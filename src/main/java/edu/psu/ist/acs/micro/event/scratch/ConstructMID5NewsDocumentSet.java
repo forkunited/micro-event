@@ -111,8 +111,7 @@ public class ConstructMID5NewsDocumentSet {
 			} else if (line.equals("---------------------------------------------------------------")) {
 				/* End of document text, so construct document */
 				DocumentNLP document = new DocumentNLPInMemory(dataTools, documentName, documentContent.toString(), Language.English, fullPipeline);
-				System.out.println(document.toJSON().toString());
-				
+				System.out.println(document.toHtmlString());
 				fullPipeline = null;
 				documentContentLine = false;
 			} else if (documentContentLine) {
