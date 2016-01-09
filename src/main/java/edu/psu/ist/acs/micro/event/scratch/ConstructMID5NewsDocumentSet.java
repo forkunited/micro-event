@@ -112,21 +112,7 @@ public class ConstructMID5NewsDocumentSet {
 				documentContentLine = true;
 			} else if (line.equals("---------------------------------------------------------------")) {
 				/* End of document text, so construct document */
-				final String documentText = documentContent.toString();
-				PipelineNLPExtendable textPipeline = new PipelineNLPExtendable();
-				textPipeline.extend(new AnnotatorDocument<String>() {
-					public String getName() { return "MID5-News"; }
-					public boolean measuresConfidence() { return false; }
-					public AnnotationType<String> produces() { return AnnotationTypeNLP.ORIGINAL_TEXT; }
-					public AnnotationType<?>[] requires() { return new AnnotationType<?>[0]; }
-					public Pair<String, Double> annotate(DocumentNLP document) {
-						return new Pair<String, Double>(documentText, null);
-					}
-				});
-				
-				PipelineNLP pipeline = fullPipeline.weld(textPipeline);
-				DocumentNLP document = new DocumentNLPInMemory(dataTools, documentName, documentContent.toString(), Language.English, pipeline);
-				
+				DocumentNLP document = new DocumentNLPInMemory(dataTools, documentName, documentContent.toString(), Language.English, fullPipeline, null, true);
 				System.out.println(document.toHtmlString());
 				
 				fullPipeline = null;
