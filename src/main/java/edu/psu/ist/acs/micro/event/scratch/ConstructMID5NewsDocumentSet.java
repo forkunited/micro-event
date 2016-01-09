@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 import edu.cmu.ml.rtw.generic.data.annotation.AnnotationType;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.AnnotationTypeNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPInMemory;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.Language;
@@ -105,13 +106,29 @@ public class ConstructMID5NewsDocumentSet {
 					}
 				});
 				
+				
 				fullPipeline = nlpPipeline.weld(metaDataPipeline);
 				
 				documentContentLine = true;
 			} else if (line.equals("---------------------------------------------------------------")) {
 				/* End of document text, so construct document */
-				DocumentNLP document = new DocumentNLPInMemory(dataTools, documentName, documentContent.toString(), Language.English, fullPipeline);
+				final String documentText = documentContent.toString();
+				PipelineNLPExtendable textPipeline = new PipelineNLPExtendable();
+				textPipeline.extend(new AnnotatorDocument<String>() {
+					public String getName() { return "MID5-News"; }
+					public boolean measuresConfidence() { return false; }
+					public AnnotationType<String> produces() { return AnnotationTypeNLP.ORIGINAL_TEXT; }
+					public AnnotationType<?>[] requires() { return new AnnotationType<?>[0]; }
+					public Pair<String, Double> annotate(DocumentNLP document) {
+						return new Pair<String, Double>(documentText, null);
+					}
+				});
+				
+				PipelineNLP pipeline = fullPipeline.weld(textPipeline);
+				DocumentNLP document = new DocumentNLPInMemory(dataTools, documentName, documentContent.toString(), Language.English, pipeline);
+				
 				System.out.println(document.toHtmlString());
+				
 				fullPipeline = null;
 				documentContentLine = false;
 			} else if (documentContentLine) {
