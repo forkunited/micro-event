@@ -127,7 +127,7 @@ public class ConstructMID5NewsDocumentSet {
 				
 				documentContentLine = false;
 			} else if (documentContentLine) {
-				documentContent.append(line);
+				documentContent.append(line).append(" ");
 			}
 		}
 	}
