@@ -2,6 +2,8 @@ package edu.psu.ist.acs.micro.event.scratch;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.cmu.ml.rtw.generic.data.annotation.AnnotationType;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.AnnotationTypeNLP;
@@ -16,6 +18,7 @@ import edu.cmu.ml.rtw.generic.util.FileUtil;
 import edu.cmu.ml.rtw.generic.util.Pair;
 import edu.cmu.ml.rtw.micro.cat.data.CatDataTools;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.CategoryList;
+import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.AnnotationTypeNLPCat;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.NELLMentionCategorizer;
 import edu.psu.ist.acs.micro.event.data.EventDataTools;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
@@ -50,7 +53,6 @@ public class ConstructMID5NewsDocumentSet {
 		
 		StringBuilder documentContent = new StringBuilder();
 		PipelineNLP fullPipeline = null;
-		
 		String documentName = null;
 		
 		while ((line = reader.readLine()) != null) {
@@ -60,6 +62,7 @@ public class ConstructMID5NewsDocumentSet {
 			if (line.toLowerCase().endsWith("-files.list")) {
 				/* Parse meta-data */
 				documentName = line.substring(0, line.indexOf("-files.list"));
+				documentContent = new StringBuilder();
 				final String title = reader.readLine().trim();
 				final String pubDate = reader.readLine().trim();
 				final String source = reader.readLine().trim().substring("News source: ".length());
@@ -113,9 +116,15 @@ public class ConstructMID5NewsDocumentSet {
 			} else if (line.equals("---------------------------------------------------------------")) {
 				/* End of document text, so construct document */
 				DocumentNLP document = new DocumentNLPInMemory(dataTools, documentName, documentContent.toString(), Language.English, fullPipeline, null, true);
-				System.out.println(document.toHtmlString());
+				List<AnnotationTypeNLP<?>> htmlAnnotations = new ArrayList<AnnotationTypeNLP<?>>();
+				htmlAnnotations.add(AnnotationTypeNLPCat.NELL_CATEGORY);
 				
-				fullPipeline = null;
+				System.out.println("--------------");
+				System.out.println(document.toHtmlString(htmlAnnotations));
+				System.out.println("--------------");
+				System.out.println(document.toJSON().toString());
+				System.out.println("--------------");
+				
 				documentContentLine = false;
 			} else if (documentContentLine) {
 				documentContent.append(line);
