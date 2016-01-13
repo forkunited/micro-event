@@ -86,7 +86,7 @@ public enum COWCountry {
 	CYP(352,"Cyprus"),
 	BUL(355,"Bulgaria"),
 	MLD(359,"Moldova"),
-	RUM(360,"Romania"),
+	ROM(360,"Romania"),
 	RUS(365,"Russia"),
 	EST(366,"Estonia"),
 	LAT(367,"Latvia"),
@@ -217,7 +217,10 @@ public enum COWCountry {
 	MSI(983,"Marshall Islands"),
 	PAL(986,"Palau"),
 	FSM(987,"Federated States of Micronesia"),
-	WSM(990,"Samoa");
+	WSM(990,"Samoa"),
+	// Added these to the ones above so that the MID dataset would be valid
+	RUM(360,"Romania"),
+	VTM(816,"Vietnam");
 	
 	private int code;
 	private String name;
