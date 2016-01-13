@@ -56,10 +56,11 @@ public class ConstructCOWData {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-		Map<Integer, Pair<Integer, String>> narratives = parseNarrativesOldFormat(args[0]);
+		/*Map<Integer, Pair<Integer, String>> narratives = parseNarrativesOldFormat(args[0]);
 		narratives.putAll(parseNarrativesNewFormat(args[1]));
 		outputNarratives(args[5], narratives);
-
+		*/
+		
 		Map<Integer, List<MIDIncident.Participant>> incidentParticipants = parseIncidentParticipants(args[2]);
 		Map<Integer, List<MIDIncident>> incidents = parseIncidents(args[3], incidentParticipants);
 		List<MIDDispute> disputes = parseDisputes(args[4], incidents);
@@ -136,7 +137,7 @@ public class ConstructCOWData {
 			int endDay = Integer.valueOf(map.get("EndDay"));
 			int endMon = Integer.valueOf(map.get("EndMon"));
 			int endYear = Integer.valueOf(map.get("EndYear"));
-			Partial endDate = (stDay < 0) ? new Partial(new YearMonth(endYear, endMon)) 
+			Partial endDate = (endDay < 0) ? new Partial(new YearMonth(endYear, endMon)) 
 										  : new Partial(new LocalDate(endYear, endMon, endDay));
 		
 			boolean inSideA = Boolean.valueOf(map.get("InSide A"));
@@ -188,7 +189,7 @@ public class ConstructCOWData {
 			int endDay = Integer.valueOf(map.get("EndDay"));
 			int endMon = Integer.valueOf(map.get("EndMon"));
 			int endYear = Integer.valueOf(map.get("EndYear"));
-			Partial endDate = (stDay < 0) ? new Partial(new YearMonth(endYear, endMon)) 
+			Partial endDate = (endDay < 0) ? new Partial(new YearMonth(endYear, endMon)) 
 										  : new Partial(new LocalDate(endYear, endMon, endDay));
 		
 			Integer duration = (Integer.valueOf(map.get("Duration")) < 0) ? null : Integer.valueOf(map.get("Duration"));
@@ -242,7 +243,7 @@ public class ConstructCOWData {
 			int endDay = Integer.valueOf(map.get("EndDay"));
 			int endMon = Integer.valueOf(map.get("EndMon"));
 			int endYear = Integer.valueOf(map.get("EndYear"));
-			Partial endDate = (stDay < 0) ? new Partial(new YearMonth(endYear, endMon)) 
+			Partial endDate = (endDay < 0) ? new Partial(new YearMonth(endYear, endMon)) 
 										  : new Partial(new LocalDate(endYear, endMon, endDay));
 		
 			Outcome outcome = Outcome.valueOf(Integer.valueOf(map.get("Outcome")));
