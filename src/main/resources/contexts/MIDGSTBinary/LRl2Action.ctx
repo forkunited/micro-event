@@ -30,7 +30,7 @@ model lr=Areg(l1="0", l2="0", convergenceEpsilon=".00001", maxTrainingExamples="
 };
 
 gs g=GridSearch() {
-	dimension l2=Dimension(name="l2", values=(.00000001), trainingDimension="true");
+	dimension l2=Dimension(name="l2", values=(.00000001, .1), trainingDimension="true");
 
 	model model=${lr};
 	evaluation evaluation=${accuracy};
