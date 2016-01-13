@@ -86,7 +86,7 @@ public enum COWCountry {
 	CYP(352,"Cyprus"),
 	BUL(355,"Bulgaria"),
 	MLD(359,"Moldova"),
-	ROM(360,"Romania"),
+	RUM(360,"Romania"),
 	RUS(365,"Russia"),
 	EST(366,"Estonia"),
 	LAT(367,"Latvia"),
