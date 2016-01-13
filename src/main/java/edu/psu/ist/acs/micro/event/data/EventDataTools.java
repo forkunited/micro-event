@@ -1,9 +1,11 @@
 package edu.psu.ist.acs.micro.event.data;
 
 import java.util.Map.Entry;
+
 import edu.cmu.ml.rtw.generic.data.DataTools;
 import edu.cmu.ml.rtw.generic.data.Gazetteer;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
+import edu.cmu.ml.rtw.micro.cat.data.CatDataTools;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
 import edu.psu.ist.acs.micro.event.util.EventProperties;
 
@@ -42,6 +44,10 @@ public class EventDataTools extends DataTools {
 		
 		this.properties = properties;
 		
+		// FIXME Make clean fns for this project?
+		DataTools catDataTools = new CatDataTools();
+		this.addCleanFn(catDataTools.getCleanFn("CatBagOfWordsFeatureCleanFn"));
+		
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.ARTICLE_PUBLICATION_DATE);
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.ARTICLE_SOURCE);
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.ARTICLE_TITLE);
@@ -52,5 +58,10 @@ public class EventDataTools extends DataTools {
 	
 	public EventProperties getProperties() {
 		return this.properties;
+	}
+	
+	@Override
+	public DataTools makeInstance() {
+		return new EventDataTools(this.outputWriter, this);
 	}
 }

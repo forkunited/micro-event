@@ -11,11 +11,25 @@ import edu.cmu.ml.rtw.generic.util.Properties;
  *
  */
 public class EventProperties extends Properties {
+	private String contextInputDirPath;
+	private String experimentOutputDirPath;
+	
 	public EventProperties() {
 		this(null);
 	}
 	
 	public EventProperties(String path) {
-		super( new String[] { (path == null) ? "event.properties" : path } );	
+		super( new String[] { (path == null) ? "event.properties" : path } );
+		
+		this.contextInputDirPath = loadProperty("contextInputDirPath");
+		this.experimentOutputDirPath = loadProperty("experimentOutputDirPath");
+	}
+	
+	public String getContextInputDirPath() {
+		return this.contextInputDirPath;
+	}
+	
+	public String getExperimentOutputDirPath() {
+		return this.experimentOutputDirPath;
 	}
 }
