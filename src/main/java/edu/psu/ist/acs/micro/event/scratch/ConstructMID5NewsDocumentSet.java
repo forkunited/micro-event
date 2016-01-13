@@ -46,7 +46,7 @@ public class ConstructMID5NewsDocumentSet {
 		constructDocumentsFromBulkText(args[0]);
 	}
 	
-	public static void constructDocumentsFromBulkText(String bulkTextPath) throws IOException {
+	private static void constructDocumentsFromBulkText(String bulkTextPath) throws IOException {
 		BufferedReader reader = FileUtil.getFileReader(bulkTextPath);
 		String line = null;
 		boolean documentContentLine = false;
