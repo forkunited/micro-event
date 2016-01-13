@@ -1,5 +1,5 @@
 value randomSeed="1";
-value maxThreads="33";
+value maxThreads="1";
 value trainOnDev="false";
 value errorExampleExtractor="FirstTokenSpan";
 array validLabels=(
@@ -30,7 +30,7 @@ model lr=Areg(l1="0", l2="0", convergenceEpsilon=".00001", maxTrainingExamples="
 };
 
 gs g=GridSearch() {
-	dimension l2=Dimension(name="l2", values=(.00000001,.0000001,.000001,.00001,.0001,.001,.01,.1,1,10), trainingDimension="true");
+	dimension l2=Dimension(name="l2", values=(.00000001), trainingDimension="true");
 
 	model model=${lr};
 	evaluation evaluation=${accuracy};
