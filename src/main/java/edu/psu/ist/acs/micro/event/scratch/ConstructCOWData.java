@@ -143,7 +143,7 @@ public class ConstructCOWData {
 			boolean inSideA = Boolean.valueOf(map.get("InSide A"));
 			boolean sideA = Boolean.valueOf(map.get("SideA"));
 			FatalityLevel fatalityLevel = FatalityLevel.valueOf(Integer.valueOf(map.get("Fatality")));
-			Integer fatalities = Integer.valueOf((Integer.valueOf(map.get("FatalPre")) < 0) ? null : Integer.valueOf(map.get("FatalPre")));
+			Integer fatalities = (Integer.valueOf(map.get("FatalPre")) < 0) ? null : Integer.valueOf(map.get("FatalPre"));
 			Action action = Action.valueOf(Integer.valueOf(map.get("Action")));
 			HostilityLevel hostilityLevel = HostilityLevel.valueOf(Integer.valueOf(map.get("HostLev")));
 			RevisionType revType1 = RevisionType.valueOf(Integer.valueOf(map.get("RevType1")));
