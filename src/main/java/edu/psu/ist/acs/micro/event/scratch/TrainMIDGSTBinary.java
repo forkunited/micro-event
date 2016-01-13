@@ -110,8 +110,9 @@ public class TrainMIDGSTBinary {
 		DocumentSetNLP<DocumentNLP> documents = DocumentSetNLP.loadFromJSONDirectory(nlpDocumentSetPath, new DocumentNLPInMemory(dataTools), new DocumentSetNLP<DocumentNLP>(""));
 		Map<Integer, MIDDispute> disputes = constructDisputes();
 		DataSet<DocumentNLPDatum<WeightedStringList>, WeightedStringList> data = new DataSet<DocumentNLPDatum<WeightedStringList>, WeightedStringList>(datumTools, null);
-		
-		for (DocumentNLP document : documents) {
+		Set<String> documentNames = documents.getDocumentNames();
+		for (String documentName : documentNames) {
+			DocumentNLP document = documents.getDocumentByName(documentName);
 			MIDDispute dispute = disputes.get(document.getDocumentAnnotation(AnnotationTypeNLPEvent.MID_DISPUTE_NUMBER_3));
 			Set<String> labelSet = new HashSet<String>();
 			
