@@ -1,5 +1,5 @@
 value randomSeed="1";
-value maxThreads="1";
+value maxThreads="2";
 value trainOnDev="false";
 value errorExampleExtractor="FirstTokenSpan";
 array validLabels=(
