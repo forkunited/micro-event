@@ -82,7 +82,8 @@ public class ConstructMID5NewsDocumentSet {
 				continue;
 			if (line.toLowerCase().endsWith("-files.list")) {
 				/* Parse meta-data */
-				documentName = line.substring(0, line.indexOf("-files.list"));
+				System.out.println("Parsing document at: " + line);
+				documentName = line.substring(0, line.toLowerCase().indexOf("-files.list"));
 				documentContent = new StringBuilder();
 				final String title = reader.readLine().trim();
 				final String pubDate = reader.readLine().trim();
