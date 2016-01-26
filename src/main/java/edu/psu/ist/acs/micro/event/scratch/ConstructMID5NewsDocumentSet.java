@@ -50,6 +50,7 @@ public class ConstructMID5NewsDocumentSet {
 		documents = (StoredCollection<DocumentNLPMutable, Document>)storage.createCollection(properties.getMIDNewsDocumentCollectionName(), new SerializerDocumentNLPBSON(dataTools));
 		
 		PipelineNLPStanford pipelineStanford = new PipelineNLPStanford();
+		pipelineStanford.initialize(AnnotationTypeNLP.POS);
 		
 		/*pipelineStanford.initialize();
 		
