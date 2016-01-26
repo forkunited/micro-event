@@ -19,7 +19,6 @@ import org.joda.time.YearMonth;
 import edu.cmu.ml.rtw.generic.data.annotation.AnnotationType;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPInMemory;
-import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentSetNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.Language;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.AnnotatorDocument;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLP;
@@ -27,6 +26,7 @@ import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLPExtendable;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLPStanford;
 import edu.cmu.ml.rtw.generic.util.FileUtil;
 import edu.cmu.ml.rtw.generic.util.Pair;
+import edu.cmu.ml.rtw.generic.util.Properties;
 import edu.cmu.ml.rtw.micro.cat.data.CatDataTools;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.CategoryList;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.NELLMentionCategorizer;
@@ -42,6 +42,7 @@ import edu.psu.ist.acs.micro.event.data.annotation.MIDIncident.HostilityLevel;
 import edu.psu.ist.acs.micro.event.data.annotation.MIDIncident.Participant;
 import edu.psu.ist.acs.micro.event.data.annotation.MIDIncident.RevisionType;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
+import edu.psu.ist.acs.micro.event.util.EventProperties;
 
 public class ConstructCOWData {
 	/**
@@ -51,11 +52,15 @@ public class ConstructCOWData {
 	 * 	2 => Input MID incident participant CSV file
 	 *  3 => Input MID incident CSV file
 	 *  4 => Input MID CSV file
-	 *  5 => Output narratives directory path
-	 *  6 => Output MID directory path
+	 *  5 => Output narratives storage collection
+	 *  6 => Output MID storage collection
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
+		EventProperties properties = new EventProperties();
+		properties.getStorage(new EventDataTools());
+		// FIXME do stuff
+		
 		Map<Integer, Pair<Integer, String>> narratives = parseNarrativesOldFormat(args[0]);
 		narratives.putAll(parseNarrativesNewFormat(args[1]));
 		outputNarratives(args[5], narratives);
@@ -295,7 +300,10 @@ public class ConstructCOWData {
 		pipelineMicroCat.extend(mentionCategorizer);
 		
 		PipelineNLP basePipeline = pipelineStanford.weld(pipelineMicroCat);
-		DocumentSetNLP<DocumentNLP> documents = new DocumentSetNLP<DocumentNLP>("narratives");
+		
+		
+		// FIXME DocumentSetNLP<DocumentNLP> documents = new DocumentSetNLP<DocumentNLP>("narratives");
+		
 		
 		for (Entry<Integer, Pair<Integer, String>> entry : narratives.entrySet()) {
 			final int dispNum3 = entry.getKey();
@@ -328,12 +336,12 @@ public class ConstructCOWData {
 			}
 			
 			PipelineNLP pipeline = basePipeline.weld(metaDataPipeline);
-			DocumentNLP document = new DocumentNLPInMemory(dataTools, String.valueOf(dispNum3), narrativeText, Language.English, pipeline, null, true);
-			documents.add(document);
+			// FIXME DocumentNLP document = new DocumentNLPInMemory(dataTools, String.valueOf(dispNum3), narrativeText, Language.English, pipeline, null, true);
+			// documents.add(document);
 		
 		}
 		
-		documents.saveToJSONDirectory(path);
+		// FIXME documents.saveToJSONDirectory(path);
 	}
 	
 	private static void outputDisputes(String path, List<MIDDispute> disputes) throws IOException {

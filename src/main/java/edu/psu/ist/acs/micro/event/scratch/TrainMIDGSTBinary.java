@@ -8,15 +8,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.json.JSONObject;
+
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import edu.cmu.ml.rtw.generic.data.Context;
 import edu.cmu.ml.rtw.generic.data.annotation.DataSet;
 import edu.cmu.ml.rtw.generic.data.annotation.Datum.Tools.LabelIndicator;
+import edu.cmu.ml.rtw.generic.data.annotation.DocumentSet;
+import edu.cmu.ml.rtw.generic.data.annotation.DocumentSetInMemoryLazy;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPDatum;
-import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPInMemory;
-import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentSetNLP;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPMutable;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.SerializerDocumentNLPJSONLegacy;
+import edu.cmu.ml.rtw.generic.data.store.StoredCollectionFileSystem;
 import edu.cmu.ml.rtw.generic.model.evaluation.ValidationGSTBinary;
 import edu.cmu.ml.rtw.generic.util.FileUtil;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
@@ -107,7 +112,8 @@ public class TrainMIDGSTBinary {
 	
 	private static List<DataSet<DocumentNLPDatum<WeightedStringList>, WeightedStringList>> constructData() {
 		context.getDatumTools().getDataTools().getOutputWriter().debugWriteln("Constructing data from " + nlpDocumentSetPath + " documents and " + disputeDataPath + "data...");
-		DocumentSetNLP<DocumentNLP> documents = DocumentSetNLP.loadFromJSONDirectory(nlpDocumentSetPath, new DocumentNLPInMemory(dataTools), new DocumentSetNLP<DocumentNLP>(""));
+		
+		DocumentSet<DocumentNLP, DocumentNLPMutable> documents = new DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable>(new StoredCollectionFileSystem<DocumentNLPMutable, JSONObject>("", new File(nlpDocumentSetPath), new SerializerDocumentNLPJSONLegacy(dataTools)));
 		Map<Integer, MIDDispute> disputes = constructDisputes();
 		DataSet<DocumentNLPDatum<WeightedStringList>, WeightedStringList> data = new DataSet<DocumentNLPDatum<WeightedStringList>, WeightedStringList>(datumTools, null);
 		Set<String> documentNames = documents.getDocumentNames();

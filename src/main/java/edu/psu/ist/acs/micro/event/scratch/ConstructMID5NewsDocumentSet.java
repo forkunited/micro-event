@@ -5,11 +5,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bson.Document;
+
 import edu.cmu.ml.rtw.generic.data.annotation.AnnotationType;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.AnnotationTypeNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPInMemory;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPMutable;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.Language;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.SerializerDocumentNLPBSON;
+import edu.cmu.ml.rtw.generic.data.store.Storage;
+import edu.cmu.ml.rtw.generic.data.store.StoredCollection;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.AnnotatorDocument;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLP;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLPExtendable;
@@ -22,26 +28,40 @@ import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.AnnotationTypeNLPCat;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.NELLMentionCategorizer;
 import edu.psu.ist.acs.micro.event.data.EventDataTools;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
+import edu.psu.ist.acs.micro.event.util.EventProperties;
 
 public class ConstructMID5NewsDocumentSet {
+	private static EventProperties properties;
 	private static EventDataTools dataTools;
 	private static PipelineNLP nlpPipeline;
+	private static StoredCollection<DocumentNLPMutable, Document> documents;
 	
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException {
 		dataTools = new EventDataTools();
+		properties = new EventProperties();
+		
+		Storage<?, Document> storage = properties.getStorage(dataTools);
+		if (storage.hasCollection(properties.getMIDNewsDocumentCollectionName())) {
+			System.err.println("Error: News document set already exists in collection");
+			return;
+		}
+		
+		documents = (StoredCollection<DocumentNLPMutable, Document>)storage.createCollection(properties.getMIDNewsDocumentCollectionName(), new SerializerDocumentNLPBSON(dataTools));
 		
 		PipelineNLPStanford pipelineStanford = new PipelineNLPStanford();
-		pipelineStanford.initialize();
+		
+		/*pipelineStanford.initialize();
 		
 		NELLMentionCategorizer mentionCategorizer = new NELLMentionCategorizer(
 				new CategoryList(CategoryList.Type.ALL_NELL_CATEGORIES, new CatDataTools()), 
 				NELLMentionCategorizer.DEFAULT_MENTION_MODEL_THRESHOLD, NELLMentionCategorizer.DEFAULT_LABEL_TYPE, 
 				1);
 		PipelineNLPExtendable pipelineMicroCat = new PipelineNLPExtendable();
-		pipelineMicroCat.extend(mentionCategorizer);
+		pipelineMicroCat.extend(mentionCategorizer);*/
 		
 		
-		nlpPipeline = pipelineStanford.weld(pipelineMicroCat);
+		nlpPipeline = pipelineStanford; //pipelineStanford.weld(pipelineMicroCat);
 	
 		constructDocumentsFromBulkText(args[0]);
 	}
@@ -115,15 +135,9 @@ public class ConstructMID5NewsDocumentSet {
 				documentContentLine = true;
 			} else if (line.equals("---------------------------------------------------------------")) {
 				/* End of document text, so construct document */
-				DocumentNLP document = new DocumentNLPInMemory(dataTools, documentName, documentContent.toString(), Language.English, fullPipeline, null, true);
-				List<AnnotationTypeNLP<?>> htmlAnnotations = new ArrayList<AnnotationTypeNLP<?>>();
-				htmlAnnotations.add(AnnotationTypeNLPCat.NELL_CATEGORY);
-				
-				System.out.println("--------------");
-				System.out.println(document.toHtmlString(htmlAnnotations));
-				System.out.println("--------------");
-				System.out.println(document.toJSON().toString());
-				System.out.println("--------------");
+				DocumentNLPMutable document = new DocumentNLPInMemory(dataTools, documentName, documentContent.toString());
+				fullPipeline.run(document);
+				documents.addItem(document);
 				
 				documentContentLine = false;
 			} else if (documentContentLine) {
