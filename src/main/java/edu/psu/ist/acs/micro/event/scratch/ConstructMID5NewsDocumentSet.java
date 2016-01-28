@@ -144,7 +144,11 @@ public class ConstructMID5NewsDocumentSet {
 						svmScore = Double.valueOf(line.substring("svm score:".length()).trim());
 					} else if (lowerLine.startsWith("date:")) {
 						//Date: 20020401
-						date = shortDateParser.parseDateTime(line.substring("date:".length()).trim()).toString(dateOutputFormat);
+						try {
+							date = shortDateParser.parseDateTime(line.substring("date:".length()).trim()).toString(dateOutputFormat);
+						} catch (IllegalArgumentException e) {
+							
+						}
 					} else if (lowerLine.startsWith("source:")) {
 						///Source: Associated Press Worldstream
 						newsSource = line.substring("source:".length()).trim();
