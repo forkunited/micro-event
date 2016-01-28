@@ -38,7 +38,7 @@ public class ConstructMID5NewsDocumentSet {
 	private static StoredCollection<DocumentNLPMutable, Document> labeledDocuments;
 	private static StoredCollection<DocumentNLPMutable, Document> unlabeledDocuments;
 	private static Collection<AnnotationType<?>> annotationTypes = new ArrayList<AnnotationType<?>>();
-	private static int writeBatchSize = 300;
+	private static int writeBatchSize = 1;
 	
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException {
@@ -287,17 +287,25 @@ public class ConstructMID5NewsDocumentSet {
 				DocumentNLPMutable document = new DocumentNLPInMemory(dataTools, documentName, documentContent.toString());
 				fullPipeline.run(document);
 				
-				i++;
-				if (i % writeBatchSize == 0) {
-					if (goldPositive != null)
-						labeledDocuments.addItems(documents);
-					else
-						unlabeledDocuments.addItems(documents);
+				if (writeBatchSize > 1) {
+					i++;
+					if (i % writeBatchSize == 0) {
+						if (goldPositive != null)
+							labeledDocuments.addItems(documents);
+						else
+							unlabeledDocuments.addItems(documents);
+						
+						documents = new ArrayList<DocumentNLPMutable>();
+					}
 					
-					documents = new ArrayList<DocumentNLPMutable>();
+					documents.add(document);
+				} else {
+					if (goldPositive != null)
+						labeledDocuments.addItem(document);
+					else
+						unlabeledDocuments.addItem(document);
+					
 				}
-				
-				documents.add(document);
 				
 				documentContentLine = false;
 			} else if (documentContentLine) {
@@ -305,9 +313,11 @@ public class ConstructMID5NewsDocumentSet {
 			}
 		}
 		
-		if (goldPositive != null)
-			labeledDocuments.addItems(documents);
-		else
-			unlabeledDocuments.addItems(documents);
+		if (writeBatchSize > 1) {
+			if (goldPositive != null)
+				labeledDocuments.addItems(documents);
+			else
+				unlabeledDocuments.addItems(documents);
+		}
 	}
 }
