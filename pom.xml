@@ -28,6 +28,11 @@
   </build>
   <dependencies>
     <dependency>
+         <groupId>yadll</groupId>
+         <artifactId>yadll</artifactId>
+         <version>1v4_fat</version>
+    </dependency>
+    <dependency>
  		<groupId>org.json</groupId>
  		<artifactId>json</artifactId>
  		<version>20120521</version>

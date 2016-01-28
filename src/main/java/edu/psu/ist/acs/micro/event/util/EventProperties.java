@@ -1,7 +1,10 @@
 package edu.psu.ist.acs.micro.event.util;
 
+import java.util.Collection;
+
 import org.bson.Document;
 
+import edu.cmu.ml.rtw.generic.data.annotation.AnnotationType;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPInMemory;
 import edu.cmu.ml.rtw.generic.data.store.Storage;
 import edu.cmu.ml.rtw.generic.data.store.StorageFileSystem;
@@ -25,7 +28,9 @@ public class EventProperties extends Properties {
 	private String storageFileSystemMicroEventDirPath;
 	private boolean useMongoStorage;
 	
-	private String midNewsDocumentCollectionName;
+	private String midNewsUnlabeledDocumentCollectionName;
+	private String midNewsRelevanceLabeledDocumentCollectionName;
+	
 	
 	public EventProperties() {
 		this(null);
@@ -39,7 +44,8 @@ public class EventProperties extends Properties {
 		this.storageFileSystemMicroEventDirPath = loadProperty("storageFileSystemMicroEventDirPath");
 		this.storageMongoMicroEventDatabaseName = loadProperty("storageMongoMicroEventDatabaseName");
 		this.useMongoStorage = Boolean.valueOf(loadProperty("useMongoStorage"));
-		this.midNewsDocumentCollectionName = loadProperty("midNewsDocumentCollectionName");
+		this.midNewsUnlabeledDocumentCollectionName = loadProperty("midNewsUnlabeledDocumentCollectionName");
+		this.midNewsRelevanceLabeledDocumentCollectionName = loadProperty("midNewsRelevanceLabeledDocumentCollectionName");
 	}
 	
 	public String getContextInputDirPath() {
@@ -50,15 +56,19 @@ public class EventProperties extends Properties {
 		return this.experimentOutputDirPath;
 	}
 	
-	public Storage<?,Document> getStorage(EventDataTools dataTools) {
+	public Storage<?,Document> getStorage(EventDataTools dataTools, Collection<AnnotationType<?>> annotationTypes) {
 		if (this.useMongoStorage) {
-			return new StorageMongo("localhost", this.storageMongoMicroEventDatabaseName, dataTools.getDocumentSerializers(new DocumentNLPInMemory(dataTools), null));
+			return new StorageMongo("localhost", this.storageMongoMicroEventDatabaseName, dataTools.getDocumentSerializers(new DocumentNLPInMemory(dataTools), annotationTypes));
 		} else {
-			return new StorageFileSystem<Document>(this.storageFileSystemMicroEventDirPath, dataTools.getDocumentSerializers(new DocumentNLPInMemory(dataTools), null));
+			return new StorageFileSystem<Document>(this.storageFileSystemMicroEventDirPath, dataTools.getDocumentSerializers(new DocumentNLPInMemory(dataTools), annotationTypes));
 		}
 	}
 	
-	public String getMIDNewsDocumentCollectionName() {
-		return this.midNewsDocumentCollectionName;
+	public String getMIDNewsUnlabeledDocumentCollectionName() {
+		return this.midNewsUnlabeledDocumentCollectionName;
+	}
+	
+	public String getMIDNewsRelevanceLabeledDocumentCollectionName() {
+		return this.midNewsRelevanceLabeledDocumentCollectionName;
 	}
 }

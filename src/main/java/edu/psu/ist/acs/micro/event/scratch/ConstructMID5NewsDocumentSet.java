@@ -3,16 +3,17 @@ package edu.psu.ist.acs.micro.event.scratch;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import org.bson.Document;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import edu.cmu.ml.rtw.generic.data.annotation.AnnotationType;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.AnnotationTypeNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPInMemory;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPMutable;
-import edu.cmu.ml.rtw.generic.data.annotation.nlp.Language;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.SerializerDocumentNLPBSON;
 import edu.cmu.ml.rtw.generic.data.store.Storage;
 import edu.cmu.ml.rtw.generic.data.store.StoredCollection;
@@ -24,7 +25,6 @@ import edu.cmu.ml.rtw.generic.util.FileUtil;
 import edu.cmu.ml.rtw.generic.util.Pair;
 import edu.cmu.ml.rtw.micro.cat.data.CatDataTools;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.CategoryList;
-import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.AnnotationTypeNLPCat;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.NELLMentionCategorizer;
 import edu.psu.ist.acs.micro.event.data.EventDataTools;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
@@ -34,40 +34,63 @@ public class ConstructMID5NewsDocumentSet {
 	private static EventProperties properties;
 	private static EventDataTools dataTools;
 	private static PipelineNLP nlpPipeline;
-	private static StoredCollection<DocumentNLPMutable, Document> documents;
+	private static StoredCollection<DocumentNLPMutable, Document> labeledDocuments;
+	private static StoredCollection<DocumentNLPMutable, Document> unlabeledDocuments;
+	private static Collection<AnnotationType<?>> annotationTypes = new ArrayList<AnnotationType<?>>();
 	
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException {
+		String svmTruePositiveFilePath = args[0];
+		String svmFalsePositiveFilePath = args[1];
+		String svmNegativePath = args[2];
+		boolean onlyTokens = Boolean.valueOf(args[3]);
+		boolean onlyLabeled = Boolean.valueOf(args[4]);
+		
 		dataTools = new EventDataTools();
 		properties = new EventProperties();
+		annotationTypes.addAll(dataTools.getAnnotationTypesNLP());
+		annotationTypes.remove(AnnotationTypeNLP.SENTENCE);
 		
-		Storage<?, Document> storage = properties.getStorage(dataTools);
-		if (storage.hasCollection(properties.getMIDNewsDocumentCollectionName())) {
-			System.err.println("Error: News document set already exists in collection");
-			return;
+		String unlabeledCollectionName = properties.getMIDNewsUnlabeledDocumentCollectionName() + ((onlyTokens) ? "_tokens" : "");
+		String labeledCollectionName = properties.getMIDNewsRelevanceLabeledDocumentCollectionName() + ((onlyTokens) ? "_tokens" : "");
+		
+		Storage<?, Document> storage = properties.getStorage(dataTools, annotationTypes);
+		if (!onlyLabeled && storage.hasCollection(unlabeledCollectionName)) {
+			storage.deleteCollection(unlabeledCollectionName);
 		}
 		
-		documents = (StoredCollection<DocumentNLPMutable, Document>)storage.createCollection(properties.getMIDNewsDocumentCollectionName(), new SerializerDocumentNLPBSON(dataTools));
+		if (storage.hasCollection(labeledCollectionName)) {
+			storage.deleteCollection(labeledCollectionName);
+		}
+		
+		labeledDocuments = (StoredCollection<DocumentNLPMutable, Document>)storage.createCollection(labeledCollectionName, new SerializerDocumentNLPBSON(dataTools));
+		unlabeledDocuments = (StoredCollection<DocumentNLPMutable, Document>)storage.createCollection(labeledCollectionName, new SerializerDocumentNLPBSON(dataTools));
 		
 		PipelineNLPStanford pipelineStanford = new PipelineNLPStanford();
-		pipelineStanford.initialize(AnnotationTypeNLP.POS);
 		
-		/*pipelineStanford.initialize();
+		if (onlyTokens) {
+			pipelineStanford.initialize(AnnotationTypeNLP.POS);
+			nlpPipeline = pipelineStanford;
+		} else {
+			NELLMentionCategorizer mentionCategorizer = new NELLMentionCategorizer(
+					new CategoryList(CategoryList.Type.ALL_NELL_CATEGORIES, new CatDataTools()), 
+					NELLMentionCategorizer.DEFAULT_MENTION_MODEL_THRESHOLD, NELLMentionCategorizer.DEFAULT_LABEL_TYPE, 
+					1);
+			PipelineNLPExtendable pipelineMicroCat = new PipelineNLPExtendable();
+			pipelineMicroCat.extend(mentionCategorizer);
+			
+			nlpPipeline = pipelineStanford.weld(pipelineMicroCat);
+		}
 		
-		NELLMentionCategorizer mentionCategorizer = new NELLMentionCategorizer(
-				new CategoryList(CategoryList.Type.ALL_NELL_CATEGORIES, new CatDataTools()), 
-				NELLMentionCategorizer.DEFAULT_MENTION_MODEL_THRESHOLD, NELLMentionCategorizer.DEFAULT_LABEL_TYPE, 
-				1);
-		PipelineNLPExtendable pipelineMicroCat = new PipelineNLPExtendable();
-		pipelineMicroCat.extend(mentionCategorizer);*/
 		
+		constructDocumentsFromBulkText(svmTruePositiveFilePath, true, true);
+		constructDocumentsFromBulkText(svmFalsePositiveFilePath, true, false);
 		
-		nlpPipeline = pipelineStanford; //pipelineStanford.weld(pipelineMicroCat);
-	
-		constructDocumentsFromBulkText(args[0]);
+		if (!onlyLabeled)
+			constructDocumentsFromBulkText(svmNegativePath, false, null);
 	}
 	
-	private static void constructDocumentsFromBulkText(String bulkTextPath) throws IOException {
+	private static void constructDocumentsFromBulkText(String bulkTextPath, Boolean svmPositive, Boolean goldPositive) throws IOException {
 		BufferedReader reader = FileUtil.getFileReader(bulkTextPath);
 		String line = null;
 		boolean documentContentLine = false;
@@ -76,61 +99,177 @@ public class ConstructMID5NewsDocumentSet {
 		PipelineNLP fullPipeline = null;
 		String documentName = null;
 		
+		DateTimeFormatter verboseDateParser = DateTimeFormat.forPattern("MMMM dd, yyyy E");
+		DateTimeFormatter shortDateParser = DateTimeFormat.forPattern("yyyyMMdd");
+		DateTimeFormatter dateOutputFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
+		
 		while ((line = reader.readLine()) != null) {
 			line = line.trim();
-			if (line.length() == 0)
+			if (line.length() == 0 
+					|| line.equals(">>>>>>>>>>>>>>>>>>>>>>")
+					|| line.equals("<<<<<<<<<<<<<<<<<<<<<<"))
 				continue;
-			if (line.toLowerCase().endsWith("-files.list")) {
+	
+			if (!documentContentLine) {
 				/* Parse meta-data */
 				System.out.println("Parsing document at: " + line);
+				String firstLine = line;
+				String otherLine = null;
+				String newsSource = null;
+				double svmScore = -1;
+				String date = null;
+				String dateLine = null;
+				String byline = null;
+				String key = null;
+				String title = null;
+				
+				while (!((line = reader.readLine()).trim()).equals("")) {
+					line = line.trim();
+					String lowerLine = line.toLowerCase();
+					if (lowerLine.startsWith("news source:")) {
+						// News source: (c) Japan Economic Newswire
+						newsSource = line.substring("news source:".length()).trim();
+					} else if (lowerLine.startsWith("svm score:")) {
+						// SVM score: 1.1164
+						svmScore = Double.valueOf(line.substring("news source:".length()).trim());
+					} else if (lowerLine.startsWith("date:")) {
+						//Date: 20020401
+						date = shortDateParser.parseDateTime(line.substring("date:".length()).trim()).toString(dateOutputFormat);
+					} else if (lowerLine.startsWith("source:")) {
+						///Source: Associated Press Worldstream
+						newsSource = line.substring("source:".length()).trim();
+					} else if (lowerLine.startsWith("dateline:")) {
+						//DATELINE: MOSCOW
+						dateLine = line.substring("dateline:".length()).trim();
+					} else if (lowerLine.startsWith("byline:")) {
+						//BYLINE: VLADIMIR ISACHENKOV; Associated Press Writer
+						byline = line.substring("byline:".length()).trim();
+					} else if (line.startsWith("key: key:")) {
+						// Key: Key: 20020401-56-0-AP_2002/April_2002/April01_2002_LN_NP1.TXT
+						key = line.substring("key: key:".length()).trim();
+					} else {
+						try {
+							date = verboseDateParser.parseDateTime(line).toString(dateOutputFormat);
+						} catch (IllegalArgumentException e) {
+							otherLine = line;
+						}
+					}
+				}
+				
+				if (otherLine != null && key == null) {
+					documentName = firstLine.substring(0, line.toLowerCase().indexOf("-files.list"));
+					title = otherLine;
+				} else {
+					title = firstLine;
+					documentName = key;
+				}
+				
 				documentName = line.substring(0, line.toLowerCase().indexOf("-files.list"));
+				
+				final String newsSourceFinal = newsSource;
+				final double svmScoreFinal = svmScore;
+				final String dateFinal = date;
+				final String dateLineFinal = dateLine;
+				final String bylineFinal = byline;
+				final String titleFinal = title;
+				
 				documentContent = new StringBuilder();
-				final String title = reader.readLine().trim();
-				final String pubDate = reader.readLine().trim();
-				final String source = reader.readLine().trim().substring("News source: ".length());
-				final double svmScore = Double.valueOf(reader.readLine().trim().substring("SVM score: ".length()));
 				
 				PipelineNLPExtendable metaDataPipeline = new PipelineNLPExtendable();
-				metaDataPipeline.extend(new AnnotatorDocument<String>() {
+				
+				if (titleFinal != null) {
+					metaDataPipeline.extend(new AnnotatorDocument<String>() {
+						public String getName() { return "MID5-News"; }
+						public boolean measuresConfidence() { return false; }
+						public AnnotationType<String> produces() { return AnnotationTypeNLPEvent.ARTICLE_TITLE; }
+						public AnnotationType<?>[] requires() { return new AnnotationType<?>[0]; }
+						public Pair<String, Double> annotate(DocumentNLP document) {
+							return new Pair<String, Double>(titleFinal, null);
+						}
+					});
+				}
+				
+				if (dateFinal != null) {
+					metaDataPipeline.extend(new AnnotatorDocument<String>() {
+						public String getName() { return "MID5-News"; }
+						public boolean measuresConfidence() { return false; }
+						public AnnotationType<String> produces() { return AnnotationTypeNLPEvent.ARTICLE_PUBLICATION_DATE; }
+						public AnnotationType<?>[] requires() { return new AnnotationType<?>[0]; }
+						public Pair<String, Double> annotate(DocumentNLP document) {
+							return new Pair<String, Double>(dateFinal, null); 
+						}
+					});
+				}
+				
+				if (newsSourceFinal != null) {
+					metaDataPipeline.extend(new AnnotatorDocument<String>() {
+						public String getName() { return "MID5-News"; }
+						public boolean measuresConfidence() { return false; }
+						public AnnotationType<String> produces() { return AnnotationTypeNLPEvent.ARTICLE_SOURCE; }
+						public AnnotationType<?>[] requires() { return new AnnotationType<?>[0]; }
+						public Pair<String, Double> annotate(DocumentNLP document) {
+							return new Pair<String, Double>(newsSourceFinal, null);
+						}
+					});
+				}
+				
+				if (svmScoreFinal >= 0) {
+					metaDataPipeline.extend(new AnnotatorDocument<Double>() {
+						public String getName() { return "MID5-News"; }
+						public boolean measuresConfidence() { return false; }
+						public AnnotationType<Double> produces() { return AnnotationTypeNLPEvent.MID_SVM_RELEVANCE_SCORE; }
+						public AnnotationType<?>[] requires() { return new AnnotationType<?>[0]; }
+						public Pair<Double, Double> annotate(DocumentNLP document) {
+							return new Pair<Double, Double>(svmScoreFinal, null);
+						}
+					});
+				}
+				
+				if (dateLineFinal != null) {
+					metaDataPipeline.extend(new AnnotatorDocument<String>() {
+						public String getName() { return "MID5-News"; }
+						public boolean measuresConfidence() { return false; }
+						public AnnotationType<String> produces() { return AnnotationTypeNLPEvent.ARTICLE_DATELINE; }
+						public AnnotationType<?>[] requires() { return new AnnotationType<?>[0]; }
+						public Pair<String, Double> annotate(DocumentNLP document) {
+							return new Pair<String, Double>(dateLineFinal, null);
+						}
+					});
+				}
+				
+				if (bylineFinal != null) {
+					metaDataPipeline.extend(new AnnotatorDocument<String>() {
+						public String getName() { return "MID5-News"; }
+						public boolean measuresConfidence() { return false; }
+						public AnnotationType<String> produces() { return AnnotationTypeNLPEvent.ARTICLE_BYLINE; }
+						public AnnotationType<?>[] requires() { return new AnnotationType<?>[0]; }
+						public Pair<String, Double> annotate(DocumentNLP document) {
+							return new Pair<String, Double>(bylineFinal, null);
+						}
+					});
+				}
+				
+				metaDataPipeline.extend(new AnnotatorDocument<Boolean>() {
 					public String getName() { return "MID5-News"; }
 					public boolean measuresConfidence() { return false; }
-					public AnnotationType<String> produces() { return AnnotationTypeNLPEvent.ARTICLE_TITLE; }
+					public AnnotationType<Boolean> produces() { return AnnotationTypeNLPEvent.MID_SVM_RELEVANCE_CLASS; }
 					public AnnotationType<?>[] requires() { return new AnnotationType<?>[0]; }
-					public Pair<String, Double> annotate(DocumentNLP document) {
-						return new Pair<String, Double>(title, null);
+					public Pair<Boolean, Double> annotate(DocumentNLP document) {
+						return new Pair<Boolean, Double>(svmPositive, null);
 					}
 				});
 				
-				metaDataPipeline.extend(new AnnotatorDocument<String>() {
-					public String getName() { return "MID5-News"; }
-					public boolean measuresConfidence() { return false; }
-					public AnnotationType<String> produces() { return AnnotationTypeNLPEvent.ARTICLE_PUBLICATION_DATE; }
-					public AnnotationType<?>[] requires() { return new AnnotationType<?>[0]; }
-					public Pair<String, Double> annotate(DocumentNLP document) {
-						return new Pair<String, Double>(pubDate, null); // FIXME Normalize this
-					}
-				});
-				
-				metaDataPipeline.extend(new AnnotatorDocument<String>() {
-					public String getName() { return "MID5-News"; }
-					public boolean measuresConfidence() { return false; }
-					public AnnotationType<String> produces() { return AnnotationTypeNLPEvent.ARTICLE_SOURCE; }
-					public AnnotationType<?>[] requires() { return new AnnotationType<?>[0]; }
-					public Pair<String, Double> annotate(DocumentNLP document) {
-						return new Pair<String, Double>(source, null);
-					}
-				});
-				
-				metaDataPipeline.extend(new AnnotatorDocument<Double>() {
-					public String getName() { return "MID5-News"; }
-					public boolean measuresConfidence() { return false; }
-					public AnnotationType<Double> produces() { return AnnotationTypeNLPEvent.MID_SVM_RELEVANCE_SCORE; }
-					public AnnotationType<?>[] requires() { return new AnnotationType<?>[0]; }
-					public Pair<Double, Double> annotate(DocumentNLP document) {
-						return new Pair<Double, Double>(svmScore, null);
-					}
-				});
-				
+				if (goldPositive != null) {
+					metaDataPipeline.extend(new AnnotatorDocument<Boolean>() {
+						public String getName() { return "MID5-News"; }
+						public boolean measuresConfidence() { return false; }
+						public AnnotationType<Boolean> produces() { return AnnotationTypeNLPEvent.MID_GOLD_RELEVANCE_CLASS; }
+						public AnnotationType<?>[] requires() { return new AnnotationType<?>[0]; }
+						public Pair<Boolean, Double> annotate(DocumentNLP document) {
+							return new Pair<Boolean, Double>(goldPositive, null);
+						}
+					});
+				}
 				
 				fullPipeline = nlpPipeline.weld(metaDataPipeline);
 				
@@ -139,7 +278,11 @@ public class ConstructMID5NewsDocumentSet {
 				/* End of document text, so construct document */
 				DocumentNLPMutable document = new DocumentNLPInMemory(dataTools, documentName, documentContent.toString());
 				fullPipeline.run(document);
-				documents.addItem(document);
+				
+				if (goldPositive != null)
+					labeledDocuments.addItem(document);
+				else
+					unlabeledDocuments.addItem(document);
 				
 				documentContentLine = false;
 			} else if (documentContentLine) {

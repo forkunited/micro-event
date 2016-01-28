@@ -58,7 +58,7 @@ public class ConstructCOWData {
 	 */
 	public static void main(String[] args) throws IOException {
 		EventProperties properties = new EventProperties();
-		properties.getStorage(new EventDataTools());
+		properties.getStorage(new EventDataTools(), null);
 		// FIXME do stuff
 		
 		Map<Integer, Pair<Integer, String>> narratives = parseNarrativesOldFormat(args[0]);

@@ -51,9 +51,15 @@ public class EventDataTools extends DataTools {
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.ARTICLE_PUBLICATION_DATE);
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.ARTICLE_SOURCE);
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.ARTICLE_TITLE);
+		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.ARTICLE_BYLINE);
+		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.ARTICLE_DATELINE);
+		
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.MID_SVM_RELEVANCE_SCORE);
+		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.MID_SVM_RELEVANCE_CLASS);
+		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.MID_GOLD_RELEVANCE_CLASS);
+		
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.MID_DISPUTE_NUMBER_3);
-		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.MID_DISPUTE_NUMBER_4);
+		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.MID_DISPUTE_NUMBER_4);	
 	}
 	
 	public EventProperties getProperties() {
