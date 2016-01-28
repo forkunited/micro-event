@@ -66,7 +66,7 @@ public class ConstructMID5NewsDocumentSet {
 		}
 		
 		labeledDocuments = (StoredCollection<DocumentNLPMutable, Document>)storage.createCollection(labeledCollectionName, new SerializerDocumentNLPBSON(dataTools));
-		unlabeledDocuments = (StoredCollection<DocumentNLPMutable, Document>)storage.createCollection(labeledCollectionName, new SerializerDocumentNLPBSON(dataTools));
+		unlabeledDocuments = (StoredCollection<DocumentNLPMutable, Document>)storage.createCollection(unlabeledCollectionName, new SerializerDocumentNLPBSON(dataTools));
 		
 		PipelineNLPStanford pipelineStanford = new PipelineNLPStanford();
 		
