@@ -38,7 +38,7 @@ public class ConstructMID5NewsDocumentSet {
 	private static StoredCollection<DocumentNLPMutable, Document> labeledDocuments;
 	private static StoredCollection<DocumentNLPMutable, Document> unlabeledDocuments;
 	private static Collection<AnnotationType<?>> annotationTypes = new ArrayList<AnnotationType<?>>();
-	private static int writeBatchSize = 10;
+	private static int writeBatchSize = 300;
 	
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException {
@@ -90,6 +90,8 @@ public class ConstructMID5NewsDocumentSet {
 		
 		if (!onlyLabeled)
 			constructDocumentsFromBulkText(svmNegativePath, false, null);
+		
+		System.out.println("Finished writing documents.");
 	}
 	
 	private static void constructDocumentsFromBulkText(String bulkTextPath, Boolean svmPositive, Boolean goldPositive) throws IOException {
@@ -307,6 +309,5 @@ public class ConstructMID5NewsDocumentSet {
 			labeledDocuments.addItems(documents);
 		else
 			unlabeledDocuments.addItems(documents);
-		
 	}
 }
