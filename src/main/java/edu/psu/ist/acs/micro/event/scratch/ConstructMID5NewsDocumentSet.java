@@ -178,6 +178,9 @@ public class ConstructMID5NewsDocumentSet {
 					documentName = key;
 				}
 				
+				if (documentName.length() > 512)
+					documentName = documentName.substring(0, 509) + "...";
+				
 				final String newsSourceFinal = newsSource;
 				final double svmScoreFinal = svmScore;
 				final String dateFinal = date;
