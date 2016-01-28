@@ -160,7 +160,7 @@ public class ConstructMID5NewsDocumentSet {
 					}
 				}
 				
-				if (otherLine != null && key == null) {
+				if (key == null) {
 					documentName = firstLine;
 					title = otherLine;
 				} else {
