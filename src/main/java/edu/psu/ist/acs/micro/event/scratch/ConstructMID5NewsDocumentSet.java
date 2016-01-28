@@ -122,9 +122,13 @@ public class ConstructMID5NewsDocumentSet {
 				String byline = null;
 				String key = null;
 				String title = null;
-				
-				while (!((line = reader.readLine()).trim()).equals("")) {
+				boolean readOneLine = false;
+				while (!((line = reader.readLine()).trim()).equals("") || !readOneLine) {
 					line = line.trim();
+					readOneLine = true;
+					if (line.length() == 0)
+						continue;
+					
 					String lowerLine = line.toLowerCase();
 					if (lowerLine.startsWith("news source:")) {
 						// News source: (c) Japan Economic Newswire
