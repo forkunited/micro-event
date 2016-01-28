@@ -157,14 +157,12 @@ public class ConstructMID5NewsDocumentSet {
 				}
 				
 				if (otherLine != null && key == null) {
-					documentName = firstLine.substring(0, line.toLowerCase().indexOf("-files.list"));
+					documentName = firstLine.substring(0, firstLine.toLowerCase().indexOf("-files.list"));
 					title = otherLine;
 				} else {
 					title = firstLine;
 					documentName = key;
 				}
-				
-				documentName = line.substring(0, line.toLowerCase().indexOf("-files.list"));
 				
 				final String newsSourceFinal = newsSource;
 				final double svmScoreFinal = svmScore;
