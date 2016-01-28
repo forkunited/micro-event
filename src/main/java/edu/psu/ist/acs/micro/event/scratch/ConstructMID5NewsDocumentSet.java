@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.bson.Document;
 import org.joda.time.format.DateTimeFormat;
@@ -37,6 +38,7 @@ public class ConstructMID5NewsDocumentSet {
 	private static StoredCollection<DocumentNLPMutable, Document> labeledDocuments;
 	private static StoredCollection<DocumentNLPMutable, Document> unlabeledDocuments;
 	private static Collection<AnnotationType<?>> annotationTypes = new ArrayList<AnnotationType<?>>();
+	private static int writeBatchSize = 10;
 	
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException {
@@ -102,6 +104,8 @@ public class ConstructMID5NewsDocumentSet {
 		DateTimeFormatter verboseDateParser = DateTimeFormat.forPattern("MMMM dd, yyyy E");
 		DateTimeFormatter shortDateParser = DateTimeFormat.forPattern("yyyyMMdd");
 		DateTimeFormatter dateOutputFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
+		List<DocumentNLPMutable> documents = new ArrayList<DocumentNLPMutable>();
+		int i = 0;
 		
 		while ((line = reader.readLine()) != null) {
 			line = line.trim();
@@ -281,15 +285,28 @@ public class ConstructMID5NewsDocumentSet {
 				DocumentNLPMutable document = new DocumentNLPInMemory(dataTools, documentName, documentContent.toString());
 				fullPipeline.run(document);
 				
-				if (goldPositive != null)
-					labeledDocuments.addItem(document);
-				else
-					unlabeledDocuments.addItem(document);
+				i++;
+				if (i % writeBatchSize == 0) {
+					if (goldPositive != null)
+						labeledDocuments.addItems(documents);
+					else
+						unlabeledDocuments.addItems(documents);
+					
+					documents = new ArrayList<DocumentNLPMutable>();
+				}
+				
+				documents.add(document);
 				
 				documentContentLine = false;
 			} else if (documentContentLine) {
 				documentContent.append(line).append(" ");
 			}
 		}
+		
+		if (goldPositive != null)
+			labeledDocuments.addItems(documents);
+		else
+			unlabeledDocuments.addItems(documents);
+		
 	}
 }
