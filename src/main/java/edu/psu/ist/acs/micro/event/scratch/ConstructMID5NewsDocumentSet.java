@@ -135,7 +135,7 @@ public class ConstructMID5NewsDocumentSet {
 						newsSource = line.substring("news source:".length()).trim();
 					} else if (lowerLine.startsWith("svm score:")) {
 						// SVM score: 1.1164
-						svmScore = Double.valueOf(line.substring("news source:".length()).trim());
+						svmScore = Double.valueOf(line.substring("svm score:".length()).trim());
 					} else if (lowerLine.startsWith("date:")) {
 						//Date: 20020401
 						date = shortDateParser.parseDateTime(line.substring("date:".length()).trim()).toString(dateOutputFormat);
