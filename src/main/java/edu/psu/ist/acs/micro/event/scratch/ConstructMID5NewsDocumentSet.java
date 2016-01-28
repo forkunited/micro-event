@@ -161,7 +161,7 @@ public class ConstructMID5NewsDocumentSet {
 				}
 				
 				if (otherLine != null && key == null) {
-					documentName = firstLine.substring(0, firstLine.toLowerCase().indexOf("-files.list"));
+					documentName = firstLine;
 					title = otherLine;
 				} else {
 					title = firstLine;
