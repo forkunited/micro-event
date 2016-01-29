@@ -2,13 +2,11 @@ package edu.psu.ist.acs.micro.event.scratch;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import org.json.JSONObject;
+import org.bson.Document;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -20,8 +18,8 @@ import edu.cmu.ml.rtw.generic.data.annotation.DocumentSetInMemoryLazy;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPDatum;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPMutable;
-import edu.cmu.ml.rtw.generic.data.annotation.nlp.SerializerDocumentNLPJSONLegacy;
-import edu.cmu.ml.rtw.generic.data.store.StoredCollectionFileSystem;
+import edu.cmu.ml.rtw.generic.data.store.Storage;
+import edu.cmu.ml.rtw.generic.data.store.StoredCollection;
 import edu.cmu.ml.rtw.generic.model.evaluation.ValidationGSTBinary;
 import edu.cmu.ml.rtw.generic.util.FileUtil;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
@@ -40,8 +38,6 @@ public class TrainMIDGSTBinary {
 	
 	private static String experimentName;
 	private static int randomSeed;
-	private static String nlpDocumentSetPath;
-	private static String disputeDataPath;
 	private static PredictionType predictionType;
 	
 	private static Context<DocumentNLPDatum<WeightedStringList>, WeightedStringList> context;
@@ -49,6 +45,7 @@ public class TrainMIDGSTBinary {
 	private static EventProperties properties;
 	private static EventDataTools dataTools;
 	private static int datumId;
+	private static Storage<?, Document> storage;
 	
 	public static void main(String[] args) {
 		if (!parseArgs(args))
@@ -96,30 +93,17 @@ public class TrainMIDGSTBinary {
 			dataTools.getOutputWriter().debugWriteln("ERROR: Failed to run validation.");
 	}
 	
-	private static Map<Integer, MIDDispute> constructDisputes() {
-		Map<Integer, MIDDispute> disputes = new HashMap<Integer, MIDDispute>();
-		
-		File disputeDataDir = new File(disputeDataPath);
-		File[] disputeFiles = disputeDataDir.listFiles();
-		for (File disputeFile : disputeFiles) {
-			MIDDispute dispute = new MIDDispute();
-			dispute.fromJSON(FileUtil.readJSONFile(disputeFile));
-			disputes.put(dispute.getDispNum3(), dispute);
-		}
-		
-		return disputes;
-	}
-	
+	@SuppressWarnings("unchecked")
 	private static List<DataSet<DocumentNLPDatum<WeightedStringList>, WeightedStringList>> constructData() {
-		context.getDatumTools().getDataTools().getOutputWriter().debugWriteln("Constructing data from " + nlpDocumentSetPath + " documents and " + disputeDataPath + "data...");
+		context.getDatumTools().getDataTools().getOutputWriter().debugWriteln("Constructing data...");
 		
-		DocumentSet<DocumentNLP, DocumentNLPMutable> documents = new DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable>(new StoredCollectionFileSystem<DocumentNLPMutable, JSONObject>("", new File(nlpDocumentSetPath), new SerializerDocumentNLPJSONLegacy(dataTools)));
-		Map<Integer, MIDDispute> disputes = constructDisputes();
+		DocumentSet<DocumentNLP, DocumentNLPMutable> documents = new DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable>((StoredCollection<DocumentNLPMutable, ?>)storage.getCollection(properties.getMID4NarrativeDocumentCollectionName()));
+		StoredCollection<MIDDispute, ?> disputes = (StoredCollection<MIDDispute, ?>)storage.getCollection(properties.getMID4CollectionName());
 		DataSet<DocumentNLPDatum<WeightedStringList>, WeightedStringList> data = new DataSet<DocumentNLPDatum<WeightedStringList>, WeightedStringList>(datumTools, null);
 		Set<String> documentNames = documents.getDocumentNames();
 		for (String documentName : documentNames) {
 			DocumentNLP document = documents.getDocumentByName(documentName);
-			MIDDispute dispute = disputes.get(document.getDocumentAnnotation(AnnotationTypeNLPEvent.MID_DISPUTE_NUMBER_3));
+			MIDDispute dispute = disputes.getFirstItemByIndex("dispNum3", document.getDocumentAnnotation(AnnotationTypeNLPEvent.MID_DISPUTE_NUMBER_3));
 			Set<String> labelSet = new HashSet<String>();
 			
 			if (predictionType == PredictionType.ACTION) {
@@ -181,8 +165,6 @@ public class TrainMIDGSTBinary {
 		
 		experimentName = options.valueOf("experimentName").toString();
 		randomSeed = (Integer)options.valueOf("randomSeed");
-		nlpDocumentSetPath = options.valueOf("nlpDocumentSetPath").toString();
-		disputeDataPath = options.valueOf("disputeDataPath").toString();
 		
 		properties = new EventProperties();
 		String experimentInputPath = new File(properties.getContextInputDirPath(), "/MIDGSTBinary/" + experimentName + ".ctx").getAbsolutePath();
@@ -207,6 +189,7 @@ public class TrainMIDGSTBinary {
 		datumId = 0;
 		
 		predictionType = PredictionType.valueOf(options.valueOf("predictionType").toString());
+		storage = properties.getStorage(dataTools, null);
 		
 		return true;
 	}

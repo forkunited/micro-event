@@ -31,6 +31,8 @@ public class EventProperties extends Properties {
 	private String midNewsUnlabeledDocumentCollectionName;
 	private String midNewsRelevanceLabeledDocumentCollectionName;
 	
+	private String mid4CollectionName;
+	private String mid4NarrativeDocumentCollectionName;
 	
 	public EventProperties() {
 		this(null);
@@ -46,6 +48,8 @@ public class EventProperties extends Properties {
 		this.useMongoStorage = Boolean.valueOf(loadProperty("useMongoStorage"));
 		this.midNewsUnlabeledDocumentCollectionName = loadProperty("midNewsUnlabeledDocumentCollectionName");
 		this.midNewsRelevanceLabeledDocumentCollectionName = loadProperty("midNewsRelevanceLabeledDocumentCollectionName");
+		this.mid4CollectionName = loadProperty("mid4CollectionName");
+		this.mid4NarrativeDocumentCollectionName = loadProperty("mid4NarrativeDocumentCollectionName");
 	}
 	
 	public String getContextInputDirPath() {
@@ -70,5 +74,13 @@ public class EventProperties extends Properties {
 	
 	public String getMIDNewsRelevanceLabeledDocumentCollectionName() {
 		return this.midNewsRelevanceLabeledDocumentCollectionName;
+	}
+	
+	public String getMID4CollectionName() {
+		return this.mid4CollectionName;
+	}
+	
+	public String getMID4NarrativeDocumentCollectionName() {
+		return this.mid4NarrativeDocumentCollectionName;
 	}
 }

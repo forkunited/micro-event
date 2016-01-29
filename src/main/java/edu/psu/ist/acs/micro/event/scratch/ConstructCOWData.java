@@ -1,8 +1,6 @@
 package edu.psu.ist.acs.micro.event.scratch;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,21 +10,25 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bson.Document;
 import org.joda.time.LocalDate;
 import org.joda.time.Partial;
 import org.joda.time.YearMonth;
 
 import edu.cmu.ml.rtw.generic.data.annotation.AnnotationType;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.AnnotationTypeNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPInMemory;
-import edu.cmu.ml.rtw.generic.data.annotation.nlp.Language;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPMutable;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.SerializerDocumentNLPBSON;
+import edu.cmu.ml.rtw.generic.data.store.Storage;
+import edu.cmu.ml.rtw.generic.data.store.StoredCollection;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.AnnotatorDocument;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLP;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLPExtendable;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLPStanford;
 import edu.cmu.ml.rtw.generic.util.FileUtil;
 import edu.cmu.ml.rtw.generic.util.Pair;
-import edu.cmu.ml.rtw.generic.util.Properties;
 import edu.cmu.ml.rtw.micro.cat.data.CatDataTools;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.CategoryList;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.NELLMentionCategorizer;
@@ -41,10 +43,15 @@ import edu.psu.ist.acs.micro.event.data.annotation.MIDIncident.FatalityLevel;
 import edu.psu.ist.acs.micro.event.data.annotation.MIDIncident.HostilityLevel;
 import edu.psu.ist.acs.micro.event.data.annotation.MIDIncident.Participant;
 import edu.psu.ist.acs.micro.event.data.annotation.MIDIncident.RevisionType;
+import edu.psu.ist.acs.micro.event.data.annotation.SerializerMIDDisputeBSON;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
 import edu.psu.ist.acs.micro.event.util.EventProperties;
 
 public class ConstructCOWData {
+	private static Storage<?, Document> storage;
+	private static EventProperties properties;
+	private static EventDataTools dataTools;
+	
 	/**
 	 * @param args
 	 * 	0 => Input text document containing older narratives from PDF
@@ -57,9 +64,13 @@ public class ConstructCOWData {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-		EventProperties properties = new EventProperties();
-		properties.getStorage(new EventDataTools(), null);
-		// FIXME do stuff
+		dataTools = new EventDataTools();
+		properties = new EventProperties();
+		
+		List<AnnotationType<?>> annotationTypes = new ArrayList<AnnotationType<?>>();
+		annotationTypes.addAll(dataTools.getAnnotationTypesNLP());
+		annotationTypes.remove(AnnotationTypeNLP.SENTENCE);
+		storage = properties.getStorage(new EventDataTools(), annotationTypes);
 		
 		Map<Integer, Pair<Integer, String>> narratives = parseNarrativesOldFormat(args[0]);
 		narratives.putAll(parseNarrativesNewFormat(args[1]));
@@ -286,11 +297,9 @@ public class ConstructCOWData {
 		return disputes;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private static void outputNarratives(String path, Map<Integer, Pair<Integer, String>> narratives) {
-		EventDataTools dataTools = new EventDataTools();
-		
 		PipelineNLPStanford pipelineStanford = new PipelineNLPStanford();
-		pipelineStanford.initialize();
 		
 		NELLMentionCategorizer mentionCategorizer = new NELLMentionCategorizer(
 				new CategoryList(CategoryList.Type.ALL_NELL_CATEGORIES, new CatDataTools()), 
@@ -301,9 +310,11 @@ public class ConstructCOWData {
 		
 		PipelineNLP basePipeline = pipelineStanford.weld(pipelineMicroCat);
 		
+		if (storage.hasCollection(properties.getMID4NarrativeDocumentCollectionName())) {
+			storage.deleteCollection(properties.getMID4NarrativeDocumentCollectionName());
+		}
 		
-		// FIXME DocumentSetNLP<DocumentNLP> documents = new DocumentSetNLP<DocumentNLP>("narratives");
-		
+		StoredCollection<DocumentNLPMutable, Document> documents = (StoredCollection<DocumentNLPMutable, Document>)storage.createCollection(properties.getMID4NarrativeDocumentCollectionName(), new SerializerDocumentNLPBSON(dataTools));
 		
 		for (Entry<Integer, Pair<Integer, String>> entry : narratives.entrySet()) {
 			final int dispNum3 = entry.getKey();
@@ -336,20 +347,24 @@ public class ConstructCOWData {
 			}
 			
 			PipelineNLP pipeline = basePipeline.weld(metaDataPipeline);
-			// FIXME DocumentNLP document = new DocumentNLPInMemory(dataTools, String.valueOf(dispNum3), narrativeText, Language.English, pipeline, null, true);
-			// documents.add(document);
-		
+			DocumentNLPMutable document = new DocumentNLPInMemory(dataTools, String.valueOf(dispNum3), narrativeText);
+			pipeline.run(document);
+			documents.addItem(document);
 		}
-		
-		// FIXME documents.saveToJSONDirectory(path);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private static void outputDisputes(String path, List<MIDDispute> disputes) throws IOException {
 		System.out.println("Outputting disputes...");
+		
+		if (storage.hasCollection(properties.getMID4CollectionName())) {
+			storage.deleteCollection(properties.getMID4CollectionName());
+		}
+		
+		StoredCollection<MIDDispute, Document> mid4Collection = (StoredCollection<MIDDispute, Document>)storage.createCollection(properties.getMID4CollectionName(), new SerializerMIDDisputeBSON());
+
 		for (MIDDispute dispute : disputes) {
-			BufferedWriter w = new BufferedWriter(new FileWriter(path + "/" + dispute.getDispNum3() + ".json"));
-			w.write(dispute.toJSON().toString() + "\n");
-			w.close();
+			mid4Collection.addItem(dispute);
 		}
 	}
 }

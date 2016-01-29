@@ -27,6 +27,11 @@
 	</extensions>
   </build>
   <dependencies>
+  	<dependency>
+ 		<groupId>edu.psu.ist.acs</groupId>
+ 		<artifactId>micro-yadll</artifactId>
+ 		<version>0.0.1-SNAPSHOT</version>
+    </dependency>
     <dependency>
  		<groupId>org.json</groupId>
  		<artifactId>json</artifactId>
