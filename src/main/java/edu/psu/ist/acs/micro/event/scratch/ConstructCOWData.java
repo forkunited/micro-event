@@ -59,21 +59,25 @@ public class ConstructCOWData {
 	 * 	2 => Input MID incident participant CSV file
 	 *  3 => Input MID incident CSV file
 	 *  4 => Input MID CSV file
+	 *  5 => Only disputes?
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
 		dataTools = new EventDataTools();
 		properties = new EventProperties();
+		boolean onlyDisputes = Boolean.valueOf(args[5]);
 		
 		List<AnnotationType<?>> annotationTypes = new ArrayList<AnnotationType<?>>();
 		annotationTypes.addAll(dataTools.getAnnotationTypesNLP());
 		annotationTypes.remove(AnnotationTypeNLP.SENTENCE);
 		storage = properties.getStorage(new EventDataTools(), annotationTypes);
 		
-		Map<Integer, Pair<Integer, String>> narratives = parseNarrativesOldFormat(args[0]);
-		narratives.putAll(parseNarrativesNewFormat(args[1]));
-		outputNarratives(narratives);
-	
+		if (!onlyDisputes) {
+			Map<Integer, Pair<Integer, String>> narratives = parseNarrativesOldFormat(args[0]);
+			narratives.putAll(parseNarrativesNewFormat(args[1]));
+			outputNarratives(narratives);
+		}
+		
 		Map<Integer, List<MIDIncident.Participant>> incidentParticipants = parseIncidentParticipants(args[2]);
 		Map<Integer, List<MIDIncident>> incidents = parseIncidents(args[3], incidentParticipants);
 		List<MIDDispute> disputes = parseDisputes(args[4], incidents);
