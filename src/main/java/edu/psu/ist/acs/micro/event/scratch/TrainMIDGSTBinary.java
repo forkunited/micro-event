@@ -29,7 +29,6 @@ import edu.psu.ist.acs.micro.event.data.annotation.MIDDispute;
 import edu.psu.ist.acs.micro.event.data.annotation.MIDIncident;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
 import edu.psu.ist.acs.micro.event.util.EventProperties;
-import edu.psu.ist.acs.micro.yadll.model.SupervisedModelYADLL;
 
 public class TrainMIDGSTBinary {
 	public enum PredictionType {
