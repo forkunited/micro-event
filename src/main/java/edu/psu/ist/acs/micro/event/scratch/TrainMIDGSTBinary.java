@@ -180,9 +180,9 @@ public class TrainMIDGSTBinary {
 		
 		dataTools.setRandomSeed(randomSeed);
 		datumTools = DocumentNLPDatum.getWeightedStringListTools(dataTools);
-		datumTools.addGenericModel(new SupervisedModelYADLL<DocumentNLPDatum<WeightedStringList>, WeightedStringList>());
 		
 		context = Context.deserialize(datumTools, FileUtil.getFileReader(experimentInputPath));
+		
 		if (context == null) {
 			dataTools.getOutputWriter().debugWriteln("ERROR: Failed to deserialize context.");
 			return false;
