@@ -81,8 +81,6 @@ public class TrainMIDGSTBinary {
 			datumTools.addLabelIndicator(labelIndicator);
 		}
 		
-		datumTools.addGenericModel(new SupervisedModelYADLL<DocumentNLPDatum<WeightedStringList>, WeightedStringList>());
-		
 		ValidationGSTBinary<DocumentNLPDatum<Boolean>,DocumentNLPDatum<WeightedStringList>,WeightedStringList> validation = 
 				new ValidationGSTBinary<DocumentNLPDatum<Boolean>, DocumentNLPDatum<WeightedStringList>, WeightedStringList>(
 						experimentName, 
@@ -182,6 +180,7 @@ public class TrainMIDGSTBinary {
 		
 		dataTools.setRandomSeed(randomSeed);
 		datumTools = DocumentNLPDatum.getWeightedStringListTools(dataTools);
+		datumTools.addGenericModel(new SupervisedModelYADLL<DocumentNLPDatum<WeightedStringList>, WeightedStringList>());
 		
 		context = Context.deserialize(datumTools, FileUtil.getFileReader(experimentInputPath));
 		if (context == null) {
