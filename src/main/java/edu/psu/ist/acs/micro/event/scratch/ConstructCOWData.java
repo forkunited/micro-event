@@ -59,8 +59,6 @@ public class ConstructCOWData {
 	 * 	2 => Input MID incident participant CSV file
 	 *  3 => Input MID incident CSV file
 	 *  4 => Input MID CSV file
-	 *  5 => Output narratives storage collection
-	 *  6 => Output MID storage collection
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
@@ -74,12 +72,12 @@ public class ConstructCOWData {
 		
 		Map<Integer, Pair<Integer, String>> narratives = parseNarrativesOldFormat(args[0]);
 		narratives.putAll(parseNarrativesNewFormat(args[1]));
-		outputNarratives(args[5], narratives);
+		outputNarratives(narratives);
 	
 		Map<Integer, List<MIDIncident.Participant>> incidentParticipants = parseIncidentParticipants(args[2]);
 		Map<Integer, List<MIDIncident>> incidents = parseIncidents(args[3], incidentParticipants);
 		List<MIDDispute> disputes = parseDisputes(args[4], incidents);
-		outputDisputes(args[6], disputes);
+		outputDisputes(disputes);
 	}
 	
 	/**
@@ -298,7 +296,7 @@ public class ConstructCOWData {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private static void outputNarratives(String path, Map<Integer, Pair<Integer, String>> narratives) {
+	private static void outputNarratives(Map<Integer, Pair<Integer, String>> narratives) {
 		PipelineNLPStanford pipelineStanford = new PipelineNLPStanford();
 		
 		NELLMentionCategorizer mentionCategorizer = new NELLMentionCategorizer(
@@ -354,7 +352,7 @@ public class ConstructCOWData {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private static void outputDisputes(String path, List<MIDDispute> disputes) throws IOException {
+	private static void outputDisputes(List<MIDDispute> disputes) throws IOException {
 		System.out.println("Outputting disputes...");
 		
 		if (storage.hasCollection(properties.getMID4CollectionName())) {
