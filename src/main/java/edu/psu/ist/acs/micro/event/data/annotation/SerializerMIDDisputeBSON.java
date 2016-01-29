@@ -64,7 +64,6 @@ public class SerializerMIDDisputeBSON extends Serializer<MIDDispute, Document>{
 
 	@Override
 	public List<edu.cmu.ml.rtw.generic.data.Serializer.Index<MIDDispute>> getIndices() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.indices;
 	}
 }
