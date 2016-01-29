@@ -50,7 +50,7 @@ public class TrainMIDGSTBinary {
 	public static void main(String[] args) {
 		if (!parseArgs(args))
 			return;
-		
+		System.out.println(System.getProperty("java.library.path"));
 		List<DataSet<DocumentNLPDatum<WeightedStringList>, WeightedStringList>> data = constructData();
 		
 		DataSet<DocumentNLPDatum<WeightedStringList>, WeightedStringList> trainData = data.get(0);

@@ -27,11 +27,6 @@
 	</extensions>
   </build>
   <dependencies>
-      <dependency>
-         <groupId>BIDMat</groupId>
-         <artifactId>BIDMat</artifactId>
-         <version>BIDMat</version>
-    </dependency>
     <dependency>
  		<groupId>org.json</groupId>
  		<artifactId>json</artifactId>
