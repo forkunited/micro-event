@@ -16,13 +16,13 @@ ts_str_fn strBoW=String(cleanFn="CatBagOfWordsFeatureCleanFn");
 
 feature fdoc1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstTokenSpan", fn=(${strBoW} o ${doc1}));
 
-model yadll=YADLL(numEpochs=2)
+model yadll=YADLL(numEpochs="2")
 {
 	array validLabels=${validLabels};
 };
 
 gs g=GridSearch() {
-	dimension numEpochs=Dimension(name="numEpochs", values=(2,4), trainingDimension="true");
+	dimension numEpochs=Dimension(name="numEpochs", values=("2","4"), trainingDimension="true");
 	
 	model model=${yadll};
 	evaluation evaluation=${accuracy};
