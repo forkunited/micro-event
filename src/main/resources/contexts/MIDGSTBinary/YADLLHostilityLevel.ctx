@@ -22,7 +22,7 @@ model yadll=YADLL(numEpochs="2")
 };
 
 gs g=GridSearch() {
-	dimension numEpochs=Dimension(name="numEpochs", values=("11"), trainingDimension="true");
+	dimension numEpochs=Dimension(name="numEpochs", values=("100"), trainingDimension="true");
 	
 	model model=${yadll};
 	evaluation evaluation=${accuracy};
