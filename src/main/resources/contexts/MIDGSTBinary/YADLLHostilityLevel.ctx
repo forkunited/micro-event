@@ -34,7 +34,7 @@ gs g=GridSearch() {
  		dimension fnParameters0=Dimension(name="fnParameters", parentValueIndex="0", values=(${netParams0}), trainingDimension="true") {
  			dimension Sigmoid_0_input=Dimension(name="Sigmoid_0_input", parentValueIndex="0", values=("FanIn_0*x+Zeros_1"), trainingDimension="true");
  			dimension Sigmoid_0_size=Dimension(name="Sigmoid_0_size", parentValueIndex="0", values=("2"), trainingDimension="true");
-			dimension OutputFnNode=Dimension(name="outputFnNode", parentValueIndex="0", values=("Sigmoid_0"), trainingDimension="true");
+			dimension targetFnNode=Dimension(name="targetFnNode", parentValueIndex="0", values=("Sigmoid_0"), trainingDimension="true");
  		};
  		
  		dimension fnParameters1=Dimension(name="fnParameters", parentValueIndex="1", values=(${netParams1}), trainingDimension="true") {
@@ -42,7 +42,7 @@ gs g=GridSearch() {
  			dimension Relu_0_size=Dimension(name="Relu_0_size", parentValueIndex="0", values=("500", "1000"), trainingDimension="true");
  			dimension Sigmoid_1_input=Dimension(name="Sigmoid_1_input", parentValueIndex="0", values=("FanIn_2*Relu_0+Zeros_3"), trainingDimension="true");
  			dimension Sigmoid_1_size=Dimension(name="Sigmoid_1_size", parentValueIndex="0", values=("2"), trainingDimension="true");
- 			dimension OutputFnNode=Dimension(name="outputFnNode", parentValueIndex="0", values=("Sigmoid_1"), trainingDimension="true");
+ 			dimension targetFnNode=Dimension(name="targetFnNode", parentValueIndex="0", values=("Sigmoid_1"), trainingDimension="true");
  		};
  		
  		dimension fnParameters2=Dimension(name="fnParameters", parentValueIndex="2", values=(${netParams2}), trainingDimension="true") {
@@ -52,7 +52,7 @@ gs g=GridSearch() {
  			dimension Relu_1_size=Dimension(name="Relu_1_size", parentValueIndex="0", values=("500", "1000"), trainingDimension="true");
  			dimension Sigmoid_2_input=Dimension(name="Sigmoid_2_input", parentValueIndex="0", values=("FanIn_4*Relu_1+Zeros_5"), trainingDimension="true");
  			dimension Sigmoid_2_size=Dimension(name="Sigmoid_2_size", parentValueIndex="0", values=("2"), trainingDimension="true");
- 			dimension OutputFnNode=Dimension(name="outputFnNode", parentValueIndex="0", values=("Sigmoid_2"), trainingDimension="true");
+ 			dimension targetFnNode=Dimension(name="targetFnNode", parentValueIndex="0", values=("Sigmoid_2"), trainingDimension="true");
  		}; 			
  	};
  	
