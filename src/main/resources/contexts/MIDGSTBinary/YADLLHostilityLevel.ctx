@@ -52,7 +52,8 @@ gs g=GridSearch() {
  			dimension Sigmoid_2_size=Dimension(name="Sigmoid_2_size", parentValueIndex="0", values=("2"), trainingDimension="true");
  		};
  			
- 	}
+ 	};
+ 	
 	dimension stepSize=Dimension(name="stepSize", values=(".01", ".1"), trainingDimension="true");
 	dimension numEpochs=Dimension(name="numEpochs", values=("5","10","40","160"), trainingDimension="true");
 	
