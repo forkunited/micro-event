@@ -33,7 +33,7 @@ gs g=GridSearch() {
  	dimension fnNodes=Dimension(name="fnNodes", values=(${net0}, ${reluNet1}, ${reluNet2}), trainingDimension="true") {
  		dimension fnParameters0=Dimension(name="fnParameters", parentValueIndex="0", values=(${netParams0}), trainingDimension="true") {
  			dimension Sigmoid_0_input=Dimension(name="Sigmoid_0_input", parentValueIndex="0", values=("FanIn_0*x+Zeros_1"), trainingDimension="true");
- 			dimension Sigmoid_0_size=Dimension(name="Sigmoid_0_size", parentValueIndex="0", values=("2"), trainingDimension="true"); 		
+ 			dimension Sigmoid_0_size=Dimension(name="Sigmoid_0_size", parentValueIndex="0", values=("2"), trainingDimension="true");
 			dimension outputFnNode=Dimension(name="outputFnNode", parentValueIndex="0", values=("Sigmoid_0"), trainingDimension="true");
  		};
  		
