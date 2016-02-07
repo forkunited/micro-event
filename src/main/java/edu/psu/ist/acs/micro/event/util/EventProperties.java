@@ -31,12 +31,6 @@ public class EventProperties extends Properties {
 	private String storageFileSystemMicroEventDirPath;
 	private boolean useMongoStorage;
 	
-	private String midNewsUnlabeledDocumentCollectionName;
-	private String midNewsRelevanceLabeledDocumentCollectionName;
-	
-	private String mid4CollectionName;
-	private String mid4NarrativeDocumentCollectionName;
-	
 	public EventProperties() {
 		this(null);
 	}
@@ -49,10 +43,6 @@ public class EventProperties extends Properties {
 		this.storageFileSystemMicroEventDirPath = loadProperty("storageFileSystemMicroEventDirPath");
 		this.storageMongoMicroEventDatabaseName = loadProperty("storageMongoMicroEventDatabaseName");
 		this.useMongoStorage = Boolean.valueOf(loadProperty("useMongoStorage"));
-		this.midNewsUnlabeledDocumentCollectionName = loadProperty("midNewsUnlabeledDocumentCollectionName");
-		this.midNewsRelevanceLabeledDocumentCollectionName = loadProperty("midNewsRelevanceLabeledDocumentCollectionName");
-		this.mid4CollectionName = loadProperty("mid4CollectionName");
-		this.mid4NarrativeDocumentCollectionName = loadProperty("mid4NarrativeDocumentCollectionName");
 	}
 	
 	public String getContextInputDirPath() {
@@ -72,21 +62,5 @@ public class EventProperties extends Properties {
 		} else {
 			return new StorageFileSystem<Document>(this.storageFileSystemMicroEventDirPath, serializers);
 		}
-	}
-	
-	public String getMIDNewsUnlabeledDocumentCollectionName() {
-		return this.midNewsUnlabeledDocumentCollectionName;
-	}
-	
-	public String getMIDNewsRelevanceLabeledDocumentCollectionName() {
-		return this.midNewsRelevanceLabeledDocumentCollectionName;
-	}
-	
-	public String getMID4CollectionName() {
-		return this.mid4CollectionName;
-	}
-	
-	public String getMID4NarrativeDocumentCollectionName() {
-		return this.mid4NarrativeDocumentCollectionName;
 	}
 }
