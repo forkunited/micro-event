@@ -164,11 +164,13 @@ public class ConstructTimeBankDense {
 					relType = TimeMLRelType.NONE_VAGUE;
 				}
 				
-				if (!tlinkTypes.containsKey(lineParts[0]))
-					tlinkTypes.put(lineParts[0], new HashMap<>());
-				if (!tlinkTypes.get(lineParts[0]).containsKey(lineParts[1]))
-					tlinkTypes.get(lineParts[0]).put(lineParts[1], new HashMap<>());
-				tlinkTypes.get(lineParts[0]).get(lineParts[1]).put(lineParts[2], relType);
+				String name = lineParts[0] + ".tml";
+				
+				if (!tlinkTypes.containsKey(name))
+					tlinkTypes.put(name, new HashMap<>());
+				if (!tlinkTypes.get(name).containsKey(lineParts[1]))
+					tlinkTypes.get(name).put(lineParts[1], new HashMap<>());
+				tlinkTypes.get(name).get(lineParts[1]).put(lineParts[2], relType);
 			}
 		} catch (IOException e) {
 			return null;
