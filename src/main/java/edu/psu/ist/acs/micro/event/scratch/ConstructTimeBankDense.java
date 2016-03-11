@@ -332,15 +332,26 @@ public class ConstructTimeBankDense {
 			List<Element> timexElements = (List<Element>)timexesElement.getChildren("timex");
 			for (Element timexElement : timexElements) {
 				TimeExpression timex = timexFromXML(timexElement, document, sentenceIndex);
+				if (timex == null) {
+					System.out.println("ERROR: Failed to load timex " + timexElement.toString());
+					System.exit(0);
+				}
+				
 				timexRefs.add(new Triple<>(timex.getTokenSpan(), timex.getStoreReference(), null));
 			}
 			
 			Element eventsElement = entryElement.getChild("events");
 			List<Element> eventElements = (List<Element>)eventsElement.getChildren("event");
-			for (Element eventElement : eventElements) {
-				List<EventMention> eventMentions = eventFromXML(eventElement, document, sentenceIndex);
-				for (EventMention eventMention : eventMentions) {
-					eventMentionRefs.add(new Triple<>(eventMention.getTokenSpan(), eventMention.getStoreReference(), null));
+			if (eventElements != null) {
+				for (Element eventElement : eventElements) {
+					List<EventMention> eventMentions = eventFromXML(eventElement, document, sentenceIndex);
+					if (eventMentions == null) {
+						System.out.println("ERROR: Failed to load events " + eventsElement.toString());
+						System.exit(0);	
+					}
+					for (EventMention eventMention : eventMentions) {
+						eventMentionRefs.add(new Triple<>(eventMention.getTokenSpan(), eventMention.getStoreReference(), null));
+					}
 				}
 			}
 		}
@@ -378,6 +389,9 @@ public class ConstructTimeBankDense {
 						return new Pair<StoreReference, Double>(creationTime.getStoreReference(), null);
 					}
 				});
+			} else {
+				System.out.println("ERROR: Failed to load creation time.");
+				System.exit(0);
 			}
 		}
 		
