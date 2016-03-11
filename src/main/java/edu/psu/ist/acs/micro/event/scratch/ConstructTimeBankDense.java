@@ -5,8 +5,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.jdom2.Attribute;
 import org.jdom2.Document;
@@ -73,6 +75,7 @@ public class ConstructTimeBankDense {
 	private static StoredItemSetInMemoryLazy<TLink, TLink> storedTLinks;
 	//private static StoredItemSetInMemoryLazy<Signal, Signal> storedSignals;
 	
+	private static Set<String> skippedPos = new HashSet<String>();
 	private static Map<String, Map<String, Map<String, TimeMLRelType>>> tlinkTypes;
 	private static int linkId = 0;
 	
@@ -134,6 +137,9 @@ public class ConstructTimeBankDense {
 			
 			i++;
 		}
+		
+		for (String skipped : skippedPos) 
+			System.out.println("Note: " + skipped + " was replaced with SYM pos tag");
 	}
 	
 	private static Map<String, Map<String, Map<String, TimeMLRelType>>> loadTLinkTypes(String tlinkFilePath) {
@@ -193,6 +199,8 @@ public class ConstructTimeBankDense {
 		if (name == null)
 			return false;
 		
+		System.out.println("Loading document " + name + "...");
+		
 		PipelineNLPExtendable pipeline = new PipelineNLPExtendable();
 		DocumentNLPMutable document = new DocumentNLPInMemory(dataTools, name, storageName, DOCUMENT_COLLECTION);
 		
@@ -251,7 +259,7 @@ public class ConstructTimeBankDense {
 						tag = PoSTag.valueOf(posStr);
 					} catch (IllegalArgumentException e) {
 						tag = PoSTag.SYM;
-						System.out.println("Missing pos tag " + posStr + "... replacing with SYM.");
+						skippedPos.add(posStr);
 					}
 					
 					posTags[sentenceIndex][j] = 
@@ -385,8 +393,6 @@ public class ConstructTimeBankDense {
 		document = pipeline.run(document);
 
 		storedDocuments.addItem(document);
-
-		System.out.println("Loaded document " + document.getName());
 		
 		return true;
 	}
