@@ -76,6 +76,8 @@ public class ConstructTimeBankDense {
 	//private static StoredItemSetInMemoryLazy<Signal, Signal> storedSignals;
 	
 	private static Set<String> skippedPos = new HashSet<String>();
+	private static Set<String> eventIds = new HashSet<String>();
+	private static Set<String> timexIds = new HashSet<String>();
 	private static Map<String, Map<String, Map<String, TimeMLRelType>>> tlinkTypes;
 	private static int linkId = 0;
 	
@@ -137,6 +139,9 @@ public class ConstructTimeBankDense {
 			
 			i++;
 		}
+		
+		System.out.println("Timex count: " + timexIds.size());
+		System.out.println("Event count: " + eventIds.size());
 		
 		for (String skipped : skippedPos) 
 			System.out.println("Note: " + skipped + " was replaced with SYM pos tag");
@@ -555,6 +560,8 @@ public class ConstructTimeBankDense {
 														  valueFromFunctionReference,
 														  timeMLMod);
 		
+		timexIds.add(document.getName() + "_" + id);
+		
 		if (!storedTimeExpressions.addItem(timeExpression))
 			return null;
 		else 
@@ -679,6 +686,8 @@ public class ConstructTimeBankDense {
 					timeMLPoS,
 					modality,
 					cardinality);
+			
+			eventIds.add(document.getName() + "_" + id);
 			
 			if (!storedEventMentions.addItem(eventMention)) {
 				System.out.println("ERROR: Failed to add event " + id + " to storage.");
