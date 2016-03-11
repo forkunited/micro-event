@@ -221,7 +221,7 @@ public class EventMention implements TLinkable {
 			if (this.id != null)
 				json.put("id", this.id);
 			if (this.tokenSpan != null)
-				json.put("tokenSpan", this.tokenSpan.toJSON(SerializationType.SENTENCE));
+				json.put("tokenSpan", this.tokenSpan.toJSON(SerializationType.STORE_REFERENCE));
 			if (this.sourceId != null)
 				json.put("sourceId", this.sourceId);
 			if (this.sourceInstanceId != null)
