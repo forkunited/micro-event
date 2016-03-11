@@ -74,6 +74,7 @@ public class ConstructTimeBankDense {
 	//private static StoredItemSetInMemoryLazy<Signal, Signal> storedSignals;
 	
 	private static Map<String, Map<String, TimeMLRelType>> tlinkTypes;
+	private static int linkId = 0;
 	
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
@@ -653,7 +654,6 @@ public class ConstructTimeBankDense {
 	}
 	
 	public static TLink tlinkFromXML(Element element, DocumentNLP document) {
-		boolean hasId = false;
 		boolean hasOrigin = false;
 		boolean hasSourceId = false;
 		boolean hasTargetId = false;
@@ -662,9 +662,7 @@ public class ConstructTimeBankDense {
 			
 		List<Attribute> attributes = (List<Attribute>)element.getAttributes();
 		for (Attribute attribute : attributes) {
-			if (attribute.getName().equals("id"))
-				hasId = true;
-			else if (attribute.getName().equals("origin"))
+			if (attribute.getName().equals("origin"))
 				hasOrigin = true;
 			else if (attribute.getName().equals("event1"))
 				hasSourceId = true;
@@ -676,12 +674,8 @@ public class ConstructTimeBankDense {
 				hasSyntax = true;
 		}
 		
-		String id = null;
-		if (hasId) {
-			id = element.getAttributeValue("id");
-		} else {
-			return null;
-		}
+		linkId++;
+		String id = String.valueOf(linkId);
 		
 		String origin = null;
 		if (hasOrigin)
