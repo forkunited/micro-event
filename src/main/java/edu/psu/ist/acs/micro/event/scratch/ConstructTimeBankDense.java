@@ -189,7 +189,7 @@ public class ConstructTimeBankDense {
 			return false;
 		
 		PipelineNLPExtendable pipeline = new PipelineNLPExtendable();
-		DocumentNLPMutable document = new DocumentNLPInMemory(dataTools, name);
+		DocumentNLPMutable document = new DocumentNLPInMemory(dataTools, name, storageName, DOCUMENT_COLLECTION);
 		
 		List<Element> entryElements = (List<Element>)element.getChildren("entry");
 		Pair<Token, Double>[][] tokens = new Pair[entryElements.size()][];
