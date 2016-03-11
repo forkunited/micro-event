@@ -246,7 +246,14 @@ public class ConstructTimeBankDense {
 				posTags[sentenceIndex] = new Pair[tElements.size()];
 				for (int j = 0; j < tokens[sentenceIndex].length; j++) {
 					String posStr = constituencyParses.get(sentenceIndex).getFirst().getTokenConstituent(j).getLabel();
-					if (posStr.equals(".") || posStr.equals(",") || posStr.equals(";") || posStr.equals(":"))
+					if (posStr.equals(".") 
+							|| posStr.equals(",") 
+							|| posStr.equals(";") 
+							|| posStr.equals(":")
+							|| posStr.equals("''")
+							|| posStr.equals("``")
+							|| posStr.equals("'")
+							|| posStr.equals("`"))
 						posStr = "SYM";
 					posTags[sentenceIndex][j] = 
 						new Pair<PoSTag, Double>(
