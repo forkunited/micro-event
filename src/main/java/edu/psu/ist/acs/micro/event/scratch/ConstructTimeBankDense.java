@@ -330,23 +330,25 @@ public class ConstructTimeBankDense {
 		
 			Element timexesElement = entryElement.getChild("timexes");
 			List<Element> timexElements = (List<Element>)timexesElement.getChildren("timex");
-			for (Element timexElement : timexElements) {
-				TimeExpression timex = timexFromXML(timexElement, document, sentenceIndex);
-				if (timex == null) {
-					System.out.println("ERROR: Failed to load timex " + timexElement.toString());
-					System.exit(0);
+			if (timexElements != null && timexElements.size() != 0) {
+				for (Element timexElement : timexElements) {
+					TimeExpression timex = timexFromXML(timexElement, document, sentenceIndex);
+					if (timex == null) {
+						System.out.println("ERROR: Failed to load timex " + timexElement.toString());
+						System.exit(0);
+					}
+					
+					timexRefs.add(new Triple<>(timex.getTokenSpan(), timex.getStoreReference(), null));
 				}
-				
-				timexRefs.add(new Triple<>(timex.getTokenSpan(), timex.getStoreReference(), null));
 			}
 			
 			Element eventsElement = entryElement.getChild("events");
 			List<Element> eventElements = (List<Element>)eventsElement.getChildren("event");
-			if (eventElements != null) {
+			if (eventElements != null && eventElements.size() != 0) {
 				for (Element eventElement : eventElements) {
 					List<EventMention> eventMentions = eventFromXML(eventElement, document, sentenceIndex);
 					if (eventMentions == null) {
-						System.out.println("ERROR: Failed to load events " + eventsElement.toString());
+						System.out.println("ERROR: Failed to load events " + eventElement.toString());
 						System.exit(0);	
 					}
 					for (EventMention eventMention : eventMentions) {
