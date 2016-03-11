@@ -721,6 +721,11 @@ public class ConstructTimeBankDense {
 				targetId = ((EventMention)targetObj).getSourceId();
 			}
 			
+			if (!tlinkTypes.containsKey(sourceId) || !tlinkTypes.get(sourceId).containsKey(targetId)) {
+				System.out.println("ERROR: Missing link " + sourceId + " " + targetId);
+				System.exit(0);
+			}
+			
 			TimeMLRelType fineGrainedType = tlinkTypes.get(sourceId).get(targetId);
 			TimeMLRelType coarseGrainedType = TimeMLRelType.valueOf(element.getAttributeValue("relation"));
 			
@@ -731,7 +736,7 @@ public class ConstructTimeBankDense {
 									|| fineGrainedType.equals(TimeMLRelType.NONE_VAGUE)))) {
 				timeMLRelType = fineGrainedType;
 			} else {
-				System.out.println("ERROR: TLink type mismatch");
+				System.out.println("ERROR: TLink type mismatch " + sourceId + " " + targetId);
 				System.exit(0);
 			}
 		}
