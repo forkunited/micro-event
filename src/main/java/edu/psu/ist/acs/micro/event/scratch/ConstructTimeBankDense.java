@@ -677,8 +677,10 @@ public class ConstructTimeBankDense {
 					modality,
 					cardinality);
 			
-			if (!storedEventMentions.addItem(eventMention))
+			if (!storedEventMentions.addItem(eventMention)) {
+				System.out.println("ERROR: Failed to add event " + id + " to storage.");
 				return null;
+			}
 			
 			events.add(eventMention);
 		}
