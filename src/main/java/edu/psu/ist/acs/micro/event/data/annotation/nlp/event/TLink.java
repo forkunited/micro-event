@@ -329,9 +329,9 @@ public class TLink implements StoredJSONSerializable {
 			if (this.targetReference != null)
 				json.put("targetRef", this.targetReference.toJSON());
 			if (this.signal != null)
-				json.put("signal", this.signal.getStoreReference());
+				json.put("signal", this.signal.getStoreReference().toJSON());
 			if (this.timeMLRelType != null)
-				json.put("timeMLRelType", this.timeMLRelType);
+				json.put("timeMLRelType", this.timeMLRelType.toString());
 			if (this.syntax != null)
 				json.put("syntax", this.syntax);
 		} catch (JSONException e) {

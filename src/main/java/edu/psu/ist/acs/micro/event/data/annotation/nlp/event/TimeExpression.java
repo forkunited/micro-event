@@ -286,7 +286,7 @@ public class TimeExpression implements TLinkable {
 			if (this.tokenSpan != null)
 				json.put("tokenSpan", this.tokenSpan.toJSON(SerializationType.STORE_REFERENCE));
 			if (this.timeMLType != null)
-				json.put("timeMLType", this.timeMLType);
+				json.put("timeMLType", this.timeMLType.toString());
 			if (this.startTimeReference != null)
 				json.put("startTime", this.startTimeReference.toJSON());
 			if (this.endTimeReference != null)
@@ -298,7 +298,7 @@ public class TimeExpression implements TLinkable {
 			if (this.quant != null)
 				json.put("quant", this.quant);
 			if (this.timeMLDocumentFunction != null)
-				json.put("timeMLDocumentFunction", this.timeMLDocumentFunction);
+				json.put("timeMLDocumentFunction", this.timeMLDocumentFunction.toString());
 			
 			json.put("temporalFunction", this.temporalFunction);
 			
@@ -307,7 +307,7 @@ public class TimeExpression implements TLinkable {
 			if (this.valueFromFunctionReference != null)
 				json.put("valueFromFunction", this.valueFromFunctionReference.toJSON());
 			if (this.timeMLMod != null)
-				json.put("timeMLMod", this.timeMLMod);
+				json.put("timeMLMod", this.timeMLMod.toString());
 		} catch (JSONException e) {
 			return null;
 		}
