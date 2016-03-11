@@ -57,6 +57,7 @@ public class TimeExpression implements TLinkable {
 	private TokenSpan tokenSpan;
 	
 	private String id;
+	private String sourceId;
 	private TimeMLType timeMLType;
 	private StoreReference startTimeReference;
 	private StoreReference endTimeReference;
@@ -85,6 +86,7 @@ public class TimeExpression implements TLinkable {
 						  StoreReference reference,
 						  TokenSpan tokenSpan,
 						  String id,
+						  String sourceId,
 						  TimeMLType timeMLType,
 						  StoreReference startTimeReference,
 						  StoreReference endTimeReference,
@@ -100,6 +102,7 @@ public class TimeExpression implements TLinkable {
 		this.reference = reference;
 		this.tokenSpan = tokenSpan;
 		this.id = id;
+		this.sourceId = sourceId;
 		this.timeMLType = timeMLType;
 		this.startTimeReference = startTimeReference;
 		this.endTimeReference = endTimeReference;
@@ -123,6 +126,10 @@ public class TimeExpression implements TLinkable {
 	
 	public String getId() {
 		return this.id;
+	}
+	
+	public String getSourceId() {
+		return this.sourceId;
 	}
 	
 	public TimeMLType getTimeMLType() {
@@ -283,6 +290,8 @@ public class TimeExpression implements TLinkable {
 		try {
 			if (this.id != null)
 				json.put("id", this.id);
+			if (this.sourceId != null)
+				json.put("sourceId", this.sourceId);
 			if (this.tokenSpan != null)
 				json.put("tokenSpan", this.tokenSpan.toJSON(SerializationType.STORE_REFERENCE));
 			if (this.timeMLType != null)
@@ -319,6 +328,8 @@ public class TimeExpression implements TLinkable {
 		try {
 			if (json.has("id"))
 				this.id = json.getString("id");
+			if (json.has("sourceId"))
+				this.sourceId = json.getString("sourceId");
 			if (json.has("tokenSpan"))
 				this.tokenSpan = TokenSpan.fromJSON(json.getJSONObject("tokenSpan"), this.dataTools.getStoredItemSetManager());
 			if (json.has("timeMLType"))

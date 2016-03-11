@@ -80,6 +80,9 @@ public class ConstructTimeBankDense {
 	private static Set<String> timexIds = new HashSet<String>();
 	private static Map<String, Map<String, Map<String, TimeMLRelType>>> tlinkTypes;
 	private static int linkId = 0;
+	private static int eventId = 0;
+	private static int timexId = 0;
+	private static Map<String, Map<String, StoreReference>> references = new HashMap<String, Map<String, StoreReference>>(); 
 	
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
@@ -492,7 +495,7 @@ public class ConstructTimeBankDense {
 		if (hasStartTimeId) {
 			String starttid = element.getAttributeValue("starttid");
 			if (starttid.length() > 0) {
-				startTimeReference = new StoreReference(storageName, TIME_EXPRESSION_COLLECTION, "id", starttid);
+				startTimeReference = makeTimexReference(document.getName(), starttid);
 			}
 		}
 		
@@ -500,7 +503,7 @@ public class ConstructTimeBankDense {
 		if (hasEndTimeId) {
 			String endtid = element.getAttributeValue("endtid");
 			if (endtid.length() > 0) {
-				endTimeReference = new StoreReference(storageName, TIME_EXPRESSION_COLLECTION, "id", endtid);
+				endTimeReference = makeTimexReference(document.getName(), endtid);
 			}
 		}
 		
@@ -526,7 +529,7 @@ public class ConstructTimeBankDense {
 		if (hasAnchorTimeId) {
 			String anchortid = element.getAttributeValue("anchortid");
 			if (anchortid.length() > 0) {
-				anchorTimeReference = new StoreReference(storageName, TIME_EXPRESSION_COLLECTION, "id", anchortid);
+				anchorTimeReference = makeTimexReference(document.getName(), anchortid);
 			}
 		}
 		
@@ -534,7 +537,7 @@ public class ConstructTimeBankDense {
 		if (hasValueFromFunctionId) {
 			String valueFromFunctionTid = element.getAttributeValue("valueFromFunctionTid");
 			if (valueFromFunctionTid.length() > 0) {
-				valueFromFunctionReference = new StoreReference(storageName, TIME_EXPRESSION_COLLECTION, "id", valueFromFunctionTid);
+				valueFromFunctionReference = makeTimexReference(document.getName(), valueFromFunctionTid);
 			}
 		}
 		
@@ -542,11 +545,12 @@ public class ConstructTimeBankDense {
 		if (hasTimeMLMod)
 			timeMLMod = TimeMLMod.valueOf(element.getAttributeValue("mod"));
 		
-		StoreReference reference = new StoreReference(storageName, TIME_EXPRESSION_COLLECTION, "id", id);
+		StoreReference reference = makeTimexReference(document.getName(), id);
 		
 		TimeExpression timeExpression = new TimeExpression(dataTools, 
 														  reference,
 														  tokenSpan,
+														  reference.getIndexValue(0).toString(),
 														  id,
 														  timeMLType,
 														  startTimeReference,
@@ -670,11 +674,12 @@ public class ConstructTimeBankDense {
 			if (hasCardinality)
 				cardinality = element.getAttributeValue("cardinality");
 			
-			StoreReference reference = new StoreReference(storageName, TIME_EXPRESSION_COLLECTION, "id", id);
+			StoreReference reference = makeEventReference(document.getName(), id);
 			EventMention eventMention = new EventMention(dataTools,
 					reference, 
-					id, 
-					sourceId, 
+					reference.getIndexValue(0).toString(), 
+					sourceId,
+					eiid,
 					tokenSpan,
 					null,
 					timeMLTense, 
@@ -736,18 +741,18 @@ public class ConstructTimeBankDense {
 		if (hasSourceId) {
 			String sourceId = element.getAttributeValue("event1");
 			if (sourceId.startsWith("e"))
-				sourceReference = new StoreReference(storageName, EVENT_MENTION_COLLECTION, "id", sourceId);
+				sourceReference = makeEventReference(document.getName(), sourceId);
 			else
-				sourceReference = new StoreReference(storageName, TIME_EXPRESSION_COLLECTION, "id", sourceId);
+				sourceReference = makeTimexReference(document.getName(), sourceId);
 		}
 		
 		StoreReference targetReference = null;
 		if (hasTargetId) {
 			String targetId = element.getAttributeValue("event2");
 			if (targetId.startsWith("e"))
-				targetReference = new StoreReference(storageName, EVENT_MENTION_COLLECTION, "id", targetId);
+				targetReference = makeEventReference(document.getName(), targetId);
 			else
-				targetReference = new StoreReference(storageName, TIME_EXPRESSION_COLLECTION, "id", targetId);
+				targetReference = makeTimexReference(document.getName(), targetId);
 		}
 		
 		TimeMLRelType timeMLRelType = null;
@@ -807,6 +812,28 @@ public class ConstructTimeBankDense {
 		return tlink;
 	}
 	
+	private static StoreReference makeEventReference(String documentName, String sourceId) {
+		if (!references.containsKey(documentName))
+			references.put(documentName, new HashMap<String, StoreReference>());
+		if (!references.get(documentName).containsKey(sourceId)) {
+			eventId++;
+			references.get(documentName).put(sourceId, new StoreReference(storageName, EVENT_MENTION_COLLECTION, "id", String.valueOf(eventId)));
+		}
+		
+		return references.get(documentName).get(sourceId);
+	}
+	
+	private static StoreReference makeTimexReference(String documentName, String sourceId) {
+		if (!references.containsKey(documentName))
+			references.put(documentName, new HashMap<String, StoreReference>());
+		if (!references.get(documentName).containsKey(sourceId)) {
+			timexId++;
+			references.get(documentName).put(sourceId, new StoreReference(storageName, TIME_EXPRESSION_COLLECTION, "id", String.valueOf(timexId)));
+		}
+		
+		return references.get(documentName).get(sourceId);
+	}
+
 	/*
 	public static Signal signalFfromXML(Element element, TempDocument document, int sentenceIndex) {
 		Signal signal = new Signal();

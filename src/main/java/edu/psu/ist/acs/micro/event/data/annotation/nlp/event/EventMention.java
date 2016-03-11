@@ -84,6 +84,7 @@ public class EventMention implements TLinkable {
 	private String id;
 	private TokenSpan tokenSpan;
 	private String sourceId;
+	private String sourceInstanceId;
 	private Signal signal;
 	private TimeMLTense timeMLTense;
 	private TimeMLAspect timeMLAspect;
@@ -111,6 +112,7 @@ public class EventMention implements TLinkable {
 						StoreReference reference, 
 						String id, 
 						String sourceId, 
+						String sourceInstanceId,
 						TokenSpan tokenSpan,
 						Signal signal,
 						TimeMLTense timeMLTense, 
@@ -126,6 +128,7 @@ public class EventMention implements TLinkable {
 		this.reference = reference;
 		this.id = id;
 		this.sourceId = sourceId;
+		this.sourceInstanceId = sourceInstanceId;
 		this.signal = signal;
 		this.tokenSpan = tokenSpan;
 		this.timeMLTense = timeMLTense;
@@ -159,6 +162,10 @@ public class EventMention implements TLinkable {
 	 */
 	public String getSourceId() {
 		return this.sourceId;
+	}
+	
+	public String getSourceInstanceId() {
+		return this.sourceInstanceId;
 	}
 	
 	public Signal getSignal() {
@@ -217,6 +224,8 @@ public class EventMention implements TLinkable {
 				json.put("tokenSpan", this.tokenSpan.toJSON(SerializationType.SENTENCE));
 			if (this.sourceId != null)
 				json.put("sourceId", this.sourceId);
+			if (this.sourceInstanceId != null)
+				json.put("sourceInstanceId", this.sourceInstanceId);
 			if (this.signal != null)
 				json.put("signal", this.signal.getStoreReference().toJSON()); 
 			if (this.timeMLTense != null)
@@ -253,6 +262,8 @@ public class EventMention implements TLinkable {
 				this.tokenSpan = TokenSpan.fromJSON(json.getJSONObject("tokenSpan"), this.dataTools.getStoredItemSetManager());
 			if (json.has("sourceId"))
 				this.sourceId = json.getString("sourceId");
+			if (json.has("sourceInstanceId"))
+				this.sourceInstanceId = json.getString("sourceInstanceId");
 			if (json.has("signal")) {
 				StoreReference r = new StoreReference();
 				if (!r.fromJSON(json.getJSONObject("signal")))
