@@ -73,7 +73,7 @@ public class ConstructTimeBankDense {
 	private static StoredItemSetInMemoryLazy<TLink, TLink> storedTLinks;
 	//private static StoredItemSetInMemoryLazy<Signal, Signal> storedSignals;
 	
-	private static Map<String, Map<String, TimeMLRelType>> tlinkTypes;
+	private static Map<String, Map<String, Map<String, TimeMLRelType>>> tlinkTypes;
 	private static int linkId = 0;
 	
 	@SuppressWarnings("unchecked")
@@ -136,8 +136,8 @@ public class ConstructTimeBankDense {
 		}
 	}
 	
-	private static Map<String, Map<String, TimeMLRelType>> loadTLinkTypes(String tlinkFilePath) {
-		Map<String, Map<String, TimeMLRelType>> tlinkTypes = new HashMap<String, Map<String, TimeMLRelType>>();
+	private static Map<String, Map<String, Map<String, TimeMLRelType>>> loadTLinkTypes(String tlinkFilePath) {
+		Map<String, Map<String, Map<String, TimeMLRelType>>> tlinkTypes = new HashMap<>();
 		BufferedReader r = FileUtil.getFileReader(tlinkFilePath);
 		
 		try {
@@ -146,27 +146,29 @@ public class ConstructTimeBankDense {
 				String[] lineParts = line.split("\t");
 				
 				TimeMLRelType relType = null;
-				if (lineParts[2].equals("s")) {
+				if (lineParts[3].equals("s")) {
 					relType = TimeMLRelType.SIMULTANEOUS;
-				} else if (lineParts[2].equals("b")) {
+				} else if (lineParts[3].equals("b")) {
 					relType = TimeMLRelType.BEFORE;
-				} else if (lineParts[2].equals("a")) {
+				} else if (lineParts[3].equals("a")) {
 					relType = TimeMLRelType.AFTER;
-				} else if (lineParts[2].equals("i")) {
+				} else if (lineParts[3].equals("i")) {
 					relType = TimeMLRelType.INCLUDES;
-				} else if (lineParts[2].equals("ii")) {
+				} else if (lineParts[3].equals("ii")) {
 					relType = TimeMLRelType.IS_INCLUDED;
-				} else if (lineParts[2].equals("mv")) {
+				} else if (lineParts[3].equals("mv")) {
 					relType = TimeMLRelType.MUTUAL_VAGUE;
-				} else if (lineParts[2].equals("pv")) {
+				} else if (lineParts[3].equals("pv")) {
 					relType = TimeMLRelType.PARTIAL_VAGUE;
-				} else if (lineParts[2].equals("nv")) {
+				} else if (lineParts[3].equals("nv")) {
 					relType = TimeMLRelType.NONE_VAGUE;
 				}
 				
 				if (!tlinkTypes.containsKey(lineParts[0]))
-					tlinkTypes.put(lineParts[0], new HashMap<String, TimeMLRelType>());
-				tlinkTypes.get(lineParts[0]).put(lineParts[1], relType);
+					tlinkTypes.put(lineParts[0], new HashMap<>());
+				if (!tlinkTypes.get(lineParts[0]).containsKey(lineParts[1]))
+					tlinkTypes.get(lineParts[0]).put(lineParts[1], new HashMap<>());
+				tlinkTypes.get(lineParts[0]).get(lineParts[1]).put(lineParts[2], relType);
 			}
 		} catch (IOException e) {
 			return null;
@@ -726,7 +728,7 @@ public class ConstructTimeBankDense {
 				System.exit(0);
 			}
 			
-			TimeMLRelType fineGrainedType = tlinkTypes.get(sourceId).get(targetId);
+			TimeMLRelType fineGrainedType = tlinkTypes.get(document.getName()).get(sourceId).get(targetId);
 			TimeMLRelType coarseGrainedType = TimeMLRelType.valueOf(element.getAttributeValue("relation"));
 			
 			if (fineGrainedType.equals(coarseGrainedType)
