@@ -761,14 +761,14 @@ public class ConstructTimeBankDense {
 			TLinkable targetObj = targetReference.resolve(dataTools, true);
 			String sourceId = null;
 			if (sourceObj.getTLinkableType() == Type.TIME) {
-				sourceId = ((TimeExpression)sourceObj).getId();
+				sourceId = ((TimeExpression)sourceObj).getSourceId();
 			} else {
 				sourceId = ((EventMention)sourceObj).getSourceId();
 			}
 			
 			String targetId = null;
 			if (targetObj.getTLinkableType() == Type.TIME) {
-				targetId = ((TimeExpression)targetObj).getId();
+				targetId = ((TimeExpression)targetObj).getSourceId();
 			} else {
 				targetId = ((EventMention)targetObj).getSourceId();
 			}
