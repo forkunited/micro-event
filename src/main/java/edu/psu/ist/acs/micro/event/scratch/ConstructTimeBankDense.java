@@ -616,6 +616,7 @@ public class ConstructTimeBankDense {
 												startTokenIndex, 
 												endTokenIndex);
 			} else {
+				System.out.println("ERROR: Event " + id + " missing offset.");
 				return null;
 			}
 			
