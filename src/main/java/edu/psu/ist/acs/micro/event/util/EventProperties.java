@@ -56,9 +56,9 @@ public class EventProperties extends Properties {
 		Map<String, Serializer<?, ?>> serializers = dataTools.getDocumentSerializers(new DocumentNLPInMemory(dataTools), annotationTypes);
 		
 		if (this.useMongoStorage) {
-			return new StorageMongo("localhost", this.storageMongoMicroEventDatabaseName, serializers);
+			return new StorageMongo("mongo", "localhost", this.storageMongoMicroEventDatabaseName, serializers);
 		} else {
-			return new StorageFileSystem<Document>(this.storageFileSystemMicroEventDirPath, serializers);
+			return new StorageFileSystem<Document>("fs", this.storageFileSystemMicroEventDirPath, serializers);
 		}
 	}
 }
