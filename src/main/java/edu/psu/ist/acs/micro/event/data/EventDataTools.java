@@ -24,8 +24,6 @@ import edu.psu.ist.acs.micro.event.util.EventProperties;
  *
  */
 public class EventDataTools extends DataTools {
-	private EventProperties properties;
-	
 	public EventDataTools() {
 		this(new EventProperties());
 		
@@ -37,7 +35,7 @@ public class EventDataTools extends DataTools {
 	}
 	
 	public EventDataTools(OutputWriter outputWriter, EventDataTools dataTools) {
-		this(outputWriter, dataTools.properties);
+		this(outputWriter, (EventProperties)dataTools.properties);
 		
 		this.timer = dataTools.timer;
 		
@@ -46,17 +44,13 @@ public class EventDataTools extends DataTools {
 	}
 	
 	public EventDataTools(OutputWriter outputWriter, EventProperties properties) {
-		super(outputWriter);
+		super(outputWriter, properties);
 		
 		this.properties = properties;
 		
 		// FIXME Make clean fns for this project?
 		DataTools catDataTools = new CatDataTools();
 		this.addCleanFn(catDataTools.getCleanFn("CatBagOfWordsFeatureCleanFn"));
-	}
-	
-	public EventProperties getProperties() {
-		return this.properties;
 	}
 	
 	@Override
