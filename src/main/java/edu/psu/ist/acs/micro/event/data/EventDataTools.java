@@ -1,12 +1,18 @@
 package edu.psu.ist.acs.micro.event.data;
 
+import java.util.Map;
 import java.util.Map.Entry;
 
 import edu.cmu.ml.rtw.generic.data.DataTools;
 import edu.cmu.ml.rtw.generic.data.Gazetteer;
+import edu.cmu.ml.rtw.generic.data.Serializer;
+import edu.cmu.ml.rtw.generic.data.SerializerJSONBSON;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
 import edu.cmu.ml.rtw.micro.cat.data.CatDataTools;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Signal;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression;
 import edu.psu.ist.acs.micro.event.util.EventProperties;
 
 /**
@@ -47,19 +53,6 @@ public class EventDataTools extends DataTools {
 		// FIXME Make clean fns for this project?
 		DataTools catDataTools = new CatDataTools();
 		this.addCleanFn(catDataTools.getCleanFn("CatBagOfWordsFeatureCleanFn"));
-		
-		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.ARTICLE_PUBLICATION_DATE);
-		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.ARTICLE_SOURCE);
-		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.ARTICLE_TITLE);
-		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.ARTICLE_BYLINE);
-		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.ARTICLE_DATELINE);
-		
-		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.MID_SVM_RELEVANCE_SCORE);
-		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.MID_SVM_RELEVANCE_CLASS);
-		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.MID_GOLD_RELEVANCE_CLASS);
-		
-		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.MID_DISPUTE_NUMBER_3);
-		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.MID_DISPUTE_NUMBER_4);	
 	}
 	
 	public EventProperties getProperties() {
@@ -69,5 +62,22 @@ public class EventDataTools extends DataTools {
 	@Override
 	public DataTools makeInstance() {
 		return new EventDataTools(this.outputWriter, this);
+	}
+	
+	@Override
+	public Map<String, Serializer<?, ?>> getSerializers() {
+		Map<String, Serializer<?, ?>> serializers = super.getSerializers();
+		
+		SerializerJSONBSON<EventMention> eventMentionSerializer = new SerializerJSONBSON<EventMention>("EventMention", new EventMention(this));
+		SerializerJSONBSON<Signal> signalSerializer = new SerializerJSONBSON<Signal>("Signal", new Signal(this));
+		SerializerJSONBSON<TimeExpression> timeExpressionSerializer = new SerializerJSONBSON<TimeExpression>("TimeExpression", new TimeExpression(this));
+		SerializerJSONBSON<TLink> tlinkSerializer = new SerializerJSONBSON<TLink>("TLink", new TLink(this));
+		
+		serializers.put(eventMentionSerializer.getName(), eventMentionSerializer);
+		serializers.put(signalSerializer.getName(), signalSerializer);
+		serializers.put(timeExpressionSerializer.getName(), timeExpressionSerializer);
+		serializers.put(tlinkSerializer.getName(), tlinkSerializer);
+		
+		return serializers;
 	}
 }

@@ -13,7 +13,6 @@ import edu.cmu.ml.rtw.generic.data.store.StorageFileSystem;
 import edu.cmu.ml.rtw.generic.data.store.StorageMongo;
 import edu.cmu.ml.rtw.generic.util.Properties;
 import edu.psu.ist.acs.micro.event.data.EventDataTools;
-import edu.psu.ist.acs.micro.event.data.annotation.SerializerMIDDisputeBSON;
 
 /**
  * EventProperties loads and represents a properties
@@ -55,8 +54,7 @@ public class EventProperties extends Properties {
 	
 	public Storage<?,Document> getStorage(EventDataTools dataTools, Collection<AnnotationType<?>> annotationTypes) {
 		Map<String, Serializer<?, ?>> serializers = dataTools.getDocumentSerializers(new DocumentNLPInMemory(dataTools), annotationTypes);
-		SerializerMIDDisputeBSON s = new SerializerMIDDisputeBSON();
-		serializers.put(s.getName(), s); // FIXME Do soemthing different later
+		
 		if (this.useMongoStorage) {
 			return new StorageMongo("localhost", this.storageMongoMicroEventDatabaseName, serializers);
 		} else {
