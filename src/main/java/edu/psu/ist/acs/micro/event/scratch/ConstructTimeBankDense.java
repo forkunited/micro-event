@@ -606,6 +606,9 @@ public class ConstructTimeBankDense {
 					hasCardinality = true;
 			
 			String id = eiid;
+			if (id == null) {
+				id = element.getAttributeValue("id");
+			}
 			
 			TokenSpan tokenSpan = null;
 			if (hasOffset) {
