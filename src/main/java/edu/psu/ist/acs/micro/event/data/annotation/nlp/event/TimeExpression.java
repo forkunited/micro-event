@@ -194,7 +194,7 @@ public class TimeExpression implements TLinkable {
 	public TLink.TimeMLRelType getRelationToTime(TimeExpression time, boolean unknownVague) {
 		if (this.timeMLType != TimeExpression.TimeMLType.DATE && this.timeMLType != TimeExpression.TimeMLType.TIME)
 			return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
-		if (time.timeMLType != TimeExpression.TimeMLType.DATE && this.timeMLType != TimeExpression.TimeMLType.TIME)
+		if (time.timeMLType != TimeExpression.TimeMLType.DATE && time.timeMLType != TimeExpression.TimeMLType.TIME)
 			return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
 		
 		DocumentNLP timeDocument = time.getTokenSpan().getDocument();
