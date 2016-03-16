@@ -23,6 +23,8 @@ import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
  * 
  */
 public class TimeExpression implements TLinkable {
+	private static boolean FORCE_DATE_DCT = true;
+	
 	public enum TimeMLType {
 		DATE,
 		TIME,
@@ -109,12 +111,28 @@ public class TimeExpression implements TLinkable {
 		this.endTimeReference = endTimeReference;
 		this.quant = quant;
 		this.freq = freq;
-		this.value = value;
 		this.timeMLDocumentFunction = timeMLDocumentFunction;
 		this.temporalFunction = temporalFunction;
 		this.anchorTimeReference = anchorTimeReference;
 		this.valueFromFunctionReference = valueFromFunctionReference;
 		this.timeMLMod = timeMLMod;
+		setValue(value);
+	}
+	
+	private boolean setValue(NormalizedTimeValue value) {
+		if (this.timeMLDocumentFunction == TimeMLDocumentFunction.CREATION_TIME) {
+			if (FORCE_DATE_DCT) {
+				NormalizedTimeValue dateValue = value.toDate();
+				if (dateValue != null)
+					this.value = dateValue;
+				else
+					this.value = value;
+			}
+		} else {
+			this.value = value;
+		}
+		
+		return true;
 	}
 	
 	public TLinkable.Type getTLinkableType() {
@@ -206,7 +224,7 @@ public class TimeExpression implements TLinkable {
 		TimeExpression thisCreationTime = null;
 		if (thisDocument.hasAnnotationType(AnnotationTypeNLPEvent.CREATION_TIME))
 			thisCreationTime = thisDocument.getDocumentAnnotation(AnnotationTypeNLPEvent.CREATION_TIME).resolve(this.dataTools, true);
-		System.out.println(timeCreationTime + " " + thisCreationTime);
+
 		if (this.value.getReference() != NormalizedTimeValue.Reference.NONE 
 				|| time.value.getReference() != NormalizedTimeValue.Reference.NONE) {
 			if (thisCreationTime == null || timeCreationTime == null 
@@ -364,8 +382,6 @@ public class TimeExpression implements TLinkable {
 				this.startTimeReference = StoreReference.makeFromJSON(json.getJSONObject("startTime"));
 			if (json.has("endTime"))
 				this.endTimeReference = StoreReference.makeFromJSON(json.getJSONObject("endTime"));
-			if (json.has("value"))
-				this.value = new NormalizedTimeValue(json.getString("value"));
 			if (json.has("freq"))
 				this.freq = json.getString("freq");
 			if (json.has("quant"))
@@ -380,6 +396,8 @@ public class TimeExpression implements TLinkable {
 				this.valueFromFunctionReference = StoreReference.makeFromJSON(json.getJSONObject("valueFromFunction"));
 			if (json.has("timeMLMod"))
 				this.timeMLMod = TimeMLMod.valueOf(json.getString("timeMLMod"));
+			if (json.has("value"))
+				setValue(new NormalizedTimeValue(json.getString("value")));
 		} catch (JSONException e) {
 			return false;
 		}

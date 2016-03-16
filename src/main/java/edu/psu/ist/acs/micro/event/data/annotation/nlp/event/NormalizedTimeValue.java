@@ -431,6 +431,14 @@ public class NormalizedTimeValue {
 			return Reference.NONE;
 	}
 	
+	public NormalizedTimeValue toDate() {
+  		if(this.value.matches("^\\d\\d\\d\\d-\\d\\d-\\d\\d.+") ) {
+  			return new NormalizedTimeValue(this.value.substring(0, 10));
+  		} else {
+  			return null;
+  		}
+	}
+	
 	public String toString() {
 		return this.value;
 	}
