@@ -106,6 +106,7 @@ public class MethodClassificationTLinkTypeAdjacentEventTime extends MethodClassi
 			int sentenceIndex = event.getTokenSpan().getSentenceIndex();
 			int eventIndex = eventSpan.getStartTokenIndex();
 			int timeIndex = time.getTokenSpan().getStartTokenIndex();
+			System.out.println(document.getDependencyParse(sentenceIndex) + " " + eventIndex + " " + timeIndex);
 			DependencyParse.DependencyPath path = document.getDependencyParse(sentenceIndex).getPath(eventIndex, timeIndex);
 
 			PoSTag eventTag = document.getPoSTag(eventSpan.getSentenceIndex(), eventIndex);
