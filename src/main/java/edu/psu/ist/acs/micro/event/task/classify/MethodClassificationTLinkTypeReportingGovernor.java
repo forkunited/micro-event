@@ -199,8 +199,7 @@ public class MethodClassificationTLinkTypeReportingGovernor extends MethodClassi
 					break;
 				}
 				break;
-	
-	/*			// gov=PRESENT
+				// gov=PRESENT
 			case PRESENT:
 				switch (t2) {
 	
@@ -251,7 +250,7 @@ public class MethodClassificationTLinkTypeReportingGovernor extends MethodClassi
 			case INFINITIVE:
 			case PASSIVE:
 			case PASTPART:
-				break;*/
+				break;
 		}
 		return relation;
 	}
