@@ -105,7 +105,7 @@ public class MethodClassificationTLinkTypeReportingGovernor extends MethodClassi
 				System.out.println(e1.getTokenSpan().getStartTokenIndex() + " " + e2.getTokenSpan().getStartTokenIndex());
 				eGov = e1;
 				eDep = e2;
-			} if (path.isAllGoverning()) {
+			} else if (path.isAllGoverning()) {
 				eGov = e1;
 				eDep = e2;
 			} else if (path.isAllGovernedBy()) {
