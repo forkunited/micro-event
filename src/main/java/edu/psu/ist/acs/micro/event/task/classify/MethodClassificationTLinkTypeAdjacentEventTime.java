@@ -124,7 +124,8 @@ public class MethodClassificationTLinkTypeAdjacentEventTime extends MethodClassi
 					etRel = getTypeFromPreposition(document.getTokenStr(sentenceIndex, timeIndex - 1));
 				else 
 					etRel = TimeMLRelType.IS_INCLUDED;
-/*			} else if (!eventBeforeTime && eventToTimexDist <= MAX_DISTANCE) { // Event after timex adjacent
+			/* NOTE: This bit was left out of CAEVO because it makes performance alot worse
+			} else if (!eventBeforeTime && eventToTimexDist <= MAX_DISTANCE) { // Event after timex adjacent
 				if (!eventGovernsTime)
 					etRel = TimeMLRelType.VAGUE;
 				else if (time.getValue().getReference() == Reference.PRESENT && event.getTimeMLAspect() == TimeMLAspect.PROGRESSIVE)
