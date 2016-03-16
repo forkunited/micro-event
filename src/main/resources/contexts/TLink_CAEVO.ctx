@@ -147,15 +147,15 @@ context tlinkTypeCtx=TLinkType() {
 	value strEvals = OutputStrings(id="TLink_CAEVO_Evals", storage="EventString", collection="ExperimentEvaluationOutput", 
 	                 refs=
 	                 (
-		                 ${devAdjETF}, ${devAdjETPrecision}, ${devAdjETRecall},
-		                 ${testAdjETF}, ${testAdjETPrecision}, ${testAdjETRecall},
-		                 ${devGenGovF}, ${devGenGovPrecision}, ${devGenGovRecall},
-		                 ${testGenGovF}, ${testGenGovPrecision}, ${testGenGovRecall},
-		                 ${devReichenbachF}, ${devReichenbachPrecision}, ${devReichenbachRecall},
-		                 ${testReichenbachF}, ${testReichenbachPrecision}, ${testReichenbachRecall},
-		                 ${devRepGovF}, ${devRepGovPrecision}, ${devRepGovRecall},
-		                 ${testRepGovF}, ${testRepGovPrecision}, ${testRepGovRecall}, 
-		                 ${devTimeTimeF}, ${devTimeTimePrecision}, ${devTimeTimeRecall},
-		                 ${testTimeTimeF}, ${testTimeTimePrecision}, ${testTimeTimeRecall}             
+		                 ${devAdjETPrecision}, ${devAdjETRecall},
+		                 ${testAdjETPrecision}, ${testAdjETRecall},
+		                 ${devGenGovPrecision}, ${devGenGovRecall},
+		                 ${testGenGovPrecision}, ${testGenGovRecall},
+		                 ${devReichenbachPrecision}, ${devReichenbachRecall},
+		                 ${testReichenbachPrecision}, ${testReichenbachRecall},
+		                 ${devRepGovPrecision}, ${devRepGovRecall},
+		                 ${testRepGovPrecision}, ${testRepGovRecall}, 
+		                 ${devTimeTimePrecision}, ${devTimeTimeRecall},
+		                 ${testTimeTimePrecision}, ${testTimeTimeRecall}             
 	                 ));
 };

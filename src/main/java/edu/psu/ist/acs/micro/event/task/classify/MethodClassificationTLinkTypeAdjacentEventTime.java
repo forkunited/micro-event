@@ -124,7 +124,7 @@ public class MethodClassificationTLinkTypeAdjacentEventTime extends MethodClassi
 					etRel = getTypeFromPreposition(document.getTokenStr(sentenceIndex, timeIndex - 1));
 				else 
 					etRel = TimeMLRelType.IS_INCLUDED;
-			} else if (!eventBeforeTime && eventToTimexDist <= MAX_DISTANCE) { // Event after timex adjacent
+/*			} else if (!eventBeforeTime && eventToTimexDist <= MAX_DISTANCE) { // Event after timex adjacent
 				if (!eventGovernsTime)
 					etRel = TimeMLRelType.VAGUE;
 				else if (time.getValue().getReference() == Reference.PRESENT && event.getTimeMLAspect() == TimeMLAspect.PROGRESSIVE)
@@ -136,7 +136,7 @@ public class MethodClassificationTLinkTypeAdjacentEventTime extends MethodClassi
 				else if (timeIndex > 1 && document.getTokenStr(sentenceIndex, timeIndex - 1).toLowerCase().equals("said"))
 					etRel = TimeMLRelType.VAGUE;
 				else 
-					etRel = TimeMLRelType.IS_INCLUDED;
+					etRel = TimeMLRelType.IS_INCLUDED;*/
 			} else if (eventGovernsTime) { // Event governs time
 				if (time.getValue().getReference() == Reference.PRESENT && event.getTimeMLAspect() == TimeMLAspect.PROGRESSIVE)
 					etRel = TimeMLRelType.INCLUDES;
