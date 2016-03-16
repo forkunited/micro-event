@@ -86,7 +86,7 @@ public class DataSetBuilderTimeBankDense extends DataSetBuilder<TLinkDatum<TimeM
 			this.storage = this.context.getMatchValue(parameterValue);
 		else if (parameter.equals("collection"))
 			this.collection = this.context.getMatchValue(parameterValue);
-		else if (parameter.equals("label"))
+		else if (parameter.equals("part"))
 			this.part = Part.valueOf(this.context.getMatchValue(parameterValue));
 		else
 			return false;
