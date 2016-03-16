@@ -105,7 +105,8 @@ public class MethodClassificationTLinkTypeReportingGovernor extends MethodClassi
 				eGov = e2;
 				eDep = e1;
 			} else {
-				continue;
+				eGov = e1;
+				eDep = e2;
 			}
 			
 			if (eGov.getTimeMLClass() != TimeMLClass.REPORTING || eDep.getTimeMLClass() == TimeMLClass.REPORTING)
