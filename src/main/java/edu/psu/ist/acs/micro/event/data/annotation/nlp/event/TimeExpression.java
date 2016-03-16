@@ -188,10 +188,14 @@ public class TimeExpression implements TLinkable {
 	 * time according to their grounded time intervals.  
 	 */
 	public TLink.TimeMLRelType getRelationToTime(TimeExpression time) {
+		return getRelationToTime(time, true);
+	}
+	
+	public TLink.TimeMLRelType getRelationToTime(TimeExpression time, boolean unknownVague) {
 		if (this.timeMLType != TimeExpression.TimeMLType.DATE && this.timeMLType != TimeExpression.TimeMLType.TIME)
-			return TLink.TimeMLRelType.VAGUE;
+			return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
 		if (time.timeMLType != TimeExpression.TimeMLType.DATE && this.timeMLType != TimeExpression.TimeMLType.TIME)
-			return TLink.TimeMLRelType.VAGUE;
+			return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
 		
 		DocumentNLP timeDocument = time.getTokenSpan().getDocument();
 		TimeExpression timeCreationTime = null;
@@ -208,7 +212,7 @@ public class TimeExpression implements TLinkable {
 			if (thisCreationTime == null || timeCreationTime == null 
 					|| thisCreationTime.value.getReference() != NormalizedTimeValue.Reference.NONE
 					|| timeCreationTime.value.getReference() != NormalizedTimeValue.Reference.NONE)
-				return TLink.TimeMLRelType.VAGUE;
+				return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
 			
 			int thisCtTimeCt = 0;
 			if (!thisDocument.getName().equals(timeDocument.getName())) {
@@ -222,7 +226,7 @@ public class TimeExpression implements TLinkable {
 						|| ctRel == TLink.TimeMLRelType.IS_INCLUDED)
 					thisCtTimeCt = 0;
 				else 
-					return TLink.TimeMLRelType.VAGUE;
+					return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
 			}
 			
 			
@@ -236,17 +240,17 @@ public class TimeExpression implements TLinkable {
 				else if (this.value.getReference() == NormalizedTimeValue.Reference.PAST)
 					thisCt = -1;
 				else
-					return TLink.TimeMLRelType.VAGUE;
+					return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
 			} else {
 				TLink.TimeMLRelType thisCtRelation = getRelationToTime(thisCreationTime);
 				if (thisCtRelation == TLink.TimeMLRelType.VAGUE)
-					return TLink.TimeMLRelType.VAGUE;
+					return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
 				else if (thisCtRelation == TLink.TimeMLRelType.BEFORE)
 					thisCt = -1;
 				else if (thisCtRelation == TLink.TimeMLRelType.AFTER)
 					thisCt = 1;
 				else
-					return TLink.TimeMLRelType.VAGUE;
+					return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
 			}
 			
 			if (time.value.getReference() != NormalizedTimeValue.Reference.NONE) {
@@ -255,17 +259,17 @@ public class TimeExpression implements TLinkable {
 				else if (time.value.getReference() == NormalizedTimeValue.Reference.PAST)
 					timeCt = -1;
 				else
-					return TLink.TimeMLRelType.VAGUE;
+					return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
 			} else {
 				TLink.TimeMLRelType timeCtRelation = time.getRelationToTime(timeCreationTime);
 				if (timeCtRelation == TLink.TimeMLRelType.VAGUE)
-					return TLink.TimeMLRelType.VAGUE;
+					return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
 				else if (timeCtRelation == TLink.TimeMLRelType.BEFORE)
 					timeCt = -1;
 				else if (timeCtRelation == TLink.TimeMLRelType.AFTER)
 					timeCt = 1;
 				else
-					return TLink.TimeMLRelType.VAGUE;
+					return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
 			}
 			
 			if (thisCt < timeCt && thisCtTimeCt <= 0)
@@ -273,14 +277,14 @@ public class TimeExpression implements TLinkable {
 			else if (timeCt < thisCt && thisCtTimeCt >= 0)
 				return TLink.TimeMLRelType.AFTER;
 			else
-				return TLink.TimeMLRelType.VAGUE;
+				return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
 		}
 		
 		Pair<Calendar, Calendar> thisInterval = this.value.getRange();
 		Pair<Calendar, Calendar> timeInterval = time.value.getRange();
 		
 		if (thisInterval == null || timeInterval == null)
-			return TLink.TimeMLRelType.VAGUE;
+			return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
 		
 		int startStart = thisInterval.getFirst().compareTo(timeInterval.getFirst());
 		int startEnd = thisInterval.getFirst().compareTo(timeInterval.getSecond());
@@ -302,7 +306,7 @@ public class TimeExpression implements TLinkable {
 		else if (startStart < 0 && endStart > 0 && endEnd < 0)
 			return TLink.TimeMLRelType.OVERLAPS;
 		else
-			return TLink.TimeMLRelType.VAGUE;
+			return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
 	}
 	
 	@Override

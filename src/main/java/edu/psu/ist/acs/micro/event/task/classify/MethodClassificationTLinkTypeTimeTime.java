@@ -82,7 +82,7 @@ public class MethodClassificationTLinkTypeTimeTime extends MethodClassification<
 			
 			TimeExpression t1 = (TimeExpression)tlink.getSource();
 			TimeExpression t2 = (TimeExpression)tlink.getTarget();
-			TimeMLRelType rel = t1.getRelationToTime(t2);
+			TimeMLRelType rel = t1.getRelationToTime(t2, false);
 			if (rel != null) {
 				map.put(datum, rel);
 			}
