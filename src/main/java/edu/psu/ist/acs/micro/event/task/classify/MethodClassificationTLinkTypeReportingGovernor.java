@@ -93,20 +93,26 @@ public class MethodClassificationTLinkTypeReportingGovernor extends MethodClassi
 			TokenSpan e2Span = e2.getTokenSpan();
 			DocumentNLP document = e1.getTokenSpan().getDocument();
 			DependencyPath path = document.getDependencyParse(e1Span.getSentenceIndex()).getPath(e1Span.getStartTokenIndex(), e2Span.getStartTokenIndex());
-			if (path == null)
-				continue;
+			//if (path == null)
+			//	continue;
 			
 			EventMention eGov = null;
 			EventMention eDep = null;
-			if (path.isAllGoverning()) {
+			if (path == null) {
+				System.out.println(document.getDependencyParse(e1Span.getSentenceIndex()));
+				System.out.println(document.getSentence(e1Span.getSentenceIndex()));
+				System.out.println(e1.getTokenSpan().toString() + " " + e2.getTokenSpan().toString());
+				System.out.println(e1.getTokenSpan().getStartTokenIndex() + " " + e2.getTokenSpan().getStartTokenIndex());
+				eGov = e1;
+				eDep = e2;
+			} if (path.isAllGoverning()) {
 				eGov = e1;
 				eDep = e2;
 			} else if (path.isAllGovernedBy()) {
 				eGov = e2;
 				eDep = e1;
 			} else {
-				eGov = e1;
-				eDep = e2;
+				continue;
 			}
 			
 			if (eGov.getTimeMLClass() != TimeMLClass.REPORTING || eDep.getTimeMLClass() == TimeMLClass.REPORTING)
