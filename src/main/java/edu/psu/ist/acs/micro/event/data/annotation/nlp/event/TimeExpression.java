@@ -206,7 +206,7 @@ public class TimeExpression implements TLinkable {
 		TimeExpression thisCreationTime = null;
 		if (thisDocument.hasAnnotationType(AnnotationTypeNLPEvent.CREATION_TIME))
 			thisCreationTime = thisDocument.getDocumentAnnotation(AnnotationTypeNLPEvent.CREATION_TIME).resolve(this.dataTools, true);
-
+		System.out.println(timeCreationTime + " " + thisCreationTime);
 		if (this.value.getReference() != NormalizedTimeValue.Reference.NONE 
 				|| time.value.getReference() != NormalizedTimeValue.Reference.NONE) {
 			if (thisCreationTime == null || timeCreationTime == null 
