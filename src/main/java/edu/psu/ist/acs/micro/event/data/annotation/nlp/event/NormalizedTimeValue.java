@@ -183,7 +183,9 @@ public class NormalizedTimeValue {
 	}
 
 	public Type getType() {
-		if (this.pattern.equals(this.DATE_PATTERN)) {
+		if (this.pattern == null) {
+			return null;
+		} else if (this.pattern.equals(this.DATE_PATTERN)) {
 			return Type.DATE;
 		} else if (this.pattern.equals(this.TIME_PATTERN)) {
 			return Type.TIME;
