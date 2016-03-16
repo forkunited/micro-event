@@ -9,6 +9,7 @@ import edu.cmu.ml.rtw.generic.data.Serializer;
 import edu.cmu.ml.rtw.generic.data.SerializerJSONBSON;
 import edu.cmu.ml.rtw.generic.data.annotation.DatumContext;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Signal;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink;
@@ -52,6 +53,10 @@ public class EventDataTools extends DataTools {
 		
 		this.addGenericContext(new DatumContext<TLinkDatum<TimeMLRelType>, TimeMLRelType>(TLinkDatum.getTimeMLRelTypeTools(this), "TLinkType"));
 		this.addGenericContext(new DatumContext<TLinkDatum<Boolean>, Boolean>(TLinkDatum.getBooleanTools(this), "TLinkBoolean"));
+	
+		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.CREATION_TIME);
+		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.TIME_EXPRESSION);
+		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.EVENT_MENTION);
 	}
 	
 	@Override
