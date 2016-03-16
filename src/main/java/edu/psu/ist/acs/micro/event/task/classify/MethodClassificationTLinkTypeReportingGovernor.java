@@ -102,11 +102,11 @@ public class MethodClassificationTLinkTypeReportingGovernor extends MethodClassi
 			EventMention eGov = null;
 			EventMention eDep = null;
 			if (path.isAllGoverning()) {
-				eGov = e2;
-				eDep = e1;
-			} else if (path.isAllGovernedBy()) {
 				eGov = e1;
 				eDep = e2;
+			} else if (path.isAllGovernedBy()) {
+				eGov = e2;
+				eDep = e1;
 			} else {
 				continue;
 			}
