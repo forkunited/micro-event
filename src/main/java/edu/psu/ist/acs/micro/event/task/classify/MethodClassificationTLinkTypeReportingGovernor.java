@@ -92,7 +92,12 @@ public class MethodClassificationTLinkTypeReportingGovernor extends MethodClassi
 			TokenSpan e1Span = e1.getTokenSpan();
 			TokenSpan e2Span = e2.getTokenSpan();
 			DocumentNLP document = e1.getTokenSpan().getDocument();
+			if (document.getDependencyParse(e1Span.getSentenceIndex()) == null)
+				continue;
+			
 			DependencyPath path = document.getDependencyParse(e1Span.getSentenceIndex()).getPath(e1Span.getStartTokenIndex(), e2Span.getStartTokenIndex());
+			if (path == null)
+				continue;
 			
 			EventMention eGov = null;
 			EventMention eDep = null;
