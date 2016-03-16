@@ -275,6 +275,32 @@ public class TLink implements StoredJSONSerializable {
 		return this.dataTools.getStoredItemSetManager().resolveStoreReference(this.targetReference, true);
 	}
 	
+	public EventMention getFirstEvent() {
+		TLinkable source = getSource();
+		if (source.getTLinkableType() == TLinkable.Type.EVENT)
+			return (EventMention)source;
+		else {
+			TLinkable target = getTarget();
+			if (target.getTLinkableType() == TLinkable.Type.EVENT)
+				return (EventMention)target;
+		}
+		
+		return null;
+	}
+	
+	public TimeExpression getFirstTime() {
+		TLinkable source = getSource();
+		if (source.getTLinkableType() == TLinkable.Type.TIME)
+			return (TimeExpression)source;
+		else {
+			TLinkable target = getTarget();
+			if (target.getTLinkableType() == TLinkable.Type.TIME)
+				return (TimeExpression)target;
+		}
+		
+		return null;
+	}
+	
 	public Signal getSignal() {
 		return this.signal;
 	}

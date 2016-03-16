@@ -26,6 +26,16 @@ public class NormalizedTimeValue {
 		NONE
 	}
 	
+	public enum Type {
+		DATE,
+		TIME,
+		WEEK_DATE,
+		WEEK_TIME,
+		SEASON,
+		PART_OF_YEAR,
+		REFERENCE
+	}
+	
 	/**
 	 * TimePattern represents a regex that is used
 	 * to parse time expressions.  The TimePattern has a 
@@ -52,17 +62,17 @@ public class NormalizedTimeValue {
 		private int weekDayGroup;
 		
 		public TimePattern(String pattern, 
-											 int yearGroup, 
-											 int monthGroup, 
-											 int dayGroup,
-											 int hourGroup,
-											 int minuteGroup,
-											 int secondGroup,
-											 int yearPartGroup,
-											 int seasonGroup,
-											 int weekGroup,
-											 int timeOfDayGroup,
-											 int weekDayGroup) {
+						 int yearGroup, 
+						 int monthGroup, 
+						 int dayGroup,
+						 int hourGroup,
+						 int minuteGroup,
+						 int secondGroup,
+						 int yearPartGroup,
+						 int seasonGroup,
+						 int weekGroup,
+						 int timeOfDayGroup,
+						 int weekDayGroup) {
 			this.pattern = Pattern.compile(pattern);
 			this.yearGroup = yearGroup; 
 			this.monthGroup = monthGroup;
@@ -169,6 +179,26 @@ public class NormalizedTimeValue {
 		} else if (referenceMatcher.matches()) {
 			this.pattern = this.REFERENCE_PATTERN;
 			this.matcher = referenceMatcher;
+		}
+	}
+
+	public Type getType() {
+		if (this.pattern.equals(this.DATE_PATTERN)) {
+			return Type.DATE;
+		} else if (this.pattern.equals(this.TIME_PATTERN)) {
+			return Type.TIME;
+		} else if (this.pattern.equals(this.WEEK_DATE_PATTERN)) {
+			return Type.WEEK_DATE;
+		} else if (this.pattern.equals(this.WEEK_TIME_PATTERN)) {
+			return Type.WEEK_TIME;
+		} else if (this.pattern.equals(this.SEASON_PATTERN)) {
+			return Type.SEASON;
+		} else if (this.pattern.equals(this.PART_OF_YEAR_PATTERN)) {
+			return Type.PART_OF_YEAR;
+		} else if (this.pattern.equals(this.REFERENCE_PATTERN)) {
+			return Type.REFERENCE;
+		} else {
+			return null;
 		}
 	}
 	

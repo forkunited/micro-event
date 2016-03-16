@@ -1,0 +1,160 @@
+value maxThreads="30";
+value debug=Debug(file="TLink_CAEVO.out");
+value randomSeed=SetRandomSeed(seed="1");
+value cleanFn=BuildCleanFn(name="BagOfWordsCleanFn", fns=("Trim", "RemoveSymbols", "ReplaceNumbers", "UnderscoreToSpace", "Trim", "RemoveLongTokens", "Stem", "SpaceToUnderscore"));
+
+context tlinkTypeCtx=TLinkType() {	
+	data trainData = TimeBankDense(storage="EventBson", collection="tbd_tlinks", part="TRAIN");
+	data devData = TimeBankDense(storage="EventBson", collection="tbd_tlinks", part="DEV");
+	data testData = TimeBankDense(storage="EventBson", collection="tbd_tlinks", part="TEST");
+
+	value countTrainData = SizeData(data=${trainData});
+	value countDevData = SizeData(data=${devData});
+	value countTestData = SizeData(data=${testData});
+	value debugTrainData = OutputDebug(refs=(${countTrainData}));
+	value debugDevData = OutputDebug(refs=(${countDevData}));
+	value debugTestData = OutputDebug(refs=(${countTestData}));
+
+	ts_fn head = Head();
+	ts_fn before2 = NGramContext(type="BEFORE", n="2");
+	ts_fn before1 = NGramContext(type="BEFORE", n="1");
+	ts_fn inside1 = NGramInside(n="1");
+	ts_fn dep = DependencyRelation(mode="PARENTS_AND_CHILDREN");
+	ts_str_fn strDef = String(cleanFn="BagOfWordsCleanFn");
+	ts_str_fn pos = PoS();
+	ts_str_fn lemma = TokenAnnotation(annotationType="lemma");
+	ts_str_fn sentPos = SentencePosition();
+	
+	feature feventToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${strDef}));
+	feature feventTokenB = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${strDef} o ${inside1} o ${before2}));
+	feature feventLemma = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${lemma}));
+	feature feventPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${pos}));
+	feature feventPosB1 = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${pos} o ${before1}));
+	feature feventPosB2 = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${pos} o ${before2}));
+	feature feventTense = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="TIMEML_TENSE");
+	feature feventAspect = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="TIMEML_ASPECT");
+	feature feventClass = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="TIMEML_CLASS");
+	feature feventDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${strDef} o ${dep}));
+	feature ftimeToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=(${strDef}));
+	feature ftimeTokenh = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=(${strDef} o ${head}));
+	feature ftimeSentPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=(${sentPos}));
+	feature feventTimeToken = Conjunction(minFeatureOccurrence="2", features=(${feventToken}, ${ftimeToken}));
+	feature ftokenPathET = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="BetweenSourceTarget", fn=(${strDef}));
+	feature fdepPathET = DependencyPath(minFeatureOccurrence="2", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime", useRelationTypes="true");
+	feature fconPathET = ConstituencyPath(minFeatureOccurrence="2", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime");
+	feature fdomET = DependencyPathType(sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime");
+	
+	feature_set fsET = FeatureSet(features=(${feventToken}, ${feventTokenB}, ${feventLemma}, ${feventPos}, ${feventPosB1},
+											${feventPosB2}, ${feventTense}, ${feventAspect}, ${feventClass}, ${feventDep},
+											${ftimeToken}, ${ftimeTokenh}, ${ftimeSentPos}, ${feventTimeToken}, 
+											${ftokenPathET}, ${fdepPathET}, ${fconPathET}, ${fdomET}), initData=(${trainData}));
+		
+	feature fsToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${strDef}));
+	feature fsTokenB = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${strDef} o ${inside1} o ${before2}));
+	feature fsLemma = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${lemma}));
+	feature fsPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${pos}));
+	feature fsPosB1 = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${pos} o ${before1}));
+	feature fsPosB2 = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${pos} o ${before2}));
+	feature fsTense = TLinkEventAttribute(sourceOrTarget="SOURCE", attribute="TIMEML_TENSE");
+	feature fsAspect = TLinkEventAttribute(sourceOrTarget="SOURCE", attribute="TIMEML_ASPECT");
+	feature fsClass = TLinkEventAttribute(sourceOrTarget="SOURCE", attribute="TIMEML_CLASS");
+	feature fsDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${strDef} o ${dep}));
+	feature ftToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${strDef}));
+	feature ftTokenB = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${strDef} o ${inside1} o ${before2}));
+	feature ftLemma = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${lemma}));
+	feature ftPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${pos}));
+	feature ftPosB1 = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${pos} o ${before1}));
+	feature ftPosB2 = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${pos} o ${before2}));
+	feature ftTense = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="TIMEML_TENSE");
+	feature ftAspect = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="TIMEML_ASPECT");
+	feature ftClass = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="TIMEML_CLASS");
+	feature ftDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${strDef} o ${dep}));
+	feature fstToken = Conjunction(minFeatureOccurrence="2", features=(${fsToken}, ${ftToken}));
+	feature fstPos = Conjunction(minFeatureOccurrence="2", features=(${fsPos}, ${ftPos}));
+	feature fstTense = Conjunction(minFeatureOccurrence="2", features=(${fsTense}, ${ftTense}));
+	feature fstAspect = Conjunction(minFeatureOccurrence="2", features=(${fsAspect}, ${ftAspect}));
+	feature fstClass = Conjunction(minFeatureOccurrence="2", features=(${fsClass}, ${ftClass}));	
+	feature fdepPathEE = DependencyPath(minFeatureOccurrence="2", sourceTokenExtractor="Source", targetTokenExtractor="Target", useRelationTypes="true");
+	feature fconPathEE = ConstituencyPath(minFeatureOccurrence="2", sourceTokenExtractor="Source", targetTokenExtractor="Target");
+	feature fdomEE = DependencyPathType(sourceTokenExtractor="Source", targetTokenExtractor="Target");
+
+	feature_set fsEE = FeatureSet(features=(${fsToken}, ${fsTokenB}, ${fsLemma}, ${fsPos}, ${fsPosB1}, ${fsPosB2},
+											${fsTense}, ${fsAspect}, ${fsClass}, ${fsDep}, ${ftToken}, ${ftTokenB},
+											${ftLemma}, ${ftPos}, ${ftPosB1}, ${ftPosB2}, ${ftTense},
+											${ftAspect}, ${ftClass}, ${ftDep}, ${fstToken}, ${fstPos},
+											${fstTense}, ${fstAspect}, ${fstClass}, ${fdepPathEE}, 
+											${fconPathEE}, ${fdomEE}), initData=(${trainData}));
+	
+	feature_set fsDCT = FeatureSet(features=(${feventToken}, ${feventTokenB}, ${feventLemma}, ${feventPos},
+											 ${feventPosB1}, ${feventPosB2}, ${feventTense}, ${feventAspect}, 
+											 ${feventClass}), initData=(${trainData});
+
+	
+	data_features trainMatrix = DataFeatureMatrix(data=${trainData}, features=${f});
+	data_features devMatrix = DataFeatureMatrix(data=${devData}, features=${f});
+	data_features testMatrix = DataFeatureMatrix(data=${testData}, features=${f});
+	
+	classify_task devTask = Classification(data=${devMatrix});
+	classify_task testTask = Classification(data=${testMatrix});
+	
+	classify_method adjETSieve = AdjacentEventTime();
+	classify_method genGovSieve = GeneralGovernor();
+	classify_method reichenbachSieve = Reichenbach();
+	classify_method repGovSieve = ReportingGovernor();
+	classify_method timeTimeSieve = TimeTime();
+	classify_method adjETSieveM = LabelMapping(method=${adjETSieve}, labelMapping="TBD");
+	classify_method genGovSieveM = LabelMapping(method=${genGovSieve}, labelMapping="TBD");
+	classify_method reichenbachSieveM = LabelMapping(method=${reichenbachSieve}, labelMapping="TBD");
+	classify_method repGovSieveM = LabelMapping(method=${repGovSieve}, labelMapping="TBD");
+	classify_method timeTimeSieveM = LabelMapping(method=${timetimeSieve}, labelMapping="TBD");
+	
+	classify_eval devAdjETF = F(task=${devTask}, method=${adjETSieveM}, Beta="1", mode="MICRO");
+	classify_eval devAdjETPrecision = Precision(task=${devTask}, method=${adjETSieveM}, mode="MICRO");
+	classify_eval devAdjETRecall = Recall(task=${devTask}, method=${adjETSieveM}, mode="MICRO");
+	classify_eval testAdjETF = F(task=${testTask}, method=${adjETSieveM}, Beta="1", mode="MICRO");
+	classify_eval testAdjETPrecision = Precision(task=${testTask}, method=${adjETSieveM}, mode="MICRO");
+	classify_eval testAdjETRecall = Recall(task=${testTask}, method=${adjETSieveM}, mode="MICRO");
+	
+	classify_eval devGenGovF = F(task=${devTask}, method=${genGovSieveM}, Beta="1", mode="MICRO");
+	classify_eval devGenGovPrecision = Precision(task=${devTask}, method=${genGovSieveM}, mode="MICRO");
+	classify_eval devGenGovRecall = Recall(task=${devTask}, method=${genGovSieveM}, mode="MICRO");
+	classify_eval testGenGovF = F(task=${testTask}, method=${genGovSieveM}, Beta="1", mode="MICRO");
+	classify_eval testGenGovPrecision = Precision(task=${testTask}, method=${genGovSieveM}, mode="MICRO");
+	classify_eval testGenGovRecall = Recall(task=${testTask}, method=${genGovSieveM}, mode="MICRO");
+	
+	classify_eval devReichenbachF = F(task=${devTask}, method=${reichenbachSieveM}, Beta="1", mode="MICRO");
+	classify_eval devReichenbachPrecision = Precision(task=${devTask}, method=${reichenbachSieveM}, mode="MICRO");
+	classify_eval devReichenbachRecall = Recall(task=${devTask}, method=${reichenbachSieveM}, mode="MICRO");
+	classify_eval testReichenbachF = F(task=${testTask}, method=${reichenbachSieveM}, Beta="1", mode="MICRO");
+	classify_eval testReichenbachPrecision = Precision(task=${testTask}, method=${reichenbachSieveM}, mode="MICRO");
+	classify_eval testReichenbachRecall = Recall(task=${testTask}, method=${reichenbachSieveM}, mode="MICRO");
+	
+	classify_eval devRepGovF = F(task=${devTask}, method=${repGovSieveM}, Beta="1", mode="MICRO");
+	classify_eval devRepGovPrecision = Precision(task=${devTask}, method=${repGovSieveM}, mode="MICRO");
+	classify_eval devRepGovRecall = Recall(task=${devTask}, method=${repGovSieveM}, mode="MICRO");
+	classify_eval testRepGovF = F(task=${testTask}, method=${repGovSieveM}, Beta="1", mode="MICRO");
+	classify_eval testRepGovPrecision = Precision(task=${testTask}, method=${repGovSieveM}, mode="MICRO");
+	classify_eval testRepGovRecall = Recall(task=${testTask}, method=${repGovSieveM}, mode="MICRO");
+	
+	classify_eval devTimeTimeF = F(task=${devTask}, method=${timeTimeSieveM}, Beta="1", mode="MICRO");
+	classify_eval devTimeTimePrecision = Precision(task=${devTask}, method=${timeTimeSieveM}, mode="MICRO");
+	classify_eval devTimeTimeRecall = Recall(task=${devTask}, method=${timeTimeSieveM}, mode="MICRO");
+	classify_eval testTimeTimeF = F(task=${testTask}, method=${timeTimeSieveM}, Beta="1", mode="MICRO");
+	classify_eval testTimeTimePrecision = Precision(task=${testTask}, method=${timeTimeSieveM}, mode="MICRO");
+	classify_eval testTimeTimeRecall = Recall(task=${testTask}, method=${timeTimeSieveM}, mode="MICRO");
+	
+	value strEvals = OutputStrings(id="TLink_CAEVO_Evals", storage="EventString", collection="ExperimentEvaluationOutput", 
+	                 refs=
+	                 (
+		                 ${devAdjETF}, ${devAdjETPrecision}, ${devAdjETRecall},
+		                 ${testAdjETF}, ${testAdjETPrecision}, ${testAdjETRecall},
+		                 ${devGenGovF}, ${devGenGovPrecision}, ${devGenGovRecall},
+		                 ${testGenGovF}, ${testGenGovPrecision}, ${testGenGovRecall},
+		                 ${devReichenbachF}, ${devReichenbachPrecision}, ${devReichenbachRecall},
+		                 ${testReichenbachF}, ${testReichenbachPrecision}, ${testReichenbachRecall},
+		                 ${devRepGovF}, ${devRepGovPrecision}, ${devRepGovRecall},
+		                 ${testRepGovF}, ${testRepGovPrecision}, ${testRepGovRecall}, 
+		                 ${devTimeTimeF}, ${devTimeTimePrecision}, ${devTimeTimeRecall},
+		                 ${testTimeTimeF}, ${testTimeTimePrecision}, ${testTimeTimeRecall}             
+	                 ));
+};

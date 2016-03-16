@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.cmu.ml.rtw.generic.data.DataTools;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan.SerializationType;
 import edu.cmu.ml.rtw.generic.data.store.StoreReference;
@@ -192,17 +193,39 @@ public class TimeExpression implements TLinkable {
 		if (time.timeMLType != TimeExpression.TimeMLType.DATE && this.timeMLType != TimeExpression.TimeMLType.TIME)
 			return TLink.TimeMLRelType.VAGUE;
 		
-		TimeExpression creationTime = null;
-		if (time.getTokenSpan().getDocument().getName().equals(this.getTokenSpan().getDocument().getName())) {
-			// FIXME: This only gets document creation time if they're in the same document...
-			// But it's also possible to draw inferences if in separate documents
-			creationTime = time.getTokenSpan().getDocument().getDocumentAnnotation(AnnotationTypeNLPEvent.CREATION_TIME).resolve(this.dataTools, true);
-		}
+		DocumentNLP timeDocument = time.getTokenSpan().getDocument();
+		TimeExpression timeCreationTime = null;
+		if (timeDocument.hasAnnotationType(AnnotationTypeNLPEvent.CREATION_TIME))
+			timeCreationTime = timeDocument.getDocumentAnnotation(AnnotationTypeNLPEvent.CREATION_TIME).resolve(this.dataTools, true);
 		
+		DocumentNLP thisDocument = getTokenSpan().getDocument();
+		TimeExpression thisCreationTime = null;
+		if (thisDocument.hasAnnotationType(AnnotationTypeNLPEvent.CREATION_TIME))
+			thisCreationTime = thisDocument.getDocumentAnnotation(AnnotationTypeNLPEvent.CREATION_TIME).resolve(this.dataTools, true);
+
 		if (this.value.getReference() != NormalizedTimeValue.Reference.NONE 
 				|| time.value.getReference() != NormalizedTimeValue.Reference.NONE) {
-			if (creationTime == null)
+			if (thisCreationTime == null || timeCreationTime == null 
+					|| thisCreationTime.value.getReference() != NormalizedTimeValue.Reference.NONE
+					|| timeCreationTime.value.getReference() != NormalizedTimeValue.Reference.NONE)
 				return TLink.TimeMLRelType.VAGUE;
+			
+			int thisCtTimeCt = 0;
+			if (!thisDocument.getName().equals(timeDocument.getName())) {
+				TLink.TimeMLRelType ctRel = thisCreationTime.getRelationToTime(timeCreationTime);
+				if (ctRel == TLink.TimeMLRelType.BEFORE)
+					thisCtTimeCt = -1;
+				else if (ctRel == TLink.TimeMLRelType.AFTER)
+					thisCtTimeCt = 1;
+				else if (ctRel == TLink.TimeMLRelType.SIMULTANEOUS
+						|| ctRel == TLink.TimeMLRelType.INCLUDES
+						|| ctRel == TLink.TimeMLRelType.IS_INCLUDED)
+					thisCtTimeCt = 0;
+				else 
+					return TLink.TimeMLRelType.VAGUE;
+			}
+			
+			
 			// Relate this to creation and time to creation based on past
 			// and future references
 			int thisCt = 0, timeCt = 0; 
@@ -215,7 +238,7 @@ public class TimeExpression implements TLinkable {
 				else
 					return TLink.TimeMLRelType.VAGUE;
 			} else {
-				TLink.TimeMLRelType thisCtRelation = getRelationToTime(creationTime);
+				TLink.TimeMLRelType thisCtRelation = getRelationToTime(thisCreationTime);
 				if (thisCtRelation == TLink.TimeMLRelType.VAGUE)
 					return TLink.TimeMLRelType.VAGUE;
 				else if (thisCtRelation == TLink.TimeMLRelType.BEFORE)
@@ -234,7 +257,7 @@ public class TimeExpression implements TLinkable {
 				else
 					return TLink.TimeMLRelType.VAGUE;
 			} else {
-				TLink.TimeMLRelType timeCtRelation = time.getRelationToTime(creationTime);
+				TLink.TimeMLRelType timeCtRelation = time.getRelationToTime(timeCreationTime);
 				if (timeCtRelation == TLink.TimeMLRelType.VAGUE)
 					return TLink.TimeMLRelType.VAGUE;
 				else if (timeCtRelation == TLink.TimeMLRelType.BEFORE)
@@ -245,14 +268,13 @@ public class TimeExpression implements TLinkable {
 					return TLink.TimeMLRelType.VAGUE;
 			}
 			
-			if (thisCt < timeCt)
+			if (thisCt < timeCt && thisCtTimeCt <= 0)
 				return TLink.TimeMLRelType.BEFORE;
-			else if (timeCt < thisCt)
+			else if (timeCt < thisCt && thisCtTimeCt >= 0)
 				return TLink.TimeMLRelType.AFTER;
 			else
 				return TLink.TimeMLRelType.VAGUE;
 		}
-		
 		
 		Pair<Calendar, Calendar> thisInterval = this.value.getRange();
 		Pair<Calendar, Calendar> timeInterval = time.value.getRange();

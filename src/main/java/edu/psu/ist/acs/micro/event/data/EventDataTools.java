@@ -7,11 +7,13 @@ import edu.cmu.ml.rtw.generic.data.DataTools;
 import edu.cmu.ml.rtw.generic.data.Gazetteer;
 import edu.cmu.ml.rtw.generic.data.Serializer;
 import edu.cmu.ml.rtw.generic.data.SerializerJSONBSON;
+import edu.cmu.ml.rtw.generic.data.annotation.DatumContext;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
-import edu.cmu.ml.rtw.micro.cat.data.CatDataTools;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Signal;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkDatum;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression;
 import edu.psu.ist.acs.micro.event.util.EventProperties;
 
@@ -48,9 +50,8 @@ public class EventDataTools extends DataTools {
 		
 		this.properties = properties;
 		
-		// FIXME Make clean fns for this project?
-		DataTools catDataTools = new CatDataTools();
-		this.addCleanFn(catDataTools.getCleanFn("CatBagOfWordsFeatureCleanFn"));
+		this.addGenericContext(new DatumContext<TLinkDatum<TimeMLRelType>, TimeMLRelType>(TLinkDatum.getTimeMLRelTypeTools(this), "TLinkType"));
+		this.addGenericContext(new DatumContext<TLinkDatum<Boolean>, Boolean>(TLinkDatum.getBooleanTools(this), "TLinkBoolean"));
 	}
 	
 	@Override

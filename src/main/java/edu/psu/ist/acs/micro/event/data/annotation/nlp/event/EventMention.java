@@ -28,6 +28,7 @@ public class EventMention implements TLinkable {
 		PASTPART,
 		PRESENT,
 		PRESPART,
+		PASSIVE,
 		NONE
 	}
 	
