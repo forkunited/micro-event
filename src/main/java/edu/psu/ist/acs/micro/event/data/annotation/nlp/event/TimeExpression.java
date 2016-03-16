@@ -267,6 +267,8 @@ public class TimeExpression implements TLinkable {
 					thisCt = -1;
 				else if (thisCtRelation == TLink.TimeMLRelType.AFTER)
 					thisCt = 1;
+				else if (thisCtRelation == TLink.TimeMLRelType.SIMULTANEOUS || thisCtRelation == TLink.TimeMLRelType.IS_INCLUDED)
+					thisCt = 0;
 				else
 					return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
 			}
@@ -286,6 +288,8 @@ public class TimeExpression implements TLinkable {
 					timeCt = -1;
 				else if (timeCtRelation == TLink.TimeMLRelType.AFTER)
 					timeCt = 1;
+				else if (timeCtRelation == TLink.TimeMLRelType.SIMULTANEOUS || timeCtRelation == TLink.TimeMLRelType.IS_INCLUDED)
+					timeCt = 0;
 				else
 					return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
 			}
