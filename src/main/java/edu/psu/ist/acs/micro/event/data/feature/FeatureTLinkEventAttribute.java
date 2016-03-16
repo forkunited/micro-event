@@ -39,6 +39,10 @@ public class FeatureTLinkEventAttribute<L> extends Feature<TLinkDatum<L>, L>{
 	
 	private BidirectionalLookupTable<String, Integer> vocabulary;
 	
+	public FeatureTLinkEventAttribute() {
+		
+	}
+	
 	public FeatureTLinkEventAttribute(DatumContext<TLinkDatum<L>, L> context) {
 		this.vocabulary = new BidirectionalLookupTable<String, Integer>();
 		this.context = context;

@@ -13,6 +13,11 @@ import edu.cmu.ml.rtw.generic.data.store.StoreReference;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkable.Type;
+import edu.psu.ist.acs.micro.event.data.feature.FeatureTLinkAttribute;
+import edu.psu.ist.acs.micro.event.data.feature.FeatureTLinkEventAttribute;
+import edu.psu.ist.acs.micro.event.data.feature.FeatureTLinkTimeAttribute;
+import edu.psu.ist.acs.micro.event.data.feature.FeatureTLinkTimeRelation;
+import edu.psu.ist.acs.micro.event.data.feature.FeatureTLinkableType;
 import edu.psu.ist.acs.micro.event.task.classify.MethodClassificationTLinkTypeAdjacentEventTime;
 import edu.psu.ist.acs.micro.event.task.classify.MethodClassificationTLinkTypeGeneralGovernor;
 import edu.psu.ist.acs.micro.event.task.classify.MethodClassificationTLinkTypeReichenbach;
@@ -113,6 +118,12 @@ public class TLinkDatum<L> extends Datum<L> {
 	public static abstract class Tools<L> extends Datum.Tools<TLinkDatum<L>, L> { 
 		public Tools(DataTools dataTools) {
 			super(dataTools);
+			
+			this.addGenericFeature(new FeatureTLinkableType<L>());
+			this.addGenericFeature(new FeatureTLinkAttribute<L>());
+			this.addGenericFeature(new FeatureTLinkEventAttribute<L>());
+			this.addGenericFeature(new FeatureTLinkTimeAttribute<L>());
+			this.addGenericFeature(new FeatureTLinkTimeRelation<L>());
 			
 			this.addTokenSpanExtractor(new TokenSpanExtractor<TLinkDatum<L>, L>() {
 				@Override
