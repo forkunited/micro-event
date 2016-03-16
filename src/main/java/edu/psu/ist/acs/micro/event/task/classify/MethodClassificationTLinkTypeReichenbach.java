@@ -68,7 +68,7 @@ public class MethodClassificationTLinkTypeReichenbach extends MethodClassificati
 	@Override
 	public MethodClassification<TLinkDatum<TimeMLRelType>, TimeMLRelType> makeInstance(
 			DatumContext<TLinkDatum<TimeMLRelType>, TimeMLRelType> context) {
-		return new MethodClassificationTLinkTypeReichenbach(this.context);
+		return new MethodClassificationTLinkTypeReichenbach(context);
 	}
 
 	@Override

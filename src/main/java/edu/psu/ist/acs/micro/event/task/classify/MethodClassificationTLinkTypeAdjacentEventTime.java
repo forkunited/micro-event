@@ -64,7 +64,7 @@ public class MethodClassificationTLinkTypeAdjacentEventTime extends MethodClassi
 	@Override
 	public MethodClassification<TLinkDatum<TimeMLRelType>, TimeMLRelType> makeInstance(
 			DatumContext<TLinkDatum<TimeMLRelType>, TimeMLRelType> context) {
-		return new MethodClassificationTLinkTypeAdjacentEventTime(this.context);
+		return new MethodClassificationTLinkTypeAdjacentEventTime(context);
 	}
 
 	@Override

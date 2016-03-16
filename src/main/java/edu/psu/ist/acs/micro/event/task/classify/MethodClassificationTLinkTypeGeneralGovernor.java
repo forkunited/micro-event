@@ -61,7 +61,7 @@ public class MethodClassificationTLinkTypeGeneralGovernor extends MethodClassifi
 	@Override
 	public MethodClassification<TLinkDatum<TimeMLRelType>, TimeMLRelType> makeInstance(
 			DatumContext<TLinkDatum<TimeMLRelType>, TimeMLRelType> context) {
-		return new MethodClassificationTLinkTypeGeneralGovernor(this.context);
+		return new MethodClassificationTLinkTypeGeneralGovernor(context);
 	}
 
 	@Override
