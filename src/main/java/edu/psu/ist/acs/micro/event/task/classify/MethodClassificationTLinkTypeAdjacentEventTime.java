@@ -144,7 +144,7 @@ public class MethodClassificationTLinkTypeAdjacentEventTime extends MethodClassi
 					etRel = TimeMLRelType.VAGUE;
 				else 
 					etRel = TimeMLRelType.IS_INCLUDED;
-			} else if (path.getDependencyLength() == 1 && path.isAllGovernedBy()) { // Timex governs event
+			} else if (path != null && path.getDependencyLength() == 1 && path.isAllGovernedBy()) { // Timex governs event
 				etRel = TimeMLRelType.IS_INCLUDED;
 			}
 			
