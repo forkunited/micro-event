@@ -89,10 +89,11 @@ context tlinkTypeCtx=TLinkType() {
 											 ${feventPosB1}, ${feventPosB2}, ${feventTense}, ${feventAspect}, 
 											 ${feventClass}), initData=(${trainData}));
 
+	feature_set fsEmpty = FeatureSet(features=(), initData=(${trainData}));
 	
-	data_features trainEEMatrix = DataFeatureMatrix(data=${trainData}, features=${fsEE});
-	data_features devEEMatrix = DataFeatureMatrix(data=${devData}, features=${fsEE});
-	data_features testEEMatrix = DataFeatureMatrix(data=${testData}, features=${fsEE});
+	data_features trainEEMatrix = DataFeatureMatrix(data=${trainData}, features=${fsEmpty});
+	data_features devEEMatrix = DataFeatureMatrix(data=${devData}, features=${fsEmpty});
+	data_features testEEMatrix = DataFeatureMatrix(data=${testData}, features=${fsEmpty});
 	
 	classify_task devTask = Classification(data=${devEEMatrix});
 	classify_task testTask = Classification(data=${testEEMatrix});
