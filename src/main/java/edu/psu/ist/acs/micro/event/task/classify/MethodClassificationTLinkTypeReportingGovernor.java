@@ -108,12 +108,7 @@ public class MethodClassificationTLinkTypeReportingGovernor extends MethodClassi
 				eGov = e2;
 				eDep = e1;
 			} else {
-				System.out.println(document.getDependencyParse(e1Span.getSentenceIndex()));
-				System.out.println(document.getSentence(e1Span.getSentenceIndex()));
-				System.out.println(e1.getTokenSpan().toString() + " " + e2.getTokenSpan().toString());
-				System.out.println(e1.getTokenSpan().getStartTokenIndex() + " " + e2.getTokenSpan().getStartTokenIndex());
-				eGov = e1;
-				eDep = e2;
+				continue;
 			}
 			
 			if (eGov.getTimeMLClass() != TimeMLClass.REPORTING || eDep.getTimeMLClass() == TimeMLClass.REPORTING)
@@ -178,9 +173,9 @@ public class MethodClassificationTLinkTypeReportingGovernor extends MethodClassi
 						relation = TimeMLRelType.IS_INCLUDED;
 						break;
 					case NONE: // p=0.71 22 of 31, but no linguistic reason why
-						// relation = Type.AFTER;
+						relation = TimeMLRelType.AFTER; // FIXME Remove
 					case IMPERFECTIVE: // p=0.50 5 of 10, but no linguistic reason
-						// relation = Type.IS_INCLUDED;
+						relation = TimeMLRelType.IS_INCLUDED; // FIXME Remove 
 						break;
 	
 						// never occurs in training data
@@ -196,7 +191,7 @@ public class MethodClassificationTLinkTypeReportingGovernor extends MethodClassi
 	
 					// gov=PAST, dep=NONE
 				case NONE: // p=0.70 14 of 20, but no linguistic reason why
-					// relation = Type.BEFORE;
+					relation = TimeMLRelType.BEFORE; // FIXME Remove 
 					break;
 	
 					// never occurs in training data
@@ -224,7 +219,7 @@ public class MethodClassificationTLinkTypeReportingGovernor extends MethodClassi
 						break;
 	
 					case NONE: // p=1.00 2 of 2, but no linguistic reason why
-						// relation = Type.IS_INCLUDED;
+						relation = TimeMLRelType.IS_INCLUDED; // FIXME Remove 
 						break;
 	
 						// never occurs in training data
