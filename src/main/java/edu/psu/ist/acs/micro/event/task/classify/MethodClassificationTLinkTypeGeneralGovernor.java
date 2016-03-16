@@ -96,7 +96,7 @@ public class MethodClassificationTLinkTypeGeneralGovernor extends MethodClassifi
 			TokenSpan e2Span = e2.getTokenSpan();
 			DocumentNLP document = e1.getTokenSpan().getDocument();
 			DependencyPath path = document.getDependencyParse(e1Span.getSentenceIndex()).getPath(e1Span.getStartTokenIndex(), e2Span.getStartTokenIndex());
-			if (path.getDependencyLength() != 1)
+			if (path == null || path.getDependencyLength() != 1)
 				continue;
 
 			String type = path.getDependencyType(0);

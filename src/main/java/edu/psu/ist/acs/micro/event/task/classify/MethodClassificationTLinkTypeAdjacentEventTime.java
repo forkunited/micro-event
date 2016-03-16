@@ -106,7 +106,6 @@ public class MethodClassificationTLinkTypeAdjacentEventTime extends MethodClassi
 			int sentenceIndex = event.getTokenSpan().getSentenceIndex();
 			int eventIndex = eventSpan.getStartTokenIndex();
 			int timeIndex = time.getTokenSpan().getStartTokenIndex();
-			System.out.println(document.getDependencyParse(sentenceIndex) + " " + eventIndex + " " + timeIndex);
 			DependencyParse.DependencyPath path = document.getDependencyParse(sentenceIndex).getPath(eventIndex, timeIndex);
 
 			PoSTag eventTag = document.getPoSTag(eventSpan.getSentenceIndex(), eventIndex);
@@ -115,7 +114,7 @@ public class MethodClassificationTLinkTypeAdjacentEventTime extends MethodClassi
 			
 			int eventToTimexDist = this.context.getDatumTools().getTokenSpanExtractor("BetweenSourceTarget").extract(datum)[0].getLength();
 			boolean eventBeforeTime = timeIndex - eventIndex >= 0;
-			boolean eventGovernsTime = path.getDependencyLength() == 1 && path.isAllGoverning();
+			boolean eventGovernsTime = path != null && path.getDependencyLength() == 1 && path.isAllGoverning();
 			
 			TimeMLRelType etRel = null;
 			if (eventBeforeTime && eventToTimexDist <= MAX_DISTANCE) { // Timex after event adjacent
