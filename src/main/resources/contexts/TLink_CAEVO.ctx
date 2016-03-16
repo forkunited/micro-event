@@ -94,8 +94,8 @@ context tlinkTypeCtx=TLinkType() {
 	data_features devEEMatrix = DataFeatureMatrix(data=${devData}, features=${fsEE});
 	data_features testEEMatrix = DataFeatureMatrix(data=${testData}, features=${fsEE});
 	
-	classify_task devTask = Classification(data=${devMatrix});
-	classify_task testTask = Classification(data=${testMatrix});
+	classify_task devTask = Classification(data=${devEEMatrix});
+	classify_task testTask = Classification(data=${testEEMatrix});
 	
 	classify_method adjETSieve = AdjacentEventTime();
 	classify_method genGovSieve = GeneralGovernor();
