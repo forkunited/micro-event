@@ -102,11 +102,11 @@ public class MethodClassificationTLinkTypeReportingGovernor extends MethodClassi
 			EventMention eGov = null;
 			EventMention eDep = null;
 			if (path.isAllGoverning()) {
-				eGov = e1;
-				eDep = e2;
-			} else if (path.isAllGovernedBy()) {
 				eGov = e2;
 				eDep = e1;
+			} else if (path.isAllGovernedBy()) {
+				eGov = e1;
+				eDep = e2;
 			} else {
 				continue;
 			}
@@ -173,9 +173,9 @@ public class MethodClassificationTLinkTypeReportingGovernor extends MethodClassi
 						relation = TimeMLRelType.IS_INCLUDED;
 						break;
 					case NONE: // p=0.71 22 of 31, but no linguistic reason why
-						relation = TimeMLRelType.AFTER; // FIXME Remove
+						//relation = TimeMLRelType.AFTER; // FIXME Remove
 					case IMPERFECTIVE: // p=0.50 5 of 10, but no linguistic reason
-						relation = TimeMLRelType.IS_INCLUDED; // FIXME Remove 
+						//relation = TimeMLRelType.IS_INCLUDED; // FIXME Remove 
 						break;
 	
 						// never occurs in training data
@@ -186,12 +186,12 @@ public class MethodClassificationTLinkTypeReportingGovernor extends MethodClassi
 	
 					// gov=PAST, dep=FUTURE
 				case FUTURE: // p=1.00 5 of 5 (ignoring VAGUE)
-					relation = TimeMLRelType.BEFORE;
+					//relation = TimeMLRelType.BEFORE;
 					break;
 	
 					// gov=PAST, dep=NONE
 				case NONE: // p=0.70 14 of 20, but no linguistic reason why
-					relation = TimeMLRelType.BEFORE; // FIXME Remove 
+					//relation = TimeMLRelType.BEFORE; // FIXME Remove 
 					break;
 	
 					// never occurs in training data
@@ -219,7 +219,7 @@ public class MethodClassificationTLinkTypeReportingGovernor extends MethodClassi
 						break;
 	
 					case NONE: // p=1.00 2 of 2, but no linguistic reason why
-						relation = TimeMLRelType.IS_INCLUDED; // FIXME Remove 
+						//relation = TimeMLRelType.IS_INCLUDED; // FIXME Remove 
 						break;
 	
 						// never occurs in training data
