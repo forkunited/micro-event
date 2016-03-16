@@ -107,7 +107,7 @@ context tlinkTypeCtx=TLinkType() {
 	classify_method genGovSieveM = LabelMapping(method=${genGovSieve}, labelMapping="TBD");
 	classify_method reichenbachSieveM = LabelMapping(method=${reichenbachSieve}, labelMapping="TBD");
 	classify_method repGovSieveM = LabelMapping(method=${repGovSieve}, labelMapping="TBD");
-	classify_method timeTimeSieveM = LabelMapping(method=${timetimeSieve}, labelMapping="TBD");
+	classify_method timeTimeSieveM = LabelMapping(method=${timeTimeSieve}, labelMapping="TBD");
 	
 	classify_eval devAdjETF = F(task=${devTask}, method=${adjETSieveM}, Beta="1", mode="MICRO");
 	classify_eval devAdjETPrecision = Precision(task=${devTask}, method=${adjETSieveM}, mode="MICRO");
