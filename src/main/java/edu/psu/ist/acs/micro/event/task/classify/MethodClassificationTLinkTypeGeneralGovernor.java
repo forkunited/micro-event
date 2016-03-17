@@ -277,6 +277,7 @@ public class MethodClassificationTLinkTypeGeneralGovernor extends MethodClassifi
 			} else
 				return TimeMLRelType.VAGUE;
 		}
-		return null;
+		
+		return TimeMLRelType.AFTER;
 	}
 }
