@@ -102,12 +102,14 @@ public class MethodClassificationTLinkTypeGeneralGovernor extends MethodClassifi
 			String type = path.getDependencyType(0);
 			EventMention eGov = null;
 			EventMention eDep = null;
+			boolean swapped = false;
 			if (path.isAllGoverning()) {
 				eGov = e1;
 				eDep = e2;
 			} else {
 				eGov = e2;
 				eDep = e1;
+				swapped = true;
 			}
 			
 			TimeMLRelType govDepRel = null;
@@ -132,7 +134,8 @@ public class MethodClassificationTLinkTypeGeneralGovernor extends MethodClassifi
 				System.out.println(data.getReferenceName() + " OUTPUT FROM GENGOV : " + type + " " + eGov.getSourceInstanceId() + "->" + eDep.getSourceInstanceId() + "=" + govDepRel.toString());
 				TimeMLRelType rel = govDepRel;
 				//if (!e1.getId().equals(eGov.getId()))
-				//	rel = TLink.getConverseTimeMLRelType(govDepRel);
+				if (swapped)
+					rel = TLink.getConverseTimeMLRelType(govDepRel);
 				
 				map.put(datum, rel);
 			}
