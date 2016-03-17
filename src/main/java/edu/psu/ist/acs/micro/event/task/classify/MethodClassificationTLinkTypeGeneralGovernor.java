@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.cmu.ml.rtw.generic.data.annotation.DataSet;
 import edu.cmu.ml.rtw.generic.data.annotation.DatumContext;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DependencyParse;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DependencyParse.Dependency;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DependencyParse.DependencyPath;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
-import edu.cmu.ml.rtw.generic.data.feature.DataFeatureMatrix;
 import edu.cmu.ml.rtw.generic.parse.AssignmentList;
 import edu.cmu.ml.rtw.generic.parse.Obj;
 import edu.cmu.ml.rtw.generic.task.classify.MethodClassification;
@@ -49,7 +49,7 @@ public class MethodClassificationTLinkTypeGeneralGovernor extends MethodClassifi
 	}
 
 	@Override
-	public boolean init(DataFeatureMatrix<TLinkDatum<TimeMLRelType>, TimeMLRelType> testData) {
+	public boolean init(DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType> testData) {
 		return true;
 	}
 
@@ -80,10 +80,10 @@ public class MethodClassificationTLinkTypeGeneralGovernor extends MethodClassifi
 	}
 	
 	@Override
-	public Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> classify(DataFeatureMatrix<TLinkDatum<TimeMLRelType>, TimeMLRelType> data) {
+	public Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> classify(DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType> data) {
 		Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> map = new HashMap<TLinkDatum<TimeMLRelType>, TimeMLRelType>();
 		int correct = 0;
-		for (TLinkDatum<TimeMLRelType> datum : data.getData()) {
+		for (TLinkDatum<TimeMLRelType> datum : data) {
 			TLink tlink = datum.getTLink();
 			if (tlink.getType() != TLink.Type.EVENT_EVENT
 					|| tlink.getPosition() != TLink.Position.WITHIN_SENTENCE)

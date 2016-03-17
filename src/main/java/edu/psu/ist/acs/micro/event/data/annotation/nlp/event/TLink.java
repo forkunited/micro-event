@@ -26,7 +26,10 @@ public class TLink implements StoredJSONSerializable {
 	public enum Position {
 		DCT,
 		WITHIN_SENTENCE,
-		BETWEEN_SENTENCE
+		BETWEEN_SENTENCE,
+		DCT_DCT,
+		DCT_BETWEEN_DOCUMENT,
+		BETWEEN_DOCUMENT
 	}
 	
 	public enum TimeMLRelType {
@@ -321,7 +324,14 @@ public class TLink implements StoredJSONSerializable {
 		int sourceSentenceIndex = getSource().getTokenSpan().getSentenceIndex();
 		int targetSentenceIndex = getTarget().getTokenSpan().getSentenceIndex();
 		
-		if (sourceSentenceIndex < 0 || targetSentenceIndex < 0)
+		if (!getSource().getTokenSpan().getDocument().getName().equals(getTarget().getTokenSpan().getDocument().getName())) {
+			if (sourceSentenceIndex < 0 && targetSentenceIndex < 0)
+				return Position.DCT_DCT;
+			else if (sourceSentenceIndex < 0 || targetSentenceIndex < 0)
+				return Position.DCT_BETWEEN_DOCUMENT;
+			else 
+				return Position.BETWEEN_DOCUMENT;
+		} else if (sourceSentenceIndex < 0 || targetSentenceIndex < 0)
 			return Position.DCT;
 		else if (sourceSentenceIndex != targetSentenceIndex)
 			return Position.BETWEEN_SENTENCE;
