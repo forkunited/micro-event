@@ -100,10 +100,10 @@ public class MethodClassificationTLinkTypeReportingGovernor extends MethodClassi
 			
 			EventMention eGov = null;
 			EventMention eDep = null;
-			if (deps != null && deps.isDirectlyGoverning(e1Span.getStartTokenIndex(), e2Span.getEndTokenIndex())) {
+			if (deps != null && deps.isDirectlyGoverning(e1Span.getStartTokenIndex(), e2Span.getStartTokenIndex())) {
 				eGov = e1;
 				eDep = e2;
-			} else if (deps != null && deps.isDirectlyGoverning(e2Span.getStartTokenIndex(), e1Span.getEndTokenIndex())) {
+			} else if (deps != null && deps.isDirectlyGoverning(e2Span.getStartTokenIndex(), e1Span.getStartTokenIndex())) {
 				eGov = e2;
 				eDep = e1;
 			} else {
@@ -111,10 +111,10 @@ public class MethodClassificationTLinkTypeReportingGovernor extends MethodClassi
 				if (parse == null)
 					continue;
 				
-				if (parse.isDominating(e1Span.getStartTokenIndex(), e2Span.getEndTokenIndex())) {
+				if (parse.isDominating(e1Span.getStartTokenIndex(), e2Span.getStartTokenIndex())) {
 					eGov = e1;
 					eDep = e2;
-				} else if (parse.isDominating(e2Span.getStartTokenIndex(), e1Span.getEndTokenIndex())) {
+				} else if (parse.isDominating(e2Span.getStartTokenIndex(), e1Span.getStartTokenIndex())) {
 					eGov = e2;
 					eDep = e1;
 				} else {
