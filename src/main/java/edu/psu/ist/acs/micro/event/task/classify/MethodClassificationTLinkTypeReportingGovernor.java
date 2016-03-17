@@ -5,9 +5,7 @@ import java.util.Map;
 
 import edu.cmu.ml.rtw.generic.data.annotation.DatumContext;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.ConstituencyParse;
-import edu.cmu.ml.rtw.generic.data.annotation.nlp.ConstituencyParse.Constituent;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DependencyParse;
-import edu.cmu.ml.rtw.generic.data.annotation.nlp.DependencyParse.DependencyPath;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.data.feature.DataFeatureMatrix;

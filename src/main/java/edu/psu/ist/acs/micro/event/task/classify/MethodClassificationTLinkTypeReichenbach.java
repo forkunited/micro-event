@@ -1,9 +1,12 @@
 package edu.psu.ist.acs.micro.event.task.classify;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import edu.cmu.ml.rtw.generic.data.annotation.DatumContext;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.DependencyParse;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.DependencyParse.Dependency;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.PoSTag;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.PoSTagClass;
@@ -28,7 +31,7 @@ public class MethodClassificationTLinkTypeReichenbach extends MethodClassificati
 	private static boolean SIMPLIFY_PAST = false;
 	private static boolean SIMPLIFY_PRESENT = false;
 	private static boolean SIMPLIFY_ASPECT = true;
-	//private static boolean USE_EXTENDED_TENSE = true;
+	private static boolean USE_EXTENDED_TENSE = true;
 	//private static boolean USE_EXTENDED_TENSE_ACROSS_SENTENCE = true;
 	
 	
@@ -116,13 +119,14 @@ public class MethodClassificationTLinkTypeReichenbach extends MethodClassificati
 			if (!PoSTagClass.classContains(PoSTagClass.VB, pos1) || !PoSTagClass.classContains(PoSTagClass.VB, pos2))
 				continue;
 			
+			
+			
 			if (SAME_TENSE && e1.getTimeMLTense() != e2.getTimeMLTense())
 				continue;
 			
-			// FIXME Compute "pseudo tenses" if necessary
 			
-			TimeMLTense e1Tense = simplifyTense(e1.getTimeMLTense());
-			TimeMLTense e2Tense = simplifyTense(e2.getTimeMLTense());
+			TimeMLTense e1Tense = simplifyTense(getTense(e1));
+			TimeMLTense e2Tense = simplifyTense(getTense(e2));
 			TimeMLAspect e1Aspect = simplifyAspect(e1.getTimeMLAspect());
 			TimeMLAspect e2Aspect = simplifyAspect(e2.getTimeMLAspect());
 			
@@ -185,6 +189,31 @@ public class MethodClassificationTLinkTypeReichenbach extends MethodClassificati
 		}
 	
 		return map;
+	}
+	
+	private TimeMLTense getTense(EventMention e) {
+		if (!USE_EXTENDED_TENSE)
+			return e.getTimeMLTense();
+
+		int eventIndex = e.getTokenSpan().getStartTokenIndex();
+		DocumentNLP document = e.getTokenSpan().getDocument();
+		DependencyParse depParse = document.getDependencyParse(e.getTokenSpan().getSentenceIndex());
+		if (depParse == null)
+			return e.getTimeMLTense();
+		
+		List<Dependency> deps = depParse.getGovernedDependencies(eventIndex);
+		for (Dependency dep : deps) {
+			if (!dep.getType().equals("aux"))
+				continue;
+			String depTerm = document.getTokenStr(e.getTokenSpan().getSentenceIndex(), dep.getDependentTokenIndex()).toLowerCase();
+			if (depTerm.equals("would") || depTerm.equals("could") ||
+				depTerm.equals("might") || depTerm.equals("may") ||
+				depTerm.equals("should") || depTerm.equals("'d") ||
+				depTerm.equals("will"))
+				return TimeMLTense.FUTURE;
+		}
+		
+		return e.getTimeMLTense();
 	}
 	
 	private TimeMLTense simplifyTense(TimeMLTense tense){
