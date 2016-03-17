@@ -114,7 +114,7 @@ context tlinkTypeCtx=TLinkType() {
 	data_features trainMatrixETBS = DataFeatureMatrix(data=${trainDataETBS}, features=${fsET});
 	data_features trainMatrixEEWS = DataFeatureMatrix(data=${trainDataEEWS}, features=${fsEE});
 	data_features trainMatrixEEBS = DataFeatureMatrix(data=${trainDataEEBS}, features=${fsEE});
-	data_features trainMatrixEEG = DataFeatureMatrix(data=${trainDataEEG}, features=${fsEE});
+	data_features trainMatrixEED = DataFeatureMatrix(data=${trainDataEED}, features=${fsEE});
 	
 	classify_task devTask = Classification(data=${devData});
 	classify_task testTask = Classification(data=${testData});
@@ -134,28 +134,28 @@ context tlinkTypeCtx=TLinkType() {
 	classify_method yadllETBSUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixETBS}, trainEvaluation=${modelF1});
 	classify_method yadllEEWSUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixEEWS}, trainEvaluation=${modelF1});
 	classify_method yadllEEBSUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixEEBS}, trainEvaluation=${modelF1});
-	classify_method yadllEEGUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixEEG}, trainEvaluation=${modelF1});
+	classify_method yadllEEDUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixEED}, trainEvaluation=${modelF1});
 	
 	classify_method yadllDCTSub = FilterDatumIndicator(method=${yadllDCTUnfiltered}, datumIndicator="ETDCT");
 	classify_method yadllETWSSub = FilterDatumIndicator(method=${yadllETWSUnfiltered}, datumIndicator="ETWS");
 	classify_method yadllETBSSub = FilterDatumIndicator(method=${yadllETBSUnfiltered}, datumIndicator="ETBS");
 	classify_method yadllEEWSSub = FilterDatumIndicator(method=${yadllEEWSUnfiltered}, datumIndicator="EEWS");
 	classify_method yadllEEBSSub = FilterDatumIndicator(method=${yadllEEBSUnfiltered}, datumIndicator="EEBS");
-	classify_method yadllEEGSub = FilterDatumIndicator(method=${yadllEEGUnfiltered}, datumIndicator="EEG");
+	classify_method yadllEEDSub = FilterDatumIndicator(method=${yadllEEDUnfiltered}, datumIndicator="EED");
 	
 	classify_eval devEvalDCT = F(task=${devTask}, method=${yadllDCTSub}, Beta="1", mode="MICRO");
 	classify_eval devEvalETWS = F(task=${devTask}, method=${yadllETWSSub}, Beta="1", mode="MICRO");
 	classify_eval devEvalETBS = F(task=${devTask}, method=${yadllETBSSub}, Beta="1", mode="MICRO");
 	classify_eval devEvalEEWS = F(task=${devTask}, method=${yadllEEWSSub}, Beta="1", mode="MICRO");
 	classify_eval devEvalEEBS = F(task=${devTask}, method=${yadllEEBSSub}, Beta="1", mode="MICRO");
-	classify_eval devEvalEEG = F(task=${devTask}, method=${yadllEEGSub}, Beta="1", mode="MICRO");
+	classify_eval devEvalEED = F(task=${devTask}, method=${yadllEEDSub}, Beta="1", mode="MICRO");
 	
 	classify_method yadllDCTSieve = RunClassifyMethodSearch(fn=${devEvalDCT}, search=${yadllSearch});
 	classify_method yadllETWSSieve = RunClassifyMethodSearch(fn=${devEvalETWS}, search=${yadllSearch});
 	classify_method yadllETBSSieve = RunClassifyMethodSearch(fn=${devEvalETBS}, search=${yadllSearch});
 	classify_method yadllEEWSSieve = RunClassifyMethodSearch(fn=${devEvalEEWS}, search=${yadllSearch});
 	classify_method yadllEEBSSieve = RunClassifyMethodSearch(fn=${devEvalEEBS}, search=${yadllSearch});
-	classify_method yadllEEGSieve = RunClassifyMethodSearch(fn=${devEvalEEG}, search=${yadllSearch});	
+	classify_method yadllEEDSieve = RunClassifyMethodSearch(fn=${devEvalEED}, search=${yadllSearch});	
 	
 	classify_method adjETSieve = AdjacentEventTime();
 	classify_method genGovSieve = GeneralGovernor();
@@ -218,10 +218,10 @@ context tlinkTypeCtx=TLinkType() {
 	classify_eval testYadllEEBSPrecision = Precision(task=${testTask}, method=${yadllEEBSSieve}, mode="MICRO");
 	classify_eval testYadllEEBSRecall = Recall(task=${testTask}, method=${yadllEEBSSieve}, mode="MICRO");
 
-	classify_eval devYadllEEGPrecision = Precision(task=${devTask}, method=${yadllEEGSieve}, mode="MICRO");
-	classify_eval devYadllEEGRecall = Recall(task=${devTask}, method=${yadllEEGSieve}, mode="MICRO");
-	classify_eval testYadllEEGPrecision = Precision(task=${testTask}, method=${yadllEEGSieve}, mode="MICRO");
-	classify_eval testYadllEEGRecall = Recall(task=${testTask}, method=${yadllEEGSieve}, mode="MICRO");
+	classify_eval devYadllEEDPrecision = Precision(task=${devTask}, method=${yadllEEDSieve}, mode="MICRO");
+	classify_eval devYadllEEDRecall = Recall(task=${devTask}, method=${yadllEEDSieve}, mode="MICRO");
+	classify_eval testYadllEEDPrecision = Precision(task=${testTask}, method=${yadllEEDSieve}, mode="MICRO");
+	classify_eval testYadllEEDRecall = Recall(task=${testTask}, method=${yadllEEDSieve}, mode="MICRO");
 
 	value strEvals = OutputStrings(id="TLink_CAEVO_Evals", storage="EventString", collection="ExperimentEvaluationOutput", 
 	                 refs=
@@ -247,7 +247,7 @@ context tlinkTypeCtx=TLinkType() {
 		                 ${testYadllEEWSPrecision}, ${testYadllEEWSRecall}, 
 		                 ${devYadllEEBSPrecision}, ${devYadllEEBSRecall},
 		                 ${testYadllEEBSPrecision}, ${testYadllEEBSRecall}, 
-		                 ${devYadllEEGPrecision}, ${devYadllEEGRecall},
-		                 ${testYadllEEGPrecision}, ${testYadllEEGRecall}
+		                 ${devYadllEEDPrecision}, ${devYadllEEDRecall},
+		                 ${testYadllEEDPrecision}, ${testYadllEEDRecall}
 	                 ));
 };
