@@ -82,7 +82,7 @@ public class MethodClassificationTLinkTypeGeneralGovernor extends MethodClassifi
 	@Override
 	public Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> classify(DataFeatureMatrix<TLinkDatum<TimeMLRelType>, TimeMLRelType> data) {
 		Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> map = new HashMap<TLinkDatum<TimeMLRelType>, TimeMLRelType>();
-		
+		int correct = 0;
 		for (TLinkDatum<TimeMLRelType> datum : data.getData()) {
 			TLink tlink = datum.getTLink();
 			if (tlink.getType() != TLink.Type.EVENT_EVENT
@@ -102,14 +102,12 @@ public class MethodClassificationTLinkTypeGeneralGovernor extends MethodClassifi
 			String type = path.getDependencyType(0);
 			EventMention eGov = null;
 			EventMention eDep = null;
-			boolean swapped = false;
 			if (path.isAllGoverning()) {
 				eGov = e1;
 				eDep = e2;
 			} else {
 				eGov = e2;
 				eDep = e1;
-				swapped = true;
 			}
 			
 			TimeMLRelType govDepRel = null;
@@ -133,14 +131,16 @@ public class MethodClassificationTLinkTypeGeneralGovernor extends MethodClassifi
 			if (govDepRel != null) {
 				System.out.println(data.getReferenceName() + " OUTPUT FROM GENGOV : " + type + " " + eGov.getSourceInstanceId() + "->" + eDep.getSourceInstanceId() + "=" + govDepRel.toString());
 				TimeMLRelType rel = govDepRel;
-				//if (!e1.getId().equals(eGov.getId()))
-				if (swapped)
+				if (!e1.getId().equals(eGov.getId()))
 					rel = TLink.getConverseTimeMLRelType(govDepRel);
+				
+				if (datum.getLabel().equals(rel))
+					correct++;
 				
 				map.put(datum, rel);
 			}
 		}
-	
+		System.out.println("PRECISION " + correct + " " + map.size());
 		return map;
 	}
 	
