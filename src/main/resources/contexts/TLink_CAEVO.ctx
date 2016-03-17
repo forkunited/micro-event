@@ -46,18 +46,18 @@ context tlinkTypeCtx=TLinkType() {
 	
 	feature feventToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${strDef});
 	feature feventTokenB = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${strDef} o ${inside1} o ${before2}));
-	feature feventPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${pos}));
+	feature feventPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${pos});
 	feature feventPosB1 = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${pos} o ${before1}));
 	feature feventPosB2 = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${pos} o ${before2}));
 	feature feventTense = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="TIMEML_TENSE");
 	feature feventAspect = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="TIMEML_ASPECT");
 	feature feventClass = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="TIMEML_CLASS");
 	feature feventDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${strDef} o ${dep}));
-	feature ftimeToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=(${strDef}));
+	feature ftimeToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=${strDef});
 	feature ftimeTokenh = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=(${strDef} o ${head}));
-	feature ftimeSentPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=(${sentPos}));
+	feature ftimeSentPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=${sentPos});
 	feature feventTimeToken = Conjunction(minFeatureOccurrence="2", features=(${feventToken}, ${ftimeToken}));
-	feature ftokenPathET = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="BetweenSourceTarget", fn=(${strDef}));
+	feature ftokenPathET = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="BetweenSourceTarget", fn=${strDef});
 	feature fdepPathET = DependencyPath(minFeatureOccurrence="2", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime", useRelationTypes="true");
 	feature fconPathET = ConstituencyPath(minFeatureOccurrence="2", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime");
 	feature fdepTypeET = DependencyPathType(sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime");
