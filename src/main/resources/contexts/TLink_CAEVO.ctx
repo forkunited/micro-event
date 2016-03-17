@@ -44,7 +44,7 @@ context tlinkTypeCtx=TLinkType() {
 	ts_str_fn lemma = TokenAnnotation(annotationType="lemma");
 	ts_str_fn sentPos = SentencePosition();
 	
-	feature feventToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${strDef}));
+	feature feventToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${strDef});
 	feature feventTokenB = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${strDef} o ${inside1} o ${before2}));
 	feature feventPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${pos}));
 	feature feventPosB1 = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${pos} o ${before1}));
