@@ -129,13 +129,14 @@ public class MethodClassificationTLinkTypeGeneralGovernor extends MethodClassifi
 				govDepRel = classifyEventPair_dobj(eGov, eDep);
 			 
 			if (govDepRel != null) {
-				System.out.println(data.getReferenceName() + " OUTPUT FROM GENGOV : " + type + " " + eGov.getSourceInstanceId() + "->" + eDep.getSourceInstanceId() + "=" + govDepRel.toString());
 				TimeMLRelType rel = govDepRel;
 				if (!e1.getId().equals(eGov.getId()))
 					rel = TLink.getConverseTimeMLRelType(govDepRel);
 				
 				if (datum.getLabel().equals(rel))
 					correct++;
+				
+				System.out.println(data.getReferenceName() + " OUTPUT FROM GENGOV : " + type + " " + eGov.getSourceInstanceId() + "->" + eDep.getSourceInstanceId() + "=" + govDepRel.toString() + " (" + rel + ")" + datum.getLabel().equals(rel));
 				
 				map.put(datum, rel);
 			}
