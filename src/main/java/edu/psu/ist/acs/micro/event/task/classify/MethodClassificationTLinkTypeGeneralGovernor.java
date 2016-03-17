@@ -136,7 +136,7 @@ public class MethodClassificationTLinkTypeGeneralGovernor extends MethodClassifi
 				if (datum.getLabel().equals(rel))
 					correct++;
 				
-				System.out.println(data.getReferenceName() + " OUTPUT FROM GENGOV : " + type + " " + eGov.getSourceInstanceId() + "->" + eDep.getSourceInstanceId() + "=" + govDepRel.toString() + " (" + rel + ")" + datum.getLabel().equals(rel));
+				System.out.println(data.getReferenceName() + " OUTPUT FROM GENGOV : " + type + " " + eGov.getSourceInstanceId() + "->" + eDep.getSourceInstanceId() + "=" + govDepRel.toString() + " (" + rel + ")" + datum.getLabel().equals(rel) + " TRUE-" + datum.getLabel());
 				
 				map.put(datum, rel);
 			}
