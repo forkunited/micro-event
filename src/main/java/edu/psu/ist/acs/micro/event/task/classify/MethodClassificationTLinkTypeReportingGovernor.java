@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.cmu.ml.rtw.generic.data.annotation.DatumContext;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.ConstituencyParse.Constituent;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.DependencyParse;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DependencyParse.DependencyPath;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
@@ -92,23 +94,32 @@ public class MethodClassificationTLinkTypeReportingGovernor extends MethodClassi
 			TokenSpan e1Span = e1.getTokenSpan();
 			TokenSpan e2Span = e2.getTokenSpan();
 			DocumentNLP document = e1.getTokenSpan().getDocument();
-			if (document.getDependencyParse(e1Span.getSentenceIndex()) == null)
-				continue;
-			
-			DependencyPath path = document.getDependencyParse(e1Span.getSentenceIndex()).getPath(e1Span.getStartTokenIndex(), e2Span.getStartTokenIndex());
-			if (path == null)
-				continue;
+						
+			DependencyPath path = null;
+			DependencyParse deps = document.getDependencyParse(e1Span.getSentenceIndex());
+			if (deps != null)
+				path = deps.getPath(e1Span.getStartTokenIndex(), e2Span.getStartTokenIndex());
 			
 			EventMention eGov = null;
 			EventMention eDep = null;
-			if (path.isAllGoverning()) {
+			if (path != null && path.getDependencyLength() == 1 && path.isAllGoverning()) {
 				eGov = e1;
 				eDep = e2;
-			} else if (path.isAllGovernedBy()) {
+			} else if (path != null && path.getDependencyLength() == 1 && path.isAllGovernedBy()) {
 				eGov = e2;
 				eDep = e1;
 			} else {
-				continue;
+				Constituent cons1 = document.getConstituencyParse(e1Span.getSentenceIndex()).getTokenConstituent(e1Span.getStartTokenIndex()).getParent();
+				Constituent cons2 = document.getConstituencyParse(e2Span.getSentenceIndex()).getTokenConstituent(e2Span.getStartTokenIndex()).getParent();
+				if (cons1 != null && cons1.getTokenSpan().containsToken(e2Span.getSentenceIndex(), e2Span.getStartTokenIndex())) {
+					eGov = e1;
+					eDep = e2;
+				} else if (cons2 != null && cons2.getTokenSpan().containsToken(e1Span.getSentenceIndex(), e1Span.getStartTokenIndex())) {
+					eGov = e2;
+					eDep = e1;
+				} else {
+					continue;
+				}
 			}
 			
 			if (eGov.getTimeMLClass() != TimeMLClass.REPORTING || eDep.getTimeMLClass() == TimeMLClass.REPORTING)
