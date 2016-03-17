@@ -96,17 +96,14 @@ public class MethodClassificationTLinkTypeReportingGovernor extends MethodClassi
 			TokenSpan e2Span = e2.getTokenSpan();
 			DocumentNLP document = e1.getTokenSpan().getDocument();
 						
-			DependencyPath path = null;
 			DependencyParse deps = document.getDependencyParse(e1Span.getSentenceIndex());
-			if (deps != null)
-				path = deps.getPath(e1Span.getStartTokenIndex(), e2Span.getStartTokenIndex());
 			
 			EventMention eGov = null;
 			EventMention eDep = null;
-			if (path != null && path.getDependencyLength() == 1 && path.isAllGoverning()) {
+			if (deps != null && deps.isDirectlyGoverning(e1Span.getStartTokenIndex(), e2Span.getEndTokenIndex())) {
 				eGov = e1;
 				eDep = e2;
-			} else if (path != null && path.getDependencyLength() == 1 && path.isAllGovernedBy()) {
+			} else if (deps != null && deps.isDirectlyGoverning(e2Span.getStartTokenIndex(), e1Span.getEndTokenIndex())) {
 				eGov = e2;
 				eDep = e1;
 			} else {
@@ -114,12 +111,10 @@ public class MethodClassificationTLinkTypeReportingGovernor extends MethodClassi
 				if (parse == null)
 					continue;
 				
-				Constituent cons1 = parse.getTokenConstituent(e1Span.getStartTokenIndex()).getParent();
-				Constituent cons2 = parse.getTokenConstituent(e2Span.getStartTokenIndex()).getParent();
-				if (cons1 != null && cons1.getTokenSpan().containsToken(e2Span.getSentenceIndex(), e2Span.getStartTokenIndex())) {
+				if (parse.isDominating(e1Span.getStartTokenIndex(), e2Span.getEndTokenIndex())) {
 					eGov = e1;
 					eDep = e2;
-				} else if (cons2 != null && cons2.getTokenSpan().containsToken(e1Span.getSentenceIndex(), e1Span.getStartTokenIndex())) {
+				} else if (parse.isDominating(e2Span.getStartTokenIndex(), e1Span.getEndTokenIndex())) {
 					eGov = e2;
 					eDep = e1;
 				} else {
