@@ -127,8 +127,9 @@ public class MethodClassificationTLinkTypeGeneralGovernor extends MethodClassifi
 				govDepRel = classifyEventPair_conj_or(eGov, eDep);
 			else if (type.equals("dobj"))
 				govDepRel = classifyEventPair_dobj(eGov, eDep);
-			
+			 
 			if (govDepRel != null) {
+				System.out.println("OUTPUT FROM GENGOV : " + type + " " + eGov.getSourceInstanceId() + "->" + eDep.getSourceInstanceId() + "=" + govDepRel.toString());
 				TimeMLRelType rel = govDepRel;
 				if (!e1.getId().equals(eGov.getId()))
 					rel = TLink.getConverseTimeMLRelType(govDepRel);
@@ -158,12 +159,8 @@ public class MethodClassificationTLinkTypeGeneralGovernor extends MethodClassifi
 			for (Dependency dep : deps) {
 				if (dep.getType().equals("det")) {
 					String detStr = depSpan.getDocument().getTokenStr(depSpan.getSentenceIndex(), dep.getDependentTokenIndex()).toLowerCase();
-				
 					if (detStr.equals("a"))
 						return TimeMLRelType.BEFORE;
-					else if (detStr.equals("the"))
-						return TimeMLRelType.AFTER; // FIXME Remove
-				
 				}
 			}
 		} else {
