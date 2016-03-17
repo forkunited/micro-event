@@ -17,7 +17,7 @@ context tlinkTypeCtx=TLinkType() {
 	data trainDataETWS = FilterData(data=${trainDataET}, datumIndicator="PositionWithinSentence");
 	data trainDataETBS = FilterData(data=${trainDataET}, datumIndicator="PositionBetweenSentence");
 	data trainDataEEWS = FilterData(data=${trainDataEE}, datumIndicator="PositionWithinSentence");
-	data trainDataEEBS = FilterData(data=${trainDataEE}, datumIndicator="PositionBetweenSenence");
+	data trainDataEEBS = FilterData(data=${trainDataEE}, datumIndicator="PositionBetweenSentence");
 	data trainDataEED = FilterData(data=${trainDataEE}, datumIndicator="PositionWithinSentenceDominant");
 
 	value ETDCTIndicator = ConjoinDatumIndicators(name="ETDCT", fns=("TypeEventTime", "PositionDCT"));
@@ -142,8 +142,6 @@ context tlinkTypeCtx=TLinkType() {
 	classify_method yadllEEWSSub = FilterDatumIndicator(method=${yadllEEWSUnfiltered}, datumIndicator="EEWS");
 	classify_method yadllEEBSSub = FilterDatumIndicator(method=${yadllEEBSUnfiltered}, datumIndicator="EEBS");
 	classify_method yadllEEGSub = FilterDatumIndicator(method=${yadllEEGUnfiltered}, datumIndicator="EEG");
-	
-	
 	
 	classify_eval devEvalDCT = F(task=${devTask}, method=${yadllDCTSub}, Beta="1", mode="MICRO");
 	classify_eval devEvalETWS = F(task=${devTask}, method=${yadllETWSSub}, Beta="1", mode="MICRO");
