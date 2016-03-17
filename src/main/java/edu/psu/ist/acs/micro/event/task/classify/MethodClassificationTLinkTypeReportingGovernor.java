@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.cmu.ml.rtw.generic.data.annotation.DatumContext;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.ConstituencyParse;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.ConstituencyParse.Constituent;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DependencyParse;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DependencyParse.DependencyPath;
@@ -109,8 +110,12 @@ public class MethodClassificationTLinkTypeReportingGovernor extends MethodClassi
 				eGov = e2;
 				eDep = e1;
 			} else {
-				Constituent cons1 = document.getConstituencyParse(e1Span.getSentenceIndex()).getTokenConstituent(e1Span.getStartTokenIndex()).getParent();
-				Constituent cons2 = document.getConstituencyParse(e2Span.getSentenceIndex()).getTokenConstituent(e2Span.getStartTokenIndex()).getParent();
+				ConstituencyParse parse = document.getConstituencyParse(e1Span.getSentenceIndex());
+				if (parse == null)
+					continue;
+				
+				Constituent cons1 = parse.getTokenConstituent(e1Span.getStartTokenIndex()).getParent();
+				Constituent cons2 = parse.getTokenConstituent(e2Span.getStartTokenIndex()).getParent();
 				if (cons1 != null && cons1.getTokenSpan().containsToken(e2Span.getSentenceIndex(), e2Span.getStartTokenIndex())) {
 					eGov = e1;
 					eDep = e2;
@@ -197,7 +202,7 @@ public class MethodClassificationTLinkTypeReportingGovernor extends MethodClassi
 	
 					// gov=PAST, dep=FUTURE
 				case FUTURE: // p=1.00 5 of 5 (ignoring VAGUE)
-					//relation = TimeMLRelType.BEFORE;
+					relation = TimeMLRelType.BEFORE;
 					break;
 	
 					// gov=PAST, dep=NONE
