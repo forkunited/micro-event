@@ -241,9 +241,8 @@ public class MethodClassificationTLinkTypeGeneralGovernor extends MethodClassifi
 	}
 
 	private TimeMLRelType classifyEventPair_ccomp(EventMention eGov, EventMention eDep) {
-		// FIXME Add "extended tense" if necessary
-		TimeMLTense eDepTense = eDep.getTimeMLTense();
-		TimeMLTense eGovTense = eGov.getTimeMLTense();
+		TimeMLTense eDepTense = eDep.getTimeMLExtendedTense();
+		TimeMLTense eGovTense = eGov.getTimeMLExtendedTense();
 
 		TimeMLClass eDepClass = eDep.getTimeMLClass();
 		TimeMLClass eGovClass = eGov.getTimeMLClass();

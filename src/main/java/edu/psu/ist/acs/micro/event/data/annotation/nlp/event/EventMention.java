@@ -1,10 +1,15 @@
 package edu.psu.ist.acs.micro.event.data.annotation.nlp.event;
 
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.cmu.ml.rtw.generic.data.DataTools;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.DependencyParse;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.DependencyParse.Dependency;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan.SerializationType;
 import edu.cmu.ml.rtw.generic.data.store.StoreReference;
 import edu.cmu.ml.rtw.generic.util.StoredJSONSerializable;
@@ -175,6 +180,28 @@ public class EventMention implements TLinkable {
 	
 	public TimeMLTense getTimeMLTense() {
 		return this.timeMLTense;
+	}
+	
+	public TimeMLTense getTimeMLExtendedTense() {
+		int eventIndex = this.tokenSpan.getStartTokenIndex();
+		DocumentNLP document = this.tokenSpan.getDocument();
+		DependencyParse depParse = document.getDependencyParse(this.tokenSpan.getSentenceIndex());
+		if (depParse == null)
+			return getTimeMLTense();
+		
+		List<Dependency> deps = depParse.getGovernedDependencies(eventIndex);
+		for (Dependency dep : deps) {
+			if (!dep.getType().equals("aux"))
+				continue;
+			String depTerm = document.getTokenStr(this.tokenSpan.getSentenceIndex(), dep.getDependentTokenIndex()).toLowerCase();
+			if (depTerm.equals("would") || depTerm.equals("could") ||
+				depTerm.equals("might") || depTerm.equals("may") ||
+				depTerm.equals("should") || depTerm.equals("'d") ||
+				depTerm.equals("will"))
+				return TimeMLTense.FUTURE;
+		}
+		
+		return getTimeMLTense();
 	}
 	
 	public TimeMLAspect getTimeMLAspect() {
