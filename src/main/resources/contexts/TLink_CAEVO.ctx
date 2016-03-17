@@ -106,7 +106,7 @@ context tlinkTypeCtx=TLinkType() {
 	
 	feature_set fsDCT = FeatureSet(features=(${feventToken}, ${feventTokenB}, ${feventPos},
 											 ${feventPosB1}, ${feventPosB2}, ${feventTense}, ${feventAspect}, 
-											 ${feventClass}), initData=(${trainDataETDCT}));
+											 ${feventClass}), initData=(${trainDataDCT}));
 
 	
 	data_features trainMatrixDCT = DataFeatureMatrix(data=${trainDataDCT}, features=${fsDCT});
