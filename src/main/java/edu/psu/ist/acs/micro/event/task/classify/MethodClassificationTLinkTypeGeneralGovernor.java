@@ -156,9 +156,15 @@ public class MethodClassificationTLinkTypeGeneralGovernor extends MethodClassifi
 			DependencyParse parse = depSpan.getDocument().getDependencyParse(depSpan.getSentenceIndex());
 			List<Dependency> deps = parse.getGovernedDependencies(depSpan.getStartTokenIndex());
 			for (Dependency dep : deps) {
-				if (dep.getType().equals("det") 
-						&& depSpan.getDocument().getTokenStr(depSpan.getSentenceIndex(), dep.getDependentTokenIndex()).toLowerCase().equals("a"))
-					return TimeMLRelType.BEFORE;
+				if (dep.getType().equals("det")) {
+					String detStr = depSpan.getDocument().getTokenStr(depSpan.getSentenceIndex(), dep.getDependentTokenIndex()).toLowerCase();
+				
+					if (detStr.equals("a"))
+						return TimeMLRelType.BEFORE;
+					else if (detStr.equals("the"))
+						return TimeMLRelType.AFTER; // FIXME Remove
+				
+				}
 			}
 		} else {
 			return TimeMLRelType.VAGUE;
@@ -207,7 +213,7 @@ public class MethodClassificationTLinkTypeGeneralGovernor extends MethodClassifi
 		} else if (mark != null && mark.toLowerCase().equals("because")) {
 			return TimeMLRelType.BEFORE;
 		} else {
-			return TimeMLRelType.VAGUE; // FIXME return null;
+			return null;
 		} 
 	}
 
