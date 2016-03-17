@@ -207,8 +207,8 @@ public class MethodClassificationTLinkTypeGeneralGovernor extends MethodClassifi
 		} else if (mark != null && mark.toLowerCase().equals("because")) {
 			return TimeMLRelType.BEFORE;
 		} else {
-			return null;
-		}
+			return TimeMLRelType.VAGUE; // FIXME return null;
+		} 
 	}
 
 	private TimeMLRelType classifyEventPair_nsubj(EventMention eGov, EventMention eDep) {
@@ -278,6 +278,6 @@ public class MethodClassificationTLinkTypeGeneralGovernor extends MethodClassifi
 				return TimeMLRelType.VAGUE;
 		}
 		
-		return TimeMLRelType.AFTER;
+		return null;
 	}
 }
