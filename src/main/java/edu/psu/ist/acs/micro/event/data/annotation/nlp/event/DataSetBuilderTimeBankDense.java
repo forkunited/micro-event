@@ -6,6 +6,7 @@ import java.util.Set;
 
 import edu.cmu.ml.rtw.generic.data.StoredItemSetInMemoryLazy;
 import edu.cmu.ml.rtw.generic.data.annotation.DataSet;
+import edu.cmu.ml.rtw.generic.data.annotation.Datum.Tools.LabelMapping;
 import edu.cmu.ml.rtw.generic.data.annotation.DatumContext;
 import edu.cmu.ml.rtw.generic.data.annotation.Datum.Tools.DataSetBuilder;
 import edu.cmu.ml.rtw.generic.parse.AssignmentList;
@@ -43,7 +44,8 @@ public class DataSetBuilderTimeBankDense extends DataSetBuilder<TLinkDatum<TimeM
 	private String storage;
 	private String collection;
 	private Part part = Part.TRAIN;
-	private String[] parameterNames = { "storage", "collection", "part" };
+	private LabelMapping<TimeMLRelType> labelMapping;
+	private String[] parameterNames = { "storage", "collection", "part", "labelMapping" };
 	
 	private static Integer datumId = 1;
 	
@@ -77,6 +79,8 @@ public class DataSetBuilderTimeBankDense extends DataSetBuilder<TLinkDatum<TimeM
 			return Obj.stringValue(this.collection);
 		else if (parameter.equals("part"))
 			return Obj.stringValue(this.part.toString());
+		else if (parameter.equals("labelMapping"))
+			return this.labelMapping == null ? null : Obj.stringValue(this.labelMapping.toString());
 		return null;
 	}
 
@@ -88,6 +92,8 @@ public class DataSetBuilderTimeBankDense extends DataSetBuilder<TLinkDatum<TimeM
 			this.collection = this.context.getMatchValue(parameterValue);
 		else if (parameter.equals("part"))
 			this.part = Part.valueOf(this.context.getMatchValue(parameterValue));
+		else if (parameter.equals("labelMapping"))
+			this.labelMapping = (parameterValue == null) ? null : this.context.getDatumTools().getLabelMapping(this.context.getMatchValue(parameterValue));
 		else
 			return false;
 		return true;
@@ -123,7 +129,7 @@ public class DataSetBuilderTimeBankDense extends DataSetBuilder<TLinkDatum<TimeM
 				
 				synchronized (data) {
 					data.add(new TLinkDatum<TimeMLRelType>(
-						getNextDatumId(), tlink, tlink.getTimeMLRelType()));
+						getNextDatumId(), tlink, (labelMapping != null) ? labelMapping.map(tlink.getTimeMLRelType()) : tlink.getTimeMLRelType()));
 				}
 				
 				return true;

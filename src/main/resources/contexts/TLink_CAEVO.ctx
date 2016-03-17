@@ -4,9 +4,9 @@ value randomSeed=SetRandomSeed(seed="1");
 value cleanFn=BuildCleanFn(name="BagOfWordsCleanFn", fns=("Trim", "RemoveSymbols", "ReplaceNumbers", "UnderscoreToSpace", "Trim", "RemoveLongTokens", "Stem", "SpaceToUnderscore"));
 
 context tlinkTypeCtx=TLinkType() {	
-	data trainData = TimeBankDense(storage="EventBson", collection="tbd_tlinks", part="TRAIN");
-	data devData = TimeBankDense(storage="EventBson", collection="tbd_tlinks", part="DEV");
-	data testData = TimeBankDense(storage="EventBson", collection="tbd_tlinks", part="TEST");
+	data trainData = TimeBankDense(storage="EventBson", collection="tbd_tlinks", part="TRAIN", labelMapping="TBD");
+	data devData = TimeBankDense(storage="EventBson", collection="tbd_tlinks", part="DEV", labelMapping="TBD");
+	data testData = TimeBankDense(storage="EventBson", collection="tbd_tlinks", part="TEST", labelMapping="TBD");
 
 	value countTrainData = SizeData(data=${trainData});
 	value countDevData = SizeData(data=${devData});
