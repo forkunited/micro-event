@@ -128,7 +128,7 @@ context tlinkTypeCtx=TLinkType() {
 		dimension numEpochs=Enumerated(values=("1", "5", "10"), stageIndex="0");
 	};
 
-	evaluation modelF1=F(filterLabel="true", Beta="1");
+	evaluation modelF1=F(mode="MICRO", Beta="1");
 	classify_method yadllDCTUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixDCT}, trainEvaluation=${modelF1});
 	classify_method yadllETWSUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixETWS}, trainEvaluation=${modelF1});
 	classify_method yadllETBSUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixETBS}, trainEvaluation=${modelF1});
