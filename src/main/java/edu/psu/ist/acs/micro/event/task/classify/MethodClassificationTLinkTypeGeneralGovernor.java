@@ -82,7 +82,7 @@ public class MethodClassificationTLinkTypeGeneralGovernor extends MethodClassifi
 	@Override
 	public Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> classify(DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType> data) {
 		Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> map = new HashMap<TLinkDatum<TimeMLRelType>, TimeMLRelType>();
-		int correct = 0;
+
 		for (TLinkDatum<TimeMLRelType> datum : data) {
 			TLink tlink = datum.getTLink();
 			if (tlink.getType() != TLink.Type.EVENT_EVENT
@@ -133,15 +133,10 @@ public class MethodClassificationTLinkTypeGeneralGovernor extends MethodClassifi
 				if (!e1.getId().equals(eGov.getId()))
 					rel = TLink.getConverseTimeMLRelType(govDepRel);
 				
-				if (datum.getLabel().equals(rel))
-					correct++;
-				
-				System.out.println(data.getReferenceName() + " OUTPUT FROM GENGOV : " + type + " " + eGov.getSourceInstanceId() + "->" + eDep.getSourceInstanceId() + "=" + govDepRel.toString() + " (" + rel + ")" + datum.getLabel().equals(rel) + " TRUE-" + datum.getLabel());
-				
 				map.put(datum, rel);
 			}
 		}
-		System.out.println("PRECISION " + correct + " " + map.size());
+		
 		return map;
 	}
 	
