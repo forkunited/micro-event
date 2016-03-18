@@ -125,6 +125,7 @@ context tlinkTypeCtx=TLinkType() {
 
 	search yadllSearch=Grid() {
 		dimension stepSize=Enumerated(values=(".01", ".1"), stageIndex="0");
+		dimension classificationThreshold=Enumerated(values=("0.0", "0.3", "0.5", "0.7"), stageIndex="0");
 	};
 
 	evaluation modelF1=F(mode="MICRO", Beta="1");
