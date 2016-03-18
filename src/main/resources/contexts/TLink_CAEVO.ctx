@@ -119,22 +119,21 @@ context tlinkTypeCtx=TLinkType() {
 	classify_task devTask = Classification(data=${devData});
 	classify_task testTask = Classification(data=${testData});
 	
-	model yadll=YADLL(numEpochs="100", fnNodes=("Sigmoid"), fnParameters=("FanIn", "Zeros"), Sigmoid_0_input="FanIn_0*x+Zeros_1", Sigmoid_0_size="6", targetFnNode="Sigmoid_0") {
+	model yadll=YADLL(numEpochs="500", stepSize=".1", fnNodes=("Sigmoid"), fnParameters=("FanIn", "Zeros"), Sigmoid_0_input="FanIn_0*x+Zeros_1", Sigmoid_0_size="6", targetFnNode="Sigmoid_0") {
 		array validLabels=${validLabels};
 	};
 
 	search yadllSearch=Grid() {
-		dimension stepSize=Enumerated(values=(".01", ".1"), stageIndex="0");
 		dimension classificationThreshold=Enumerated(values=("0.0", "0.3", "0.5", "0.7"), stageIndex="0");
 	};
 
-	evaluation modelF1=F(mode="MICRO", Beta="1");
-	classify_method yadllDCTUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixDCT}, trainEvaluation=${modelF1});
-	classify_method yadllETWSUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixETWS}, trainEvaluation=${modelF1});
-	classify_method yadllETBSUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixETBS}, trainEvaluation=${modelF1});
-	classify_method yadllEEWSUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixEEWS}, trainEvaluation=${modelF1});
-	classify_method yadllEEBSUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixEEBS}, trainEvaluation=${modelF1});
-	classify_method yadllEEDUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixEED}, trainEvaluation=${modelF1});
+	evaluation acc=Accuracy();
+	classify_method yadllDCTUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixDCT}, trainEvaluation=${acc});
+	classify_method yadllETWSUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixETWS}, trainEvaluation=${acc});
+	classify_method yadllETBSUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixETBS}, trainEvaluation=${acc});
+	classify_method yadllEEWSUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixEEWS}, trainEvaluation=${acc});
+	classify_method yadllEEBSUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixEEBS}, trainEvaluation=${acc});
+	classify_method yadllEEDUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixEED}, trainEvaluation=${acc});
 	
 	classify_method yadllDCTSub = FilterDatumIndicator(method=${yadllDCTUnfiltered}, datumIndicator="ETDCT");
 	classify_method yadllETWSSub = FilterDatumIndicator(method=${yadllETWSUnfiltered}, datumIndicator="ETWS");
