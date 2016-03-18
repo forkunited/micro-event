@@ -119,13 +119,12 @@ context tlinkTypeCtx=TLinkType() {
 	classify_task devTask = Classification(data=${devData});
 	classify_task testTask = Classification(data=${testData});
 	
-	model yadll=YADLL(fnNodes=("Sigmoid"), fnParameters=("FanIn", "Zeros"), Sigmoid_0_input="FanIn_0*x+Zeros_1", Sigmoid_0_size="6", targetFnNode="Sigmoid_0") {
+	model yadll=YADLL(numEpochs="100", fnNodes=("Sigmoid"), fnParameters=("FanIn", "Zeros"), Sigmoid_0_input="FanIn_0*x+Zeros_1", Sigmoid_0_size="6", targetFnNode="Sigmoid_0") {
 		array validLabels=${validLabels};
 	};
 
 	search yadllSearch=Grid() {
 		dimension stepSize=Enumerated(values=(".01", ".1"), stageIndex="0");
-		dimension numEpochs=Enumerated(values=("1", "5", "10"), stageIndex="0");
 	};
 
 	evaluation modelF1=F(mode="MICRO", Beta="1");
