@@ -120,13 +120,13 @@ context tlinkTypeCtx=TLinkType() {
 	classify_task testTask = Classification(data=${testData});
 	
 	model yadll=YADLL(numEpochs="100", stepSize=".01", 
-					  fnNodes=("Softmax", "NegativeLogLoss"), 
+					  fnNodes=("Sigmoid", "NegativeLogLoss"), 
 					  fnParameters=("FanIn", "Zeros"), 
-					  Softmax_0_input="FanIn_0*x+Zeros_1", 
-					  Softmax_0_size="6", 
-					  NegativeLogLoss_1_input="Softmax_0", 
+					  Sigmoid_0_input="FanIn_0*x+Zeros_1", 
+					  Sigmoid_0_size="6", 
+					  NegativeLogLoss_1_input="Sigmoid_0", 
 					  NegativeLogLoss_1_size="1", 
-					  targetFnNode="Softmax_0", 
+					  targetFnNode="Sigmoid_0", 
 					  lossFnNode="NegativeLogLoss_1") {
 		array validLabels=${validLabels};
 	};
