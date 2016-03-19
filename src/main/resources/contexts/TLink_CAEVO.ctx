@@ -119,7 +119,7 @@ context tlinkTypeCtx=TLinkType() {
 	classify_task devTask = Classification(data=${devData});
 	classify_task testTask = Classification(data=${testData});
 	
-	model yadll=YADLL(numEpochs="1000", stepSize=".01", fnNodes=("Sigmoid"), fnParameters=("FanIn", "Zeros"), Sigmoid_0_input="FanIn_0*x+Zeros_1", Sigmoid_0_size="6", targetFnNode="Sigmoid_0") {
+	model yadll=YADLL(numEpochs="1000", stepSize=".01", fnNodes=("Sigmoid", "NegativeLogLoss"), fnParameters=("FanIn", "Zeros"), Sigmoid_0_input="FanIn_0*x+Zeros_1", Sigmoid_0_size="6", NegativeLogLoss_1_size="1", targetFnNode="Sigmoid_0", lossFnNode="NegativeLogLoss_1") {
 		array validLabels=${validLabels};
 	};
 
