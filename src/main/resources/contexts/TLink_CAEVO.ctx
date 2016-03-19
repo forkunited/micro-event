@@ -119,20 +119,20 @@ context tlinkTypeCtx=TLinkType() {
 	classify_task devTask = Classification(data=${devData});
 	classify_task testTask = Classification(data=${testData});
 	
-	model yadll=YADLL(numEpochs="1000", stepSize=".01", 
-					  fnNodes=("Sigmoid", "NegativeLogLoss"), 
+	model yadll=YADLL(numEpochs="100", stepSize=".1", 
+					  fnNodes=("Softmax", "NegativeLogLoss"), 
 					  fnParameters=("FanIn", "Zeros"), 
-					  Sigmoid_0_input="FanIn_0*x+Zeros_1", 
-					  Sigmoid_0_size="6", 
-					  NegativeLogLoss_1_input="Sigmoid_0", 
+					  Softmax_0_input="FanIn_0*x+Zeros_1", 
+					  Softmax_0_size="6", 
+					  NegativeLogLoss_1_input="Softmax_0", 
 					  NegativeLogLoss_1_size="1", 
-					  targetFnNode="Sigmoid_0", 
+					  targetFnNode="Softmax_0", 
 					  lossFnNode="NegativeLogLoss_1") {
 		array validLabels=${validLabels};
 	};
 
 	search yadllSearch=Grid() {
-		dimension classificationThreshold=Enumerated(values=("0.0", "0.3", "0.5", "0.7"), stageIndex="0");
+		dimension classificationThreshold=Enumerated(values=("0.0", "0.3", "0.5", "0.7"), stageIndex="1");
 	};
 
 	evaluation acc=Accuracy();
