@@ -133,16 +133,16 @@ rule_set tlinkTransitiveRules = RuleSet(rules=(${b_b_b}, ${b_i_b}, ${b_s_b}, ${b
                                                      ${s_lb_lb}, ${a_i_a}, ${a_s_a}, ${a_a_a}, ${a_lb_a}, ${l_b_b},
                                                      ${l_s_l}, ${lb_s_lb}, ${lb_a_a}));
 
-structure_fn graphPaths = GraphPaths(length = "2");
+structure_fn graphPaths = GraphPaths(length="2", ignoreTypes=("VAGUE"));
 structure_fn greedyTlinkTransitiveRules = GreedyStructureRules(rules=${tlinkTransitiveRules}, splitFn=${graphPaths});
 
 multi_classify_method caevo = Sieve(methods=(${tlinkTypeCtx.adjETSieveM}, ${tlinkTypeCtx.timeTimeSieveM},
                                              ${tlinkTypeCtx.repGovSieveM}, ${tlinkTypeCtx.reichenbachSieveM}, 
-                                             ${tlinkTypeCtx.genGovSieveM}),
+                                             ${tlinkTypeCtx.genGovSieveM}, ${tlinkTypeCtx.allVagueSieve}),
                                     
                                     structurizers=(${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
                                                    ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
-                                                   ${tlinkTypeCtx.docStruct}),
+                                                   ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct}),
                                     structureTransformFn=${greedyTlinkTransitiveRules});
 
 multi_classify_task multiDevTask = MultiClassification(tasks=(${tlinkTypeCtx.devTask}));
