@@ -127,12 +127,14 @@ rule l_s_l = (And(c1=OVERLAPS(r1=O(id=[id1]), r2=O(id=[id2])), c2=SIMULTANEOUS(r
 rule lb_s_lb = (And(c1=OVERLAPPED_BY(r1=O(id=[id1]), r2=O(id=[id2])), c2=SIMULTANEOUS(r1=O(id=${id2}), r2=O(id=[id3])))) -> (OVERLAPPED_BY(r1=O(id=${id1}), r2=O(id=${id3})));
 rule lb_a_a = (And(c1=OVERLAPPED_BY(r1=O(id=[id1]), r2=O(id=[id2])), c2=AFTER(r1=O(id=${id2}), r2=O(id=[id3])))) -> (AFTER(r1=O(id=${id1}), r2=O(id=${id3})));
 
-rule_set greedyTLinkTransitiveRules = RuleSet(rules=(${b_b_b}, ${b_i_b}, ${b_s_b}, ${b_l_b}, ${ii_b_b}, 
+rule_set tlinkTransitiveRules = RuleSet(rules=(${b_b_b}, ${b_i_b}, ${b_s_b}, ${b_l_b}, ${ii_b_b}, 
                                                      ${ii_ii_ii}, ${ii_s_ii}, ${ii_a_a}, ${i_i_i}, ${i_s_i},
                                                      ${s_b_b}, ${s_ii_ii}, ${s_i_i}, ${s_s_s}, ${s_a_a}, ${s_l_l},
                                                      ${s_lb_lb}, ${a_i_a}, ${a_s_a}, ${a_a_a}, ${a_lb_a}, ${l_b_b},
                                                      ${l_s_l}, ${lb_s_lb}, ${lb_a_a}));
 
+structure_fn graphPaths = GraphPaths();
+structure_fn greedyTlinkTransitiveRules = GreedyStructureRules(rules=${tlinkTransitiveRules}, splitFn=${graphPaths});
 
 multi_classify_method caevo = Sieve(methods=(${tlinkTypeCtx.adjETSieveM}, ${tlinkTypeCtx.timeTimeSieveM},
                                              ${tlinkTypeCtx.repGovSieveM}, ${tlinkTypeCtx.reichenbachSieveM}, 
