@@ -8,6 +8,8 @@ import edu.cmu.ml.rtw.generic.data.Gazetteer;
 import edu.cmu.ml.rtw.generic.data.Serializer;
 import edu.cmu.ml.rtw.generic.data.SerializerJSONBSON;
 import edu.cmu.ml.rtw.generic.data.annotation.DatumContext;
+import edu.cmu.ml.rtw.generic.structure.WeightedStructureRelationBinary;
+import edu.cmu.ml.rtw.generic.structure.WeightedStructureRelationUnary;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention;
@@ -57,6 +59,10 @@ public class EventDataTools extends DataTools {
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.CREATION_TIME);
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.TIME_EXPRESSION);
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.EVENT_MENTION);
+		
+		for (TimeMLRelType relType : TimeMLRelType.values())
+			this.addGenericWeightedStructure(new WeightedStructureRelationBinary(relType.toString()));
+		this.addGenericWeightedStructure(new WeightedStructureRelationUnary("O"));
 	}
 	
 	@Override

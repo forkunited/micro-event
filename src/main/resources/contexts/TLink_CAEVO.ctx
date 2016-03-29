@@ -169,11 +169,13 @@ context tlinkTypeCtx=TLinkType() {
 	classify_method reichenbachSieve = Reichenbach();
 	classify_method repGovSieve = ReportingGovernor();
 	classify_method timeTimeSieve = TimeTime();
+	
 	classify_method adjETSieveM = LabelMapping(method=${adjETSieve}, labelMapping="TBD");
 	classify_method genGovSieveM = LabelMapping(method=${genGovSieve}, labelMapping="TBD");
 	classify_method reichenbachSieveM = LabelMapping(method=${reichenbachSieve}, labelMapping="TBD");
 	classify_method repGovSieveM = LabelMapping(method=${repGovSieve}, labelMapping="TBD");
 	classify_method timeTimeSieveM = LabelMapping(method=${timeTimeSieve}, labelMapping="TBD");
+	classify_method allVagueSieve = Constant(label="VAGUE");
 	
 	classify_eval devAdjETPrecision = Precision(task=${devTask}, method=${adjETSieveM}, mode="MICRO");
 	classify_eval devAdjETRecall = Recall(task=${devTask}, method=${adjETSieveM}, mode="MICRO");
@@ -199,6 +201,11 @@ context tlinkTypeCtx=TLinkType() {
 	classify_eval devTimeTimeRecall = Recall(task=${devTask}, method=${timeTimeSieveM}, mode="MICRO");
 	classify_eval testTimeTimePrecision = Precision(task=${testTask}, method=${timeTimeSieveM}, mode="MICRO");
 	classify_eval testTimeTimeRecall = Recall(task=${testTask}, method=${timeTimeSieveM}, mode="MICRO");
+	
+	classify_eval devAllVaguePrecision = Precision(task=${devTask}, method=${allVagueSieve}, mode="MICRO");
+	classify_eval devAllVagueRecall = Recall(task=${devTask}, method=${allVagueSieve}, mode="MICRO");
+	classify_eval testAllVaguePrecision = Precision(task=${testTask}, method=${allVagueSieve}, mode="MICRO");
+	classify_eval testAllVagueRecall = Recall(task=${testTask}, method=${allVagueSieve}, mode="MICRO");
 	
 	classify_eval devYadllDCTPrecision = Precision(task=${devTask}, method=${yadllDCTSieve}, mode="MICRO");
 	classify_eval devYadllDCTRecall = Recall(task=${devTask}, method=${yadllDCTSieve}, mode="MICRO");
@@ -230,7 +237,8 @@ context tlinkTypeCtx=TLinkType() {
 	classify_eval testYadllEEDPrecision = Precision(task=${testTask}, method=${yadllEEDSieve}, mode="MICRO");
 	classify_eval testYadllEEDRecall = Recall(task=${testTask}, method=${yadllEEDSieve}, mode="MICRO");
 
-	value strEvals = OutputStrings(id="TLink_CAEVO_Evals", storage="EventString", collection="ExperimentEvaluationOutput", 
+	value strSieveEvals = 
+		OutputStrings(id="TLink_CAEVO_Sieve_Evals", storage="EventString", collection="ExperimentEvaluationOutput", 
 	                 refs=
 	                 (
 		                 ${devAdjETPrecision}, ${devAdjETRecall},
@@ -243,6 +251,8 @@ context tlinkTypeCtx=TLinkType() {
 		                 ${testRepGovPrecision}, ${testRepGovRecall}, 
 		                 ${devTimeTimePrecision}, ${devTimeTimeRecall},
 		                 ${testTimeTimePrecision}, ${testTimeTimeRecall},     
+		                 ${devAllVaguePrecision}, ${devAllVagueRecall},
+		                 ${testAllVaguePrecision}, ${testAllVagueRecall},   
 		                 
 		                 ${devYadllDCTPrecision}, ${devYadllDCTRecall},
 		                 ${testYadllDCTPrecision}, ${testYadllDCTRecall},	                 
@@ -257,4 +267,70 @@ context tlinkTypeCtx=TLinkType() {
 		                 ${devYadllEEDPrecision}, ${devYadllEEDRecall},
 		                 ${testYadllEEDPrecision}, ${testYadllEEDRecall}
 	                 ));
+	   
+	structurizer docStruct = TLinkDocument(labelMapping="TBD");
 };
+
+rule b_b_b = (And(BEFORE(r1=O(id=[id1]), r2=O(id=[id2])), BEFORE(r1=O(id=${id2}), r2=O(id=[id3])))) -> (BEFORE(r1=O(id=${id1}), r2=O(id=${id3})));
+rule b_i_b = (And(BEFORE(r1=O(id=[id1]), r2=O(id=[id2])), INCLUDES(r1=O(id=${id2}), r2=O(id=[id3])))) -> (BEFORE(r1=O(id=${id1}), r2=O(id=${id3})));
+rule b_s_b = (And(BEFORE(r1=O(id=[id1]), r2=O(id=[id2])), SIMULTANEOUS(r1=O(id=${id2}), r2=O(id=[id3])))) -> (BEFORE(r1=O(id=${id1}), r2=O(id=${id3})));
+rule b_o_b = (And(BEFORE(r1=O(id=[id1]), r2=O(id=[id2])), OVERLAPS(r1=O(id=${id2}), r2=O(id=[id3])))) -> (BEFORE(r1=O(id=${id1}), r2=O(id=${id3})));
+rule ii_b_b = (And(IS_INCLUDED(r1=O(id=[id1]), r2=O(id=[id2])), BEFORE(r1=O(id=${id2}), r2=O(id=[id3])))) -> (BEFORE(r1=O(id=${id1}), r2=O(id=${id3})));
+rule ii_ii_ii = (And(IS_INCLUDED(r1=O(id=[id1]), r2=O(id=[id2])), IS_INCLUDED(r1=O(id=${id2}), r2=O(id=[id3])))) -> (IS_INCLUDED(r1=O(id=${id1}), r2=O(id=${id3})));
+rule ii_s_ii = (And(IS_INCLUDED(r1=O(id=[id1]), r2=O(id=[id2])), SIMULTANEOUS(r1=O(id=${id2}), r2=O(id=[id3])))) -> (IS_INCLUDED(r1=O(id=${id1}), r2=O(id=${id3})));
+rule ii_a_a = (And(IS_INCLUDED(r1=O(id=[id1]), r2=O(id=[id2])), AFTER(r1=O(id=${id2}), r2=O(id=[id3])))) -> (AFTER(r1=O(id=${id1}), r2=O(id=${id3})));
+rule i_i_i = (And(INCLUDES(r1=O(id=[id1]), r2=O(id=[id2])), INCLUDES(r1=O(id=${id2}), r2=O(id=[id3])))) -> (INCLUDES(r1=O(id=${id1}), r2=O(id=${id3})));
+rule i_s_i = (And(INCLUDES(r1=O(id=[id1]), r2=O(id=[id2])), SIMULTANEOUS(r1=O(id=${id2}), r2=O(id=[id3])))) -> (INCLUDES(r1=O(id=${id1}), r2=O(id=${id3})));
+rule s_b_b = (And(SIMULTANEOUS(r1=O(id=[id1]), r2=O(id=[id2])), BEFORE(r1=O(id=${id2}), r2=O(id=[id3])))) -> (BEFORE(r1=O(id=${id1}), r2=O(id=${id3})));
+rule s_ii_ii = (And(SIMULTANEOUS(r1=O(id=[id1]), r2=O(id=[id2])), IS_INCLUDED(r1=O(id=${id2}), r2=O(id=[id3])))) -> (IS_INCLUDED(r1=O(id=${id1}), r2=O(id=${id3})));
+rule s_i_i = (And(SIMULTANEOUS(r1=O(id=[id1]), r2=O(id=[id2])), INCLUDES(r1=O(id=${id2}), r2=O(id=[id3])))) -> (INCLUDES(r1=O(id=${id1}), r2=O(id=${id3})));
+rule s_s_s = (And(SIMULTANEOUS(r1=O(id=[id1]), r2=O(id=[id2])), SIMULTANEOUS(r1=O(id=${id2}), r2=O(id=[id3])))) -> (SIMULTANEOUS(r1=O(id=${id1}), r2=O(id=${id3})));
+rule s_a_a = (And(SIMULTANEOUS(r1=O(id=[id1]), r2=O(id=[id2])), AFTER(r1=O(id=${id2}), r2=O(id=[id3])))) -> (AFTER(r1=O(id=${id1}), r2=O(id=${id3})));
+rule s_o_o = (And(SIMULTANEOUS(r1=O(id=[id1]), r2=O(id=[id2])), OVERLAPS(r1=O(id=${id2}), r2=O(id=[id3])))) -> (OVERLAPS(r1=O(id=${id1}), r2=O(id=${id3})));
+rule s_ob_ob = (And(SIMULTANEOUS(r1=O(id=[id1]), r2=O(id=[id2])), OVERLAPPED_BY(r1=O(id=${id2}), r2=O(id=[id3])))) -> (OVERLAPPED_BY(r1=O(id=${id1}), r2=O(id=${id3})));
+rule a_i_a = (And(AFTER(r1=O(id=[id1]), r2=O(id=[id2])), INCLUDES(r1=O(id=${id2}), r2=O(id=[id3])))) -> (AFTER(r1=O(id=${id1}), r2=O(id=${id3})));
+rule a_s_a = (And(AFTER(r1=O(id=[id1]), r2=O(id=[id2])), SIMULTANEOUS(r1=O(id=${id2}), r2=O(id=[id3])))) -> (AFTER(r1=O(id=${id1}), r2=O(id=${id3})));
+rule a_a_a = (And(AFTER(r1=O(id=[id1]), r2=O(id=[id2])), AFTER(r1=O(id=${id2}), r2=O(id=[id3])))) -> (AFTER(r1=O(id=${id1}), r2=O(id=${id3})));
+rule a_ob_a = (And(AFTER(r1=O(id=[id1]), r2=O(id=[id2])), OVERLAPPED_BY(r1=O(id=${id2}), r2=O(id=[id3])))) -> (AFTER(r1=O(id=${id1}), r2=O(id=${id3})));
+rule o_b_b = (And(OVERLAPS(r1=O(id=[id1]), r2=O(id=[id2])), BEFORE(r1=O(id=${id2}), r2=O(id=[id3])))) -> (BEFORE(r1=O(id=${id1}), r2=O(id=${id3})));
+rule o_s_o = (And(OVERLAPS(r1=O(id=[id1]), r2=O(id=[id2])), SIMULTANEOUS(r1=O(id=${id2}), r2=O(id=[id3])))) -> (OVERLAPS(r1=O(id=${id1}), r2=O(id=${id3})));
+rule ob_s_ob = (And(OVERLAPPED_BY(r1=O(id=[id1]), r2=O(id=[id2])), SIMULTANEOUS(r1=O(id=${id2}), r2=O(id=[id3])))) -> (OVERLAPPED_BY(r1=O(id=${id1}), r2=O(id=${id3})));
+rule ob_a_a = (And(OVERLAPPED_BY(r1=O(id=[id1]), r2=O(id=[id2])), AFTER(r1=O(id=${id2}), r2=O(id=[id3])))) -> (AFTER(r1=O(id=${id1}), r2=O(id=${id3})));
+
+rule_set greedyTLinkTransitiveRules = RuleSet(rules=(${b_b_b}, ${b_i_b}, ${b_s_b}, ${b_o_b}, ${ii_b_b}, 
+                                                     ${ii_ii_ii}, ${ii_s_ii}, ${ii_a_a}, ${i_i_i}, ${i_s_i},
+                                                     ${s_b_b}, ${s_ii_ii}, ${s_i_i}, ${s_s_s}, ${s_a_a}, ${s_o_o},
+                                                     ${s_ob_ob}, ${a_i_a}, ${a_s_a}, ${a_a_a}, ${a_ob_a}, ${o_b_b},
+                                                     ${o_s_o}, ${ob_s_ob}, ${ob_a_a}));
+
+
+multi_classify_method caevo = Sieve(methods=(${tlinkTypeCtx.adjETSieveM}, ${tlinkTypeCtx.timeTimeSieveM},
+                                             ${tlinkTypeCtx.repGovSieveM}, ${tlinkTypeCtx.yadllETWSSieve},
+                                             ${tlinkTypeCtx.yadllETBSSieve}, ${tlinkTypeCtx.yadllEEDSieve},
+                                             ${tlinkTypeCtx.reichenbachSieveM}, ${tlinkTypeCtx.genGovSieveM},
+                                             ${tlinkTypeCtx.yadllEEBSSieve}, ${tlinkTypeCtx.yadllEEWSSieve},
+                                             ${tlinkTypeCtx.yadllDCTSieve}, ${tlinkTypeCtx.allVagueSieve}),
+                                    
+                                    structurizers=(${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
+                                                   ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
+                                                   ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
+                                                   ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
+                                                   ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
+                                                   ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct}),
+                                    ), 
+                                    structureTransformFn=${greedyTlinkTransitiveRules});
+
+multi_classify_task multiDevTask = MultiClassification(tasks=(${tlinkTypeCtx.devTask}));
+multi_classify_task multiTestTask = MultiClassification(tasks=(${tlinkTypeCtx.testTask}));
+
+multi_classify_eval multiDevPrecision = Precision(task=${multiDevTask}, method=${caevo}, mode="MICRO");
+multi_classify_eval multiDevRecall = Recall(task=${multiDevTask}, method=${caevo}, mode="MICRO");
+multi_classify_eval multiTestPrecision = Precision(task=${multiTestTask}, method=${caevo}, mode="MICRO");
+multi_classify_eval multiTestRecall = Recall(task=${multiTestTask}, method=${caevo}, mode="MICRO");
+
+value strEvals = OutputStrings(id="TLink_CAEVO_Evals", storage="EventString", collection="ExperimentEvaluationOutput", 
+                 refs=
+                 (
+	                 ${multiDevPrecision}, ${multiDevRecall},
+	                 ${multiTestPrecision}, ${multiTestRecall}
+                 ));

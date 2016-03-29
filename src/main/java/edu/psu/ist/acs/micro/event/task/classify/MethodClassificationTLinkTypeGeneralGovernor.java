@@ -3,6 +3,7 @@ package edu.psu.ist.acs.micro.event.task.classify;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import edu.cmu.ml.rtw.generic.data.annotation.DataSet;
 import edu.cmu.ml.rtw.generic.data.annotation.DatumContext;
@@ -14,6 +15,7 @@ import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.parse.AssignmentList;
 import edu.cmu.ml.rtw.generic.parse.Obj;
 import edu.cmu.ml.rtw.generic.task.classify.MethodClassification;
+import edu.cmu.ml.rtw.generic.util.Pair;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention.TimeMLAspect;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention.TimeMLClass;
@@ -281,5 +283,15 @@ public class MethodClassificationTLinkTypeGeneralGovernor extends MethodClassifi
 		}
 		
 		return null;
+	}
+	
+	@Override
+	public Map<TLinkDatum<TimeMLRelType>, Pair<TimeMLRelType, Double>> classifyWithScore(
+			DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType> data) {
+		Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> classifications = classify(data);
+		Map<TLinkDatum<TimeMLRelType>, Pair<TimeMLRelType, Double>> scores = new HashMap<>();
+		for (Entry<TLinkDatum<TimeMLRelType>, TimeMLRelType> entry : classifications.entrySet())
+			scores.put(entry.getKey(), new Pair<TimeMLRelType, Double>(entry.getValue(), 1.0));
+		return scores;
 	}
 }
