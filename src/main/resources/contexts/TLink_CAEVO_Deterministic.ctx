@@ -138,11 +138,11 @@ structure_fn greedyTlinkTransitiveRules = GreedyStructureRules(rules=${tlinkTran
 
 multi_classify_method caevo = Sieve(methods=(${tlinkTypeCtx.adjETSieveM}, ${tlinkTypeCtx.timeTimeSieveM},
                                              ${tlinkTypeCtx.repGovSieveM}, ${tlinkTypeCtx.reichenbachSieveM}, 
-                                             ${tlinkTypeCtx.genGovSieveM}, ${tlinkTypeCtx.allVagueSieve}),
+                                             ${tlinkTypeCtx.genGovSieveM}),
                                     
                                     structurizers=(${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
                                                    ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
-                                                   ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct}),
+                                                   ${tlinkTypeCtx.docStruct}),
                                     structureTransformFn=${greedyTlinkTransitiveRules});
 
 multi_classify_task multiDevTask = MultiClassification(tasks=(${tlinkTypeCtx.devTask}));
