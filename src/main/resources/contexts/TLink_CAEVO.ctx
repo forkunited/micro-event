@@ -317,7 +317,6 @@ multi_classify_method caevo = Sieve(methods=(${tlinkTypeCtx.adjETSieveM}, ${tlin
                                                    ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
                                                    ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
                                                    ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct}),
-                                    ), 
                                     structureTransformFn=${greedyTlinkTransitiveRules});
 
 multi_classify_task multiDevTask = MultiClassification(tasks=(${tlinkTypeCtx.devTask}));
