@@ -323,7 +323,7 @@ multi_classify_method caevo = Sieve(methods=(${tlinkTypeCtx.adjETSieveM}, ${tlin
                                                       ${tlinkTypeCtx.devGenGovPrecision}, ${tlinkTypeCtx.devAllVaguePrecision},                                    
                                                       ${tlinkTypeCtx.devYadllETWSPrecision}, ${tlinkTypeCtx.devYadllEEDPrecision}, 
                                                       ${tlinkTypeCtx.devYadllEEWSPrecision}, ${tlinkTypeCtx.devYadllEEBSPrecision}, 
-                                                      ${tlinkTypeCtx.devYadllDCTPrecision}, ${tlinkTypeCtx.devYadllETBSPrecision},
+                                                      ${tlinkTypeCtx.devYadllDCTPrecision}, ${tlinkTypeCtx.devYadllETBSPrecision}
                                     ),
                                     structureTransformFn=${greedyTlinkTransitiveRules});
 
