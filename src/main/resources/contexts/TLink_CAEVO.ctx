@@ -318,7 +318,7 @@ multi_classify_method caevo = Sieve(methods=(${tlinkTypeCtx.adjETSieveM}, ${tlin
                                                    ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
                                                    ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
                                                    ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct}),
-                                    orderingMeasures=(${tlinkTypeCtx.devAdjETPrecision}, ${tlinkTypeCtx.devTimeTimePrecision},
+                                    permutationMeasures=(${tlinkTypeCtx.devAdjETPrecision}, ${tlinkTypeCtx.devTimeTimePrecision},
                                                       ${tlinkTypeCtx.devRepGovPrecision}, ${tlinkTypeCtx.devReichenbachPrecision},
                                                       ${tlinkTypeCtx.devGenGovPrecision}, ${tlinkTypeCtx.devAllVaguePrecision},                                    
                                                       ${tlinkTypeCtx.devYadllETWSPrecision}, ${tlinkTypeCtx.devYadllEEDPrecision}, 
