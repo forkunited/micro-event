@@ -464,7 +464,7 @@ context tlinkTypeCtx=TLinkType() {
 		                 ${devYadllEED7Precision}, ${devYadllEED7Recall},
 		                 ${testYadllEED7Precision}, ${testYadllEED7Recall},	   
 		                 ${devYadllEED9Precision}, ${devYadllEED9Recall},
-		                 ${testYadllEED9Precision}, ${testYadllEED9Recall},	 		                 		   
+		                 ${testYadllEED9Precision}, ${testYadllEED9Recall}		                 		   
 	                 ));
 	   
 	structurizer docStruct = TLinkDocument(labelMapping="TBD");
