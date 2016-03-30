@@ -307,18 +307,17 @@ structure_fn graphPaths = GraphPaths(length="2", ignoreTypes=("VAGUE"));
 structure_fn greedyTlinkTransitiveRules = GreedyStructureRules(rules=${tlinkTransitiveRules}, splitFn=${graphPaths});
 
 multi_classify_method caevo = Sieve(methods=(${tlinkTypeCtx.adjETSieveM}, ${tlinkTypeCtx.timeTimeSieveM},
-                                             ${tlinkTypeCtx.repGovSieveM}, ${tlinkTypeCtx.yadllETWSSieve},
-                                             ${tlinkTypeCtx.yadllETBSSieve}, ${tlinkTypeCtx.yadllEEDSieve},
-                                             ${tlinkTypeCtx.reichenbachSieveM}, ${tlinkTypeCtx.genGovSieveM},
-                                             ${tlinkTypeCtx.yadllEEBSSieve}, ${tlinkTypeCtx.yadllEEWSSieve},
-                                             ${tlinkTypeCtx.yadllDCTSieve}, ${tlinkTypeCtx.allVagueSieve}),
-                                    
+                                             ${tlinkTypeCtx.repGovSieveM}, ${tlinkTypeCtx.reichenbachSieveM}, 
+                                             ${tlinkTypeCtx.genGovSieveM}, ${tlinkTypeCtx.yadllETWSSieve}, 
+                                             ${tlinkTypeCtx.yadllEEDSieve}, ${tlinkTypeCtx.yadllEEWSSieve}, 
+                                             ${tlinkTypeCtx.yadllEEBSSieve}, ${tlinkTypeCtx.yadllDCTSieve}, 
+                                             ${tlinkTypeCtx.allVagueSieve}),                                   
                                     structurizers=(${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
                                                    ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
                                                    ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
                                                    ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
                                                    ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
-                                                   ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct}),
+                                                   ${tlinkTypeCtx.docStruct}),
                                     structureTransformFn=${greedyTlinkTransitiveRules});
 
 multi_classify_task multiDevTask = MultiClassification(tasks=(${tlinkTypeCtx.devTask}));
