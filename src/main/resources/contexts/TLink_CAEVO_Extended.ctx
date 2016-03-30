@@ -151,7 +151,7 @@ context tlinkTypeCtx=TLinkType() {
 	classify_method yadllETBS = InitClassifyMethod(devData=${devData}, method=${yadllETBSSub});
 	classify_method yadllEEWS = InitClassifyMethod(devData=${devData}, method=${yadllEEWSSub});
 	classify_method yadllEEBS = InitClassifyMethod(devData=${devData}, method=${yadllEEBSSub});
-	classify_method yadllEEDS = InitClassifyMethod(devData=${devData}, method=${yadllEEDSub});
+	classify_method yadllEED = InitClassifyMethod(devData=${devData}, method=${yadllEEDSub});
 	
 	classify_method adjETSieveUM = AdjacentEventTime();
 	classify_method genGovSieveUM = GeneralGovernor();
@@ -189,11 +189,11 @@ context tlinkTypeCtx=TLinkType() {
 	classify_method yadllEEBS7Sieve = CloneClassifyMethod(method=${yadllEEBS}, classificationThreshold=".7");
 	classify_method yadllEEBS9Sieve = CloneClassifyMethod(method=${yadllEEBS}, classificationThreshold=".9");
 	
-	classify_method yadllEEDS1Sieve = CloneClassifyMethod(method=${yadllEEDS}, classificationThreshold=".1");
-	classify_method yadllEEDS3Sieve = CloneClassifyMethod(method=${yadllEEDS}, classificationThreshold=".3");
-	classify_method yadllEEDS5Sieve = CloneClassifyMethod(method=${yadllEEDS}, classificationThreshold=".5");
-	classify_method yadllEEDS7Sieve = CloneClassifyMethod(method=${yadllEEDS}, classificationThreshold=".7");
-	classify_method yadllEEDS9Sieve = CloneClassifyMethod(method=${yadllEEDS}, classificationThreshold=".9");
+	classify_method yadllEED1Sieve = CloneClassifyMethod(method=${yadllEED}, classificationThreshold=".1");
+	classify_method yadllEED3Sieve = CloneClassifyMethod(method=${yadllEED}, classificationThreshold=".3");
+	classify_method yadllEED5Sieve = CloneClassifyMethod(method=${yadllEED}, classificationThreshold=".5");
+	classify_method yadllEED7Sieve = CloneClassifyMethod(method=${yadllEED}, classificationThreshold=".7");
+	classify_method yadllEED9Sieve = CloneClassifyMethod(method=${yadllEED}, classificationThreshold=".9");
 	
 	classify_method adjETSieve = LabelMapping(method=${adjETSieveUM}, labelMapping="TBD");
 	classify_method genGovSieve = LabelMapping(method=${genGovSieveUM}, labelMapping="TBD");
