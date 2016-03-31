@@ -105,7 +105,7 @@ public class MethodClassificationTLinkTypeWordNet extends MethodClassification<T
 			
 			TimeMLRelType rel = null;
 			if (tlink.getType() == TLink.Type.TIME_TIME) {
-				if (sourceLemma.equals(targetLemma))
+				if (sourceLemma != null && sourceLemma.equals(targetLemma))
 					rel = TimeMLRelType.SIMULTANEOUS;
 			} else { // EVENT_EVENT
 				if (sourcePos == targetPos && wordNet.areSynonyms(sourceWord, sourcePos, targetWord, targetPos))
