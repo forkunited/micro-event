@@ -108,7 +108,7 @@ public class MethodClassificationTLinkTypeWordNet extends MethodClassification<T
 				if (sourceLemma != null && sourceLemma.equals(targetLemma))
 					rel = TimeMLRelType.SIMULTANEOUS;
 			} else { // EVENT_EVENT
-				if (sourcePos == targetPos && wordNet.areSynonyms(sourceWord, sourcePos, targetWord, targetPos))
+				if (wordNet.areSynonyms(sourceWord, sourcePos, targetWord, targetPos))
 					rel = TimeMLRelType.VAGUE;
 				else if (sourceLemma != null && sourceLemma.equals(targetLemma))
 					rel = TimeMLRelType.VAGUE;
