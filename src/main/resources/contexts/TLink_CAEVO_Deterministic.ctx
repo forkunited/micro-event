@@ -42,12 +42,14 @@ context tlinkTypeCtx=TLinkType() {
 	classify_method reichenbachSieve = Reichenbach();
 	classify_method repGovSieve = ReportingGovernor();
 	classify_method timeTimeSieve = TimeTime();
+	classify_method wordNetSieve = WordNet();
 	
 	classify_method adjETSieveM = LabelMapping(method=${adjETSieve}, labelMapping="TBD");
 	classify_method genGovSieveM = LabelMapping(method=${genGovSieve}, labelMapping="TBD");
 	classify_method reichenbachSieveM = LabelMapping(method=${reichenbachSieve}, labelMapping="TBD");
 	classify_method repGovSieveM = LabelMapping(method=${repGovSieve}, labelMapping="TBD");
 	classify_method timeTimeSieveM = LabelMapping(method=${timeTimeSieve}, labelMapping="TBD");
+	classify_method wordNetSieveM = LabelMapping(method=${wordNetSieve}, labelMapping="TBD");
 	classify_method allVagueSieve = Constant(label="VAGUE");
 	
 	classify_eval devAdjETPrecision = Precision(task=${devTask}, method=${adjETSieveM}, mode="MICRO");
@@ -75,6 +77,11 @@ context tlinkTypeCtx=TLinkType() {
 	classify_eval testTimeTimePrecision = Precision(task=${testTask}, method=${timeTimeSieveM}, mode="MICRO");
 	classify_eval testTimeTimeRecall = Recall(task=${testTask}, method=${timeTimeSieveM}, mode="MICRO");
 	
+	classify_eval devWordNetPrecision = Precision(task=${devTask}, method=${wordNetSieveM}, mode="MICRO");
+	classify_eval devWordNetRecall = Recall(task=${devTask}, method=${wordNetSieveM}, mode="MICRO");
+	classify_eval testWordNetPrecision = Precision(task=${testTask}, method=${wordNetSieveM}, mode="MICRO");
+	classify_eval testWordNetRecall = Recall(task=${testTask}, method=${wordNetSieveM}, mode="MICRO");
+	
 	classify_eval devAllVaguePrecision = Precision(task=${devTask}, method=${allVagueSieve}, mode="MICRO");
 	classify_eval devAllVagueRecall = Recall(task=${devTask}, method=${allVagueSieve}, mode="MICRO");
 	classify_eval testAllVaguePrecision = Precision(task=${testTask}, method=${allVagueSieve}, mode="MICRO");
@@ -93,7 +100,9 @@ context tlinkTypeCtx=TLinkType() {
 		                 ${devRepGovPrecision}, ${devRepGovRecall},
 		                 ${testRepGovPrecision}, ${testRepGovRecall}, 
 		                 ${devTimeTimePrecision}, ${devTimeTimeRecall},
-		                 ${testTimeTimePrecision}, ${testTimeTimeRecall},     
+		                 ${testTimeTimePrecision}, ${testTimeTimeRecall},    
+		                 ${devWordNetPrecision}, ${devWordNetRecall},
+		                 ${testWordNetPrecision}, ${testWordNetRecall},  
 		                 ${devAllVaguePrecision}, ${devAllVagueRecall},
 		                 ${testAllVaguePrecision}, ${testAllVagueRecall}
 	                 ));
@@ -138,10 +147,12 @@ structure_fn greedyTlinkTransitiveRules = GreedyStructureRules(rules=${tlinkTran
 
 multi_classify_method caevo = Sieve(methods=(${tlinkTypeCtx.adjETSieveM}, ${tlinkTypeCtx.timeTimeSieveM},
                                              ${tlinkTypeCtx.repGovSieveM}, ${tlinkTypeCtx.reichenbachSieveM}, 
-                                             ${tlinkTypeCtx.genGovSieveM}, ${tlinkTypeCtx.allVagueSieve}),
+                                             ${tlinkTypeCtx.genGovSieveM}, ${tlinkTypeCtx.wordNetSieveM},
+                                             ${tlinkTypeCtx.allVagueSieve}),
                                     structurizers=(${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
                                                    ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
-                                                   ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct}),
+                                                   ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
+                                                   ${tlinkTypeCtx.docStruct}),
                                     structureTransformFn=${greedyTlinkTransitiveRules});
 
 multi_classify_task multiDevTask = MultiClassification(tasks=(${tlinkTypeCtx.devTask}));

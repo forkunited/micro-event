@@ -25,6 +25,7 @@ import edu.psu.ist.acs.micro.event.task.classify.MethodClassificationTLinkTypeGe
 import edu.psu.ist.acs.micro.event.task.classify.MethodClassificationTLinkTypeReichenbach;
 import edu.psu.ist.acs.micro.event.task.classify.MethodClassificationTLinkTypeReportingGovernor;
 import edu.psu.ist.acs.micro.event.task.classify.MethodClassificationTLinkTypeTimeTime;
+import edu.psu.ist.acs.micro.event.task.classify.MethodClassificationTLinkTypeWordNet;
 
 public class TLinkDatum<L> extends Datum<L> {
 	private TLink tlink;
@@ -86,6 +87,7 @@ public class TLinkDatum<L> extends Datum<L> {
 		tools.addGenericClassifyMethod(new MethodClassificationTLinkTypeReichenbach());
 		tools.addGenericClassifyMethod(new MethodClassificationTLinkTypeReportingGovernor());
 		tools.addGenericClassifyMethod(new MethodClassificationTLinkTypeTimeTime());
+		tools.addGenericClassifyMethod(new MethodClassificationTLinkTypeWordNet());
 		
 		tools.addLabelMapping(new LabelMapping<TimeMLRelType>() {
 			@Override
