@@ -59,8 +59,10 @@ public class MethodClassificationTLinkTypeAdjacentEventTime extends MethodClassi
 	}
 
 	@Override
-	public MethodClassification<TLinkDatum<TimeMLRelType>, TimeMLRelType> clone() {
-		return new MethodClassificationTLinkTypeAdjacentEventTime(this.context);
+	public MethodClassification<TLinkDatum<TimeMLRelType>, TimeMLRelType> clone(String referenceName) {
+		MethodClassificationTLinkTypeAdjacentEventTime clone = new MethodClassificationTLinkTypeAdjacentEventTime(this.context);
+		clone.referenceName = referenceName;
+		return clone;
 	}
 
 	@Override

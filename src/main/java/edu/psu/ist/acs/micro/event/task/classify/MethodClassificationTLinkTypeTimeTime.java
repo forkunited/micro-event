@@ -47,8 +47,10 @@ public class MethodClassificationTLinkTypeTimeTime extends MethodClassification<
 	}
 
 	@Override
-	public MethodClassification<TLinkDatum<TimeMLRelType>, TimeMLRelType> clone() {
-		return new MethodClassificationTLinkTypeTimeTime(this.context);
+	public MethodClassification<TLinkDatum<TimeMLRelType>, TimeMLRelType> clone(String referenceName) {
+		MethodClassificationTLinkTypeTimeTime clone = new MethodClassificationTLinkTypeTimeTime(this.context);
+		clone.referenceName = referenceName;
+		return clone;
 	}
 
 	@Override

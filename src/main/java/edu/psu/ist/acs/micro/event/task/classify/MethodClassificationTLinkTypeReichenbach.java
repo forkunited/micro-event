@@ -63,8 +63,10 @@ public class MethodClassificationTLinkTypeReichenbach extends MethodClassificati
 	}
 
 	@Override
-	public MethodClassification<TLinkDatum<TimeMLRelType>, TimeMLRelType> clone() {
-		return new MethodClassificationTLinkTypeReichenbach(this.context);
+	public MethodClassification<TLinkDatum<TimeMLRelType>, TimeMLRelType> clone(String referenceName) {
+		MethodClassificationTLinkTypeReichenbach clone = new MethodClassificationTLinkTypeReichenbach(this.context);
+		clone.referenceName = referenceName;
+		return clone;
 	}
 
 	@Override

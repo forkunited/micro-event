@@ -54,8 +54,10 @@ public class MethodClassificationTLinkTypeReportingGovernor extends MethodClassi
 	}
 
 	@Override
-	public MethodClassification<TLinkDatum<TimeMLRelType>, TimeMLRelType> clone() {
-		return new MethodClassificationTLinkTypeReportingGovernor(this.context);
+	public MethodClassification<TLinkDatum<TimeMLRelType>, TimeMLRelType> clone(String referenceName) {
+		MethodClassificationTLinkTypeReportingGovernor clone = new MethodClassificationTLinkTypeReportingGovernor(this.context);
+		clone.referenceName = referenceName;
+		return clone;
 	}
 
 	@Override
