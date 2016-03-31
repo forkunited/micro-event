@@ -88,7 +88,7 @@ context tlinkTypeCtx=TLinkType() {
 	classify_eval testAllVagueRecall = Recall(task=${testTask}, method=${allVagueSieve}, mode="MICRO");
 
 	value strSieveEvals = 
-		OutputStrings(id="TLink_CAEVO_Sieve_Evals", storage="EventString", collection="ExperimentEvaluationOutput", 
+		OutputStrings(id="TLink_CAEVO_Deterministic_Sieve_Evals", storage="EventString", collection="ExperimentEvaluationOutput", 
 	                 refs=
 	                 (
 		                 ${devAdjETPrecision}, ${devAdjETRecall},
@@ -163,7 +163,7 @@ multi_classify_eval multiDevRecall = Recall(task=${multiDevTask}, method=${caevo
 multi_classify_eval multiTestPrecision = Precision(task=${multiTestTask}, method=${caevo}, mode="MICRO");
 multi_classify_eval multiTestRecall = Recall(task=${multiTestTask}, method=${caevo}, mode="MICRO");
 
-value strEvals = OutputStrings(id="TLink_CAEVO_Evals", storage="EventString", collection="ExperimentEvaluationOutput", 
+value strEvals = OutputStrings(id="TLink_CAEVO_Deterministic_Evals", storage="EventString", collection="ExperimentEvaluationOutput", 
                  refs=
                  (
 	                 ${multiDevPrecision}, ${multiDevRecall},
