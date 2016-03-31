@@ -23,6 +23,7 @@ import edu.psu.ist.acs.micro.event.data.feature.FeatureTLinkableType;
 import edu.psu.ist.acs.micro.event.task.classify.MethodClassificationTLinkTypeAdjacentEventTime;
 import edu.psu.ist.acs.micro.event.task.classify.MethodClassificationTLinkTypeGeneralGovernor;
 import edu.psu.ist.acs.micro.event.task.classify.MethodClassificationTLinkTypeReichenbach;
+import edu.psu.ist.acs.micro.event.task.classify.MethodClassificationTLinkTypeReportingDCT;
 import edu.psu.ist.acs.micro.event.task.classify.MethodClassificationTLinkTypeReportingGovernor;
 import edu.psu.ist.acs.micro.event.task.classify.MethodClassificationTLinkTypeTimeTime;
 import edu.psu.ist.acs.micro.event.task.classify.MethodClassificationTLinkTypeWordNet;
@@ -88,6 +89,7 @@ public class TLinkDatum<L> extends Datum<L> {
 		tools.addGenericClassifyMethod(new MethodClassificationTLinkTypeReportingGovernor());
 		tools.addGenericClassifyMethod(new MethodClassificationTLinkTypeTimeTime());
 		tools.addGenericClassifyMethod(new MethodClassificationTLinkTypeWordNet());
+		tools.addGenericClassifyMethod(new MethodClassificationTLinkTypeReportingDCT());
 		
 		tools.addLabelMapping(new LabelMapping<TimeMLRelType>() {
 			@Override
