@@ -90,8 +90,12 @@ public class MethodClassificationTLinkTypeWordNet extends MethodClassification<T
 			
 			TokenSpan sourceSpan = datum.getTLink().getSource().getTokenSpan();
 			TokenSpan targetSpan = datum.getTLink().getTarget().getTokenSpan();
+			if (sourceSpan.getSentenceIndex() < 0 || targetSpan.getSentenceIndex() < 0)
+				continue;
+			
 			DocumentNLP sourceDocument = sourceSpan.getDocument();
 			DocumentNLP targetDocument = targetSpan.getDocument();
+
 			String sourceWord = sourceDocument.getTokenStr(sourceSpan.getSentenceIndex(), sourceSpan.getEndTokenIndex() - 1);
 			String targetWord = targetDocument.getTokenStr(targetSpan.getSentenceIndex(), targetSpan.getEndTokenIndex() - 1);
 			PoSTag sourcePos = sourceDocument.getPoSTag(sourceSpan.getSentenceIndex(), sourceSpan.getEndTokenIndex() - 1);
