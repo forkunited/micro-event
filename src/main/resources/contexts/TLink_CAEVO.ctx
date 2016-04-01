@@ -119,7 +119,7 @@ context tlinkTypeCtx=TLinkType() {
 	classify_task devTask = Classification(data=${devData});
 	classify_task testTask = Classification(data=${testData});
 	
-	model yadll=YADLL(numEpochs="100", stepSize="2", 
+	model yadll=YADLL(numEpochs="200", stepSize="2", 
 					  fnNodes=("Softmax", "NegativeLogLoss"), 
 					  fnParameters=("FanIn", "Zeros"), 
 					  Softmax_0_input="FanIn_0*x+Zeros_1", 
@@ -330,21 +330,21 @@ multi_classify_method caevo = Sieve(methods=(${tlinkTypeCtx.adjETSieveM}, ${tlin
                                              ${tlinkTypeCtx.reportingDCTSieveM}, ${tlinkTypeCtx.allVagueSieve},
                                              ${tlinkTypeCtx.yadllETWSSieve}, ${tlinkTypeCtx.yadllEEDSieve},
                                              ${tlinkTypeCtx.yadllEEWSSieve}, ${tlinkTypeCtx.yadllDCTSieve},  
-                                             ${tlinkTypeCtx.yadllETBSSieve}),                                   
+                                             ${tlinkTypeCtx.yadllETBSSieve}, ${tlinkTypeCtx.yadllEEBSSieve}),                                   
                                     structurizers=(${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
                                                    ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
                                                    ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
                                                    ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
                                                    ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
                                                    ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct},
-                                                   ${tlinkTypeCtx.docStruct}),
+                                                   ${tlinkTypeCtx.docStruct}, ${tlinkTypeCtx.docStruct}),
                                     permutationMeasures=(${tlinkTypeCtx.devAdjETPrecision}, ${tlinkTypeCtx.devTimeTimePrecision},
                                                       ${tlinkTypeCtx.devRepGovPrecision}, ${tlinkTypeCtx.devReichenbachPrecision},
                                                       ${tlinkTypeCtx.devGenGovPrecision}, ${tlinkTypeCtx.devWordNetPrecision},
                                                       ${tlinkTypeCtx.devReportingDCTPrecision}, ${tlinkTypeCtx.devAllVaguePrecision}, 
                                                       ${tlinkTypeCtx.devYadllETWSPrecision}, ${tlinkTypeCtx.devYadllEEDPrecision}, 
                                                       ${tlinkTypeCtx.devYadllEEWSPrecision}, ${tlinkTypeCtx.devYadllDCTPrecision}, 
-                                                      ${tlinkTypeCtx.devYadllETBSPrecision}
+                                                      ${tlinkTypeCtx.devYadllETBSPrecision}, ${tlinkTypeCtx.devYadllEEBSPrecision}
                                     ),
                                     structureTransformFn=${greedyTlinkTransitiveRules});
 
