@@ -41,7 +41,8 @@ context tlinkTypeCtx=TLinkType() {
 	ts_fn dep = DependencyRelation(mode="PARENTS_AND_CHILDREN");
 	ts_str_fn strDef = String(cleanFn="BagOfWordsCleanFn");
 	ts_str_fn pos = PoS();
-	ts_str_fn lemma = TokenAnnotation(annotationType="lemma");
+	ts_str_fn lemma = WordNetLemma();
+	ts_str_fn synset = WordNetSynset();
 	ts_str_fn sentPos = SentencePosition();
 	
 	feature feventToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${strDef});
@@ -53,6 +54,8 @@ context tlinkTypeCtx=TLinkType() {
 	feature feventAspect = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="TIMEML_ASPECT");
 	feature feventClass = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="TIMEML_CLASS");
 	feature feventDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${strDef} o ${dep}));
+	feature feventLemma = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${lemma}));
+	feature feventSynset = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${synset}));
 	feature ftimeToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=${strDef});
 	feature ftimeTokenh = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=(${strDef} o ${head}));
 	feature ftimeSentPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=${sentPos});
@@ -65,6 +68,7 @@ context tlinkTypeCtx=TLinkType() {
 	
 	feature_set fsET = FeatureSet(features=(${feventToken}, ${feventTokenB}, ${feventPos}, ${feventPosB1},
 											${feventPosB2}, ${feventTense}, ${feventAspect}, ${feventClass}, ${feventDep},
+											${feventLemma}, ${feventSynset},
 											${ftimeToken}, ${ftimeTokenh}, ${ftimeSentPos}, ${feventTimeToken}, 
 											${ftokenPathET}, ${fdepPathET}, ${fconPathET}, ${fdepTypeET},
 											${fdomET}), initData=(${trainDataET}));
@@ -78,6 +82,8 @@ context tlinkTypeCtx=TLinkType() {
 	feature fsAspect = TLinkEventAttribute(sourceOrTarget="SOURCE", attribute="TIMEML_ASPECT");
 	feature fsClass = TLinkEventAttribute(sourceOrTarget="SOURCE", attribute="TIMEML_CLASS");
 	feature fsDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${strDef} o ${dep}));
+	feature fsLemma = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${lemma});
+	feature fsSynset = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${synset});
 	feature ftToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${strDef});
 	feature ftTokenB = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${strDef} o ${inside1} o ${before2}));
 	feature ftPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${pos});
@@ -87,26 +93,31 @@ context tlinkTypeCtx=TLinkType() {
 	feature ftAspect = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="TIMEML_ASPECT");
 	feature ftClass = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="TIMEML_CLASS");
 	feature ftDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${strDef} o ${dep}));
+	feature ftLemma = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${lemma});
+	feature ftSynset = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${synset});
 	feature fstToken = Conjunction(minFeatureOccurrence="2", features=(${fsToken}, ${ftToken}));
 	feature fstPos = Conjunction(minFeatureOccurrence="2", features=(${fsPos}, ${ftPos}));
 	feature fstTense = Conjunction(minFeatureOccurrence="2", features=(${fsTense}, ${ftTense}));
 	feature fstAspect = Conjunction(minFeatureOccurrence="2", features=(${fsAspect}, ${ftAspect}));
 	feature fstClass = Conjunction(minFeatureOccurrence="2", features=(${fsClass}, ${ftClass}));	
+	feature fstLemma = Conjunction(minFeatureOccurrence="2", features=(${fsLemma}, ${ftLemma}));
+	feature fstSynset = Conjunction(minFeatureOccurrence="2", features=(${fsSynset}, ${ftSynset}));
 	feature fdepPathEE = DependencyPath(minFeatureOccurrence="2", sourceTokenExtractor="Source", targetTokenExtractor="Target", useRelationTypes="true");
 	feature fconPathEE = ConstituencyPath(minFeatureOccurrence="2", sourceTokenExtractor="Source", targetTokenExtractor="Target");
 	feature fdepTypeEE = DependencyPathType(sourceTokenExtractor="Source", targetTokenExtractor="Target");
 	feature fdomEE = ConstituencyParseRelation(sourceTokenExtractor="Source", targetTokenExtractor="Target");
 
 	feature_set fsEE = FeatureSet(features=(${fsToken}, ${fsTokenB}, ${fsPos}, ${fsPosB1}, ${fsPosB2},
-											${fsTense}, ${fsAspect}, ${fsClass}, ${fsDep}, ${ftToken}, ${ftTokenB},
-											${ftPos}, ${ftPosB1}, ${ftPosB2}, ${ftTense},
-											${ftAspect}, ${ftClass}, ${ftDep}, ${fstToken}, ${fstPos},
-											${fstTense}, ${fstAspect}, ${fstClass}, ${fdepPathEE}, 
-											${fconPathEE}, ${fdepTypeEE}, ${fdomEE}), initData=(${trainDataEE}));
+											${fsTense}, ${fsAspect}, ${fsClass}, ${fsDep}, ${fsLemma}, ${fsSynset},
+											${ftToken}, ${ftTokenB}, ${ftPos}, ${ftPosB1}, ${ftPosB2}, ${ftTense},
+											${ftAspect}, ${ftClass}, ${ftDep}, ${ftLemma}, ${ftSynset},
+											${fstToken}, ${fstPos}, ${fstTense}, 
+											${fstAspect}, ${fstClass}, ${fstLemma}, ${fstSynset},
+											${fdepPathEE}, ${fconPathEE}, ${fdepTypeEE}, ${fdomEE}), initData=(${trainDataEE}));
 	
 	feature_set fsDCT = FeatureSet(features=(${feventToken}, ${feventTokenB}, ${feventPos},
 											 ${feventPosB1}, ${feventPosB2}, ${feventTense}, ${feventAspect}, 
-											 ${feventClass}), initData=(${trainDataDCT}));
+											 ${feventClass}, ${feventLemma}, ${feventSynset}), initData=(${trainDataDCT}));
 
 	
 	data_features trainMatrixDCT = DataFeatureMatrix(data=${trainDataDCT}, features=${fsDCT});
