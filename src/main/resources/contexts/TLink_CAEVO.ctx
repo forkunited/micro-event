@@ -54,8 +54,8 @@ context tlinkTypeCtx=TLinkType() {
 	feature feventAspect = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="TIMEML_ASPECT");
 	feature feventClass = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="TIMEML_CLASS");
 	feature feventDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${strDef} o ${dep}));
-	feature feventLemma = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${lemma}));
-	feature feventSynset = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${synset}));
+	feature feventLemma = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${lemma});
+	feature feventSynset = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${synset});
 	feature ftimeToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=${strDef});
 	feature ftimeTokenh = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=(${strDef} o ${head}));
 	feature ftimeSentPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=${sentPos});
