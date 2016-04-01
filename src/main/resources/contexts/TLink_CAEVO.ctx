@@ -100,7 +100,6 @@ context tlinkTypeCtx=TLinkType() {
 	feature fstTense = Conjunction(minFeatureOccurrence="2", features=(${fsTense}, ${ftTense}));
 	feature fstAspect = Conjunction(minFeatureOccurrence="2", features=(${fsAspect}, ${ftAspect}));
 	feature fstClass = Conjunction(minFeatureOccurrence="2", features=(${fsClass}, ${ftClass}));	
-	feature fstSynset = Conjunction(minFeatureOccurrence="2", features=(${fsSynset}, ${ftSynset}));
 	feature fdepPathEE = DependencyPath(minFeatureOccurrence="2", sourceTokenExtractor="Source", targetTokenExtractor="Target", useRelationTypes="true");
 	feature fconPathEE = ConstituencyPath(minFeatureOccurrence="2", sourceTokenExtractor="Source", targetTokenExtractor="Target");
 	feature fdepTypeEE = DependencyPathType(sourceTokenExtractor="Source", targetTokenExtractor="Target");
@@ -111,7 +110,7 @@ context tlinkTypeCtx=TLinkType() {
 											${ftToken}, ${ftTokenB}, ${ftPos}, ${ftPosB1}, ${ftPosB2}, ${ftTense},
 											${ftAspect}, ${ftClass}, ${ftDep}, ${ftLemma}, ${ftSynset},
 											${fstToken}, ${fstPos}, ${fstTense}, 
-											${fstAspect}, ${fstClass}, ${fstSynset},
+											${fstAspect}, ${fstClass}, 
 											${fdepPathEE}, ${fconPathEE}, ${fdepTypeEE}, ${fdomEE}), initData=(${trainDataEE}));
 	
 	feature_set fsDCT = FeatureSet(features=(${feventToken}, ${feventTokenB}, ${feventPos},
@@ -129,7 +128,7 @@ context tlinkTypeCtx=TLinkType() {
 	classify_task devTask = Classification(data=${devData});
 	classify_task testTask = Classification(data=${testData});
 	
-	model yadll=YADLL(numEpochs="100", stepSize="2", 
+	model yadll=YADLL(numEpochs="80", stepSize="2", 
 					  fnNodes=("Softmax", "NegativeLogLoss"), 
 					  fnParameters=("FanIn", "Zeros"), 
 					  Softmax_0_input="FanIn_0*x+Zeros_1", 
