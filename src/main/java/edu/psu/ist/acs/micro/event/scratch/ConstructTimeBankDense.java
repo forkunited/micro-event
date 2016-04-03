@@ -439,11 +439,19 @@ public class ConstructTimeBankDense {
 			DocumentNLPMutable tempDocument = new DocumentNLPInMemory(dataTools, document.getName(), document.getSentence(i));
 			tempDocument = extraAnnotationPipeline.run(tempDocument);
 			
-			if (tempDocument.getSentenceCount() != 1)
-				throw new UnsupportedOperationException("More than one output sentence for input " + document.getName() + " " + i);
-			if (tempDocument.getSentenceTokenCount(0) != document.getSentenceTokenCount(i))
-				throw new UnsupportedOperationException("Mismatching token count for sentence " + document.getName() + " " + i);
-/*
+			List<Pair<String, Double>> sentenceLemmas = new ArrayList<Pair<String, Double>>();
+			for (int j = 0; j < tempDocument.getSentenceCount(); j++) {
+				for (int k = 0; k < tempDocument.getSentenceTokenCount(j); k++) {
+					sentenceLemmas.add(new Pair<String, Double>(tempDocument.getTokenAnnotation(AnnotationTypeNLP.LEMMA, j, k), null));
+				}
+			}
+			
+			lemmas[i] = (Pair[])sentenceLemmas.toArray();
+
+			if (lemmas[i].length != document.getSentenceTokenCount(i))
+				throw new UnsupportedOperationException("Mismatching token count for lemmas of " + document.getName() + " " + i);
+			
+			/*
 			lemmas[i] = new Pair[tempDocument.getSentenceTokenCount(i)];
 			for (int j = 0; j < tempDocument.getSentenceTokenCount(i); j++)
 				lemmas[i][j] = new Pair<String, Double>(
