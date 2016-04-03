@@ -454,7 +454,12 @@ public class ConstructTimeBankDense {
 			if (lemmas[i].length != document.getSentenceTokenCount(i)) {
 				throw new UnsupportedOperationException("Mismatching token count (" + lemmas[i].length + "," + document.getSentenceTokenCount(i) + ") for lemmas of " + document.getName() + " " + i + "\n" + document.getSentence(i));
 			}
-				
+			
+			List<Pair<TokenSpan, Predicate>> sentenceSrl = tempDocument.getTokenSpanAnnotations(AnnotationTypeNLP.PREDICATE);
+			for (Pair<TokenSpan, Predicate> pair : sentenceSrl)
+				if (pair.getFirst().getSentenceIndex() != 0)
+					System.out.println("Predicate on span outside sentence 0 in " + document.getName() + " " + i);
+			
 			/*
 			lemmas[i] = new Pair[tempDocument.getSentenceTokenCount(i)];
 			for (int j = 0; j < tempDocument.getSentenceTokenCount(i); j++)
