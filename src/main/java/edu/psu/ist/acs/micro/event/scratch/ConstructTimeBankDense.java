@@ -442,6 +442,9 @@ public class ConstructTimeBankDense {
 			List<Pair<String, Double>> sentenceLemmas = new ArrayList<Pair<String, Double>>();
 			for (int j = 0; j < tempDocument.getSentenceCount(); j++) {
 				for (int k = 0; k < tempDocument.getSentenceTokenCount(j); k++) {
+					if (j == 0 && tempDocument.getSentenceCount() == 2 && k == tempDocument.getSentenceTokenCount(j) - 1)
+						continue;
+					
 					sentenceLemmas.add(new Pair<String, Double>(tempDocument.getTokenAnnotation(AnnotationTypeNLP.LEMMA, j, k), null));
 				}
 			}
