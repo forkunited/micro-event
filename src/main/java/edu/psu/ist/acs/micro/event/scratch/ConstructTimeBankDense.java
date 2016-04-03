@@ -446,7 +446,7 @@ public class ConstructTimeBankDense {
 				}
 			}
 			
-			lemmas[i] = (Pair[])sentenceLemmas.toArray();
+			lemmas[i] = sentenceLemmas.toArray(new Pair[0]);
 
 			if (lemmas[i].length != document.getSentenceTokenCount(i))
 				throw new UnsupportedOperationException("Mismatching token count for lemmas of " + document.getName() + " " + i);
