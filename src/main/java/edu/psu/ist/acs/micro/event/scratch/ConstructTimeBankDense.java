@@ -35,7 +35,10 @@ import edu.cmu.ml.rtw.generic.model.annotator.nlp.AnnotatorDocument;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.AnnotatorSentence;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.AnnotatorToken;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.AnnotatorTokenSpan;
+import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLP;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLPExtendable;
+import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLPMateTools;
+import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLPStanford;
 import edu.cmu.ml.rtw.generic.util.FileUtil;
 import edu.cmu.ml.rtw.generic.util.Pair;
 import edu.cmu.ml.rtw.generic.util.Triple;
@@ -84,6 +87,8 @@ public class ConstructTimeBankDense {
 	private static int timexId = 0;
 	private static Map<String, Map<String, StoreReference>> references = new HashMap<String, Map<String, StoreReference>>(); 
 	
+	private static PipelineNLP extraAnnotationPipeline;
+	
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		String dataFilePath = args[0];
@@ -92,6 +97,10 @@ public class ConstructTimeBankDense {
 		
 		tlinkTypes = loadTLinkTypes(tlinkFilePath);
 		dataTools = new EventDataTools();
+		
+		PipelineNLPStanford stanfordPipe = new PipelineNLPStanford();
+		stanfordPipe.initialize(AnnotationTypeNLP.CONSTITUENCY_PARSE);
+		extraAnnotationPipeline = stanfordPipe.weld(new PipelineNLPMateTools(dataTools.getProperties()));
 		
 		Storage<?, ?> storage = dataTools.getStoredItemSetManager().getStorage(storageName);
 		if (storage.hasCollection(DOCUMENT_COLLECTION))
@@ -118,8 +127,6 @@ public class ConstructTimeBankDense {
 				.getItemSet(storageName, TLINK_COLLECTION, true,(Serializer<TLink, Document>)serializers.get("JSONBSONTLink"));
 		//storedSignals = dataTools.getStoredItemSetManager()
 		//		.getItemSet(storageName, SIGNAL_COLLECTION, true,(Serializer<Signal, Document>)serializers.get("JSONBSONSignal"));
-
-		
 		
 		SAXBuilder builder = new SAXBuilder();
 		Document xml = null;
@@ -414,11 +421,43 @@ public class ConstructTimeBankDense {
 				return false;
 		}
 
-		document = pipeline.run(document);
+		document = addExtraAnnotations(pipeline.run(document));
 
 		storedDocuments.addItem(document);
 		
 		return true;
+	}
+	
+	// Add SRL and lemmas
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private static DocumentNLPMutable addExtraAnnotations(DocumentNLPMutable document) {
+		DocumentNLPMutable tempDocument = new DocumentNLPInMemory(dataTools, document.getName(), document.getOriginalText());
+		tempDocument = extraAnnotationPipeline.run(tempDocument);
+		
+		if (tempDocument.getSentenceCount() != document.getSentenceCount())
+			throw new UnsupportedOperationException("Mismatching sentence count for additional annotations in " + document.getName());
+		
+		Pair<String, Double>[][] lemmas = new Pair[tempDocument.getSentenceCount()][];
+		for (int i = 0; i < tempDocument.getSentenceCount(); i++) {
+			if (tempDocument.getSentenceTokenCount(i) != document.getSentenceTokenCount(i))
+				throw new UnsupportedOperationException("Mismatching sentence count for additional annotations in " + document.getName() + " (" + i + ")");
+
+			lemmas[i] = new Pair[tempDocument.getSentenceTokenCount(i)];
+			for (int j = 0; j < tempDocument.getSentenceTokenCount(i); j++)
+				lemmas[i][j] = new Pair<String, Double>(
+						tempDocument.getTokenAnnotation(AnnotationTypeNLP.LEMMA, i, j),
+						tempDocument.getTokenAnnotationConfidence(AnnotationTypeNLP.LEMMA, i, j));
+		}
+		
+		String lemmaAnnotator = tempDocument.getAnnotatorName(AnnotationTypeNLP.LEMMA);
+		document.setTokenAnnotation(lemmaAnnotator, AnnotationTypeNLP.LEMMA, lemmas);
+		
+		String srlAnnotator = tempDocument.getAnnotatorName(AnnotationTypeNLP.PREDICATE);
+		document.setTokenSpanAnnotation(srlAnnotator, 
+				(AnnotationTypeNLP<?>)AnnotationTypeNLP.PREDICATE, 
+				(List)tempDocument.getTokenSpanAnnotationConfidences(AnnotationTypeNLP.PREDICATE));
+		
+		return document;
 	}
 	
 	private static TimeExpression timexFromXML(Element element, DocumentNLP document, int sentenceIndex) {			
