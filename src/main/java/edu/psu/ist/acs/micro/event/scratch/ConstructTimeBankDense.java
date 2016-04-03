@@ -27,6 +27,7 @@ import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPInMemory;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPMutable;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.PoSTag;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.Predicate;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.Token;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.data.store.Storage;
@@ -430,32 +431,33 @@ public class ConstructTimeBankDense {
 	
 	// Add SRL and lemmas
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private static DocumentNLPMutable addExtraAnnotations(DocumentNLPMutable document) {
-		DocumentNLPMutable tempDocument = new DocumentNLPInMemory(dataTools, document.getName(), document.getOriginalText());
-		tempDocument = extraAnnotationPipeline.run(tempDocument);
+	private static DocumentNLPMutable addExtraAnnotations(DocumentNLPMutable document) {		
+		Pair<String, Double>[][] lemmas = new Pair[document.getSentenceCount()][];
+		List<Triple<TokenSpan, Predicate, Double>> predicates = new ArrayList<>();
 		
-		if (tempDocument.getSentenceCount() != document.getSentenceCount())
-			throw new UnsupportedOperationException("Mismatching sentence count for additional annotations in " + document.getName());
-		
-		Pair<String, Double>[][] lemmas = new Pair[tempDocument.getSentenceCount()][];
-		for (int i = 0; i < tempDocument.getSentenceCount(); i++) {
-			if (tempDocument.getSentenceTokenCount(i) != document.getSentenceTokenCount(i))
-				throw new UnsupportedOperationException("Mismatching sentence count for additional annotations in " + document.getName() + " (" + i + ")");
-
+		for (int i = 0; i < document.getSentenceCount(); i++) {
+			DocumentNLPMutable tempDocument = new DocumentNLPInMemory(dataTools, document.getName(), document.getSentence(i));
+			tempDocument = extraAnnotationPipeline.run(tempDocument);
+			
+			if (tempDocument.getSentenceCount() != 1)
+				throw new UnsupportedOperationException("More than one output sentence for input " + document.getName() + " " + i);
+			if (tempDocument.getSentenceTokenCount(0) != document.getSentenceTokenCount(i))
+				throw new UnsupportedOperationException("Mismatching token count for sentence " + document.getName() + " " + i);
+/*
 			lemmas[i] = new Pair[tempDocument.getSentenceTokenCount(i)];
 			for (int j = 0; j < tempDocument.getSentenceTokenCount(i); j++)
 				lemmas[i][j] = new Pair<String, Double>(
 						tempDocument.getTokenAnnotation(AnnotationTypeNLP.LEMMA, i, j),
-						tempDocument.getTokenAnnotationConfidence(AnnotationTypeNLP.LEMMA, i, j));
+						tempDocument.getTokenAnnotationConfidence(AnnotationTypeNLP.LEMMA, i, j));*/
 		}
 		
-		String lemmaAnnotator = tempDocument.getAnnotatorName(AnnotationTypeNLP.LEMMA);
+		/*String lemmaAnnotator = tempDocument.getAnnotatorName(AnnotationTypeNLP.LEMMA);
 		document.setTokenAnnotation(lemmaAnnotator, AnnotationTypeNLP.LEMMA, lemmas);
 		
 		String srlAnnotator = tempDocument.getAnnotatorName(AnnotationTypeNLP.PREDICATE);
 		document.setTokenSpanAnnotation(srlAnnotator, 
 				(AnnotationTypeNLP<?>)AnnotationTypeNLP.PREDICATE, 
-				(List)tempDocument.getTokenSpanAnnotationConfidences(AnnotationTypeNLP.PREDICATE));
+				(List)tempDocument.getTokenSpanAnnotationConfidences(AnnotationTypeNLP.PREDICATE));*/
 		
 		return document;
 	}
