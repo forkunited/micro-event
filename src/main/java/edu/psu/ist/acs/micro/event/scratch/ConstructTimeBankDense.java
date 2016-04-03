@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.jdom2.Attribute;
 import org.jdom2.Document;
@@ -456,27 +457,63 @@ public class ConstructTimeBankDense {
 			}
 			
 			List<Pair<TokenSpan, Predicate>> sentenceSrl = tempDocument.getTokenSpanAnnotations(AnnotationTypeNLP.PREDICATE);
-			for (Pair<TokenSpan, Predicate> pair : sentenceSrl)
-				if (pair.getFirst().getSentenceIndex() != 0)
-					System.out.println("Predicate on span outside sentence 0 in " + document.getName() + " " + i);
-			
-			/*
-			lemmas[i] = new Pair[tempDocument.getSentenceTokenCount(i)];
-			for (int j = 0; j < tempDocument.getSentenceTokenCount(i); j++)
-				lemmas[i][j] = new Pair<String, Double>(
-						tempDocument.getTokenAnnotation(AnnotationTypeNLP.LEMMA, i, j),
-						tempDocument.getTokenAnnotationConfidence(AnnotationTypeNLP.LEMMA, i, j));*/
+			for (Pair<TokenSpan, Predicate> pair : sentenceSrl) {
+				if (pair.getFirst().getSentenceIndex() == 0) {
+					Pair<TokenSpan, Predicate> offsetPair = offsetPredicate(pair, i, 0);
+					predicates.add(new Triple<TokenSpan, Predicate, Double>(
+						offsetPair.getFirst(),
+						offsetPair.getSecond(),
+						null	
+					));
+				} else if (pair.getFirst().getSentenceIndex() == 1) { // Handle edge case where sentence is split
+					Pair<TokenSpan, Predicate> offsetPair = offsetPredicate(pair, i, tempDocument.getSentenceTokenCount(0) - 1);
+					predicates.add(new Triple<TokenSpan, Predicate, Double>(
+						offsetPair.getFirst(),
+						offsetPair.getSecond(),
+						null	
+					));
+				} else {
+					throw new UnsupportedOperationException();
+				}
+			}
 		}
 		
-		/*String lemmaAnnotator = tempDocument.getAnnotatorName(AnnotationTypeNLP.LEMMA);
+		String lemmaAnnotator = extraAnnotationPipeline.getAnnotatorName(AnnotationTypeNLP.LEMMA);
 		document.setTokenAnnotation(lemmaAnnotator, AnnotationTypeNLP.LEMMA, lemmas);
 		
-		String srlAnnotator = tempDocument.getAnnotatorName(AnnotationTypeNLP.PREDICATE);
+		String srlAnnotator = extraAnnotationPipeline.getAnnotatorName(AnnotationTypeNLP.PREDICATE);
 		document.setTokenSpanAnnotation(srlAnnotator, 
 				(AnnotationTypeNLP<?>)AnnotationTypeNLP.PREDICATE, 
-				(List)tempDocument.getTokenSpanAnnotationConfidences(AnnotationTypeNLP.PREDICATE));*/
+				(List)predicates);
 		
 		return document;
+	}
+	
+	private static Pair<TokenSpan, Predicate> offsetPredicate(Pair<TokenSpan, Predicate> pair, int sentenceIndex, int tokenOffset) {
+		TokenSpan span = offsetSpan(pair.getFirst(), sentenceIndex, tokenOffset);
+		Map<String, TokenSpan[]> arguments = new TreeMap<String, TokenSpan[]>();
+		
+		for (String tag : pair.getSecond().getArgumentTags()) {
+			TokenSpan[] spans = new TokenSpan[pair.getSecond().getArgument(tag).length];
+			for (int i = 0; i < spans.length; i++) {
+				spans[i] = offsetSpan(pair.getSecond().getArgument(tag)[i], sentenceIndex, tokenOffset);
+			}
+			
+			arguments.put(tag, spans);
+		}
+		
+		Predicate predicate = new Predicate(pair.getSecond().getSense(), 
+											offsetSpan(pair.getSecond().getSpan(), sentenceIndex, tokenOffset), 
+											arguments); 
+		
+		return new Pair<>(span, predicate);
+	}
+	
+	private static TokenSpan offsetSpan(TokenSpan span, int sentenceIndex, int tokenOffset) {
+		return new TokenSpan(span.getDocument(), 
+				   sentenceIndex, 
+				   span.getStartTokenIndex() + tokenOffset, 
+				   span.getEndTokenIndex() + tokenOffset);
 	}
 	
 	private static TimeExpression timexFromXML(Element element, DocumentNLP document, int sentenceIndex) {			
