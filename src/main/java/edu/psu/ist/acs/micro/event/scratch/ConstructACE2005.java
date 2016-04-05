@@ -3,6 +3,7 @@ package edu.psu.ist.acs.micro.event.scratch;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -278,7 +279,7 @@ From the Associated Press : A baby girl who had been cut out of her
 		SAXBuilder builder = new SAXBuilder();
 		Document xml = null;
 		try {
-			xml = builder.build(xmlStr.toString());
+			xml = builder.build(new StringReader(xmlStr.toString()));
 		} catch (JDOMException e) {
 			System.err.println("Failed to read file " + xmlFile.getAbsolutePath());
 			e.printStackTrace();
