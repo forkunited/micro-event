@@ -39,7 +39,7 @@ public class ConstructACE2005 {
 		System.out.println("Annotation summary");
 		for (Entry<String, Set<String>> entry : summary.entrySet()) {
 			System.out.println(entry.getKey());
-			if (entry.getValue().size() > 20) {
+			if (entry.getValue().size() > 50) {
 				System.out.println("\t(" + entry.getValue().size() + " values)");
 			} else {
 				for (String child : entry.getValue())
