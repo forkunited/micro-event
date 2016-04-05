@@ -83,7 +83,7 @@ public class ConstructACE2005 {
 				
 			} else {
 				Attribute attribute = (Attribute)o;
-				String name = attribute.getName() + " (attribute)";
+				String name = parent + " " + attribute.getName() + " (attribute)";
 				if (!summary.containsKey(name))
 					summary.put(name, new HashSet<String>());
 				summary.get(name).add(attribute.getValue() + " (value)");
