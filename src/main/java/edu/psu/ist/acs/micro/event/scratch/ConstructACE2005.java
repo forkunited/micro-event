@@ -40,8 +40,12 @@ public class ConstructACE2005 {
 		System.out.println("Annotation summary");
 		for (Entry<String, Set<String>> entry : summary.entrySet()) {
 			System.out.println(entry.getKey());
-			for (String child : entry.getValue())
-				System.out.println("\t" + child);
+			if (entry.getValue().size() > 20) {
+				System.out.println("\t(" + entry.getValue().size() + " values)");
+			} else {
+				for (String child : entry.getValue())
+					System.out.println("\t" + child);
+			}
 		}
 	}
 	
