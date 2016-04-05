@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -28,7 +27,7 @@ public class ConstructACE2005 {
 	public static void main(String[] args) {
 		Map<String, Pair<File, File>> inputFiles = getInputFiles(args);
 		
-		Map<String, Set<String>> summary = new HashMap<String, Set<String>>();
+		Map<String, Set<String>> summary = new TreeMap<String, Set<String>>();
 		for (Entry<String, Pair<File, File>> entry : inputFiles.entrySet()) {
 			summarizeAnnotations(entry.getValue().getSecond(), summary);
 			
@@ -56,28 +55,30 @@ public class ConstructACE2005 {
 	
 	private static Map<String, Set<String>> summarizeAnnotations(File annotationFile, Map<String, Set<String>> summary) {
 		Element rootElement = getDocumentRootElement(annotationFile);
-		Stack<Object> toVisit = new Stack<Object>();
-		toVisit.add(rootElement);
+		Stack<Pair<String, Object>> toVisit = new Stack<>();
+		toVisit.add(new Pair<String, Object>("", rootElement));
 		
 		while (!toVisit.isEmpty()) {
-			Object o = toVisit.pop();
+			Pair<String, Object> curPair = toVisit.pop();
+			String parent = curPair.getFirst();
+			Object o = curPair.getSecond();
 			if (o instanceof Element) {
 				Element element = (Element)o;
-				String name = element.getName() + " (element)";
+				String name = parent + " " + element.getName() + " (element)";
 				if (!summary.containsKey(name))
 					summary.put(name, new HashSet<String>());
 				Set<String> childNames = summary.get(name);
 				
 				List<Attribute> attributes = element.getAttributes();
 				for (Attribute attribute : attributes) {
-					childNames.add(attribute.getName() + "(attribute)");
-					toVisit.add(attribute);
+					childNames.add(attribute.getName() + " (attribute)");
+					toVisit.add(new Pair<String, Object>(element.getName(), attribute));
 				}
 				
 				List<Element> children = element.getChildren();
 				for (Element child : children) {
-					childNames.add(child.getName() + "(element)");					
-					toVisit.add(child);
+					childNames.add(child.getName() + " (element)");					
+					toVisit.add(new Pair<String, Object>(element.getName(), child));
 				}
 				
 			} else {
