@@ -1,5 +1,6 @@
 package edu.psu.ist.acs.micro.event.scratch;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPMutable;
+import edu.cmu.ml.rtw.generic.util.FileUtil;
 import edu.cmu.ml.rtw.generic.util.Pair;
 
 public class ConstructACE2005 {
@@ -258,10 +260,25 @@ From the Associated Press : A baby girl who had been cut out of her
 	}
 	
 	private static Element getDocumentRootElement(File xmlFile) {
+		BufferedReader r = FileUtil.getFileReader(xmlFile.getAbsolutePath());
+		StringBuilder xmlStr = new StringBuilder();
+		try {
+			String line = null;
+			while ((line = r.readLine()) != null) {
+				if (!line.startsWith("<!DOCTYPE"))
+					xmlStr.append(line).append("\n");
+			}
+			
+			r.close();
+		} catch (IOException e1) {
+			System.err.println("Failed to read file " + xmlFile.getAbsolutePath());
+			System.exit(1);
+		}
+		
 		SAXBuilder builder = new SAXBuilder();
 		Document xml = null;
 		try {
-			xml = builder.build(xmlFile);
+			xml = builder.build(xmlStr.toString());
 		} catch (JDOMException e) {
 			System.err.println("Failed to read file " + xmlFile.getAbsolutePath());
 			e.printStackTrace();
