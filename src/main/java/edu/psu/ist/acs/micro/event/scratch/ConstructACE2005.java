@@ -263,9 +263,11 @@ From the Associated Press : A baby girl who had been cut out of her
 		try {
 			xml = builder.build(xmlFile);
 		} catch (JDOMException e) {
+			System.err.println("Failed to read file " + xmlFile.getAbsolutePath());
 			e.printStackTrace();
 			System.exit(1);
 		} catch (IOException e) {
+			System.err.println("Failed to read file " + xmlFile.getAbsolutePath());
 			e.printStackTrace();
 			System.exit(1);
 		}
