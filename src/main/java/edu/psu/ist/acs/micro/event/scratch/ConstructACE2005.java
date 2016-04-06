@@ -417,7 +417,10 @@ adsfasdfsdf
 			traversal.add(current);
 			
 			List<Element> children = current.getChildren();
-			for (Element child : children) {
+			List<Element> reverseChildren = new ArrayList<Element>();
+			for (int i = 0; i < children.size(); i++)
+				reverseChildren.add(children.get(children.size() - 1 - i));
+			for (Element child : reverseChildren) {
 				toVisit.push(child);
 			}
 		}
