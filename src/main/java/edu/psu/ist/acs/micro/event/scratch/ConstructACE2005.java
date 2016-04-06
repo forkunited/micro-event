@@ -414,10 +414,10 @@ adsfasdfsdf
 		List<Element> traversal = new ArrayList<Element>();
 		while (!toVisit.isEmpty()) {
 			Element current = toVisit.pop();
-			traversal.add(root);
+			traversal.add(current);
+			
 			List<Element> children = current.getChildren();
 			for (Element child : children) {
-				traversal.add(child);
 				toVisit.push(child);
 			}
 		}
