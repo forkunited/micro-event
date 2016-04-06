@@ -509,12 +509,12 @@ public class ConstructACE2005 {
 	private static int getElementParts(Element element, int offset, TreeMap<Integer, Pair<String, String>> parts) {
 		List<Content> content = element.getContent();
 		for (int i = 0; i < content.size(); i++) {
-			if (content instanceof Text) {
-				Text text = (Text)content;
+			if (content.get(i) instanceof Text) {
+				Text text = (Text)content.get(i);
 				parts.put(offset, new Pair<String, String>(null, text.getText()));
 				offset += text.getText().length();
-			} else if (content instanceof Element) {
-				offset = getElementParts((Element)content, offset, parts);
+			} else if (content.get(i) instanceof Element) {
+				offset = getElementParts((Element)content.get(i), offset, parts);
 			}
 		}
 		
