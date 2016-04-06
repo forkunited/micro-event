@@ -92,10 +92,17 @@ public class ConstructACE2005 {
 	private static List<ACESourceDocument> constructSourceDocuments(File contentFile) {
 		Pair<Element, String> rootAndString = getDocumentRootElementAndString(contentFile);
 		Element rootElement = rootAndString.getFirst();
-		Map<Element, Integer> charOffsets = getCharOffsets(rootAndString.getSecond(), traverse(rootElement));
+		List<Element> elementsInOrder = traverse(rootElement);
+		Map<Element, Integer> charOffsets = getCharOffsets(rootAndString.getSecond(), elementsInOrder);
 		
+		System.out.println(contentFile.getName());
+		for (Element element : elementsInOrder)
+			System.out.println(element.getName());
+		System.out.println(" ");
 		for (Entry<Element, Integer> entry : charOffsets.entrySet())
 			System.out.println(entry.getKey().getName() + " " + entry.getValue());
+		System.out.println(" ");
+		System.out.println(rootAndString.getSecond());
 		System.exit(1);
 		
 		if (isNewswire(rootElement))
