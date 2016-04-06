@@ -785,7 +785,10 @@ public class ConstructTimeBankDense {
 					timeMLVerbForm, 
 					timeMLPoS,
 					modality,
-					cardinality);
+					cardinality,
+					null,
+					null,
+					null);
 			
 			eventIds.add(document.getName() + "_" + id);
 			

@@ -1,7 +1,9 @@
 package edu.psu.ist.acs.micro.event.data.annotation.nlp.event;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,6 +14,7 @@ import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DependencyParse.Dependency;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan.SerializationType;
 import edu.cmu.ml.rtw.generic.data.store.StoreReference;
+import edu.cmu.ml.rtw.generic.util.Pair;
 import edu.cmu.ml.rtw.generic.util.StoredJSONSerializable;
 
 
@@ -25,7 +28,7 @@ import edu.cmu.ml.rtw.generic.util.StoredJSONSerializable;
  * @author Bill McDowell
  * 
  */
-public class EventMention implements TLinkable {	
+public class EventMention implements TLinkable, MentionArgumentable {	
 	public enum TimeMLTense {
 		FUTURE,
 		INFINITIVE,
@@ -102,16 +105,22 @@ public class EventMention implements TLinkable {
 	private String modality;
 	private String cardinality;
 	
+	private TokenSpan extent;
+	private StoreReference eventReference;
+	private List<Pair<StoreReference, String>> argumentReferences;
+	
 	private StoreReference reference;
 	private DataTools dataTools;
 	
 	public EventMention(DataTools dataTools) {
 		this.dataTools = dataTools;
+		this.argumentReferences = new ArrayList<>();
 	}
 	
 	public EventMention(DataTools dataTools, StoreReference reference) {
 		this.dataTools = dataTools;
 		this.reference = reference;
+		this.argumentReferences = new ArrayList<>();
 	}
 	
 	public EventMention(DataTools dataTools,
@@ -129,7 +138,10 @@ public class EventMention implements TLinkable {
 						TimeMLVerbForm timeMLVerbForm, 
 						TimeMLPoS timeMLPoS,
 						String modality,
-						String cardinality) {
+						String cardinality,
+						TokenSpan extent,
+						StoreReference eventReference,
+						List<Pair<StoreReference, String>> argumentReferences) {
 		this.dataTools = dataTools;
 		this.reference = reference;
 		this.id = id;
@@ -146,6 +158,9 @@ public class EventMention implements TLinkable {
 		this.timeMLPoS = timeMLPoS;
 		this.modality = modality;
 		this.cardinality = cardinality;
+		this.extent = extent;
+		this.eventReference = eventReference;
+		this.argumentReferences = argumentReferences;
 	}
 	
 	public TLinkable.Type getTLinkableType() {
@@ -241,6 +256,33 @@ public class EventMention implements TLinkable {
 		return this.cardinality;
 	}
 	
+	public TokenSpan getExtent() {
+		return this.extent;
+	}
+	
+	public Event getEvent() {
+		return this.dataTools.getStoredItemSetManager().resolveStoreReference(this.eventReference, true);
+	}
+	
+	public int getArgumentCount() {
+		return this.argumentReferences.size();
+	}
+	
+	public String getArgumentRole(int index) {
+		return this.argumentReferences.get(index).getSecond();
+	}
+	
+	public MentionArgumentable getArgument(String role) {
+		for (int i = 0; i < getArgumentCount(); i++)
+			if (this.argumentReferences.get(i).getSecond().equals(role))
+				return getArgument(i);
+		return null;
+	}
+	
+	public MentionArgumentable getArgument(int index) {
+		return this.dataTools.getStoredItemSetManager().resolveStoreReference(this.argumentReferences.get(index).getFirst(), true);
+	}
+	
 	@Override
 	public JSONObject toJSON() {
 		JSONObject json = new JSONObject();
@@ -274,6 +316,21 @@ public class EventMention implements TLinkable {
 				json.put("modality", this.modality);
 			if (this.cardinality != null)
 				json.put("cardinality", this.cardinality);
+			if (this.extent != null)
+				json.put("extent", this.extent.toJSON(SerializationType.STORE_REFERENCE));
+			if (this.eventReference != null)
+				json.put("eventRef", this.eventReference.toJSON());
+			if (this.argumentReferences != null) {
+				JSONArray jsonArgs = new JSONArray();
+				for (int i = 0; i < this.argumentReferences.size(); i++) {
+					Pair<StoreReference, String> arg = this.argumentReferences.get(i);
+					JSONObject jsonArg = new JSONObject();
+					jsonArg.put("role", arg.getSecond());
+					jsonArg.put("ref", arg.getFirst().toJSON());
+					jsonArgs.put(jsonArg);
+				}
+				json.put("args", jsonArgs);
+			}
 		} catch (JSONException e) {
 			return null;
 		}
@@ -316,6 +373,20 @@ public class EventMention implements TLinkable {
 				this.modality = json.getString("modality");
 			if (json.has("polarity"))
 				this.cardinality = json.getString("cardinality");
+			if (json.has("extent"))
+				this.extent = TokenSpan.fromJSON(json.getJSONObject("extent"), this.dataTools.getStoredItemSetManager());
+			if (json.has("eventRef"))
+				this.eventReference = StoreReference.makeFromJSON(json.getJSONObject("eventRef"));
+			if (json.has("args")) {
+				this.argumentReferences = new ArrayList<>();
+				JSONArray jsonArgs = json.getJSONArray("args");
+				for (int i = 0; i < jsonArgs.length(); i++) {
+					JSONObject jsonArg = jsonArgs.getJSONObject(i);
+					String role = jsonArg.getString("role");
+					StoreReference ref = StoreReference.makeFromJSON(jsonArg.getJSONObject("ref"));
+					this.argumentReferences.add(new Pair<StoreReference, String>(ref, role));
+				}
+			}
 		} catch (JSONException e) {
 			return false;
 		}
@@ -331,5 +402,15 @@ public class EventMention implements TLinkable {
 	@Override
 	public StoreReference getStoreReference() {
 		return this.reference;
+	}
+
+	@Override
+	public MentionArgumentable.Type getMentionArgumentableType() {
+		return MentionArgumentable.Type.EVENT_MENTION;
+	}
+
+	@Override
+	public Argumentable getArgumentable() {
+		return getEvent();
 	}
 }
