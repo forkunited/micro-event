@@ -16,9 +16,11 @@ import java.util.Stack;
 import java.util.TreeMap;
 
 import org.jdom2.Attribute;
+import org.jdom2.Content;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
+import org.jdom2.Text;
 import org.jdom2.input.SAXBuilder;
 
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPMutable;
@@ -113,8 +115,6 @@ public class ConstructACE2005 {
 		if (isNewswire(rootElement))
 			return getNewswireSource(rootElement, charOffsets);
 		else if (isBroadcastConversation(rootElement)) {
-			System.out.println(rootAndString.getSecond() + "\n");
-			System.out.println(rootElement.getChild("BODY").getChild("TEXT").getChildText("TURN"));
 			return getBroadcastConversationSource(rootElement, charOffsets);
 		} else if (isBroadcastNews(rootElement))
 			return getBroadcastNewsSource(rootElement, charOffsets);
@@ -172,24 +172,33 @@ public class ConstructACE2005 {
 	}
 
 	private static List<ACESourceDocument> getBroadcastConversationSource(Element root, Map<Element, Integer> charOffsets) {
+	
+		String name = root.getChildText("DOCID").trim();
+		String dctStr = root.getChildText("DATETIME");
+		int dctStrOffset = charOffsets.get(root.getChild("DATETIME"));
+		Pair<Integer, Integer> dctStrCharRange = new Pair<>(dctStrOffset, dctStrOffset + dctStr.length());
 		
-	/*
-	 * <DOC>
-<DOCID> CNN_CF_20030303.1900.00 </DOCID>
-<DOCTYPE SOURCE="broadcast conversation"> STORY </DOCTYPE>
-<DATETIME> 2003-03-03T19:00:00-05:00 </DATETIME>
-<BODY>
-<HEADLINE>
-New Questions About Attacking Iraq; Is Torturing Terrorists Necessary?
-</HEADLINE>
-<TEXT>
-<TURN>
-<SPEAKER> BEGALA </SPEAKER>
-adsfasdfsdf
-</TURN>
-	 */
-		// FIXME
-		return null;
+		
+		TreeMap<Integer, Pair<String, String>> bodyParts = new TreeMap<>();
+		getElementParts(root.getChild("BODY"), charOffsets.get(root.getChild("BODY")), bodyParts);
+		
+		
+		ACESourceDocument document = new ACESourceDocument(
+				name,
+				ACEDocumentType.BROADCAST_CONVERSATION,
+				dctStr, 
+				dctStrCharRange,
+				new HashMap<String, String>(),
+				bodyParts);
+		
+		System.out.println(name);
+		for (Entry<Integer, Pair<String, String>> entry : bodyParts.entrySet())
+			System.out.println(entry.getKey() + " " + entry.getValue().getFirst() + " " + entry.getValue().getSecond());
+		System.exit(1);
+		List<ACESourceDocument> documents = new ArrayList<>();
+		documents.add(document);
+		
+		return documents;
 	}
 	
 	private static boolean isBroadcastNews(Element root) {
@@ -495,5 +504,20 @@ adsfasdfsdf
 		}
 		
 		return charOffsets;
+	}
+	
+	private static int getElementParts(Element element, int offset, TreeMap<Integer, Pair<String, String>> parts) {
+		List<Content> content = element.getContent();
+		for (int i = 0; i < content.size(); i++) {
+			if (content instanceof Text) {
+				Text text = (Text)content;
+				parts.put(offset, new Pair<String, String>(null, text.getText()));
+				offset += text.getText().length();
+			} else if (content instanceof Element) {
+				offset = getElementParts((Element)content, offset, parts);
+			}
+		}
+		
+		return offset;
 	}
 }
