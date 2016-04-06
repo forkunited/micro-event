@@ -24,22 +24,37 @@ import org.jdom2.input.SAXBuilder;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPMutable;
 import edu.cmu.ml.rtw.generic.util.FileUtil;
 import edu.cmu.ml.rtw.generic.util.Pair;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.ACEDocumentType;
 
 public class ConstructACE2005 {
 	private static class ACESourceDocument {
+		private String name;
+		private ACEDocumentType type;
 		private String dctStr;
 		private Pair<Integer, Integer> dctStrCharRange;
 		private Map<String, String> metaData;
 		private TreeMap<Integer, Pair<String, String>> bodyParts; // Map start char index to (part name, part value)
 		
-		public ACESourceDocument(String dctStr, 
+		public ACESourceDocument(String name,
+								ACEDocumentType type,
+								String dctStr, 
 								Pair<Integer, Integer> dctStrCharRange,
 								Map<String, String> metaData,
 								TreeMap<Integer, Pair<String, String>> bodyParts) {
+			this.name = name;
+			this.type = type;
 			this.dctStr = dctStr;
 			this.dctStrCharRange = dctStrCharRange;
 			this.metaData = metaData;
 			this.bodyParts = bodyParts;
+		}
+		
+		public String getName() {
+			return this.name;
+		}
+		
+		public ACEDocumentType getType() {
+			return this.type;
 		}
 		
 		public String getDCTStr() {
@@ -95,28 +110,20 @@ public class ConstructACE2005 {
 		List<Element> elementsInOrder = traverse(rootElement);
 		Map<Element, Integer> charOffsets = getCharOffsets(rootAndString.getSecond(), elementsInOrder);
 		
-		System.out.println(contentFile.getName());
-		for (Element element : elementsInOrder)
-			System.out.println(element.getName());
-		System.out.println(" ");
-		for (Entry<Element, Integer> entry : charOffsets.entrySet())
-			System.out.println(entry.getKey().getName() + " " + entry.getValue());
-		System.out.println(" ");
-		System.out.println(rootAndString.getSecond());
-		System.exit(1);
-		
 		if (isNewswire(rootElement))
-			return getNewswireSource(rootElement);
-		else if (isBroadcastConversation(rootElement))
-			return getBroadcastConversationSource(rootElement);
-		else if (isBroadcastNews(rootElement))
-			return getBroadcastNewsSource(rootElement);
+			return getNewswireSource(rootElement, charOffsets);
+		else if (isBroadcastConversation(rootElement)) {
+			System.out.println(rootAndString.getSecond() + "\n");
+			System.out.println(rootElement.getChild("BODY").getChild("TEXT").getChildText("TURN"));
+			return getBroadcastConversationSource(rootElement, charOffsets);
+		} else if (isBroadcastNews(rootElement))
+			return getBroadcastNewsSource(rootElement, charOffsets);
 		else if (isTelephone(rootElement))
-			return getTelephoneSource(rootElement);
+			return getTelephoneSource(rootElement, charOffsets);
 		else if (isUsenet(rootElement))
-			return getUsenetSource(rootElement);
+			return getUsenetSource(rootElement, charOffsets);
 		else if (isWeblog(rootElement))
-			return getWeblogSource(rootElement);
+			return getWeblogSource(rootElement, charOffsets);
 		else {
 			System.err.println("Unrecognized document source type " + contentFile.getAbsolutePath());
 			System.exit(1);
@@ -128,27 +135,44 @@ public class ConstructACE2005 {
 		return root.getChild("DOCTYPE").getAttribute("SOURCE").getValue().equals("newswire");
 	}
 	
-	private static List<ACESourceDocument> getNewswireSource(Element root) {
+	private static List<ACESourceDocument> getNewswireSource(Element root, Map<Element, Integer> charOffsets) {
+		String name = root.getChildText("DOCID").trim();
+		String dctStr = root.getChildText("DATETIME");
+		int dctStrOffset = charOffsets.get(root.getChild("DATETIME"));
+		Pair<Integer, Integer> dctStrCharRange = new Pair<>(dctStrOffset, dctStrOffset + dctStr.length());
 		
-		// FIXME 
-		/*
-		 * <DOCID> AFP_ENG_20030522.0878 </DOCID>
-	<DOCTYPE SOURCE="newswire"> NEWS STORY </DOCTYPE>
-	<DATETIME> 20030522 </DATETIME>
-	<BODY>
-	<HEADLINE>
-	Chinese leader favours Russia in first foreign tour by Henry Meyer
-	</HEADLINE>
-	<TEXT>
-		 */
-		return null;
+		Element headlineElement = root.getChild("BODY").getChild("HEADLINE");
+		int headlineOffset = charOffsets.get(headlineElement);
+		String headlineStr = headlineElement.getText();
+		
+		Element textElement = root.getChild("BODY").getChild("TEXT");
+		int textOffset = charOffsets.get(textElement);
+		String textStr = textElement.getText();
+		
+		TreeMap<Integer, Pair<String, String>> bodyParts = new TreeMap<>();
+		bodyParts.put(headlineOffset, new Pair<String, String>("HEADLINE", headlineStr));
+		bodyParts.put(textOffset, new Pair<String, String>("TEXT", textStr));
+		
+		ACESourceDocument document = new ACESourceDocument(
+				name,
+				ACEDocumentType.NEWS_WIRE,
+				dctStr, 
+				dctStrCharRange,
+				new HashMap<String, String>(),
+				bodyParts);
+		
+		List<ACESourceDocument> documents = new ArrayList<>();
+		documents.add(document);
+		
+		return documents;
 	}
 	
 	private static boolean isBroadcastConversation(Element root) {
 		return root.getChild("DOCTYPE").getAttribute("SOURCE").getValue().equals("broadcast conversation");
 	}
 
-	private static List<ACESourceDocument> getBroadcastConversationSource(Element root) {
+	private static List<ACESourceDocument> getBroadcastConversationSource(Element root, Map<Element, Integer> charOffsets) {
+		
 	/*
 	 * <DOC>
 <DOCID> CNN_CF_20030303.1900.00 </DOCID>
@@ -172,7 +196,7 @@ adsfasdfsdf
 		return root.getChild("DOCTYPE").getAttribute("SOURCE").getValue().equals("broadcast news");
 	}
 
-	private static List<ACESourceDocument> getBroadcastNewsSource(Element root) {
+	private static List<ACESourceDocument> getBroadcastNewsSource(Element root, Map<Element, Integer> charOffsets) {
 		/* FIXME
 		 * <DOC>
 	<DOCID> CNN_ENG_20030327_163556.20 </DOCID>
@@ -190,7 +214,7 @@ adsfasdfsdf
 		return root.getChild("DOCTYPE").getAttribute("SOURCE").getValue().equals("telephone");
 	}
 	
-	private static List<ACESourceDocument> getTelephoneSource(Element root) {
+	private static List<ACESourceDocument> getTelephoneSource(Element root, Map<Element, Integer> charOffsets) {
 		/*
 		 * <DOC>
 	<DOCID> fsh_29139 </DOCID>
@@ -220,7 +244,7 @@ adsfasdfsdf
 		return root.getChild("DOCTYPE").getAttribute("SOURCE").getValue().equals("usenet");
 	}
 	
-	private static List<ACESourceDocument> getUsenetSource(Element root) {
+	private static List<ACESourceDocument> getUsenetSource(Element root, Map<Element, Integer> charOffsets) {
 		/*
 		 * <DOC>
 	<DOCID> alt.sys.pc-clone.dell_20050226.2350 </DOCID>
@@ -285,7 +309,7 @@ adsfasdfsdf
 		return root.getChild("DOCTYPE").getAttribute("SOURCE").getValue().equals("weblog");
 	}
 	
-	private static List<ACESourceDocument> getWeblogSource(Element root) {
+	private static List<ACESourceDocument> getWeblogSource(Element root, Map<Element, Integer> charOffsets) {
 		/*
 		 * <DOC>
 	<DOCID> AGGRESSIVEVOICEDAILY_20041218.1004 </DOCID>

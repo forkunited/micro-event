@@ -16,4 +16,5 @@ public class AnnotationTypeNLPEvent {
 	public static final AnnotationTypeNLP<StoreReference> CREATION_TIME = new AnnotationTypeNLP<StoreReference>("dct", StoreReference.class, Target.DOCUMENT);
 	public static final AnnotationTypeNLP<StoreReference> EVENT_MENTION = new AnnotationTypeNLP<StoreReference>("ev_mention", StoreReference.class, Target.TOKEN_SPAN);
 	public static final AnnotationTypeNLP<StoreReference> TIME_EXPRESSION = new AnnotationTypeNLP<StoreReference>("timex", StoreReference.class, Target.TOKEN_SPAN);
+	public static final AnnotationTypeNLP<ACEDocumentType> ACE_DOCUMENT_TYPE = new AnnotationTypeNLP<ACEDocumentType>("ace_doc_type", ACEDocumentType.class, Target.DOCUMENT);
 }
