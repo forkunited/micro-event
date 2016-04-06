@@ -420,29 +420,37 @@ adsfasdfsdf
 	private static Map<Element, Integer> getCharOffsets(String docString, List<Element> elements) {
 		Map<Element, Integer> charOffsets = new HashMap<Element, Integer>();
 		char[] chars = docString.toCharArray();
-		boolean inTag = false;
+		boolean inStartTag = false;
+		boolean inEndTag = false;
 		boolean inQuote = false;
 		int curOffset = 0;
 		char prevChar = 0;
 		int tagIndex = -1;
 		for (int i = 0; i < chars.length; i++) {
-			if (inTag) {
+			if (inStartTag) {
 				if (chars[i] == '"') {
-					inTag = false;
+					inStartTag = false;
 					inQuote = true;
 				} else if (chars[i] == '>') {
-					inTag = false;
+					inStartTag = false;
 					charOffsets.put(elements.get(tagIndex), curOffset);
 				}
+			} else if (inEndTag) {
+				if (chars[i] =='>')
+					inEndTag = false;
 			} else if (inQuote) {
 				if (chars[i] == '"') {
 					inQuote = false;
-					inTag = true;
+					inStartTag = true;
 				}
 			} else {
-				if (chars[i] == '<' && prevChar != '\\' && (i + 1 == chars.length || !Character.isWhitespace(chars[i + 1]))) {
-					inTag = true;
-					tagIndex++;
+				if (chars[i] == '<' && prevChar != '\\' && i + 1 != chars.length && !Character.isWhitespace(chars[i + 1])) {
+					if (chars[i + 1] == '/')
+						inEndTag = true;
+					else {
+						inStartTag = true;
+						tagIndex++;
+					}
 				} else {
 					curOffset++;
 				}
