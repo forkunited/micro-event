@@ -411,6 +411,7 @@ adsfasdfsdf
 			List<Element> children = current.getChildren();
 			for (Element child : children) {
 				traversal.add(child);
+				toVisit.push(child);
 			}
 		}
 		
