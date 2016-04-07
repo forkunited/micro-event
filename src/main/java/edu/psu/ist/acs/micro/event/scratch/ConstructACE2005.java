@@ -385,8 +385,11 @@ public class ConstructACE2005 {
 			boolean foundSpan = false;
 			for (int i = startTokenIndex; i < partialDocument.getSentenceTokenCount(partialSentenceIndex); i++) {
 				try {
-					if (partialDocument.getToken(partialSentenceIndex, i).getCharSpanEnd() + offset - 1 == seq.getAttribute("END").getIntValue()) {
-						foundSpan = true;
+					if (partialDocument.getToken(partialSentenceIndex, i).getCharSpanEnd() + offset - 1 >= seq.getAttribute("END").getIntValue() && partialDocument.getToken(partialSentenceIndex, i).getCharSpanStart() + offset <= seq.getAttribute("END").getIntValue()) {
+						if (partialDocument.getTokenStr(partialSentenceIndex, i).contains(seq.getText()))
+							foundSpan = true;
+						else
+							foundSpan = false;
 						spans.add(new TokenSpan(spanDocument, sentenceIndex, startTokenIndex, i + 1));
 						break;
 					}
