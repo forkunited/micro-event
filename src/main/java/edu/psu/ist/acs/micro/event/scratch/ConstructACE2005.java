@@ -461,7 +461,7 @@ public class ConstructACE2005 {
 		for (Element eventElement : eventElements) {
 			StoreReference eventRef = new StoreReference(storageName, EVENT_COLLECTION, "id", String.valueOf(eventElement.getAttributeValue("ID")));
 			String modality = eventElement.getAttributeValue("MODALITY");
-			TimeMLTense tense = TimeMLTense.valueOf(eventElement.getAttributeValue("TENSE"));
+			TimeMLTense tense = TimeMLTense.valueOf(eventElement.getAttributeValue("TENSE").toUpperCase());
 			TimeMLPolarity polarity = null;
 			if (eventElement.getAttributeValue("POLARITY") != null) {
 				if (eventElement.getAttributeValue("POLARITY").equals("Negative"))
@@ -606,7 +606,7 @@ public class ConstructACE2005 {
 
 		for (Element relationElement : relationElements) {
 			StoreReference relationRef = new StoreReference(storageName, RELATION_COLLECTION, "id", String.valueOf(relationElement.getAttributeValue("ID")));
-			TimeMLTense tense = TimeMLTense.valueOf(relationElement.getAttributeValue("TENSE"));
+			TimeMLTense tense = TimeMLTense.valueOf(relationElement.getAttributeValue("TENSE").toUpperCase());
 	
 			List<Element> mentionElements = relationElement.getChildren("relation_mention");
 			for (Element mentionElement : mentionElements) {
