@@ -288,6 +288,9 @@ public class ConstructACE2005 {
 				EntityMention.ACERole aceRole = mentionElement.getAttributeValue("ROLE") == null ? EntityMention.ACERole.NONE : EntityMention.ACERole.valueOf(mentionElement.getAttributeValue("ROLE").replace('-', '_'));
 				TokenSpan tokenSpan = getSpan(mentionElement.getChild("extent").getChild("charseq"), seqSpans);
 				TokenSpan head = mentionElement.getChild("head") != null ? getSpan(mentionElement.getChild("head").getChild("charseq"), seqSpans) : null;
+				if (tokenSpan == null) {
+					tokenSpan = head;
+				}
 				
 				EntityMention mention = new EntityMention(dataTools,
 								  ref,
@@ -484,8 +487,7 @@ public class ConstructACE2005 {
 	
 	private static TokenSpan getSpan(Element charseq, Map<Element, TokenSpan> charseqSpans) {
 		if (!charseqSpans.containsKey(charseq)) {
-			System.out.println("Failed to find charseq " + charseq.getText() + " " + charseq.getAttributeValue("START") + " " + charseq.getAttributeValue("END") + " " + charseqSpans.size());
-			System.exit(1);
+			System.out.println("Warning: Failed to find charseq " + charseq.getText() + " " + charseq.getAttributeValue("START") + " " + charseq.getAttributeValue("END") + " " + charseqSpans.size());
 		}
 		
 		return charseqSpans.get(charseq);
