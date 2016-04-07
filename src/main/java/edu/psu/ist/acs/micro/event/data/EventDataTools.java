@@ -16,6 +16,7 @@ import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Entity;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EntityMention;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Event;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.NormalizedTimeValue;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Relation;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.RelationMention;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Signal;
@@ -95,6 +96,7 @@ public class EventDataTools extends DataTools {
 		SerializerJSONBSON<Value> valueSerializer = new SerializerJSONBSON<Value>("Value", new Value(this));
 		SerializerJSONBSON<Signal> signalSerializer = new SerializerJSONBSON<Signal>("Signal", new Signal(this));
 		SerializerJSONBSON<TimeExpression> timeExpressionSerializer = new SerializerJSONBSON<TimeExpression>("TimeExpression", new TimeExpression(this));
+		SerializerJSONBSON<NormalizedTimeValue> timeValueSerializer = new SerializerJSONBSON<NormalizedTimeValue>("NormalizedTimeValue", new NormalizedTimeValue(this));
 		SerializerJSONBSON<TLink> tlinkSerializer = new SerializerJSONBSON<TLink>("TLink", new TLink(this));
 		
 		serializers.put(eventMentionSerializer.getName(), eventMentionSerializer);
@@ -107,6 +109,7 @@ public class EventDataTools extends DataTools {
 		serializers.put(valueSerializer.getName(), valueSerializer);
 		serializers.put(signalSerializer.getName(), signalSerializer);
 		serializers.put(timeExpressionSerializer.getName(), timeExpressionSerializer);
+		serializers.put(timeValueSerializer.getName(), timeValueSerializer);
 		serializers.put(tlinkSerializer.getName(), tlinkSerializer);
 		
 		return serializers;

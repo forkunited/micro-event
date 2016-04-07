@@ -70,6 +70,7 @@ public class ConstructTimeBankDense {
 	public static final String DOCUMENT_COLLECTION = "tbd_docs";
 	public static final String EVENT_MENTION_COLLECTION = "tbd_ementions";
 	public static final String TIME_EXPRESSION_COLLECTION = "tbd_timexes";
+	public static final String TIME_VALUE_COLLECTION = "tbd_tvalues";
 	public static final String TLINK_COLLECTION = "tbd_tlinks";
 	//public static final String SIGNAL_COLLECTION = "TimeBankDenseSignals";
 	
@@ -77,6 +78,7 @@ public class ConstructTimeBankDense {
 	private static DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable> storedDocuments;
 	private static StoredItemSetInMemoryLazy<EventMention, EventMention> storedEventMentions;
 	private static StoredItemSetInMemoryLazy<TimeExpression, TimeExpression> storedTimeExpressions;
+	private static StoredItemSetInMemoryLazy<NormalizedTimeValue, NormalizedTimeValue> storedTimeValues;
 	private static StoredItemSetInMemoryLazy<TLink, TLink> storedTLinks;
 	//private static StoredItemSetInMemoryLazy<Signal, Signal> storedSignals;
 	
@@ -87,6 +89,7 @@ public class ConstructTimeBankDense {
 	private static int linkId = 0;
 	private static int eventId = 0;
 	private static int timexId = 0;
+	private static int timeValueId = 0;
 	private static Map<String, Map<String, StoreReference>> references = new HashMap<String, Map<String, StoreReference>>(); 
 	
 	private static PipelineNLP extraAnnotationPipeline;
@@ -111,6 +114,8 @@ public class ConstructTimeBankDense {
 			storage.deleteCollection(EVENT_MENTION_COLLECTION);
 		if (storage.hasCollection(TIME_EXPRESSION_COLLECTION))
 			storage.deleteCollection(TIME_EXPRESSION_COLLECTION);
+		if (storage.hasCollection(TIME_VALUE_COLLECTION))
+			storage.deleteCollection(TIME_VALUE_COLLECTION);
 		if (storage.hasCollection(TLINK_COLLECTION))
 			storage.deleteCollection(TLINK_COLLECTION);
 		//if (storage.hasCollection(SIGNAL_COLLECTION))
@@ -125,6 +130,8 @@ public class ConstructTimeBankDense {
 				.getItemSet(storageName, EVENT_MENTION_COLLECTION, true,(Serializer<EventMention, Document>)serializers.get("JSONBSONEventMention"));
 		storedTimeExpressions = dataTools.getStoredItemSetManager()
 				.getItemSet(storageName, TIME_EXPRESSION_COLLECTION, true,(Serializer<TimeExpression, Document>)serializers.get("JSONBSONTimeExpression"));
+		storedTimeValues = dataTools.getStoredItemSetManager()
+				.getItemSet(storageName, TIME_VALUE_COLLECTION, true,(Serializer<NormalizedTimeValue, Document>)serializers.get("JSONBSONNormalizedTimeValue"));
 		storedTLinks = dataTools.getStoredItemSetManager()
 				.getItemSet(storageName, TLINK_COLLECTION, true,(Serializer<TLink, Document>)serializers.get("JSONBSONTLink"));
 		//storedSignals = dataTools.getStoredItemSetManager()
@@ -606,8 +613,11 @@ public class ConstructTimeBankDense {
 		if (hasFreq)
 			freq = element.getAttributeValue("freq");
 		NormalizedTimeValue value = null;
-		if (hasValue)
-			value = new NormalizedTimeValue(element.getAttributeValue("value"));
+		StoreReference valueRef = null;
+		if (hasValue) {
+			valueRef = makeTimeValueReference();
+			value = new NormalizedTimeValue(dataTools, valueRef, valueRef.getIndexValue(0).toString(), element.getAttributeValue("value"));
+		}
 		String quant = null;
 		if (hasQuant)
 			quant = element.getAttributeValue("quant");
@@ -652,7 +662,7 @@ public class ConstructTimeBankDense {
 														  endTimeReference,
 														  quant,
 														  freq,
-														  value,
+														  valueRef,
 														  timeMLDocumentFunction,
 														  temporalFunction,
 														  anchorTimeReference,
@@ -660,6 +670,9 @@ public class ConstructTimeBankDense {
 														  timeMLMod);
 		
 		timexIds.add(document.getName() + "_" + id);
+		
+		if (!storedTimeValues.addItem(value))
+			return null;
 		
 		if (!storedTimeExpressions.addItem(timeExpression))
 			return null;
@@ -930,6 +943,11 @@ public class ConstructTimeBankDense {
 		}
 		
 		return references.get(documentName).get(sourceId);
+	}
+	
+	private static StoreReference makeTimeValueReference() {
+		timeValueId++;
+		return new StoreReference(storageName, TIME_VALUE_COLLECTION, "id", String.valueOf(timeValueId));
 	}
 
 	/*

@@ -117,6 +117,7 @@ public class ConstructACE2005 {
 	public static final String VALUE_MENTION_COLLECTION = "ace_vmentions";
 	public static final String VALUE_COLLECTION = "ace_values";
 	public static final String TIME_EXPRESSION_COLLECTION = "ace_timexes";
+	public static final String TIME_VALUE_COLLECTION = "ace_tvalues";
 	
 	private static String storageName;
 	private static DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable> storedDocuments;
@@ -129,6 +130,7 @@ public class ConstructACE2005 {
 	private static StoredItemSetInMemoryLazy<ValueMention, ValueMention> storedValueMentions;
 	private static StoredItemSetInMemoryLazy<Value, Value> storedValues;
 	private static StoredItemSetInMemoryLazy<TimeExpression, TimeExpression> storedTimeExpressions;
+	private static StoredItemSetInMemoryLazy<NormalizedTimeValue, NormalizedTimeValue> storedTimeValues;
 	
 	private static EventDataTools dataTools;
 	
@@ -169,6 +171,8 @@ public class ConstructACE2005 {
 			storage.deleteCollection(VALUE_COLLECTION);
 		if (storage.hasCollection(TIME_EXPRESSION_COLLECTION))
 			storage.deleteCollection(TIME_EXPRESSION_COLLECTION);
+		if (storage.hasCollection(TIME_VALUE_COLLECTION))
+			storage.deleteCollection(TIME_VALUE_COLLECTION);
 		
 		Map<String, Serializer<?, ?>> serializers = dataTools.getSerializers();
 		
@@ -193,6 +197,8 @@ public class ConstructACE2005 {
 				.getItemSet(storageName, VALUE_COLLECTION, true,(Serializer<Value, Document>)serializers.get("JSONBSONValue"));
 		storedTimeExpressions = dataTools.getStoredItemSetManager()
 				.getItemSet(storageName, TIME_EXPRESSION_COLLECTION, true,(Serializer<TimeExpression, Document>)serializers.get("JSONBSONTimeExpression"));	
+		storedTimeValues = dataTools.getStoredItemSetManager()
+				.getItemSet(storageName, TIME_VALUE_COLLECTION, true,(Serializer<NormalizedTimeValue, Document>)serializers.get("JSONBSONNormalizedTimeValue"));	
 		
 		Map<String, Set<String>> summary = new TreeMap<String, Set<String>>();
 		for (Entry<String, Pair<File, File>> entry : inputFiles.entrySet()) {
@@ -236,6 +242,7 @@ public class ConstructACE2005 {
 		parseAndOutputEventMentions(annotationsRoot, annotatedDocs, charseqSpans); 
 		parseAndOutputRelations(annotationsRoot, annotatedDocs);
 		parseAndOutputRelationMentions(annotationsRoot, annotatedDocs, charseqSpans); 
+		parseAndOutputTimeValues(annotationsRoot, annotatedDocs);
 		parseAndOutputTimeExpressions(annotationsRoot, annotatedDocs, charseqSpans, docs); 
 	
 		for (DocumentNLPMutable annotatedDoc : annotatedDocs.values())
@@ -422,6 +429,11 @@ public class ConstructACE2005 {
 							new StoreReference(storageName, VALUE_COLLECTION, "id", argId), 
 							argElement.getAttributeValue("ROLE")
 						));
+				} else if (argIdParts[argIdParts.length - 1].startsWith("T")) {
+					argRefs.add(new Pair<StoreReference, String>(
+							new StoreReference(storageName, TIME_VALUE_COLLECTION, "id", argId), 
+							argElement.getAttributeValue("ROLE")
+						));
 				} else {
 					System.err.println("Invalid argument for " + id + ": " + argId);
 					System.exit(1);
@@ -478,6 +490,11 @@ public class ConstructACE2005 {
 					} else if (argIdParts[argIdParts.length - 2].startsWith("V")) {
 						argRefs.add(new Pair<StoreReference, String>(
 								new StoreReference(storageName, VALUE_MENTION_COLLECTION, "id", argId), 
+								argElement.getAttributeValue("ROLE")
+							));
+					} else if (argIdParts[argIdParts.length - 2].startsWith("T")) {
+						argRefs.add(new Pair<StoreReference, String>(
+								new StoreReference(storageName, TIME_VALUE_COLLECTION, "id", argId), 
 								argElement.getAttributeValue("ROLE")
 							));
 					} else {
@@ -558,6 +575,11 @@ public class ConstructACE2005 {
 							new StoreReference(storageName, VALUE_COLLECTION, "id", argId), 
 							argElement.getAttributeValue("ROLE")
 						));
+				} else if (argIdParts[argIdParts.length - 1].startsWith("T")) {
+					argRefs.add(new Pair<StoreReference, String>(
+							new StoreReference(storageName, TIME_VALUE_COLLECTION, "id", argId), 
+							argElement.getAttributeValue("ROLE")
+						));
 				} else {
 					System.err.println("Invalid argument for " + id + ": " + argId);
 					System.exit(1);
@@ -608,6 +630,11 @@ public class ConstructACE2005 {
 								new StoreReference(storageName, VALUE_MENTION_COLLECTION, "id", argId), 
 								argElement.getAttributeValue("ROLE")
 							));
+					} else if (argIdParts[argIdParts.length - 2].startsWith("T")) {
+						argRefs.add(new Pair<StoreReference, String>(
+								new StoreReference(storageName, TIME_VALUE_COLLECTION, "id", argId), 
+								argElement.getAttributeValue("ROLE")
+							));
 					} else {
 						System.err.println("Invalid argument for " + id + ": " + argId);
 						System.exit(1);
@@ -650,12 +677,26 @@ public class ConstructACE2005 {
 		return true;
 	}
 	
+	private static boolean parseAndOutputTimeValues(Element annotationsRoot, Map<String, DocumentNLPMutable> docs) {
+		List<Element> timexElements = annotationsRoot.getChild("document").getChildren("timex2");
+		for (Element timexElement : timexElements) {
+			String id = timexElement.getAttributeValue("ID");
+			StoreReference ref = new StoreReference(storageName, TIME_VALUE_COLLECTION, "id", String.valueOf(id));
+			String value = timexElement.getAttributeValue("VAL");
+			
+			NormalizedTimeValue tvalue = new NormalizedTimeValue(dataTools, ref, id, value);
+			storedTimeValues.addItem(tvalue);
+		}
+		
+		return true;
+	}
+	
 	private static boolean parseAndOutputTimeExpressions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Element, TokenSpan> seqSpans, List<ACESourceDocument> sourceDocs) {		
 		Map<String, List<Triple<TokenSpan, StoreReference, Double>>> annotations = new HashMap<>();
 		List<Element> timexElements = annotationsRoot.getChild("document").getChildren("timex2");
 
 		for (Element timexElement : timexElements) {
-			NormalizedTimeValue value = new NormalizedTimeValue(timexElement.getAttributeValue("VAL"));
+			StoreReference valueRef = new StoreReference(storageName, TIME_VALUE_COLLECTION, "id", String.valueOf(timexElement.getAttributeValue("ID")));
 			TimeMLMod mod = timexElement.getAttributeValue("MOD") != null ? TimeMLMod.valueOf(timexElement.getAttributeValue("MOD")) : null;
 			
 			List<Element> mentionElements = timexElement.getChildren("timex2_mention");
@@ -707,7 +748,7 @@ public class ConstructACE2005 {
 															  null,
 															  null,
 															  null,
-															  value,
+															  valueRef,
 															  fn,
 															  false,
 															  null,

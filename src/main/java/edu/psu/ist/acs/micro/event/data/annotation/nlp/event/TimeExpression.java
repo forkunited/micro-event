@@ -22,7 +22,7 @@ import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
  * @author Bill McDowell
  * 
  */
-public class TimeExpression implements TLinkable {
+public class TimeExpression implements TLinkable, MentionArgumentable {
 	private static boolean FORCE_DATE_DCT = true;
 	
 	public enum TimeMLType {
@@ -66,7 +66,7 @@ public class TimeExpression implements TLinkable {
 	private StoreReference endTimeReference;
 	private String quant;
 	private String freq;
-	private NormalizedTimeValue value;
+	private StoreReference valueReference;
 	private TimeMLDocumentFunction timeMLDocumentFunction = TimeMLDocumentFunction.NONE;
 	private boolean temporalFunction;
 	private StoreReference anchorTimeReference;
@@ -95,7 +95,7 @@ public class TimeExpression implements TLinkable {
 						  StoreReference endTimeReference,
 						  String quant,
 						  String freq,
-						  NormalizedTimeValue value,
+						  StoreReference valueReference,
 						  TimeMLDocumentFunction timeMLDocumentFunction,
 						  boolean temporalFunction,
 						  StoreReference anchorTimeReference,
@@ -116,23 +116,7 @@ public class TimeExpression implements TLinkable {
 		this.anchorTimeReference = anchorTimeReference;
 		this.valueFromFunctionReference = valueFromFunctionReference;
 		this.timeMLMod = timeMLMod;
-		setValue(value);
-	}
-	
-	private boolean setValue(NormalizedTimeValue value) {
-		if (this.timeMLDocumentFunction == TimeMLDocumentFunction.CREATION_TIME) {
-			if (FORCE_DATE_DCT) {
-				NormalizedTimeValue dateValue = value.toDate();
-				if (dateValue != null)
-					this.value = dateValue;
-				else
-					this.value = value;
-			}
-		} else {
-			this.value = value;
-		}
-		
-		return true;
+		this.valueReference = valueReference;
 	}
 	
 	public TLinkable.Type getTLinkableType() {
@@ -177,7 +161,17 @@ public class TimeExpression implements TLinkable {
 	 * expression
 	 */
 	public NormalizedTimeValue getValue() {
-		return this.value;
+		NormalizedTimeValue value = this.dataTools.getStoredItemSetManager().resolveStoreReference(this.valueReference, true);
+		
+		if (this.timeMLDocumentFunction == TimeMLDocumentFunction.CREATION_TIME) {
+			if (FORCE_DATE_DCT) {
+				NormalizedTimeValue dateValue = value.toDate();
+				if (dateValue != null)
+					value = dateValue;
+			}
+		} 
+		
+		return value;
 	}
 	
 	public TimeMLDocumentFunction getTimeMLDocumentFunction() {
@@ -210,6 +204,9 @@ public class TimeExpression implements TLinkable {
 	}
 	
 	public TLink.TimeMLRelType getRelationToTime(TimeExpression time, boolean unknownVague) {
+		NormalizedTimeValue thisValue = getValue();
+		NormalizedTimeValue timeValue = time.getValue();
+		
 		if (this.timeMLType != TimeExpression.TimeMLType.DATE && this.timeMLType != TimeExpression.TimeMLType.TIME)
 			return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
 		if (time.timeMLType != TimeExpression.TimeMLType.DATE && time.timeMLType != TimeExpression.TimeMLType.TIME)
@@ -225,11 +222,11 @@ public class TimeExpression implements TLinkable {
 		if (thisDocument.hasAnnotationType(AnnotationTypeNLPEvent.CREATION_TIME))
 			thisCreationTime = thisDocument.getDocumentAnnotation(AnnotationTypeNLPEvent.CREATION_TIME).resolve(this.dataTools, true);
 
-		if (this.value.getReference() != NormalizedTimeValue.Reference.NONE 
-				|| time.value.getReference() != NormalizedTimeValue.Reference.NONE) {
+		if (thisValue.getReference() != NormalizedTimeValue.Reference.NONE 
+				|| timeValue.getReference() != NormalizedTimeValue.Reference.NONE) {
 			if (thisCreationTime == null || timeCreationTime == null 
-					|| thisCreationTime.value.getReference() != NormalizedTimeValue.Reference.NONE
-					|| timeCreationTime.value.getReference() != NormalizedTimeValue.Reference.NONE)
+					|| thisCreationTime.getValue().getReference() != NormalizedTimeValue.Reference.NONE
+					|| timeCreationTime.getValue().getReference() != NormalizedTimeValue.Reference.NONE)
 				return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
 			
 			int thisCtTimeCt = 0;
@@ -252,10 +249,10 @@ public class TimeExpression implements TLinkable {
 			// and future references
 			int thisCt = 0, timeCt = 0; 
 			
-			if (this.value.getReference() != NormalizedTimeValue.Reference.NONE) {
-				if (this.value.getReference() == NormalizedTimeValue.Reference.FUTURE)
+			if (thisValue.getReference() != NormalizedTimeValue.Reference.NONE) {
+				if (thisValue.getReference() == NormalizedTimeValue.Reference.FUTURE)
 					thisCt = 1;
-				else if (this.value.getReference() == NormalizedTimeValue.Reference.PAST)
+				else if (thisValue.getReference() == NormalizedTimeValue.Reference.PAST)
 					thisCt = -1;
 				else
 					return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
@@ -273,10 +270,10 @@ public class TimeExpression implements TLinkable {
 					return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
 			}
 			
-			if (time.value.getReference() != NormalizedTimeValue.Reference.NONE) {
-				if (time.value.getReference() == NormalizedTimeValue.Reference.FUTURE)
+			if (timeValue.getReference() != NormalizedTimeValue.Reference.NONE) {
+				if (timeValue.getReference() == NormalizedTimeValue.Reference.FUTURE)
 					timeCt = 1;
-				else if (time.value.getReference() == NormalizedTimeValue.Reference.PAST)
+				else if (timeValue.getReference() == NormalizedTimeValue.Reference.PAST)
 					timeCt = -1;
 				else
 					return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
@@ -302,8 +299,8 @@ public class TimeExpression implements TLinkable {
 				return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
 		}
 		
-		Pair<Calendar, Calendar> thisInterval = this.value.getRange();
-		Pair<Calendar, Calendar> timeInterval = time.value.getRange();
+		Pair<Calendar, Calendar> thisInterval = thisValue.getRange();
+		Pair<Calendar, Calendar> timeInterval = timeValue.getRange();
 		
 		if (thisInterval == null || timeInterval == null)
 			return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
@@ -350,8 +347,8 @@ public class TimeExpression implements TLinkable {
 				json.put("endTime", this.endTimeReference.toJSON());	
 			if (this.freq != null)
 				json.put("freq", this.freq);
-			if (this.value != null)
-				json.put("value", this.value.toString());
+			if (this.valueReference != null)
+				json.put("valueRef", this.valueReference.toJSON());
 			if (this.quant != null)
 				json.put("quant", this.quant);
 			if (this.timeMLDocumentFunction != null)
@@ -400,8 +397,8 @@ public class TimeExpression implements TLinkable {
 				this.valueFromFunctionReference = StoreReference.makeFromJSON(json.getJSONObject("valueFromFunction"));
 			if (json.has("timeMLMod"))
 				this.timeMLMod = TimeMLMod.valueOf(json.getString("timeMLMod"));
-			if (json.has("value"))
-				setValue(new NormalizedTimeValue(json.getString("value")));
+			if (json.has("valueRef"))
+				this.valueReference = StoreReference.makeFromJSON(json.getJSONObject("valueRef"));
 		} catch (JSONException e) {
 			return false;
 		}
@@ -417,5 +414,15 @@ public class TimeExpression implements TLinkable {
 	@Override
 	public StoreReference getStoreReference() {
 		return this.reference;
+	}
+
+	@Override
+	public MentionArgumentable.Type getMentionArgumentableType() {
+		return MentionArgumentable.Type.TIME_EXPRESSION;
+	}
+
+	@Override
+	public Argumentable getArgumentable() {
+		return getValue();
 	}
 }

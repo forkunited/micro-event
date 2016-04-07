@@ -4,7 +4,13 @@ import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import edu.cmu.ml.rtw.generic.data.DataTools;
+import edu.cmu.ml.rtw.generic.data.store.StoreReference;
 import edu.cmu.ml.rtw.generic.util.Pair;
+import edu.cmu.ml.rtw.generic.util.StoredJSONSerializable;
 
 /**
  * 
@@ -18,7 +24,7 @@ import edu.cmu.ml.rtw.generic.util.Pair;
  * @author Bill McDowell
  * 
  */
-public class NormalizedTimeValue {
+public class NormalizedTimeValue implements Argumentable {
 	public enum Reference {
 		FUTURE,
 		PRESENT,
@@ -140,13 +146,33 @@ public class NormalizedTimeValue {
 	private TimePattern REFERENCE_PATTERN = new TimePattern("PAST_REF|PRESENT_REF|FUTURE_REF",
 			0,0,0,0,0,0,0,0,0,0,0);
 	
+	private String id;
 	private String value; // regex string
 	private TimePattern pattern; 
 	private Matcher matcher;
   
-	public NormalizedTimeValue(String value) {
+	private StoreReference reference;
+	private DataTools dataTools;
+	
+	public NormalizedTimeValue(DataTools dataTools) {
+		this.dataTools = dataTools;
+	}
+	
+	public NormalizedTimeValue(DataTools dataTools, StoreReference reference) {
+		this.dataTools = dataTools;
+		this.reference = reference;
+	}
+	
+	public NormalizedTimeValue(DataTools dataTools, StoreReference reference, String id, String value) {
+		this.dataTools = dataTools;
+		this.reference = reference;
+		this.id = id;
 		this.value = value;
 	
+		initPattern();
+	}
+	
+	private void initPattern() {
 		Matcher dateMatcher = this.DATE_PATTERN.getMatcher(this.value);
 		Matcher timeMatcher = this.TIME_PATTERN.getMatcher(this.value);
 		Matcher weekDateMatcher = this.WEEK_DATE_PATTERN.getMatcher(this.value);
@@ -433,7 +459,7 @@ public class NormalizedTimeValue {
 	
 	public NormalizedTimeValue toDate() {
   		if(this.value.matches("^\\d\\d\\d\\d-\\d\\d-\\d\\d.+") ) {
-  			return new NormalizedTimeValue(this.value.substring(0, 10));
+  			return new NormalizedTimeValue(this.dataTools, this.reference, this.getId(), this.value.substring(0, 10));
   		} else {
   			return null;
   		}
@@ -463,5 +489,57 @@ public class NormalizedTimeValue {
 			if (!Character.isDigit(str.charAt(i)))
 				return false;
 		return true;
+	}
+
+	@Override
+	public StoredJSONSerializable makeInstance(StoreReference reference) {
+		return new NormalizedTimeValue(this.dataTools, reference);
+	}
+
+	@Override
+	public StoreReference getStoreReference() {
+		return this.reference;
+	}
+
+	@Override
+	public JSONObject toJSON() {
+		JSONObject json = new JSONObject();
+		
+		try {
+			if (this.id != null)
+				json.put("id", this.id);
+			if (this.value != null)
+				json.put("name", this.value);
+		} catch (JSONException e) {
+			return null;
+		}
+		
+		return json;
+	}
+
+	@Override
+	public boolean fromJSON(JSONObject json) {
+		try {
+			if (json.has("id"))
+				this.id = json.getString("id");
+			if (json.has("value"))
+				this.value = json.getString("value");
+		} catch (JSONException e) {
+			return false;
+		}
+		
+		initPattern();
+		
+		return true;
+	}
+
+	@Override
+	public String getId() {
+		return this.id;
+	}
+
+	@Override
+	public Argumentable.Type getArgumentableType() {
+		return Argumentable.Type.TIME;
 	}
 }

@@ -6,7 +6,8 @@ public interface Argumentable extends StoredJSONSerializable {
 	public enum Type {
 		ENTITY,
 		VALUE,
-		EVENT
+		EVENT,
+		TIME
 	}
 	
 	String getId();
