@@ -286,8 +286,8 @@ public class ConstructACE2005 {
 				Boolean metonymy = mentionElement.getAttribute("METONYMY_MENTION") != null ? Boolean.valueOf(mentionElement.getAttributeValue("METONYMY_MENTION")) : null;
 				EntityMention.ACEType aceType = EntityMention.ACEType.valueOf(mentionElement.getAttributeValue("TYPE").replace('-', '_'));
 				EntityMention.ACERole aceRole = mentionElement.getAttributeValue("ROLE") == null ? EntityMention.ACERole.NONE : EntityMention.ACERole.valueOf(mentionElement.getAttributeValue("ROLE").replace('-', '_'));
-				TokenSpan tokenSpan = seqSpans.get(mentionElement.getChild("extent").getChild("charseq"));
-				TokenSpan head = mentionElement.getChild("head") != null ? seqSpans.get(mentionElement.getChild("head").getChild("charseq")) : null;
+				TokenSpan tokenSpan = getSpan(mentionElement.getChild("extent").getChild("charseq"), seqSpans);
+				TokenSpan head = mentionElement.getChild("head") != null ? getSpan(mentionElement.getChild("head").getChild("charseq"), seqSpans) : null;
 				
 				EntityMention mention = new EntityMention(dataTools,
 								  ref,
@@ -465,6 +465,15 @@ public class ConstructACE2005 {
 		}
 		
 		return spans;
+	}
+	
+	private static TokenSpan getSpan(Element charseq, Map<Element, TokenSpan> charseqSpans) {
+		if (!charseqSpans.containsKey(charseq)) {
+			System.out.println("Failed to find charseq " + charseq.getText() + " " + charseq.getAttributeValue("START") + " " + charseq.getAttributeValue("END") + " " + charseqSpans.size());
+			System.exit(1);
+		}
+		
+		return charseqSpans.get(charseq);
 	}
 	
 	private static TreeMap<Integer, List<Element>> getCharseqElements(Element annotationsRoot) {
