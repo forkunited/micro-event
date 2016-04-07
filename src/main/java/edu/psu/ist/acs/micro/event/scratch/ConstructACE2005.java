@@ -3,7 +3,6 @@ package edu.psu.ist.acs.micro.event.scratch;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,16 +16,42 @@ import java.util.TreeMap;
 
 import org.jdom2.Attribute;
 import org.jdom2.Content;
+import org.jdom2.DataConversionException;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.Text;
 import org.jdom2.input.SAXBuilder;
 
+import edu.cmu.ml.rtw.generic.data.Serializer;
+import edu.cmu.ml.rtw.generic.data.StoredItemSetInMemoryLazy;
+import edu.cmu.ml.rtw.generic.data.annotation.DocumentSetInMemoryLazy;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.AnnotationTypeNLP;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPInMemory;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPMutable;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.SerializerDocumentNLPBSON;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.Token;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
+import edu.cmu.ml.rtw.generic.data.store.Storage;
+import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLP;
+import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLPMateTools;
+import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLPStanford;
+import edu.cmu.ml.rtw.generic.model.annotator.nlp.stanford.BSONTokenizer;
 import edu.cmu.ml.rtw.generic.util.FileUtil;
 import edu.cmu.ml.rtw.generic.util.Pair;
+import edu.psu.ist.acs.micro.event.data.EventDataTools;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.ACEDocumentType;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Entity;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EntityMention;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Event;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Relation;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.RelationMention;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Value;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.ValueMention;
 
 public class ConstructACE2005 {
 	private static class ACESourceDocument {
@@ -34,20 +59,17 @@ public class ConstructACE2005 {
 		private ACEDocumentType type;
 		private String dctStr;
 		private Pair<Integer, Integer> dctStrCharRange;
-		private Map<String, String> metaData;
 		private TreeMap<Integer, Pair<String, String>> bodyParts; // Map start char index to (part name, part value)
 		
 		public ACESourceDocument(String name,
 								ACEDocumentType type,
 								String dctStr, 
 								Pair<Integer, Integer> dctStrCharRange,
-								Map<String, String> metaData,
 								TreeMap<Integer, Pair<String, String>> bodyParts) {
 			this.name = name;
 			this.type = type;
 			this.dctStr = dctStr;
 			this.dctStrCharRange = dctStrCharRange;
-			this.metaData = metaData;
 			this.bodyParts = bodyParts;
 		}
 		
@@ -67,23 +89,103 @@ public class ConstructACE2005 {
 			return index >= this.dctStrCharRange.getFirst() && index < this.dctStrCharRange.getSecond();
 		}
 		
-		public Map<String, String> getMetaData() {
-			return this.metaData;
-		}
-		
-		public Pair<String, String> getBodyPart(int charIndex) {
-			return this.bodyParts.floorEntry(charIndex).getValue();
+		public TreeMap<Integer, Pair<String, String>> getBodyParts() {
+			return this.bodyParts;
 		}
 	}
 	
+	public static final String DOCUMENT_COLLECTION = "ace_docs";
+	public static final String EVENT_MENTION_COLLECTION = "ace_ementions";
+	public static final String EVENT_COLLECTION = "ace_events";
+	public static final String ENTITY_MENTION_COLLECTION = "ace_enmentions";
+	public static final String ENTITY_COLLECTION = "ace_entities";
+	public static final String RELATION_MENTION_COLLECTION = "ace_rmentions";
+	public static final String RELATION_COLLECTION = "ace_relations";
+	public static final String VALUE_MENTION_COLLECTION = "ace_vmentions";
+	public static final String VALUE_COLLECTION = "ace_values";
+	public static final String TIME_EXPRESSION_COLLECTION = "ace_timexes";
+	
+	private static String storageName;
+	private static DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable> storedDocuments;
+	private static StoredItemSetInMemoryLazy<EventMention, EventMention> storedEventMentions;
+	private static StoredItemSetInMemoryLazy<Event, Event> storedEvents;
+	private static StoredItemSetInMemoryLazy<EntityMention, EntityMention> storedEntityMentions;
+	private static StoredItemSetInMemoryLazy<Entity, Entity> storedEntities;
+	private static StoredItemSetInMemoryLazy<RelationMention, RelationMention> storedRelationMentions;
+	private static StoredItemSetInMemoryLazy<Relation, Relation> storedRelations;
+	private static StoredItemSetInMemoryLazy<ValueMention, ValueMention> storedValueMentions;
+	private static StoredItemSetInMemoryLazy<Value, Value> storedValues;
+	private static StoredItemSetInMemoryLazy<TimeExpression, TimeExpression> storedTimeExpressions;
+	
+	private static EventDataTools dataTools;
+	
+	private static PipelineNLPStanford tokenPipeline;
+	private static PipelineNLP nlpPipeline;
+	
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
+		storageName = args[0];
 		Map<String, Pair<File, File>> inputFiles = getInputFiles(args);
+		
+		dataTools = new EventDataTools();
+		tokenPipeline = new PipelineNLPStanford();
+		tokenPipeline.initialize(AnnotationTypeNLP.POS);
+		
+		PipelineNLPStanford stanfordPipe = new PipelineNLPStanford();
+		stanfordPipe.initialize(null, new BSONTokenizer());
+		nlpPipeline = stanfordPipe.weld(new PipelineNLPMateTools(dataTools.getProperties()));
+		
+		Storage<?, ?> storage = dataTools.getStoredItemSetManager().getStorage(storageName);
+		if (storage.hasCollection(DOCUMENT_COLLECTION))
+			storage.deleteCollection(DOCUMENT_COLLECTION);
+		if (storage.hasCollection(EVENT_MENTION_COLLECTION))
+			storage.deleteCollection(EVENT_MENTION_COLLECTION);
+		if (storage.hasCollection(EVENT_COLLECTION))
+			storage.deleteCollection(EVENT_COLLECTION);
+		if (storage.hasCollection(ENTITY_MENTION_COLLECTION))
+			storage.deleteCollection(ENTITY_MENTION_COLLECTION);
+		if (storage.hasCollection(ENTITY_COLLECTION))
+			storage.deleteCollection(ENTITY_COLLECTION);
+		if (storage.hasCollection(RELATION_MENTION_COLLECTION))
+			storage.deleteCollection(RELATION_MENTION_COLLECTION);
+		if (storage.hasCollection(RELATION_COLLECTION))
+			storage.deleteCollection(RELATION_COLLECTION);
+		if (storage.hasCollection(VALUE_MENTION_COLLECTION))
+			storage.deleteCollection(VALUE_MENTION_COLLECTION);
+		if (storage.hasCollection(VALUE_COLLECTION))
+			storage.deleteCollection(VALUE_COLLECTION);
+		if (storage.hasCollection(TIME_EXPRESSION_COLLECTION))
+			storage.deleteCollection(TIME_EXPRESSION_COLLECTION);
+		
+		Map<String, Serializer<?, ?>> serializers = dataTools.getSerializers();
+		
+		storedDocuments = new DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable>(
+				dataTools.getStoredItemSetManager()
+				.getItemSet(storageName, DOCUMENT_COLLECTION, true, (Serializer<DocumentNLPMutable, Document>)serializers.get("DocumentNLPBSON")));
+		storedEventMentions = dataTools.getStoredItemSetManager()
+				.getItemSet(storageName, EVENT_MENTION_COLLECTION, true,(Serializer<EventMention, Document>)serializers.get("JSONBSONEventMention"));
+		storedEvents = dataTools.getStoredItemSetManager()
+				.getItemSet(storageName, EVENT_COLLECTION, true,(Serializer<Event, Document>)serializers.get("JSONBSONEvent"));
+		storedEntityMentions = dataTools.getStoredItemSetManager()
+				.getItemSet(storageName, ENTITY_MENTION_COLLECTION, true,(Serializer<EntityMention, Document>)serializers.get("JSONBSONEntityMention"));
+		storedEntities = dataTools.getStoredItemSetManager()
+				.getItemSet(storageName, ENTITY_COLLECTION, true,(Serializer<Entity, Document>)serializers.get("JSONBSONEntity"));
+		storedRelationMentions = dataTools.getStoredItemSetManager()
+				.getItemSet(storageName, RELATION_MENTION_COLLECTION, true,(Serializer<RelationMention, Document>)serializers.get("JSONBSONRelationMention"));
+		storedRelations = dataTools.getStoredItemSetManager()
+				.getItemSet(storageName, RELATION_COLLECTION, true,(Serializer<Relation, Document>)serializers.get("JSONBSONRelation"));
+		storedValueMentions = dataTools.getStoredItemSetManager()
+				.getItemSet(storageName, VALUE_MENTION_COLLECTION, true,(Serializer<ValueMention, Document>)serializers.get("JSONBSONValueMention"));
+		storedValues = dataTools.getStoredItemSetManager()
+				.getItemSet(storageName, VALUE_COLLECTION, true,(Serializer<Value, Document>)serializers.get("JSONBSONValue"));
+		storedTimeExpressions = dataTools.getStoredItemSetManager()
+				.getItemSet(storageName, TIME_EXPRESSION_COLLECTION, true,(Serializer<TimeExpression, Document>)serializers.get("JSONBSONTimeExpression"));	
 		
 		Map<String, Set<String>> summary = new TreeMap<String, Set<String>>();
 		for (Entry<String, Pair<File, File>> entry : inputFiles.entrySet()) {
 			summarizeAnnotations(entry.getValue().getSecond(), summary);
 			
-			if (!parseAndOutputDocument(entry.getKey(), entry.getValue().getFirst(), entry.getValue().getSecond())) {
+			if (!parseAndOutputDocuments(entry.getValue().getFirst(), entry.getValue().getSecond())) {
 				throw new IllegalStateException("Failed to parse and output document " + entry.getKey());
 			}
 		}
@@ -100,10 +202,122 @@ public class ConstructACE2005 {
 		}
 	}
 	
-	private static boolean parseAndOutputDocument(String documentName, File contentFile, File annotationFile) {		
-		// FIXME
-		constructSourceDocuments(contentFile);
+	private static boolean parseAndOutputDocuments(File contentFile, File annotationFile) {		
+		List<ACESourceDocument> docs = constructSourceDocuments(contentFile);
+		Element annotationsRoot = getDocumentRootElementAndString(contentFile).getFirst();
+		TreeMap<Integer, List<Element>> charseqElements = getCharseqElements(annotationsRoot);
+		Map<Element, TokenSpan> charseqSpans = new HashMap<Element, TokenSpan>();
+		Map<String, DocumentNLPMutable> annotatedDocs = new HashMap<>();
+		
+		for (int i = 0; i < docs.size(); i++) {
+			DocumentNLPMutable annotatedDoc = annotateDocument(docs.get(i), charseqElements, charseqSpans);
+			annotatedDoc.setDocumentAnnotation("ace_2005", AnnotationTypeNLPEvent.ACE_DOCUMENT_TYPE, new Pair<ACEDocumentType, Double>(docs.get(i).getType(), null));
+			annotatedDocs.put(annotatedDoc.getName(), annotatedDoc);
+		}
+		
+		// FIXME Add all entities, etc
+		// FIXME Set doc creation time somewhere down here
+	
+		for (DocumentNLPMutable annotatedDoc : annotatedDocs.values())
+			storedDocuments.addItem(annotatedDoc);
+		
 		return true;
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private static DocumentNLPMutable annotateDocument(ACESourceDocument sourceDocument, TreeMap<Integer, List<Element>> charseqElements, Map<Element, TokenSpan> charseqSpans) {
+		DocumentNLPMutable doc = new DocumentNLPInMemory(dataTools, sourceDocument.getName(), "");
+		
+		TreeMap<Integer, Pair<String, String>> bodyParts = sourceDocument.getBodyParts();
+		
+		List<Pair[]> tokens = new ArrayList<Pair[]>();
+		StringBuilder modifiedText = new StringBuilder();
+		for (Entry<Integer, Pair<String, String>> entry : bodyParts.entrySet()) {
+			String text = entry.getValue().getSecond();
+			if (text.trim().length() == 0)
+				continue;
+			DocumentNLPMutable partialDoc = new DocumentNLPInMemory(dataTools, sourceDocument.getName(), text);
+			partialDoc = tokenPipeline.run(partialDoc);
+			for (int i = 0; i < partialDoc.getSentenceCount(); i++) {
+				Pair[] sentenceTokens = new Pair[partialDoc.getSentenceTokenCount(i)];
+				for (int j = 0; j < partialDoc.getSentenceTokenCount(i); j++) {
+					Token tempToken = partialDoc.getToken(i, j);
+					String tokenStr = tempToken.getStr();
+					
+					int tempStartIndex = tempToken.getCharSpanStart() + entry.getKey();
+					if (charseqElements.containsKey(tempStartIndex)) {
+						List<Element> curCharseqs = charseqElements.get(tempStartIndex);
+						List<TokenSpan> spans = getTokenSpansForCharseqs(entry.getKey(), partialDoc, i, j, curCharseqs, doc, tokens.size());
+						for (int k = 0; k < curCharseqs.size(); k++)
+							charseqSpans.put(curCharseqs.get(k), spans.get(k));
+					}
+					
+					sentenceTokens[j] = new Pair<Token, Double>(
+						new Token(doc, tokenStr, modifiedText.length(), modifiedText.length() + tokenStr.length()),
+						null);
+					
+					modifiedText.append(tokenStr).append(" ");
+				}
+				
+				tokens.add(sentenceTokens);
+			}
+		}
+		
+		Pair<Token, Double>[][] tokenArr = new Pair[tokens.size()][];
+		for (int i = 0; i < tokens.size(); i++)
+			tokenArr[i] = tokens.get(i);
+		
+		doc.setTokenAnnotation(tokenPipeline.getAnnotatorName(AnnotationTypeNLP.TOKEN), 
+							   AnnotationTypeNLP.TOKEN,
+							   tokenArr);
+		
+		SerializerDocumentNLPBSON serializer = new SerializerDocumentNLPBSON(doc);
+		doc.setDocumentAnnotation("ace_2005", AnnotationTypeNLP.ORIGINAL_TEXT, new Pair<String, Double>(serializer.serializeToString(doc), null));
+		doc = nlpPipeline.run(doc);
+		doc.setDocumentAnnotation("ace_2005", AnnotationTypeNLP.ORIGINAL_TEXT, new Pair<String, Double>(modifiedText.toString(), null));
+		
+		return doc;
+	}
+	
+	private static List<TokenSpan> getTokenSpansForCharseqs(int offset, DocumentNLPMutable partialDocument, int partialSentenceIndex, int startTokenIndex, List<Element> seqs, DocumentNLPMutable spanDocument, int sentenceIndex) {
+		List<TokenSpan> spans = new ArrayList<TokenSpan>();
+		
+		for (Element seq : seqs) {
+			boolean foundSpan = false;
+			for (int i = startTokenIndex; i < partialDocument.getSentenceTokenCount(partialSentenceIndex); i++) {
+				try {
+					if (partialDocument.getToken(partialSentenceIndex, i).getCharSpanEnd() - 1 == seq.getAttribute("END").getIntValue()) {
+						foundSpan = true;
+						spans.add(new TokenSpan(spanDocument, sentenceIndex, startTokenIndex, i + 1));
+						break;
+					}
+				} catch (DataConversionException e) {
+					System.err.println("Bad char span.  Expecting integer type.");
+					System.exit(1);
+				}
+			}
+			
+			if (!foundSpan) {
+				System.err.println("Failed to match charseq to token span in " + spanDocument.getName() + " " + seq);
+				System.exit(1);
+			}
+		}
+		
+		return spans;
+	}
+	
+	private static TreeMap<Integer, List<Element>> getCharseqElements(Element annotationsRoot) {
+		TreeMap<Integer, List<Element>> seqs = new TreeMap<>();
+		List<Element> elements = traverse(annotationsRoot);
+		for (Element element : elements) {
+			if (element.getName().equals("charseq")) {
+				int startIndex = Integer.valueOf(element.getAttribute("START").getValue());
+				if (!seqs.containsKey(startIndex))
+					seqs.put(startIndex, new ArrayList<>());
+				seqs.get(startIndex).add(element);
+			}
+		}
+		return seqs;
 	}
 	
 	private static List<ACESourceDocument> constructSourceDocuments(File contentFile) {
@@ -111,231 +325,111 @@ public class ConstructACE2005 {
 		Element rootElement = rootAndString.getFirst();
 		List<Element> elementsInOrder = traverse(rootElement);
 		Map<Element, Integer> charOffsets = getCharOffsets(rootAndString.getSecond(), elementsInOrder);
-		
+		List<ACESourceDocument> retDocs = new ArrayList<ACESourceDocument>();
 		if (isNewswire(rootElement))
-			return getNewswireSource(rootElement, charOffsets);
-		else if (isBroadcastConversation(rootElement)) {
-			return getBroadcastConversationSource(rootElement, charOffsets);
-		} else if (isBroadcastNews(rootElement))
-			return getBroadcastNewsSource(rootElement, charOffsets);
+			retDocs.add(getSingleSourceDocument(ACEDocumentType.NEWS_WIRE, rootElement, charOffsets));
+		else if (isBroadcastConversation(rootElement))
+			retDocs.add(getSingleSourceDocument(ACEDocumentType.BROADCAST_CONVERSATION, rootElement, charOffsets));
+		else if (isBroadcastNews(rootElement))
+			retDocs.add(getSingleSourceDocument(ACEDocumentType.BROADCAST_NEWS, rootElement, charOffsets));
 		else if (isTelephone(rootElement))
-			return getTelephoneSource(rootElement, charOffsets);
+			retDocs.add(getSingleSourceDocument(ACEDocumentType.TELEPHONE, rootElement, charOffsets));
 		else if (isUsenet(rootElement))
-			return getUsenetSource(rootElement, charOffsets);
+			retDocs.addAll(getPostSourceDocuments(ACEDocumentType.USENET, rootElement, charOffsets));
 		else if (isWeblog(rootElement))
-			return getWeblogSource(rootElement, charOffsets);
+			retDocs.addAll(getPostSourceDocuments(ACEDocumentType.WEBLOG, rootElement, charOffsets));
 		else {
 			System.err.println("Unrecognized document source type " + contentFile.getAbsolutePath());
 			System.exit(1);
 		}
-		return null;
+		
+		return retDocs;
 	}
 	
 	private static boolean isNewswire(Element root) {
 		return root.getChild("DOCTYPE").getAttribute("SOURCE").getValue().equals("newswire");
 	}
 	
-	private static List<ACESourceDocument> getNewswireSource(Element root, Map<Element, Integer> charOffsets) {
-		String name = root.getChildText("DOCID").trim();
-		String dctStr = root.getChildText("DATETIME");
-		int dctStrOffset = charOffsets.get(root.getChild("DATETIME"));
-		Pair<Integer, Integer> dctStrCharRange = new Pair<>(dctStrOffset, dctStrOffset + dctStr.length());
-		
-		Element headlineElement = root.getChild("BODY").getChild("HEADLINE");
-		int headlineOffset = charOffsets.get(headlineElement);
-		String headlineStr = headlineElement.getText();
-		
-		Element textElement = root.getChild("BODY").getChild("TEXT");
-		int textOffset = charOffsets.get(textElement);
-		String textStr = textElement.getText();
-		
-		TreeMap<Integer, Pair<String, String>> bodyParts = new TreeMap<>();
-		bodyParts.put(headlineOffset, new Pair<String, String>("HEADLINE", headlineStr));
-		bodyParts.put(textOffset, new Pair<String, String>("TEXT", textStr));
-		
-		ACESourceDocument document = new ACESourceDocument(
-				name,
-				ACEDocumentType.NEWS_WIRE,
-				dctStr, 
-				dctStrCharRange,
-				new HashMap<String, String>(),
-				bodyParts);
-		
-		List<ACESourceDocument> documents = new ArrayList<>();
-		documents.add(document);
-		
-		return documents;
-	}
-	
 	private static boolean isBroadcastConversation(Element root) {
 		return root.getChild("DOCTYPE").getAttribute("SOURCE").getValue().equals("broadcast conversation");
-	}
-
-	private static List<ACESourceDocument> getBroadcastConversationSource(Element root, Map<Element, Integer> charOffsets) {
-	
-		String name = root.getChildText("DOCID").trim();
-		String dctStr = root.getChildText("DATETIME");
-		int dctStrOffset = charOffsets.get(root.getChild("DATETIME"));
-		Pair<Integer, Integer> dctStrCharRange = new Pair<>(dctStrOffset, dctStrOffset + dctStr.length());
-		
-		
-		TreeMap<Integer, Pair<String, String>> bodyParts = new TreeMap<>();
-		getElementParts(root.getChild("BODY"), charOffsets.get(root.getChild("BODY")), bodyParts);
-		
-		
-		ACESourceDocument document = new ACESourceDocument(
-				name,
-				ACEDocumentType.BROADCAST_CONVERSATION,
-				dctStr, 
-				dctStrCharRange,
-				new HashMap<String, String>(),
-				bodyParts);
-		
-		System.out.println(name);
-		for (Entry<Integer, Pair<String, String>> entry : bodyParts.entrySet())
-			System.out.println(entry.getKey() + " " + entry.getValue().getFirst() + " " + entry.getValue().getSecond());
-		System.exit(1);
-		List<ACESourceDocument> documents = new ArrayList<>();
-		documents.add(document);
-		
-		return documents;
 	}
 	
 	private static boolean isBroadcastNews(Element root) {
 		return root.getChild("DOCTYPE").getAttribute("SOURCE").getValue().equals("broadcast news");
-	}
-
-	private static List<ACESourceDocument> getBroadcastNewsSource(Element root, Map<Element, Integer> charOffsets) {
-		/* FIXME
-		 * <DOC>
-	<DOCID> CNN_ENG_20030327_163556.20 </DOCID>
-	<DOCTYPE SOURCE="broadcast news"> NEWS STORY </DOCTYPE>
-	<DATETIME> 2003-03-27 16:58:58 </DATETIME>
-	<BODY>
-	<TEXT>
-	<TURN>
-	for some americans who find themselves spending hours on
-		 */
-		return null;
 	}
 	
 	private static boolean isTelephone(Element root) {
 		return root.getChild("DOCTYPE").getAttribute("SOURCE").getValue().equals("telephone");
 	}
 	
-	private static List<ACESourceDocument> getTelephoneSource(Element root, Map<Element, Integer> charOffsets) {
-		/*
-		 * <DOC>
-	<DOCID> fsh_29139 </DOCID>
-	<DOCTYPE SOURCE="telephone"> CONVERSATION </DOCTYPE>
-	<DATETIME> 20041130-18:20:45 </DATETIME>
-	<BODY>
-	<TEXT>
-	<TURN>
-	<SPEAKER> prompt </SPEAKER>
-	2. Workplace Culture Describe the organizational structure of your
-	current or former workplace. How many people work there, and what is
-	the hierarchy?  Who works for whom?  What kind of job do you have?
-	Describe some of the people that you work with and the jobs they do.
-	Do you think your company is well-run?  If not, what could make it
-	better?
-	</TURN>
-	<TURN>
-	<SPEAKER> B </SPEAKER>
-	And then we're not supposed to answer it. Well, um all I can say about
-	big corporations -- is there's too many -- chiefs.
-	</TURN>
-		 */
-		return null;
-	}
-	
 	private static boolean isUsenet(Element root) {
 		return root.getChild("DOCTYPE").getAttribute("SOURCE").getValue().equals("usenet");
-	}
-	
-	private static List<ACESourceDocument> getUsenetSource(Element root, Map<Element, Integer> charOffsets) {
-		/*
-		 * <DOC>
-	<DOCID> alt.sys.pc-clone.dell_20050226.2350 </DOCID>
-	<DOCTYPE SOURCE="usenet"> WEB TEXT </DOCTYPE>
-	<DATETIME> 2005-02-26T23:50:00 </DATETIME>
-	<BODY>
-	<HEADLINE>
-	Dell sued for "bait and switch" and false promises
-	</HEADLINE>
-	<TEXT>
-	<POST>
-	<POSTER> Timothy Daniels </POSTER>
-	<POSTDATE> Sat, 26 Feb 2005 20:50:40 -0800 </POSTDATE>
-	<SUBJECT> Dell sued for "bait and switch" and false promises </SUBJECT>
-	
-	Dell is involved in a class action suit for "bait and switch", where a
-	nurse claims Dell switched parts and charged her for the more expensive
-	items, and for promising "easy credit" for which no one qualifies and
-	then charges ridiculously high interest rates.
-	
-	*TimDaniels*
-	
-	</POST>
-	<POST>
-	<POSTER> RRR_News </POSTER>
-	<POSTDATE> Sun, 27 Feb 2005 12:14:24 -0500 </POSTDATE>
-	<SUBJECT> Re: Dell sued for "bait and switch" and false promises </SUBJECT>
-	
-	It seems someone did not read the credit terms, before purchasing item,
-	"buyers' remorse". And lawyers trying to make a buck from it. Hope federal
-	tort reform gets passed by the congress, so we can get rid of these
-	charlatans.
-	
-	Rich/rerat
-	
-	(RRR News) (message rule)
-	((Previous Text Snipped to Save Bandwidth When Appropriate))
-	
-	<QUOTE PREVIOUSPOST="
-	Timothy Daniels (TDani...@NoSpamDot.com) wrote in message
-	
-	Dell is involved in a class action suit for
-	''bait and switch'', where a nurse claims Dell
-	switched parts and charged her for the more
-	expensive items, and for promising ''easy credit''
-	for which no one qualifies and then charges
-	ridiculously high interest rates.
-	http://money.cnn.com/2005/02/2 2/technology/dell_lawsuit.reut /
-	http://www.lerachlaw.com/lcsr- cgi-bin/mil?templ=featured/del l.html
-	*TimDaniels
-	
-	"/>
-	
-	</POST>
-	<POST>
-	
-		 */
-		return null;
 	}
 	
 	private static boolean isWeblog(Element root) {
 		return root.getChild("DOCTYPE").getAttribute("SOURCE").getValue().equals("weblog");
 	}
 	
-	private static List<ACESourceDocument> getWeblogSource(Element root, Map<Element, Integer> charOffsets) {
-		/*
-		 * <DOC>
-	<DOCID> AGGRESSIVEVOICEDAILY_20041218.1004 </DOCID>
-	<DOCTYPE SOURCE="weblog"> WEB TEXT </DOCTYPE>
-	<DATETIME> 2004-12-18T10:04:00 </DATETIME>
-	<BODY>
-	<HEADLINE>
-	Woman Charged With Murder, Kidnapping Fetus-Thingy
-	</HEADLINE>
-	<TEXT>
-	<POST>
-	<POSTER> Scott </POSTER>
-	<POSTDATE> 2004-12-18T10:04:00 </POSTDATE>
-	From the Associated Press : A baby girl who had been cut out of her
+	private static ACESourceDocument getSingleSourceDocument(ACEDocumentType type, Element root, Map<Element, Integer> charOffsets) {
+		String name = root.getChildText("DOCID").trim();
+		String dctStr = root.getChildText("DATETIME");
+		int dctStrOffset = charOffsets.get(root.getChild("DATETIME"));
+		Pair<Integer, Integer> dctStrCharRange = new Pair<>(dctStrOffset, dctStrOffset + dctStr.length());
+		
+		TreeMap<Integer, Pair<String, String>> bodyParts = new TreeMap<>();
+		getElementParts(root.getChild("BODY"), charOffsets.get(root.getChild("BODY")), bodyParts, "", false);
+		
+		ACESourceDocument document = new ACESourceDocument(
+				name,
+				type,
+				dctStr, 
+				dctStrCharRange,
+				bodyParts);
+		
+		return document;
+	}
 	
-		 */
-		return null;
+	
+	
+	private static List<ACESourceDocument> getPostSourceDocuments(ACEDocumentType type, Element root, Map<Element, Integer> charOffsets) {
+		List<ACESourceDocument> retDocuments = new ArrayList<>();
+		
+		String name = root.getChildText("DOCID").trim();
+		String dctStr = root.getChildText("DATETIME");
+		int dctStrOffset = charOffsets.get(root.getChild("DATETIME"));
+		Pair<Integer, Integer> dctStrCharRange = new Pair<>(dctStrOffset, dctStrOffset + dctStr.length());
+
+		TreeMap<Integer, Pair<String, String>> bodyParts = new TreeMap<>();
+		getElementParts(root.getChild("BODY"), charOffsets.get(root.getChild("BODY")), bodyParts, "POST", false);
+		
+		retDocuments.add(new ACESourceDocument(
+				name,
+				type,
+				dctStr, 
+				dctStrCharRange,
+				bodyParts));
+		
+		List<Element> postRoots = root.getChild("BODY").getChildren("POST");
+		int postIndex = 0;
+		for (Element postRoot : postRoots) {
+			String postName = name + "_p" + postIndex;
+			String postDctStr = postRoot.getChildText("POSTDATE");
+			int postDctStrOffset = charOffsets.get(postRoot.getChild("POSTDATE"));
+			Pair<Integer, Integer> postDctStrCharRange = new Pair<>(postDctStrOffset, postDctStrOffset + postDctStr.length());
+			TreeMap<Integer, Pair<String, String>> postParts = new TreeMap<>();
+			getElementParts(postRoot, charOffsets.get(postRoot), postParts, "POSTDATE", false);
+			
+			retDocuments.add(new ACESourceDocument(
+					postName,
+					type,
+					postDctStr, 
+					postDctStrCharRange,
+					postParts));
+			
+			postIndex++;
+		}
+		
+		return retDocuments;
 	}
 	
 	private static Pair<Element, String> getDocumentRootElementAndString(File xmlFile) {
@@ -373,9 +467,10 @@ public class ConstructACE2005 {
 		return new Pair<Element, String>(xml.getRootElement(), fullStr.toString());
 	}
 	
-	private static Map<String, Pair<File, File>> getInputFiles(String[] inputDirPaths) {
+	private static Map<String, Pair<File, File>> getInputFiles(String[] args) {		
 		Map<String, Pair<File, File>> files = new HashMap<>();
-		for (String inputDirPath : inputDirPaths) {
+		for (int i = 1; i < args.length; i++) {
+			String inputDirPath = args[i];
 			File inputDir = new File(inputDirPath);
 			File[] inputDirFiles = inputDir.listFiles();
 			for (File file : inputDirFiles) {
@@ -506,15 +601,16 @@ public class ConstructACE2005 {
 		return charOffsets;
 	}
 	
-	private static int getElementParts(Element element, int offset, TreeMap<Integer, Pair<String, String>> parts) {
+	private static int getElementParts(Element element, int offset, TreeMap<Integer, Pair<String, String>> parts, String except, boolean inExcept) {
 		List<Content> content = element.getContent();
 		for (int i = 0; i < content.size(); i++) {
 			if (content.get(i) instanceof Text) {
 				Text text = (Text)content.get(i);
-				parts.put(offset, new Pair<String, String>(null, text.getText()));
+				if (!inExcept)
+					parts.put(offset, new Pair<String, String>(element.getName(), text.getText()));
 				offset += text.getText().length();
 			} else if (content.get(i) instanceof Element) {
-				offset = getElementParts((Element)content.get(i), offset, parts);
+				offset = getElementParts((Element)content.get(i), offset, parts, except, (inExcept || element.getName().equals(except)));
 			}
 		}
 		
