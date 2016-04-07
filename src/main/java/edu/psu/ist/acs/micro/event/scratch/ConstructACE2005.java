@@ -280,11 +280,10 @@ public class ConstructACE2005 {
 				String id = mentionElement.getAttributeValue("ID");
 				StoreReference ref = new StoreReference(storageName, ENTITY_MENTION_COLLECTION, "id", String.valueOf(id));
 				Boolean metonymy = mentionElement.getAttribute("METONYMY_MENTION") != null ? Boolean.valueOf(mentionElement.getAttributeValue("METONYMY_MENTION")) : null;
-				EntityMention.ACEType aceType = EntityMention.ACEType.valueOf(entityElement.getAttributeValue("TYPE").replace('-', '_'));
-				EntityMention.ACERole aceRole = EntityMention.ACERole.valueOf(entityElement.getAttributeValue("ROLE").replace('-', '_'));
+				EntityMention.ACEType aceType = EntityMention.ACEType.valueOf(mentionElement.getAttributeValue("TYPE").replace('-', '_'));
+				EntityMention.ACERole aceRole = EntityMention.ACERole.valueOf(mentionElement.getAttributeValue("ROLE").replace('-', '_'));
 				TokenSpan tokenSpan = seqSpans.get(mentionElement.getChild("extent").getChild("charseq"));
 				TokenSpan head = mentionElement.getChild("head") != null ? seqSpans.get(mentionElement.getChild("head").getChild("charseq")) : null;
-				
 				
 				EntityMention mention = new EntityMention(dataTools,
 								  ref,
