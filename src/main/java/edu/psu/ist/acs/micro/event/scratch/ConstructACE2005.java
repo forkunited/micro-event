@@ -327,12 +327,24 @@ public class ConstructACE2005 {
 	}
 	
 	private static boolean parseAndOutputValues(Element annotationsRoot, Map<String, DocumentNLPMutable> docs) {
+		
+		
 		// FIXME
 		return true;
 	}
 	
 	private static boolean parseAndOutputValueMentions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Element, TokenSpan> seqSpans) {
 		// FIXME
+		/*
+		 * <value ID="APW_ENG_20030304.0555-V1" TYPE="Numeric" SUBTYPE="Money">
+  <value_mention ID="APW_ENG_20030304.0555-V1-1">
+    <extent>
+      <charseq START="1860" END="1870">$15 billion</charseq>
+    </extent>
+  </value_mention>
+</value>
+
+		 */
 		return true;
 	}
 	
@@ -383,7 +395,7 @@ public class ConstructACE2005 {
 					String tokenStr = tempToken.getStr();
 					
 					int tempStartIndex = tempToken.getCharSpanStart() + entry.getKey();
-					if (charseqElements.containsKey(tempStartIndex)) {
+					if (charseqElements.ceilingKey(tempStartIndex) != null && charseqElements.ceilingKey(tempStartIndex) < tempToken.getCharSpanEnd() + entry.getKey()) {
 						List<Element> curCharseqs = charseqElements.get(tempStartIndex);
 						List<TokenSpan> spans = getTokenSpansForCharseqs(entry.getKey(), partialDoc, i, j, curCharseqs, doc, tokens.size());
 						for (int k = 0; k < curCharseqs.size(); k++)
