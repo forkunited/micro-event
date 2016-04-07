@@ -387,7 +387,8 @@ public class ConstructACE2005 {
 				try {
 					if (partialDocument.getToken(partialSentenceIndex, i).getCharSpanEnd() + offset - 1 >= seq.getAttribute("END").getIntValue() && partialDocument.getToken(partialSentenceIndex, i).getCharSpanStart() + offset <= seq.getAttribute("END").getIntValue()) {
 						String[] seqParts = seq.getText().split("\\s+");
-						if (partialDocument.getTokenStr(partialSentenceIndex, i).contains(seqParts[seqParts.length - 1]))
+						if (partialDocument.getTokenStr(partialSentenceIndex, i).contains(seqParts[seqParts.length - 1])
+								|| seqParts[seqParts.length - 1].contains(partialDocument.getTokenStr(partialSentenceIndex, i)))
 							foundSpan = true;
 						else
 							foundSpan = false;
