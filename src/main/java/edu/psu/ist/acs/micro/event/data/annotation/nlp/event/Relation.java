@@ -54,7 +54,8 @@ public class Relation implements StoredJSONSerializable {
         Membership,
         Geographical,
         Family,
-        Employment
+        Employment,
+        Subsidiary
 	}
 	
 	private String id;
