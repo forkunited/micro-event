@@ -408,7 +408,7 @@ public class ConstructACE2005 {
 					String tokenStr = tempToken.getStr();
 					
 					if (tempToken.getStr().equals("anti-Saddam")) {
-						System.out.println(tempToken.getCharSpanStart() + " " + tempToken.getCharSpanEnd() + " " + entry.getKey() + " " + charseqElements.ceilingKey(tempToken.getCharSpanStart() + entry.getKey()))
+						System.out.println(tempToken.getCharSpanStart() + " " + tempToken.getCharSpanEnd() + " " + entry.getKey() + " " + charseqElements.ceilingKey(tempToken.getCharSpanStart() + entry.getKey()));
 						System.exit(1);
 					}
 					
