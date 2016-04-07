@@ -652,9 +652,11 @@ public class ConstructACE2005 {
 				
 				storedRelationMentions.addItem(mention);
 				
-				if (!annotations.containsKey(extent.getDocument().getName()))
-					annotations.put(extent.getDocument().getName(), new ArrayList<>());
-				annotations.get(extent.getDocument().getName()).add(new Triple<TokenSpan, StoreReference, Double>(extent, mention.getStoreReference(), null));
+				if (extent != null) {
+					if (!annotations.containsKey(extent.getDocument().getName()))
+						annotations.put(extent.getDocument().getName(), new ArrayList<>());
+					annotations.get(extent.getDocument().getName()).add(new Triple<TokenSpan, StoreReference, Double>(extent, mention.getStoreReference(), null));
+				}
 			}
 		}
 		

@@ -450,7 +450,9 @@ public class NormalizedTimeValue implements Argumentable {
 	}
 	
 	public Reference getReference() {
-		if (this.value.equals("FUTURE_REF"))
+		if (this.value == null)
+			return Reference.NONE;
+		else if (this.value.equals("FUTURE_REF"))
 			return Reference.FUTURE;
 		else if (this.value.equals("PRESENT_REF"))
 			return Reference.PRESENT;
@@ -460,7 +462,7 @@ public class NormalizedTimeValue implements Argumentable {
 			return Reference.NONE;
 	}
 	
-	public NormalizedTimeValue toDate() {
+	public NormalizedTimeValue toDate() {			
   		if(this.value.matches("^\\d\\d\\d\\d-\\d\\d-\\d\\d.+") ) {
   			return new NormalizedTimeValue(this.dataTools, this.reference, this.getId(), this.value.substring(0, 10));
   		} else {

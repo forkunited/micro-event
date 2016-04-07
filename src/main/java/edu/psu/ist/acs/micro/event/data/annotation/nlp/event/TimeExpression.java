@@ -206,7 +206,8 @@ public class TimeExpression implements TLinkable, MentionArgumentable {
 	public TLink.TimeMLRelType getRelationToTime(TimeExpression time, boolean unknownVague) {
 		NormalizedTimeValue thisValue = getValue();
 		NormalizedTimeValue timeValue = time.getValue();
-		
+		if (thisValue == null || timeValue == null)
+			return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
 		if (this.timeMLType != TimeExpression.TimeMLType.DATE && this.timeMLType != TimeExpression.TimeMLType.TIME)
 			return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
 		if (time.timeMLType != TimeExpression.TimeMLType.DATE && time.timeMLType != TimeExpression.TimeMLType.TIME)
