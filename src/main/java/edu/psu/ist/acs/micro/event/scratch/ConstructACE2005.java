@@ -23,7 +23,6 @@ import org.jdom2.JDOMException;
 import org.jdom2.Text;
 import org.jdom2.input.SAXBuilder;
 
-import edu.cmu.ml.rtw.generic.data.DataTools;
 import edu.cmu.ml.rtw.generic.data.Serializer;
 import edu.cmu.ml.rtw.generic.data.StoredItemSetInMemoryLazy;
 import edu.cmu.ml.rtw.generic.data.annotation.AnnotationType;
@@ -37,6 +36,7 @@ import edu.cmu.ml.rtw.generic.data.annotation.nlp.Token;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.data.store.Storage;
 import edu.cmu.ml.rtw.generic.data.store.StoreReference;
+import edu.cmu.ml.rtw.generic.model.annotator.nlp.AnnotatorDocument;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.AnnotatorTokenSpan;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLP;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLPExtendable;
@@ -53,18 +53,21 @@ import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Entity;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EntityMention;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Event;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.NormalizedTimeValue;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Relation;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.RelationMention;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Value;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.ValueMention;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Entity.ACEClass;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Entity.ACESubtype;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Entity.ACEType;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EntityMention.ACERole;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention.TimeMLPolarity;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention.TimeMLTense;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.RelationMention.ACELexicalCondition;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression.TimeMLDocumentFunction;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression.TimeMLMod;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression.TimeMLType;
 
 public class ConstructACE2005 {
-	private static class ACESourceDocument {
+	public static class ACESourceDocument {
 		private String name;
 		private ACEDocumentType type;
 		private String dctStr;
@@ -233,7 +236,7 @@ public class ConstructACE2005 {
 		parseAndOutputEventMentions(annotationsRoot, annotatedDocs, charseqSpans); 
 		parseAndOutputRelations(annotationsRoot, annotatedDocs);
 		parseAndOutputRelationMentions(annotationsRoot, annotatedDocs, charseqSpans); 
-		parseAndOutputTimeExpressions(annotationsRoot, annotatedDocs, charseqSpans); 
+		parseAndOutputTimeExpressions(annotationsRoot, annotatedDocs, charseqSpans, docs); 
 	
 		for (DocumentNLPMutable annotatedDoc : annotatedDocs.values())
 			storedDocuments.addItem(annotatedDoc);
@@ -285,7 +288,7 @@ public class ConstructACE2005 {
 				StoreReference ref = new StoreReference(storageName, ENTITY_MENTION_COLLECTION, "id", String.valueOf(id));
 				Boolean metonymy = mentionElement.getAttribute("METONYMY_MENTION") != null ? Boolean.valueOf(mentionElement.getAttributeValue("METONYMY_MENTION")) : null;
 				EntityMention.ACEType aceType = EntityMention.ACEType.valueOf(mentionElement.getAttributeValue("TYPE").replace('-', '_'));
-				EntityMention.ACERole aceRole = mentionElement.getAttributeValue("ROLE") == null ? EntityMention.ACERole.NONE : EntityMention.ACERole.valueOf(mentionElement.getAttributeValue("ROLE").replace('-', '_'));
+				EntityMention.ACERole aceRole = mentionElement.getAttributeValue("ROLE") == null ? null : EntityMention.ACERole.valueOf(mentionElement.getAttributeValue("ROLE").replace('-', '_'));
 				TokenSpan tokenSpan = getSpan(mentionElement.getChild("extent").getChild("charseq"), seqSpans);
 				TokenSpan head = mentionElement.getChild("head") != null ? getSpan(mentionElement.getChild("head").getChild("charseq"), seqSpans) : null;
 				if (tokenSpan == null) {
@@ -335,7 +338,7 @@ public class ConstructACE2005 {
 			String id = valueElement.getAttributeValue("ID");
 			StoreReference ref = new StoreReference(storageName, VALUE_COLLECTION, "id", String.valueOf(id));
 			Value.ACEType aceType = Value.ACEType.valueOf(valueElement.getAttributeValue("TYPE").replace('-', '_'));
-			Value.ACESubtype aceSubtype = valueElement.getAttributeValue("SUBTYPE") == null ? Value.ACESubtype.None : Value.ACESubtype.valueOf(valueElement.getAttributeValue("SUBTYPE").replace('-', '_'));
+			Value.ACESubtype aceSubtype = valueElement.getAttributeValue("SUBTYPE") == null ? null : Value.ACESubtype.valueOf(valueElement.getAttributeValue("SUBTYPE").replace('-', '_'));
 			
 			Value value = new Value(dataTools,
 									ref,
@@ -396,28 +399,347 @@ public class ConstructACE2005 {
 	}
 	
 	private static boolean parseAndOutputEvents(Element annotationsRoot, Map<String, DocumentNLPMutable> docs) {
-		// FIXME
+		List<Element> eventElements = annotationsRoot.getChild("document").getChildren("event");
+		for (Element eventElement : eventElements) {
+			String id = eventElement.getAttributeValue("ID");
+			StoreReference ref = new StoreReference(storageName, EVENT_COLLECTION, "id", String.valueOf(id));
+			Event.ACEType aceType = Event.ACEType.valueOf(eventElement.getAttributeValue("TYPE").replace('-', '_'));
+			Event.ACESubtype aceSubtype = Event.ACESubtype.valueOf(eventElement.getAttributeValue("SUBTYPE").replace('-', '_'));
+			Event.ACEGenericity aceGenericity = Event.ACEGenericity.valueOf(eventElement.getAttributeValue("GENERICITY").replace('-', '_'));
+			
+			List<Element> argElements = eventElement.getChildren("event_argument");
+			List<Pair<StoreReference, String>> argRefs = new ArrayList<>();
+			for (Element argElement : argElements) {
+				String argId = argElement.getAttributeValue("REFID");
+				String[] argIdParts = argId.split("\\-");
+				if (argIdParts[argIdParts.length - 1].startsWith("E") && !argIdParts[argIdParts.length - 1].startsWith("EV")) {
+					argRefs.add(new Pair<StoreReference, String>(
+						new StoreReference(storageName, ENTITY_COLLECTION, "id", argId), 
+						argElement.getAttributeValue("ROLE")
+					));
+				} else if (argIdParts[argIdParts.length - 1].startsWith("V")) {
+					argRefs.add(new Pair<StoreReference, String>(
+							new StoreReference(storageName, VALUE_COLLECTION, "id", argId), 
+							argElement.getAttributeValue("ROLE")
+						));
+				} else {
+					System.err.println("Invalid argument for " + id + ": " + argId);
+					System.exit(1);
+				}	
+			}
+			
+			Event event = new Event(dataTools,
+									ref, 
+									id,
+									aceType,
+									aceGenericity,
+									aceSubtype,
+									argRefs);
+			
+			storedEvents.addItem(event);
+		}
+		
 		return true;
 	}
 	
 	private static boolean parseAndOutputEventMentions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Element, TokenSpan> seqSpans) {
-		// FIXME
+		Map<String, List<Triple<TokenSpan, StoreReference, Double>>> annotations = new HashMap<>();
+		List<Element> eventElements = annotationsRoot.getChild("document").getChildren("event");
+
+		for (Element eventElement : eventElements) {
+			StoreReference eventRef = new StoreReference(storageName, EVENT_COLLECTION, "id", String.valueOf(eventElement.getAttributeValue("ID")));
+			String modality = eventElement.getAttributeValue("MODALITY");
+			TimeMLTense tense = TimeMLTense.valueOf(eventElement.getAttributeValue("TENSE"));
+			TimeMLPolarity polarity = null;
+			if (eventElement.getAttributeValue("POLARITY") != null) {
+				if (eventElement.getAttributeValue("POLARITY").equals("Negative"))
+					polarity = TimeMLPolarity.NEG;
+				else if (eventElement.getAttributeValue("POLARITY").equals("Positive"))
+					polarity = TimeMLPolarity.POS;
+			}
+			
+			List<Element> mentionElements = eventElement.getChildren("event_mention");
+			for (Element mentionElement : mentionElements) {
+				String id = mentionElement.getAttributeValue("ID");
+				StoreReference ref = new StoreReference(storageName, EVENT_MENTION_COLLECTION, "id", String.valueOf(id));
+				TokenSpan anchor = getSpan(mentionElement.getChild("anchor").getChild("charseq"), seqSpans);
+				TokenSpan extent = getSpan(mentionElement.getChild("extent").getChild("charseq"), seqSpans);
+				
+				List<Element> argElements = mentionElement.getChildren("event_mention_argument");
+				List<Pair<StoreReference, String>> argRefs = new ArrayList<>();
+				for (Element argElement : argElements) {
+					String argId = argElement.getAttributeValue("REFID");
+					String[] argIdParts = argId.split("\\-");
+					if (argIdParts[argIdParts.length - 2].startsWith("E") && !argIdParts[argIdParts.length - 2].startsWith("EV")) {
+						argRefs.add(new Pair<StoreReference, String>(
+							new StoreReference(storageName, ENTITY_MENTION_COLLECTION, "id", argId), 
+							argElement.getAttributeValue("ROLE")
+						));
+					} else if (argIdParts[argIdParts.length - 2].startsWith("V")) {
+						argRefs.add(new Pair<StoreReference, String>(
+								new StoreReference(storageName, VALUE_MENTION_COLLECTION, "id", argId), 
+								argElement.getAttributeValue("ROLE")
+							));
+					} else {
+						System.err.println("Invalid argument for " + id + ": " + argId);
+						System.exit(1);
+					}	
+				}
+				
+				EventMention mention = 	new EventMention(dataTools,
+						ref, 
+						id, 
+						null, 
+						null,
+						anchor,
+						null,
+						tense, 
+						null, 
+						null, 
+						polarity, 
+						null, 
+						null, 
+						null,
+						modality,
+						null,
+						extent,
+						eventRef,
+						argRefs);
+				
+				storedEventMentions.addItem(mention);
+				
+				if (!annotations.containsKey(anchor.getDocument().getName()))
+					annotations.put(anchor.getDocument().getName(), new ArrayList<>());
+				annotations.get(anchor.getDocument().getName()).add(new Triple<TokenSpan, StoreReference, Double>(anchor, mention.getStoreReference(), null));
+			}
+		}		
+		
+		for (Entry<String, List<Triple<TokenSpan, StoreReference, Double>>> entry : annotations.entrySet()) {
+			PipelineNLPExtendable pipeline = new PipelineNLPExtendable();
+			pipeline.extend(new AnnotatorTokenSpan<StoreReference>() {
+				public String getName() { return "ace_2005"; }
+				public AnnotationType<StoreReference> produces() { return AnnotationTypeNLPEvent.EVENT_MENTION; };
+				public AnnotationType<?>[] requires() { return new AnnotationType<?>[] { }; }
+				public boolean measuresConfidence() { return false; }
+				public List<Triple<TokenSpan, StoreReference, Double>> annotate(DocumentNLP document) {
+					return entry.getValue();
+				}
+			});
+			
+			DocumentNLPMutable doc = docs.get(entry.getKey());
+			pipeline.run(doc);
+		}
+		
 		return true;
 	}
 	
 	private static boolean parseAndOutputRelations(Element annotationsRoot, Map<String, DocumentNLPMutable> docs) {
-		// FIXME
+		List<Element> relationElements = annotationsRoot.getChild("document").getChildren("relation");
+		for (Element relationElement : relationElements) {
+			String id = relationElement.getAttributeValue("ID");
+			StoreReference ref = new StoreReference(storageName, RELATION_COLLECTION, "id", String.valueOf(id));
+			
+			Relation.ACEType aceType = Relation.ACEType.valueOf(relationElement.getAttributeValue("TYPE").replace('-', '_'));
+			Relation.ACESubtype aceSubtype = Relation.ACESubtype.valueOf(relationElement.getAttributeValue("SUBTYPE").replace('-', '_'));
+			String modality = relationElement.getAttributeValue("MODALITY");
+			
+			List<Element> argElements = relationElement.getChildren("relation_argument");
+			List<Pair<StoreReference, String>> argRefs = new ArrayList<>();
+			for (Element argElement : argElements) {
+				String argId = argElement.getAttributeValue("REFID");
+				String[] argIdParts = argId.split("\\-");
+				if (argIdParts[argIdParts.length - 1].startsWith("E") && !argIdParts[argIdParts.length - 1].startsWith("EV")) {
+					argRefs.add(new Pair<StoreReference, String>(
+						new StoreReference(storageName, ENTITY_COLLECTION, "id", argId), 
+						argElement.getAttributeValue("ROLE")
+					));
+				} else if (argIdParts[argIdParts.length - 1].startsWith("V")) {
+					argRefs.add(new Pair<StoreReference, String>(
+							new StoreReference(storageName, VALUE_COLLECTION, "id", argId), 
+							argElement.getAttributeValue("ROLE")
+						));
+				} else {
+					System.err.println("Invalid argument for " + id + ": " + argId);
+					System.exit(1);
+				}	
+			}
+			
+			Relation relation = new Relation(dataTools,
+											ref, 
+											id, 
+											aceType,
+											aceSubtype,
+											modality,
+											argRefs);
+			
+			storedRelations.addItem(relation);
+		}
+		
 		return true;
 	}
 	
 	private static boolean parseAndOutputRelationMentions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Element, TokenSpan> seqSpans) {
-		// FIXME
+		Map<String, List<Triple<TokenSpan, StoreReference, Double>>> annotations = new HashMap<>();
+		List<Element> relationElements = annotationsRoot.getChild("document").getChildren("relation");
+
+		for (Element relationElement : relationElements) {
+			StoreReference relationRef = new StoreReference(storageName, RELATION_COLLECTION, "id", String.valueOf(relationElement.getAttributeValue("ID")));
+			TimeMLTense tense = TimeMLTense.valueOf(relationElement.getAttributeValue("TENSE"));
+	
+			List<Element> mentionElements = relationElement.getChildren("relation_mention");
+			for (Element mentionElement : mentionElements) {
+				String id = mentionElement.getAttributeValue("ID");
+				StoreReference ref = new StoreReference(storageName, RELATION_MENTION_COLLECTION, "id", String.valueOf(id));
+				TokenSpan extent = getSpan(mentionElement.getChild("extent").getChild("charseq"), seqSpans);
+				ACELexicalCondition aceLexicalCondition = mentionElement.getAttributeValue("LEXICALCONDITION") == null ? null : ACELexicalCondition.valueOf(mentionElement.getAttributeValue("LEXICALCONDITION"));
+				
+				List<Element> argElements = mentionElement.getChildren("relation_mention_argument");
+				List<Pair<StoreReference, String>> argRefs = new ArrayList<>();
+				for (Element argElement : argElements) {
+					String argId = argElement.getAttributeValue("REFID");
+					String[] argIdParts = argId.split("\\-");
+					if (argIdParts[argIdParts.length - 2].startsWith("E") && !argIdParts[argIdParts.length - 2].startsWith("EV")) {
+						argRefs.add(new Pair<StoreReference, String>(
+							new StoreReference(storageName, ENTITY_MENTION_COLLECTION, "id", argId), 
+							argElement.getAttributeValue("ROLE")
+						));
+					} else if (argIdParts[argIdParts.length - 2].startsWith("V")) {
+						argRefs.add(new Pair<StoreReference, String>(
+								new StoreReference(storageName, VALUE_MENTION_COLLECTION, "id", argId), 
+								argElement.getAttributeValue("ROLE")
+							));
+					} else {
+						System.err.println("Invalid argument for " + id + ": " + argId);
+						System.exit(1);
+					}	
+				}
+				
+				RelationMention mention = new RelationMention(dataTools,
+						ref, 
+						id, 
+						extent,
+						tense, 
+						aceLexicalCondition,
+						relationRef,
+						argRefs);
+				
+				storedRelationMentions.addItem(mention);
+				
+				if (!annotations.containsKey(extent.getDocument().getName()))
+					annotations.put(extent.getDocument().getName(), new ArrayList<>());
+				annotations.get(extent.getDocument().getName()).add(new Triple<TokenSpan, StoreReference, Double>(extent, mention.getStoreReference(), null));
+			}
+		}
+		
+		for (Entry<String, List<Triple<TokenSpan, StoreReference, Double>>> entry : annotations.entrySet()) {
+			PipelineNLPExtendable pipeline = new PipelineNLPExtendable();
+			pipeline.extend(new AnnotatorTokenSpan<StoreReference>() {
+				public String getName() { return "ace_2005"; }
+				public AnnotationType<StoreReference> produces() { return AnnotationTypeNLPEvent.RELATION_MENTION; };
+				public AnnotationType<?>[] requires() { return new AnnotationType<?>[] { }; }
+				public boolean measuresConfidence() { return false; }
+				public List<Triple<TokenSpan, StoreReference, Double>> annotate(DocumentNLP document) {
+					return entry.getValue();
+				}
+			});
+			
+			DocumentNLPMutable doc = docs.get(entry.getKey());
+			pipeline.run(doc);
+		}
+		
 		return true;
 	}
 	
-	private static boolean parseAndOutputTimeExpressions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Element, TokenSpan> seqSpans) {
-		// FIXME
-		// Remember dct
+	private static boolean parseAndOutputTimeExpressions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Element, TokenSpan> seqSpans, List<ACESourceDocument> sourceDocs) {		
+		Map<String, List<Triple<TokenSpan, StoreReference, Double>>> annotations = new HashMap<>();
+		List<Element> timexElements = annotationsRoot.getChild("document").getChildren("timex2");
+
+		for (Element timexElement : timexElements) {
+			NormalizedTimeValue value = new NormalizedTimeValue(timexElement.getAttributeValue("VAL"));
+			TimeMLMod mod = timexElement.getAttributeValue("MOD") != null ? TimeMLMod.valueOf(timexElement.getAttributeValue("MOD")) : null;
+			
+			List<Element> mentionElements = timexElement.getChildren("timex2_mention");
+			for (Element mentionElement : mentionElements) {
+				String id = mentionElement.getAttributeValue("ID");
+				StoreReference ref = new StoreReference(storageName, TIME_EXPRESSION_COLLECTION, "id", String.valueOf(id));
+				TokenSpan tokenSpan = getSpan(mentionElement.getChild("extent").getChild("charseq"), seqSpans);
+				TimeMLDocumentFunction fn = TimeMLDocumentFunction.NONE;
+				if (tokenSpan == null) {
+					for (ACESourceDocument sourceDoc : sourceDocs) {
+						if (sourceDoc.indexInDCTStr(
+							Integer.valueOf(mentionElement.getChild("extent").getChild("charseq").getAttributeValue("START"))
+							)
+						) {
+							tokenSpan = new TokenSpan(docs.get(sourceDoc.getName()), -1, -1, -1);
+							break;
+						}
+					}
+					
+					fn = TimeMLDocumentFunction.CREATION_TIME;
+					
+					if (tokenSpan == null) {
+						System.err.println("ERROR: Failed to find document for creation time " + id);
+						System.exit(1);
+					} else {
+						PipelineNLPExtendable pipeline = new PipelineNLPExtendable();
+						pipeline.extend(new AnnotatorDocument<StoreReference>() {
+							public String getName() { return "ace_2005"; }
+							public AnnotationType<StoreReference> produces() { return AnnotationTypeNLPEvent.CREATION_TIME; };
+							public AnnotationType<?>[] requires() { return new AnnotationType<?>[] { }; }
+							public boolean measuresConfidence() { return false; }
+							public Pair<StoreReference, Double> annotate(DocumentNLP document) {
+								return new Pair<StoreReference, Double>(ref, null);
+							}
+						});
+						
+						DocumentNLPMutable doc = (DocumentNLPMutable)tokenSpan.getDocument();
+						pipeline.run(doc);
+					}
+				} 
+				
+				TimeExpression mention = new TimeExpression(dataTools, 
+															  ref,
+															  tokenSpan,
+															  id,
+															  null,
+															  TimeMLType.TIME,
+															  null,
+															  null,
+															  null,
+															  null,
+															  value,
+															  fn,
+															  false,
+															  null,
+															  null,
+															  mod);
+				
+				storedTimeExpressions.addItem(mention);
+				
+				if (fn != TimeMLDocumentFunction.CREATION_TIME) {
+					if (!annotations.containsKey(tokenSpan.getDocument().getName()))
+						annotations.put(tokenSpan.getDocument().getName(), new ArrayList<>());
+					annotations.get(tokenSpan.getDocument().getName()).add(new Triple<TokenSpan, StoreReference, Double>(tokenSpan, mention.getStoreReference(), null));
+				}
+			}
+		}		
+		
+		for (Entry<String, List<Triple<TokenSpan, StoreReference, Double>>> entry : annotations.entrySet()) {
+			PipelineNLPExtendable pipeline = new PipelineNLPExtendable();
+			pipeline.extend(new AnnotatorTokenSpan<StoreReference>() {
+				public String getName() { return "ace_2005"; }
+				public AnnotationType<StoreReference> produces() { return AnnotationTypeNLPEvent.TIME_EXPRESSION; };
+				public AnnotationType<?>[] requires() { return new AnnotationType<?>[] { }; }
+				public boolean measuresConfidence() { return false; }
+				public List<Triple<TokenSpan, StoreReference, Double>> annotate(DocumentNLP document) {
+					return entry.getValue();
+				}
+			});
+			
+			DocumentNLPMutable doc = docs.get(entry.getKey());
+			pipeline.run(doc);
+		}
+		
 		return true;
 	}
 	
