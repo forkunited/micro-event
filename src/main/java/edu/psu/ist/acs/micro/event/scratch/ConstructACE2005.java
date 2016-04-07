@@ -227,9 +227,13 @@ public class ConstructACE2005 {
 		
 		parseAndOutputEntities(annotationsRoot, annotatedDocs);
 		parseAndOutputEntityMentions(annotationsRoot, annotatedDocs, charseqSpans); 
-		
-		// FIXME Add all entities, etc
-		// FIXME Set doc creation time somewhere down here
+		parseAndOutputValues(annotationsRoot, annotatedDocs);
+		parseAndOutputValueMentions(annotationsRoot, annotatedDocs, charseqSpans); 
+		parseAndOutputEvents(annotationsRoot, annotatedDocs);
+		parseAndOutputEventMentions(annotationsRoot, annotatedDocs, charseqSpans); 
+		parseAndOutputRelations(annotationsRoot, annotatedDocs);
+		parseAndOutputRelationMentions(annotationsRoot, annotatedDocs, charseqSpans); 
+		parseAndOutputTimeExpressions(annotationsRoot, annotatedDocs, charseqSpans); 
 	
 		for (DocumentNLPMutable annotatedDoc : annotatedDocs.values())
 			storedDocuments.addItem(annotatedDoc);
@@ -319,6 +323,42 @@ public class ConstructACE2005 {
 			pipeline.run(doc);
 		}
 		
+		return true;
+	}
+	
+	private static boolean parseAndOutputValues(Element annotationsRoot, Map<String, DocumentNLPMutable> docs) {
+		// FIXME
+		return true;
+	}
+	
+	private static boolean parseAndOutputValueMentions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Element, TokenSpan> seqSpans) {
+		// FIXME
+		return true;
+	}
+	
+	private static boolean parseAndOutputEvents(Element annotationsRoot, Map<String, DocumentNLPMutable> docs) {
+		// FIXME
+		return true;
+	}
+	
+	private static boolean parseAndOutputEventMentions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Element, TokenSpan> seqSpans) {
+		// FIXME
+		return true;
+	}
+	
+	private static boolean parseAndOutputRelations(Element annotationsRoot, Map<String, DocumentNLPMutable> docs) {
+		// FIXME
+		return true;
+	}
+	
+	private static boolean parseAndOutputRelationMentions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Element, TokenSpan> seqSpans) {
+		// FIXME
+		return true;
+	}
+	
+	private static boolean parseAndOutputTimeExpressions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Element, TokenSpan> seqSpans) {
+		// FIXME
+		// Remember dct
 		return true;
 	}
 	
