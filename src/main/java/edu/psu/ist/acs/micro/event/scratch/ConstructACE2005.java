@@ -335,7 +335,7 @@ public class ConstructACE2005 {
 			String id = valueElement.getAttributeValue("ID");
 			StoreReference ref = new StoreReference(storageName, VALUE_COLLECTION, "id", String.valueOf(id));
 			Value.ACEType aceType = Value.ACEType.valueOf(valueElement.getAttributeValue("TYPE").replace('-', '_'));
-			Value.ACESubtype aceSubtype = Value.ACESubtype.valueOf(valueElement.getAttributeValue("SUBTYPE").replace('-', '_'));
+			Value.ACESubtype aceSubtype = valueElement.getAttributeValue("SUBTYPE") == null ? Value.ACESubtype.None : Value.ACESubtype.valueOf(valueElement.getAttributeValue("SUBTYPE").replace('-', '_'));
 			
 			Value value = new Value(dataTools,
 									ref,
@@ -350,17 +350,48 @@ public class ConstructACE2005 {
 	}
 	
 	private static boolean parseAndOutputValueMentions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Element, TokenSpan> seqSpans) {
-		// FIXME
-		/*
-		 * <value ID="APW_ENG_20030304.0555-V1" TYPE="Numeric" SUBTYPE="Money">
-  <value_mention ID="APW_ENG_20030304.0555-V1-1">
-    <extent>
-      <charseq START="1860" END="1870">$15 billion</charseq>
-    </extent>
-  </value_mention>
-</value>
+		Map<String, List<Triple<TokenSpan, StoreReference, Double>>> annotations = new HashMap<>();
+		List<Element> valueElements = annotationsRoot.getChild("document").getChildren("value");
 
-		 */
+		for (Element valueElement : valueElements) {
+			StoreReference valueRef = new StoreReference(storageName, VALUE_COLLECTION, "id", String.valueOf(valueElement.getAttributeValue("ID")));
+			List<Element> mentionElements = valueElement.getChildren("value_mention");
+			for (Element mentionElement : mentionElements) {
+				String id = mentionElement.getAttributeValue("ID");
+				StoreReference ref = new StoreReference(storageName, VALUE_MENTION_COLLECTION, "id", String.valueOf(id));
+				TokenSpan tokenSpan = getSpan(mentionElement.getChild("extent").getChild("charseq"), seqSpans);
+				
+				
+				ValueMention mention = new ValueMention(dataTools,
+														ref,
+														id,
+														tokenSpan,
+														valueRef);
+				
+				storedValueMentions.addItem(mention);
+				
+				if (!annotations.containsKey(tokenSpan.getDocument().getName()))
+					annotations.put(tokenSpan.getDocument().getName(), new ArrayList<>());
+				annotations.get(tokenSpan.getDocument().getName()).add(new Triple<TokenSpan, StoreReference, Double>(tokenSpan, mention.getStoreReference(), null));
+			}
+		}		
+		
+		for (Entry<String, List<Triple<TokenSpan, StoreReference, Double>>> entry : annotations.entrySet()) {
+			PipelineNLPExtendable pipeline = new PipelineNLPExtendable();
+			pipeline.extend(new AnnotatorTokenSpan<StoreReference>() {
+				public String getName() { return "ace_2005"; }
+				public AnnotationType<StoreReference> produces() { return AnnotationTypeNLPEvent.VALUE_MENTION; };
+				public AnnotationType<?>[] requires() { return new AnnotationType<?>[] { }; }
+				public boolean measuresConfidence() { return false; }
+				public List<Triple<TokenSpan, StoreReference, Double>> annotate(DocumentNLP document) {
+					return entry.getValue();
+				}
+			});
+			
+			DocumentNLPMutable doc = docs.get(entry.getKey());
+			pipeline.run(doc);
+		}
+		
 		return true;
 	}
 	
@@ -488,7 +519,7 @@ public class ConstructACE2005 {
 	
 	private static TokenSpan getSpan(Element charseq, Map<Element, TokenSpan> charseqSpans) {
 		if (!charseqSpans.containsKey(charseq)) {
-			System.out.println("Warning: Failed to find charseq " + charseq.getText() + " " + charseq.getAttributeValue("START") + " " + charseq.getAttributeValue("END") + " " + charseqSpans.size());
+			System.out.println("WARNING: Failed to find charseq " + charseq.getText() + " " + charseq.getAttributeValue("START") + " " + charseq.getAttributeValue("END") + " " + charseqSpans.size());
 		}
 		
 		return charseqSpans.get(charseq);

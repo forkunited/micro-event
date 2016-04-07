@@ -21,7 +21,8 @@ public class Value implements Argumentable {
         E_Mail,
         Percent,
         Money,
-        Phone_Number
+        Phone_Number,
+        None
 	}
 	
 	private String id;
