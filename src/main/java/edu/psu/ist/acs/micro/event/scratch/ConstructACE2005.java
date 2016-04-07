@@ -214,7 +214,7 @@ public class ConstructACE2005 {
 	
 	private static boolean parseAndOutputDocuments(File contentFile, File annotationFile) {		
 		List<ACESourceDocument> docs = constructSourceDocuments(contentFile);
-		Element annotationsRoot = getDocumentRootElementAndString(contentFile).getFirst();
+		Element annotationsRoot = getDocumentRootElementAndString(annotationFile).getFirst();
 		TreeMap<Integer, List<Element>> charseqElements = getCharseqElements(annotationsRoot);
 		Map<Element, TokenSpan> charseqSpans = new HashMap<Element, TokenSpan>();
 		Map<String, DocumentNLPMutable> annotatedDocs = new HashMap<>();
