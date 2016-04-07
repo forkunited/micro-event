@@ -23,8 +23,10 @@ import org.jdom2.JDOMException;
 import org.jdom2.Text;
 import org.jdom2.input.SAXBuilder;
 
+import edu.cmu.ml.rtw.generic.data.DataTools;
 import edu.cmu.ml.rtw.generic.data.Serializer;
 import edu.cmu.ml.rtw.generic.data.StoredItemSetInMemoryLazy;
+import edu.cmu.ml.rtw.generic.data.annotation.AnnotationType;
 import edu.cmu.ml.rtw.generic.data.annotation.DocumentSetInMemoryLazy;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.AnnotationTypeNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
@@ -34,12 +36,16 @@ import edu.cmu.ml.rtw.generic.data.annotation.nlp.SerializerDocumentNLPBSON;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.Token;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.data.store.Storage;
+import edu.cmu.ml.rtw.generic.data.store.StoreReference;
+import edu.cmu.ml.rtw.generic.model.annotator.nlp.AnnotatorTokenSpan;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLP;
+import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLPExtendable;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLPMateTools;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLPStanford;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.stanford.BSONTokenizer;
 import edu.cmu.ml.rtw.generic.util.FileUtil;
 import edu.cmu.ml.rtw.generic.util.Pair;
+import edu.cmu.ml.rtw.generic.util.Triple;
 import edu.psu.ist.acs.micro.event.data.EventDataTools;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.ACEDocumentType;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
@@ -52,6 +58,10 @@ import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.RelationMention;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Value;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.ValueMention;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Entity.ACEClass;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Entity.ACESubtype;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Entity.ACEType;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EntityMention.ACERole;
 
 public class ConstructACE2005 {
 	private static class ACESourceDocument {
@@ -215,11 +225,100 @@ public class ConstructACE2005 {
 			annotatedDocs.put(annotatedDoc.getName(), annotatedDoc);
 		}
 		
+		parseAndOutputEntities(annotationsRoot, annotatedDocs);
+		parseAndOutputEntityMentions(annotationsRoot, annotatedDocs, charseqSpans); 
+		
 		// FIXME Add all entities, etc
 		// FIXME Set doc creation time somewhere down here
 	
 		for (DocumentNLPMutable annotatedDoc : annotatedDocs.values())
 			storedDocuments.addItem(annotatedDoc);
+		
+		return true;
+	}
+	
+	private static boolean parseAndOutputEntities(Element annotationsRoot, Map<String, DocumentNLPMutable> docs) {
+		List<Element> entityElements = annotationsRoot.getChild("document").getChildren("entity");
+		for (Element entityElement : entityElements) {
+			String id = entityElement.getAttributeValue("ID");
+			StoreReference ref = new StoreReference(storageName, ENTITY_COLLECTION, "id", String.valueOf(id));
+			Entity.ACEClass aceClass = Entity.ACEClass.valueOf(entityElement.getAttributeValue("CLASS").replace('-', '_'));
+			Entity.ACEType aceType = Entity.ACEType.valueOf(entityElement.getAttributeValue("TYPE").replace('-', '_'));
+			Entity.ACESubtype aceSubtype = Entity.ACESubtype.valueOf(entityElement.getAttributeValue("SUBTYPE").replace('-', '_'));
+			
+			String defaultName = null;
+			Element attElement = entityElement.getChild("entity_attributes");
+			if (attElement != null) {
+				Element nameElement = attElement.getChild("name");
+				if (nameElement != null)
+					defaultName = nameElement.getAttributeValue("NAME");
+				
+			}
+			
+			Entity entity = new Entity(dataTools,
+										ref,
+										id,
+										defaultName,
+										aceClass,
+										aceSubtype,
+										aceType);
+			
+			storedEntities.addItem(entity);
+		}
+		
+		return true;
+	}
+	
+	private static boolean parseAndOutputEntityMentions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Element, TokenSpan> seqSpans) {
+		Map<String, List<Triple<TokenSpan, StoreReference, Double>>> annotations = new HashMap<>();
+		List<Element> entityElements = annotationsRoot.getChild("document").getChildren("entity");
+
+		for (Element entityElement : entityElements) {
+			StoreReference entityRef = new StoreReference(storageName, ENTITY_COLLECTION, "id", String.valueOf(entityElement.getAttributeValue("ID")));
+			List<Element> mentionElements = entityElement.getChildren("entity_mention");
+			for (Element mentionElement : mentionElements) {
+				String id = mentionElement.getAttributeValue("ID");
+				StoreReference ref = new StoreReference(storageName, ENTITY_MENTION_COLLECTION, "id", String.valueOf(id));
+				Boolean metonymy = mentionElement.getAttribute("METONYMY_MENTION") != null ? Boolean.valueOf(mentionElement.getAttributeValue("METONYMY_MENTION")) : null;
+				EntityMention.ACEType aceType = EntityMention.ACEType.valueOf(entityElement.getAttributeValue("TYPE").replace('-', '_'));
+				EntityMention.ACERole aceRole = EntityMention.ACERole.valueOf(entityElement.getAttributeValue("ROLE").replace('-', '_'));
+				TokenSpan tokenSpan = seqSpans.get(mentionElement.getChild("extent").getChild("charseq"));
+				TokenSpan head = mentionElement.getChild("head") != null ? seqSpans.get(mentionElement.getChild("head").getChild("charseq")) : null;
+				
+				
+				EntityMention mention = new EntityMention(dataTools,
+								  ref,
+								  id,
+								  metonymy,
+								  aceRole,
+								  aceType,
+								  tokenSpan,
+								  head,
+								  entityRef);
+				
+				storedEntityMentions.addItem(mention);
+				
+				if (!annotations.containsKey(tokenSpan.getDocument().getName()))
+					annotations.put(tokenSpan.getDocument().getName(), new ArrayList<>());
+				annotations.get(tokenSpan.getDocument().getName()).add(new Triple<TokenSpan, StoreReference, Double>(tokenSpan, mention.getStoreReference(), null));
+			}
+		}		
+		
+		for (Entry<String, List<Triple<TokenSpan, StoreReference, Double>>> entry : annotations.entrySet()) {
+			PipelineNLPExtendable pipeline = new PipelineNLPExtendable();
+			pipeline.extend(new AnnotatorTokenSpan<StoreReference>() {
+				public String getName() { return "ace_2005"; }
+				public AnnotationType<StoreReference> produces() { return AnnotationTypeNLPEvent.ENTITY_MENTION; };
+				public AnnotationType<?>[] requires() { return new AnnotationType<?>[] { }; }
+				public boolean measuresConfidence() { return false; }
+				public List<Triple<TokenSpan, StoreReference, Double>> annotate(DocumentNLP document) {
+					return entry.getValue();
+				}
+			});
+			
+			DocumentNLPMutable doc = docs.get(entry.getKey());
+			pipeline.run(doc);
+		}
 		
 		return true;
 	}

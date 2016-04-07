@@ -66,6 +66,9 @@ public class EventDataTools extends DataTools {
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.CREATION_TIME);
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.TIME_EXPRESSION);
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.EVENT_MENTION);
+		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.RELATION_MENTION);
+		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.ENTITY_MENTION);
+		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.VALUE_MENTION);
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.ACE_DOCUMENT_TYPE);
 		
 		for (TimeMLRelType relType : TimeMLRelType.values())
