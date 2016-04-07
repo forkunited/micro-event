@@ -417,7 +417,8 @@ public class ConstructACE2005 {
 						List<Element> curCharseqs = charseqEntry.getValue();
 						List<TokenSpan> spans = getTokenSpansForCharseqs(entry.getKey(), partialDoc, i, j, curCharseqs, doc, tokens.size());
 						for (int k = 0; k < curCharseqs.size(); k++)
-							charseqSpans.put(curCharseqs.get(k), spans.get(k));
+							if (spans.get(k) != null)
+								charseqSpans.put(curCharseqs.get(k), spans.get(k));
 					}
 					
 					sentenceTokens[j] = new Pair<Token, Double>(
@@ -478,6 +479,7 @@ public class ConstructACE2005 {
 					System.err.println(partialDocument.getTokenStr(partialSentenceIndex, i) + " " + (partialDocument.getToken(partialSentenceIndex, i).getCharSpanStart() + offset) + " " + (partialDocument.getToken(partialSentenceIndex, i).getCharSpanEnd() + offset));
 				}
 				System.err.println("");
+				spans.add(null);
 			}
 		}
 		
