@@ -407,14 +407,10 @@ public class ConstructACE2005 {
 					Token tempToken = partialDoc.getToken(i, j);
 					String tokenStr = tempToken.getStr();
 					
-					if (tempToken.getStr().equals("anti-Saddam")) {
-						System.out.println(tempToken.getCharSpanStart() + " " + tempToken.getCharSpanEnd() + " " + entry.getKey() + " " + charseqElements.ceilingKey(tempToken.getCharSpanStart() + entry.getKey()));
-						System.exit(1);
-					}
-					
 					int tempStartIndex = tempToken.getCharSpanStart() + entry.getKey();
-					if (charseqElements.ceilingKey(tempStartIndex) != null && charseqElements.ceilingKey(tempStartIndex) < tempToken.getCharSpanEnd() + entry.getKey()) {
-						List<Element> curCharseqs = charseqElements.get(tempStartIndex);
+					int tempEndIndex = tempToken.getCharSpanEnd() + entry.getKey();
+					for (Entry<Integer, List<Element>> charseqEntry : charseqElements.subMap(tempStartIndex, tempEndIndex).entrySet()) {
+						List<Element> curCharseqs = charseqEntry.getValue();
 						List<TokenSpan> spans = getTokenSpansForCharseqs(entry.getKey(), partialDoc, i, j, curCharseqs, doc, tokens.size());
 						for (int k = 0; k < curCharseqs.size(); k++)
 							charseqSpans.put(curCharseqs.get(k), spans.get(k));
