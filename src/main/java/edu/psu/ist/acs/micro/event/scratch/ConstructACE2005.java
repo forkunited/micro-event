@@ -439,6 +439,7 @@ public class ConstructACE2005 {
 		try {
 			String line = null;
 			while ((line = r.readLine()) != null) {
+				line = line.replace('&', '^'); // FIXME Hack
 				if (!line.startsWith("<!DOCTYPE"))
 					xmlStr.append(line).append("\n");
 				fullStr.append(line).append("\n");
