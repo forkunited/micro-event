@@ -409,10 +409,6 @@ public class ConstructACE2005 {
 					
 					int tempStartIndex = tempToken.getCharSpanStart() + entry.getKey();
 					int tempEndIndex = tempToken.getCharSpanEnd() + entry.getKey();
-					if (tempToken.getStr().equals("muckdog")) {
-						System.out.println(entry.getKey() + " " + tempStartIndex + " " + tempEndIndex);
-						System.exit(1);
-					}
 					
 					for (Entry<Integer, List<Element>> charseqEntry : charseqElements.subMap(tempStartIndex, tempEndIndex).entrySet()) {
 						List<Element> curCharseqs = charseqEntry.getValue();
@@ -598,7 +594,7 @@ public class ConstructACE2005 {
 				dctStrCharRange,
 				bodyParts));
 		
-		List<Element> postRoots = root.getChild("BODY").getChildren("POST");
+		List<Element> postRoots = root.getChild("BODY").getChildren("POST").size() == 0 ? root.getChild("BODY").getChild("TEXT").getChildren("POST") : root.getChild("BODY").getChildren("POST");
 		int postIndex = 0;
 		for (Element postRoot : postRoots) {
 			String postName = name + "_p" + postIndex;
