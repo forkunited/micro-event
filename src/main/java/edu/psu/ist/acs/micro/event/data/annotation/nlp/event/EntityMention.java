@@ -14,7 +14,8 @@ public class EntityMention implements MentionArgumentable {
 		GPE,
         LOC,
         ORG,
-        PER
+        PER,
+        NONE
 	}
 	
 	public enum ACEType {
