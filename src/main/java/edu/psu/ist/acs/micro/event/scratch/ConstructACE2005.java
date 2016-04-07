@@ -184,7 +184,7 @@ public class ConstructACE2005 {
 		Map<String, Set<String>> summary = new TreeMap<String, Set<String>>();
 		for (Entry<String, Pair<File, File>> entry : inputFiles.entrySet()) {
 			summarizeAnnotations(entry.getValue().getSecond(), summary);
-			
+			System.out.println("Processing files " + entry.getKey() + "...");
 			if (!parseAndOutputDocuments(entry.getValue().getFirst(), entry.getValue().getSecond())) {
 				throw new IllegalStateException("Failed to parse and output document " + entry.getKey());
 			}
