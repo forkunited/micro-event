@@ -201,12 +201,14 @@ public class ConstructACE2005 {
 				.getItemSet(storageName, TIME_VALUE_COLLECTION, true,(Serializer<NormalizedTimeValue, Document>)serializers.get("JSONBSONNormalizedTimeValue"));	
 		
 		Map<String, Set<String>> summary = new TreeMap<String, Set<String>>();
+		int i = 0;
 		for (Entry<String, Pair<File, File>> entry : inputFiles.entrySet()) {
 			summarizeAnnotations(entry.getValue().getSecond(), summary);
-			System.out.println("Processing files " + entry.getKey() + "...");
+			System.out.println("Processing files " + entry.getKey() + " (" + i + ")...");
 			if (!parseAndOutputDocuments(entry.getValue().getFirst(), entry.getValue().getSecond())) {
 				throw new IllegalStateException("Failed to parse and output document " + entry.getKey());
 			}
+			i++;
 		}
 		
 		System.out.println("Annotation summary");
