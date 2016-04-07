@@ -685,7 +685,6 @@ public class ConstructACE2005 {
 			String id = timexElement.getAttributeValue("ID");
 			StoreReference ref = new StoreReference(storageName, TIME_VALUE_COLLECTION, "id", String.valueOf(id));
 			String value = timexElement.getAttributeValue("VAL");
-			System.out.println(id + " " + value);
 			
 			NormalizedTimeValue tvalue = new NormalizedTimeValue(dataTools, ref, id, value);
 			storedTimeValues.addItem(tvalue);
