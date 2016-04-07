@@ -398,6 +398,9 @@ public class ConstructACE2005 {
 			
 			if (!foundSpan) {
 				System.err.println("Failed to match charseq to token span in " + spanDocument.getName() + " " + seq);
+				System.err.println("Seq: " + seq.getText() + " (" + seq.getAttributeValue("START") + " " + seq.getAttributeValue("END") + ")");
+				System.err.println("Sentence: " + partialDocument.getSentence(partialSentenceIndex));
+				
 				System.exit(1);
 			}
 		}
