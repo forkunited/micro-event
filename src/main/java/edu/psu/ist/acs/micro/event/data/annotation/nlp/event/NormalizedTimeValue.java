@@ -173,6 +173,9 @@ public class NormalizedTimeValue implements Argumentable {
 	}
 	
 	private void initPattern() {
+		if (this.value == null)
+			return;
+		
 		Matcher dateMatcher = this.DATE_PATTERN.getMatcher(this.value);
 		Matcher timeMatcher = this.TIME_PATTERN.getMatcher(this.value);
 		Matcher weekDateMatcher = this.WEEK_DATE_PATTERN.getMatcher(this.value);
