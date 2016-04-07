@@ -327,9 +327,22 @@ public class ConstructACE2005 {
 	}
 	
 	private static boolean parseAndOutputValues(Element annotationsRoot, Map<String, DocumentNLPMutable> docs) {
+		List<Element> valueElements = annotationsRoot.getChild("document").getChildren("value");
+		for (Element valueElement : valueElements) {
+			String id = valueElement.getAttributeValue("ID");
+			StoreReference ref = new StoreReference(storageName, VALUE_COLLECTION, "id", String.valueOf(id));
+			Value.ACEType aceType = Value.ACEType.valueOf(valueElement.getAttributeValue("TYPE").replace('-', '_'));
+			Value.ACESubtype aceSubtype = Value.ACESubtype.valueOf(valueElement.getAttributeValue("SUBTYPE").replace('-', '_'));
+			
+			Value value = new Value(dataTools,
+									ref,
+									id,
+									aceSubtype,
+									aceType);
+			
+			storedValues.addItem(value);
+		}
 		
-		
-		// FIXME
 		return true;
 	}
 	
