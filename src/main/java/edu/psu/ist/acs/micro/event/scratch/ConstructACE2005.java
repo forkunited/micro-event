@@ -409,6 +409,11 @@ public class ConstructACE2005 {
 					
 					int tempStartIndex = tempToken.getCharSpanStart() + entry.getKey();
 					int tempEndIndex = tempToken.getCharSpanEnd() + entry.getKey();
+					if (tempToken.getStr().equals("muckdog")) {
+						System.out.println(entry.getKey() + " " + tempStartIndex + " " + tempEndIndex);
+						System.exit(1);
+					}
+					
 					for (Entry<Integer, List<Element>> charseqEntry : charseqElements.subMap(tempStartIndex, tempEndIndex).entrySet()) {
 						List<Element> curCharseqs = charseqEntry.getValue();
 						List<TokenSpan> spans = getTokenSpansForCharseqs(entry.getKey(), partialDoc, i, j, curCharseqs, doc, tokens.size());
