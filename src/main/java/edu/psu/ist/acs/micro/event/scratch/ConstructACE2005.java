@@ -450,12 +450,12 @@ public class ConstructACE2005 {
 			for (int i = startTokenIndex; i < partialDocument.getSentenceTokenCount(partialSentenceIndex); i++) {
 				try {
 					if (partialDocument.getToken(partialSentenceIndex, i).getCharSpanEnd() + offset - 1 >= seq.getAttribute("END").getIntValue() && partialDocument.getToken(partialSentenceIndex, i).getCharSpanStart() + offset <= seq.getAttribute("END").getIntValue()) {
-						String[] seqParts = seq.getText().split("\\s+");
-						if (partialDocument.getTokenStr(partialSentenceIndex, i).contains(seqParts[seqParts.length - 1])
-								|| seqParts[seqParts.length - 1].contains(partialDocument.getTokenStr(partialSentenceIndex, i)))
+						//String[] seqParts = seq.getText().split("\\s+");
+						//if (partialDocument.getTokenStr(partialSentenceIndex, i).contains(seqParts[seqParts.length - 1])
+						//		|| seqParts[seqParts.length - 1].contains(partialDocument.getTokenStr(partialSentenceIndex, i)))
 							foundSpan = true;
-						else
-							foundSpan = false;
+						//else
+						//	foundSpan = false;
 						spans.add(new TokenSpan(spanDocument, sentenceIndex, startTokenIndex, i + 1));
 						break;
 					}
