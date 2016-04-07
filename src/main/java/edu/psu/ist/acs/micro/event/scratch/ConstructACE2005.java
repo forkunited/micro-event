@@ -557,7 +557,7 @@ public class ConstructACE2005 {
 			StoreReference ref = new StoreReference(storageName, RELATION_COLLECTION, "id", String.valueOf(id));
 			
 			Relation.ACEType aceType = Relation.ACEType.valueOf(relationElement.getAttributeValue("TYPE").replace('-', '_'));
-			Relation.ACESubtype aceSubtype = Relation.ACESubtype.valueOf(relationElement.getAttributeValue("SUBTYPE").replace('-', '_'));
+			Relation.ACESubtype aceSubtype = relationElement.getAttributeValue("SUBTYPE") == null ? null : Relation.ACESubtype.valueOf(relationElement.getAttributeValue("SUBTYPE").replace('-', '_'));
 			String modality = relationElement.getAttributeValue("MODALITY");
 			
 			List<Element> argElements = relationElement.getChildren("relation_argument");
