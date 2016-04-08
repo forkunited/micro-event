@@ -16,7 +16,6 @@ import java.util.TreeMap;
 
 import org.jdom2.Attribute;
 import org.jdom2.Content;
-import org.jdom2.DataConversionException;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -226,8 +225,8 @@ public class ConstructACE2005 {
 	private static boolean parseAndOutputDocuments(File contentFile, File annotationFile) {		
 		List<ACESourceDocument> docs = constructSourceDocuments(contentFile);
 		Element annotationsRoot = getDocumentRootElementAndString(annotationFile).getFirst();
-		TreeMap<Integer, List<Element>> charseqElements = getCharseqElements(annotationsRoot);
-		Map<Element, TokenSpan> charseqSpans = new HashMap<Element, TokenSpan>();
+		TreeMap<Integer, List<Pair<Integer, Integer>>> charseqElements = getCharseqPairs(annotationsRoot);
+		Map<Pair<Integer, Integer>, TokenSpan> charseqSpans = new HashMap<>();
 		Map<String, DocumentNLPMutable> annotatedDocs = new HashMap<>();
 		
 		for (int i = 0; i < docs.size(); i++) {
@@ -285,7 +284,7 @@ public class ConstructACE2005 {
 		return true;
 	}
 	
-	private static boolean parseAndOutputEntityMentions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Element, TokenSpan> seqSpans) {
+	private static boolean parseAndOutputEntityMentions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Pair<Integer, Integer>, TokenSpan> seqSpans) {
 		Map<String, List<Triple<TokenSpan, StoreReference, Double>>> annotations = new HashMap<>();
 		List<Element> entityElements = annotationsRoot.getChild("document").getChildren("entity");
 
@@ -361,7 +360,7 @@ public class ConstructACE2005 {
 		return true;
 	}
 	
-	private static boolean parseAndOutputValueMentions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Element, TokenSpan> seqSpans) {
+	private static boolean parseAndOutputValueMentions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Pair<Integer, Integer>, TokenSpan> seqSpans) {
 		Map<String, List<Triple<TokenSpan, StoreReference, Double>>> annotations = new HashMap<>();
 		List<Element> valueElements = annotationsRoot.getChild("document").getChildren("value");
 
@@ -456,7 +455,7 @@ public class ConstructACE2005 {
 		return true;
 	}
 	
-	private static boolean parseAndOutputEventMentions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Element, TokenSpan> seqSpans) {
+	private static boolean parseAndOutputEventMentions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Pair<Integer, Integer>, TokenSpan> seqSpans) {
 		Map<String, List<Triple<TokenSpan, StoreReference, Double>>> annotations = new HashMap<>();
 		List<Element> eventElements = annotationsRoot.getChild("document").getChildren("event");
 
@@ -602,7 +601,7 @@ public class ConstructACE2005 {
 		return true;
 	}
 	
-	private static boolean parseAndOutputRelationMentions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Element, TokenSpan> seqSpans) {
+	private static boolean parseAndOutputRelationMentions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Pair<Integer, Integer>, TokenSpan> seqSpans) {
 		Map<String, List<Triple<TokenSpan, StoreReference, Double>>> annotations = new HashMap<>();
 		List<Element> relationElements = annotationsRoot.getChild("document").getChildren("relation");
 
@@ -695,7 +694,7 @@ public class ConstructACE2005 {
 		return true;
 	}
 	
-	private static boolean parseAndOutputTimeExpressions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Element, TokenSpan> seqSpans, List<ACESourceDocument> sourceDocs) {		
+	private static boolean parseAndOutputTimeExpressions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Pair<Integer, Integer>, TokenSpan> seqSpans, List<ACESourceDocument> sourceDocs) {		
 		Map<String, List<Triple<TokenSpan, StoreReference, Double>>> annotations = new HashMap<>();
 		List<Element> timexElements = annotationsRoot.getChild("document").getChildren("timex2");
 
@@ -789,7 +788,7 @@ public class ConstructACE2005 {
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private static DocumentNLPMutable annotateDocument(ACESourceDocument sourceDocument, TreeMap<Integer, List<Element>> charseqElements, Map<Element, TokenSpan> charseqSpans) {
+	private static DocumentNLPMutable annotateDocument(ACESourceDocument sourceDocument, TreeMap<Integer, List<Pair<Integer, Integer>>> charseqPairs, Map<Pair<Integer, Integer>, TokenSpan> charseqSpans) {
 		DocumentNLPMutable doc = new DocumentNLPInMemory(dataTools, sourceDocument.getName(), "");
 		
 		TreeMap<Integer, Pair<String, String>> bodyParts = sourceDocument.getBodyParts();
@@ -811,9 +810,9 @@ public class ConstructACE2005 {
 					int tempStartIndex = tempToken.getCharSpanStart() + entry.getKey();
 					int tempEndIndex = tempToken.getCharSpanEnd() + entry.getKey();
 					
-					for (Entry<Integer, List<Element>> charseqEntry : charseqElements.subMap(tempStartIndex, tempEndIndex).entrySet()) {
-						List<Element> curCharseqs = charseqEntry.getValue();
-						List<TokenSpan> spans = getTokenSpansForCharseqs(entry.getKey(), partialDoc, i, j, curCharseqs, doc, tokens.size());
+					for (Entry<Integer, List<Pair<Integer, Integer>>> charseqEntry : charseqPairs.subMap(tempStartIndex, tempEndIndex).entrySet()) {
+						List<Pair<Integer, Integer>> curCharseqs = charseqEntry.getValue();
+						List<TokenSpan> spans = getTokenSpansForPairs(entry.getKey(), partialDoc, i, j, curCharseqs, doc, tokens.size());
 						for (int k = 0; k < curCharseqs.size(); k++)
 							if (spans.get(k) != null)
 								charseqSpans.put(curCharseqs.get(k), spans.get(k));
@@ -846,32 +845,27 @@ public class ConstructACE2005 {
 		return doc;
 	}
 	
-	private static List<TokenSpan> getTokenSpansForCharseqs(int offset, DocumentNLPMutable partialDocument, int partialSentenceIndex, int startTokenIndex, List<Element> seqs, DocumentNLPMutable spanDocument, int sentenceIndex) {
+	private static List<TokenSpan> getTokenSpansForPairs(int offset, DocumentNLPMutable partialDocument, int partialSentenceIndex, int startTokenIndex, List<Pair<Integer, Integer>> seqs, DocumentNLPMutable spanDocument, int sentenceIndex) {
 		List<TokenSpan> spans = new ArrayList<TokenSpan>();
 		
-		for (Element seq : seqs) {
+		for (Pair<Integer, Integer> seq : seqs) {
 			boolean foundSpan = false;
 			for (int i = startTokenIndex; i < partialDocument.getSentenceTokenCount(partialSentenceIndex); i++) {
-				try {
-					if (partialDocument.getToken(partialSentenceIndex, i).getCharSpanEnd() + offset - 1 >= seq.getAttribute("END").getIntValue() && partialDocument.getToken(partialSentenceIndex, i).getCharSpanStart() + offset <= seq.getAttribute("END").getIntValue()) {
-						//String[] seqParts = seq.getText().split("\\s+");
-						//if (partialDocument.getTokenStr(partialSentenceIndex, i).contains(seqParts[seqParts.length - 1])
-						//		|| seqParts[seqParts.length - 1].contains(partialDocument.getTokenStr(partialSentenceIndex, i)))
-							foundSpan = true;
-						//else
-						//	foundSpan = false;
-						spans.add(new TokenSpan(spanDocument, sentenceIndex, startTokenIndex, i + 1));
-						break;
-					}
-				} catch (DataConversionException e) {
-					System.err.println("Bad char span.  Expecting integer type.");
-					System.exit(1);
+				if (partialDocument.getToken(partialSentenceIndex, i).getCharSpanEnd() + offset - 1 >= seq.getSecond() && partialDocument.getToken(partialSentenceIndex, i).getCharSpanStart() + offset <= seq.getSecond()) {
+					//String[] seqParts = seq.getText().split("\\s+");
+					//if (partialDocument.getTokenStr(partialSentenceIndex, i).contains(seqParts[seqParts.length - 1])
+					//		|| seqParts[seqParts.length - 1].contains(partialDocument.getTokenStr(partialSentenceIndex, i)))
+						foundSpan = true;
+					//else
+					//	foundSpan = false;
+					spans.add(new TokenSpan(spanDocument, sentenceIndex, startTokenIndex, i + 1));
+					break;
 				}
 			}
 			
 			if (!foundSpan) {
 				System.err.println("WARNING: Failed to match charseq to token span in " + spanDocument.getName());
-				System.err.println("Seq: " + seq.getText() + " (" + seq.getAttributeValue("START") + " " + seq.getAttributeValue("END") + ")");
+				System.err.println("Seq: " + seq.getFirst() + " " + seq.getSecond());
 				System.err.println("Sentence: " + partialDocument.getSentence(partialSentenceIndex));
 				for (int i = startTokenIndex; i < partialDocument.getSentenceTokenCount(partialSentenceIndex); i++) {
 					System.err.println(partialDocument.getTokenStr(partialSentenceIndex, i) + " " + (partialDocument.getToken(partialSentenceIndex, i).getCharSpanStart() + offset) + " " + (partialDocument.getToken(partialSentenceIndex, i).getCharSpanEnd() + offset));
@@ -884,23 +878,48 @@ public class ConstructACE2005 {
 		return spans;
 	}
 	
-	private static TokenSpan getSpan(Element charseq, Map<Element, TokenSpan> charseqSpans) {
-		if (!charseqSpans.containsKey(charseq)) {
+	private static TokenSpan getSpan(Element charseq, Map<Pair<Integer, Integer>, TokenSpan> charseqSpans) {
+		int start = Integer.valueOf(charseq.getAttributeValue("START"));
+		int end = Integer.valueOf(charseq.getAttributeValue("END"));
+		Pair<Integer, Integer> seqPair = new Pair<Integer, Integer>(start, end);
+		
+		if (!charseqSpans.containsKey(seqPair)) {
 			System.out.println("WARNING: Failed to find charseq " + charseq.getText() + " " + charseq.getAttributeValue("START") + " " + charseq.getAttributeValue("END") + " " + charseqSpans.size());
 		}
 		
-		return charseqSpans.get(charseq);
+		int dotIndex = charseq.getText().lastIndexOf(".");
+		if (dotIndex >= 0) {
+			int otherStart = dotIndex + start + 1;
+			if (otherStart <= end) {
+				seqPair.setFirst(otherStart);
+			}
+		}
+		
+		return charseqSpans.get(seqPair);
 	}
 	
-	private static TreeMap<Integer, List<Element>> getCharseqElements(Element annotationsRoot) {
-		TreeMap<Integer, List<Element>> seqs = new TreeMap<>();
+	private static TreeMap<Integer, List<Pair<Integer, Integer>>> getCharseqPairs(Element annotationsRoot) {
+		TreeMap<Integer, List<Pair<Integer, Integer>>> seqs = new TreeMap<>();
 		List<Element> elements = traverse(annotationsRoot);
 		for (Element element : elements) {
 			if (element.getName().equals("charseq")) {
-				int startIndex = Integer.valueOf(element.getAttribute("START").getValue());
-				if (!seqs.containsKey(startIndex))
-					seqs.put(startIndex, new ArrayList<>());
-				seqs.get(startIndex).add(element);
+				int start = Integer.valueOf(element.getAttribute("START").getValue());
+				int end = Integer.valueOf(element.getAttribute("END").getValue());
+				if (!seqs.containsKey(start))
+					seqs.put(start, new ArrayList<>());
+
+				seqs.get(start).add(new Pair<Integer, Integer>(start, end));
+				
+				int dotIndex = element.getText().lastIndexOf(".");
+				if (dotIndex >= 0) {
+					int otherStart = dotIndex + start + 1;
+					if (otherStart <= end) {
+						if (!seqs.containsKey(otherStart))
+							seqs.put(otherStart, new ArrayList<>());
+						seqs.get(otherStart).add(new Pair<Integer, Integer>(otherStart, end));
+					}
+				}
+				
 			}
 		}
 		return seqs;
