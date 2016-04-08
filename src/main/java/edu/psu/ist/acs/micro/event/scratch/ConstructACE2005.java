@@ -885,6 +885,8 @@ public class ConstructACE2005 {
 		
 		if (!charseqSpans.containsKey(seqPair)) {
 			System.out.println("WARNING: Failed to find charseq " + charseq.getText() + " " + charseq.getAttributeValue("START") + " " + charseq.getAttributeValue("END") + " " + charseqSpans.size());
+		} else {
+			return charseqSpans.get(seqPair);
 		}
 		
 		int dotIndex = charseq.getText().lastIndexOf(".");
