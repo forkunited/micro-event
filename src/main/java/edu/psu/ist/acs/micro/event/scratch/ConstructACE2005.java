@@ -209,8 +209,10 @@ public class ConstructACE2005 {
 		ThreadMapper<Entry<String, Pair<File, File>>, Boolean> mapper = new ThreadMapper<Entry<String, Pair<File, File>>, Boolean>(new ThreadMapper.Fn<Entry<String, Pair<File, File>>, Boolean>() {
 			@Override
 			public Boolean apply(Entry<String, Pair<File, File>> item) {
-				System.out.println("Processing files " + item.getKey() + "...");
-				return parseAndOutputDocuments(item.getValue().getFirst(), item.getValue().getSecond());
+				System.out.println("Processing " + item.getKey() + "...");
+				boolean ret = parseAndOutputDocuments(item.getValue().getFirst(), item.getValue().getSecond());
+				System.out.println("Finished processing " + item.getKey() + ".");
+				return ret;
 			}
 		});
 		
