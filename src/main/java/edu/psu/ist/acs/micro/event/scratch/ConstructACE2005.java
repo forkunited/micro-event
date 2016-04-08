@@ -891,9 +891,22 @@ public class ConstructACE2005 {
 		
 		int dotIndex = charseq.getText().lastIndexOf(".");
 		if (dotIndex >= 0) {
-			int otherStart = dotIndex + start + 1;
-			if (otherStart <= end) {
-				seqPair.setFirst(otherStart);
+			char[] chars = charseq.getText().toCharArray();
+			int i = 0;
+			boolean foundTok = false;
+			for (i = dotIndex + 1; i < chars.length; i++) {
+				if (!Character.isWhitespace(chars[i])) {
+					foundTok = true;
+					break;
+				}
+					
+			}
+			
+			if (foundTok) {
+				int otherStart = dotIndex + start + 1;
+				if (otherStart <= end) {
+					seqPair.setFirst(otherStart);
+				}
 			}
 		}
 		
@@ -914,11 +927,24 @@ public class ConstructACE2005 {
 				
 				int dotIndex = element.getText().lastIndexOf(".");
 				if (dotIndex >= 0) {
-					int otherStart = dotIndex + start + 1;
-					if (otherStart <= end) {
-						if (!seqs.containsKey(otherStart))
-							seqs.put(otherStart, new ArrayList<>());
-						seqs.get(otherStart).add(new Pair<Integer, Integer>(otherStart, end));
+					char[] chars = element.getText().toCharArray();
+					int i = 0;
+					boolean foundTok = false;
+					for (i = dotIndex + 1; i < chars.length; i++) {
+						if (!Character.isWhitespace(chars[i])) {
+							foundTok = true;
+							break;
+						}
+							
+					}
+					
+					if (foundTok) {
+						int otherStart = i + start;
+						if (otherStart <= end) {
+							if (!seqs.containsKey(otherStart))
+								seqs.put(otherStart, new ArrayList<>());
+							seqs.get(otherStart).add(new Pair<Integer, Integer>(otherStart, end));
+						}
 					}
 				}
 				
