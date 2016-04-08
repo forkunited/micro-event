@@ -44,6 +44,7 @@ import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLPStanford;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.stanford.BSONTokenizer;
 import edu.cmu.ml.rtw.generic.util.FileUtil;
 import edu.cmu.ml.rtw.generic.util.Pair;
+import edu.cmu.ml.rtw.generic.util.ThreadMapper;
 import edu.cmu.ml.rtw.generic.util.Triple;
 import edu.psu.ist.acs.micro.event.data.EventDataTools;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.ACEDocumentType;
@@ -138,7 +139,8 @@ public class ConstructACE2005 {
 	
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
-		storageName = args[0];
+		int maxThreads = Integer.valueOf(args[0]);
+		storageName = args[1];
 		Map<String, Pair<File, File>> inputFiles = getInputFiles(args);
 		
 		dataTools = new EventDataTools();
@@ -200,15 +202,22 @@ public class ConstructACE2005 {
 				.getItemSet(storageName, TIME_VALUE_COLLECTION, true,(Serializer<NormalizedTimeValue, Document>)serializers.get("JSONBSONNormalizedTimeValue"));	
 		
 		Map<String, Set<String>> summary = new TreeMap<String, Set<String>>();
-		int i = 0;
 		for (Entry<String, Pair<File, File>> entry : inputFiles.entrySet()) {
 			summarizeAnnotations(entry.getValue().getSecond(), summary);
-			System.out.println("Processing files " + entry.getKey() + " (" + i + ")...");
-			if (!parseAndOutputDocuments(entry.getValue().getFirst(), entry.getValue().getSecond())) {
-				throw new IllegalStateException("Failed to parse and output document " + entry.getKey());
-			}
-			i++;
 		}
+		
+		ThreadMapper<Entry<String, Pair<File, File>>, Boolean> mapper = new ThreadMapper<Entry<String, Pair<File, File>>, Boolean>(new ThreadMapper.Fn<Entry<String, Pair<File, File>>, Boolean>() {
+			@Override
+			public Boolean apply(Entry<String, Pair<File, File>> item) {
+				System.out.println("Processing files " + item.getKey() + "...");
+				return parseAndOutputDocuments(item.getValue().getFirst(), item.getValue().getSecond());
+			}
+		});
+		
+		List<Boolean> retVals = mapper.run(inputFiles.entrySet(), maxThreads);
+		for (Boolean retVal : retVals)
+			if (!retVal)
+				throw new IllegalStateException("Failed to parse and output document");
 		
 		System.out.println("Annotation summary");
 		for (Entry<String, Set<String>> entry : summary.entrySet()) {
@@ -722,8 +731,7 @@ public class ConstructACE2005 {
 					fn = TimeMLDocumentFunction.CREATION_TIME;
 					
 					if (tokenSpan == null) {
-						System.err.println("ERROR: Failed to find document for creation time " + id);
-						System.exit(1);
+						System.err.println("WARNING: Failed to find document for creation time " + id);
 					} else {
 						PipelineNLPExtendable pipeline = new PipelineNLPExtendable();
 						pipeline.extend(new AnnotatorDocument<StoreReference>() {
@@ -740,6 +748,9 @@ public class ConstructACE2005 {
 						pipeline.run(doc);
 					}
 				} 
+				
+				if (tokenSpan == null)
+					continue;
 				
 				TimeExpression mention = new TimeExpression(dataTools, 
 															  ref,
@@ -1103,7 +1114,7 @@ public class ConstructACE2005 {
 	
 	private static Map<String, Pair<File, File>> getInputFiles(String[] args) {		
 		Map<String, Pair<File, File>> files = new HashMap<>();
-		for (int i = 1; i < args.length; i++) {
+		for (int i = 2; i < args.length; i++) {
 			String inputDirPath = args[i];
 			File inputDir = new File(inputDirPath);
 			File[] inputDirFiles = inputDir.listFiles();
