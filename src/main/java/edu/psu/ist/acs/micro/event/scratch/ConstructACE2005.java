@@ -1218,7 +1218,7 @@ public class ConstructACE2005 {
 					parts.put(offset, new Pair<String, String>(element.getName(), text.getText()));
 				offset += text.getText().length();
 			} else if (content.get(i) instanceof Element) {
-				offset = getElementParts((Element)content.get(i), offset, parts, except, (inExcept || element.getName().equals(except)));
+				offset = getElementParts((Element)content.get(i), offset, parts, except, (inExcept || ((Element)content.get(i)).getName().equals(except)));
 			}
 		}
 		
