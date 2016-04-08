@@ -903,7 +903,7 @@ public class ConstructACE2005 {
 			}
 			
 			if (foundTok) {
-				int otherStart = dotIndex + start + 1;
+				int otherStart = i + start;
 				if (otherStart <= end) {
 					seqPair.setFirst(otherStart);
 				}
