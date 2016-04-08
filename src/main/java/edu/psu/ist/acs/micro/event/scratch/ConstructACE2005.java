@@ -240,10 +240,12 @@ public class ConstructACE2005 {
 		Map<Pair<Integer, Integer>, TokenSpan> charseqSpans = new HashMap<>();
 		Map<String, DocumentNLPMutable> annotatedDocs = new HashMap<>();
 		
-		for (int i = 0; i < docs.size(); i++) {
-			DocumentNLPMutable annotatedDoc = annotateDocument(docs.get(i), charseqElements, charseqSpans);
-			annotatedDoc.setDocumentAnnotation("ace_2005", AnnotationTypeNLPEvent.ACE_DOCUMENT_TYPE, new Pair<ACEDocumentType, Double>(docs.get(i).getType(), null));
-			annotatedDocs.put(annotatedDoc.getName(), annotatedDoc);
+		synchronized (nlpPipeline) {
+			for (int i = 0; i < docs.size(); i++) {
+				DocumentNLPMutable annotatedDoc = annotateDocument(docs.get(i), charseqElements, charseqSpans);
+				annotatedDoc.setDocumentAnnotation("ace_2005", AnnotationTypeNLPEvent.ACE_DOCUMENT_TYPE, new Pair<ACEDocumentType, Double>(docs.get(i).getType(), null));
+				annotatedDocs.put(annotatedDoc.getName(), annotatedDoc);
+			}
 		}
 		
 		parseAndOutputEntities(annotationsRoot, annotatedDocs);
