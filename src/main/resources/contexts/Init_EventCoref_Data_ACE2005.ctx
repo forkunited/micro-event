@@ -1,6 +1,6 @@
-data trainData = ACE2005EventMentionPairCoref(storage="EventBson", collection="ace_ementions", part="TRAIN");
-data devData = ACE2005EventMentionPairCoref(storage="EventBson", collection="ace_ementions", part="DEV");
-data testData = ACE2005EventMentionPairCoref(storage="EventBson", collection="ace_ementions", part="TEST");
+data trainData = ACE2005EventMentionPairCoref(storage="EventBson", collection="ace_docs", part="TRAIN");
+data devData = ACE2005EventMentionPairCoref(storage="EventBson", collection="ace_docs", part="DEV");
+data testData = ACE2005EventMentionPairCoref(storage="EventBson", collection="ace_docs", part="TEST");
 
 value countACE2005EventCorefTrainData = SizeData(data=${trainData});
 value countACE2005EventCorefDevData = SizeData(data=${devData});
