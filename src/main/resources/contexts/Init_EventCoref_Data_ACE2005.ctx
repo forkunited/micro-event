@@ -1,0 +1,15 @@
+data trainData = ACE2005EventMentionPairCoref(storage="EventBson", collection="ace_ementions", part="TRAIN");
+data devData = ACE2005EventMentionPairCoref(storage="EventBson", collection="ace_ementions", part="DEV");
+data testData = ACE2005EventMentionPairCoref(storage="EventBson", collection="ace_ementions", part="TEST");
+
+value countACE2005EventCorefTrainData = SizeData(data=${trainData});
+value countACE2005EventCorefDevData = SizeData(data=${devData});
+value countACE2005EventCorefTestData = SizeData(data=${testData});
+value debugTrainData = OutputDebug(refs=(${countACE2005EventCorefTrainData}));
+value debugDevData = OutputDebug(refs=(${countACE2005EventCorefDevData}));
+value debugTestData = OutputDebug(refs=(${countACE2005EventCorefTestData}));
+
+classify_task devTask = Classification(data=${devData});
+classify_task testTask = Classification(data=${testData});
+  
+structurizer docStruct = DocumentNLPGraphEventMentionPair();

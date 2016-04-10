@@ -1,0 +1,9 @@
+value maxThreads="30";
+value debug=Debug(file="Test_Init_Data.out");
+value randomSeed=SetRandomSeed(seed="1");
+
+context tlinkTypeDataTBD=TLinkType(initScript="Init_TLinkType_Data_TBD.ctx");
+context tlinkTypeLabelsTBD=TLinkType(initScript="Init_TLinkType_Labels_TBD.ctx");
+
+context eventCorefDataACE2005=EventMentionPairCoref(initScript="Init_EventCoref_Data_ACE2005.ctx");
+context eventCorefLabelsACE2005=EventMentionPairCoref(initScript="Init_EventCoref_Labels_ACE2005.ctx");

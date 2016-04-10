@@ -12,6 +12,8 @@ import edu.cmu.ml.rtw.generic.data.annotation.nlp.ConstituencyParse;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.data.store.StoreReference;
+import edu.cmu.ml.rtw.generic.structure.WeightedStructureRelationBinary;
+import edu.cmu.ml.rtw.generic.structure.WeightedStructureRelationUnary;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkable.Type;
@@ -79,7 +81,11 @@ public class TLinkDatum<L> extends Datum<L> {
 			public TimeMLRelType labelFromString(String str) {
 				if (str == null)
 					return null;
-				return TimeMLRelType.valueOf(str);
+				try {
+					return TimeMLRelType.valueOf(str);
+				} catch (IllegalArgumentException e) {
+					return null;
+				}
 			}
 		};
 	
@@ -117,6 +123,9 @@ public class TLinkDatum<L> extends Datum<L> {
 		});
 
 		tools.addGenericDataSetBuilder(new DataSetBuilderTimeBankDense());
+		
+		for (TimeMLRelType relType : TimeMLRelType.values())
+			dataTools.addGenericWeightedStructure(new WeightedStructureRelationBinary(relType.toString()));
 		
 		return tools;
 	}
@@ -290,6 +299,7 @@ public class TLinkDatum<L> extends Datum<L> {
 			});
 			
 			this.addGenericStructurizer(new StructurizerTLinkDocument<L>());
+			dataTools.addGenericWeightedStructure(new WeightedStructureRelationUnary("O"));
 		}
 		
 		@Override

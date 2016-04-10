@@ -8,14 +8,14 @@ import edu.cmu.ml.rtw.generic.data.Gazetteer;
 import edu.cmu.ml.rtw.generic.data.Serializer;
 import edu.cmu.ml.rtw.generic.data.SerializerJSONBSON;
 import edu.cmu.ml.rtw.generic.data.annotation.DatumContext;
-import edu.cmu.ml.rtw.generic.structure.WeightedStructureRelationBinary;
-import edu.cmu.ml.rtw.generic.structure.WeightedStructureRelationUnary;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.CorefRelType;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Entity;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EntityMention;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Event;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMentionPairDatum;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.NormalizedTimeValue;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Relation;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.RelationMention;
@@ -63,7 +63,9 @@ public class EventDataTools extends DataTools {
 		
 		this.addGenericContext(new DatumContext<TLinkDatum<TimeMLRelType>, TimeMLRelType>(TLinkDatum.getTimeMLRelTypeTools(this), "TLinkType"));
 		this.addGenericContext(new DatumContext<TLinkDatum<Boolean>, Boolean>(TLinkDatum.getBooleanTools(this), "TLinkBoolean"));
-	
+		this.addGenericContext(new DatumContext<EventMentionPairDatum<CorefRelType>, CorefRelType>(EventMentionPairDatum.getCorefRelTypeTools(this), "EventMentionPairCoref"));
+		this.addGenericContext(new DatumContext<EventMentionPairDatum<Boolean>, Boolean>(EventMentionPairDatum.getBooleanTools(this), "EventMentionPairBoolean"));
+
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.CREATION_TIME);
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.TIME_EXPRESSION);
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.EVENT_MENTION);
@@ -71,10 +73,6 @@ public class EventDataTools extends DataTools {
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.ENTITY_MENTION);
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.VALUE_MENTION);
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.ACE_DOCUMENT_TYPE);
-		
-		for (TimeMLRelType relType : TimeMLRelType.values())
-			this.addGenericWeightedStructure(new WeightedStructureRelationBinary(relType.toString()));
-		this.addGenericWeightedStructure(new WeightedStructureRelationUnary("O"));
 	}
 	
 	@Override

@@ -47,23 +47,12 @@ public class DataSetBuilderTimeBankDense extends DataSetBuilder<TLinkDatum<TimeM
 	private LabelMapping<TimeMLRelType> labelMapping;
 	private String[] parameterNames = { "storage", "collection", "part", "labelMapping" };
 	
-	private static Integer datumId = 1;
-	
 	public DataSetBuilderTimeBankDense() {
 		this(null);
 	}
 	
 	public DataSetBuilderTimeBankDense(DatumContext<TLinkDatum<TimeMLRelType>, TimeMLRelType> context) {
 		this.context = context;
-	}
-	
-	private int getNextDatumId() {
-		int nextDatumId = 0;
-		synchronized (datumId) {
-			nextDatumId = datumId;
-			datumId++;
-		}
-		return nextDatumId;
 	}
 	
 	@Override
@@ -99,7 +88,6 @@ public class DataSetBuilderTimeBankDense extends DataSetBuilder<TLinkDatum<TimeM
 		return true;
 	}
 
-
 	@Override
 	public DataSetBuilder<TLinkDatum<TimeMLRelType>, TimeMLRelType> makeInstance(
 			DatumContext<TLinkDatum<TimeMLRelType>, TimeMLRelType> context) {
@@ -129,7 +117,7 @@ public class DataSetBuilderTimeBankDense extends DataSetBuilder<TLinkDatum<TimeM
 				
 				synchronized (data) {
 					data.add(new TLinkDatum<TimeMLRelType>(
-						getNextDatumId(), tlink, (labelMapping != null) ? labelMapping.map(tlink.getTimeMLRelType()) : tlink.getTimeMLRelType()));
+						Integer.valueOf(tlink.getId()), tlink, (labelMapping != null) ? labelMapping.map(tlink.getTimeMLRelType()) : tlink.getTimeMLRelType()));
 				}
 				
 				return true;
