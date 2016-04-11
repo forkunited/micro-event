@@ -171,6 +171,11 @@ public class EventMentionPairDatum<L> extends Datum<L> {
 				
 				@Override
 				public TokenSpan[] extract(EventMentionPairDatum<L> datum) {
+					if (datum.getSourceMention().getExtent() == null || datum.getTargetMention().getExtent() == null) {
+						System.out.println("NULL event extent " + datum.getSourceMention().getId() + " " + datum.getTargetMention().getId());
+						System.exit(0);
+					}
+					
 					return new TokenSpan[] {  datum.getSourceMention().getExtent(),
 							datum.getTargetMention().getExtent() };
 				}
