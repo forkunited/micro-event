@@ -804,8 +804,8 @@ public class ConstructACE2005 {
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static DocumentNLPMutable annotateDocument(ACESourceDocument sourceDocument, TreeMap<Integer, List<Pair<Integer, Integer>>> charseqPairs, Map<Pair<Integer, Integer>, TokenSpan> charseqSpans) {
-		DocumentNLPMutable doc = new DocumentNLPInMemory(dataTools, sourceDocument.getName(), "");
-		
+		DocumentNLPMutable doc = new DocumentNLPInMemory(dataTools, sourceDocument.getName(), storageName, DOCUMENT_COLLECTION, "");
+
 		TreeMap<Integer, Pair<String, String>> bodyParts = sourceDocument.getBodyParts();
 		
 		List<Pair[]> tokens = new ArrayList<Pair[]>();

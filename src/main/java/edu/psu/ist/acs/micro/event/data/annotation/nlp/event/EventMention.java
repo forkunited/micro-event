@@ -345,8 +345,6 @@ public class EventMention implements TLinkable, MentionArgumentable {
 				this.id = json.getString("id");
 			if (json.has("tokenSpan")) {
 				this.tokenSpan = TokenSpan.fromJSON(json.getJSONObject("tokenSpan"), this.dataTools.getStoredItemSetManager());
-				System.err.println("Span null" + this.id);
-				System.exit(1);
 			}
 			if (json.has("sourceId"))
 				this.sourceId = json.getString("sourceId");
