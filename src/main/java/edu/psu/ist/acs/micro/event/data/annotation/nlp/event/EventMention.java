@@ -343,8 +343,11 @@ public class EventMention implements TLinkable, MentionArgumentable {
 		try {
 			if (json.has("id"))
 				this.id = json.getString("id");
-			if (json.has("tokenSpan"))
+			if (json.has("tokenSpan")) {
 				this.tokenSpan = TokenSpan.fromJSON(json.getJSONObject("tokenSpan"), this.dataTools.getStoredItemSetManager());
+				System.err.println("Span null" + this.id);
+				System.exit(1);
+			}
 			if (json.has("sourceId"))
 				this.sourceId = json.getString("sourceId");
 			if (json.has("sourceInstanceId"))
@@ -388,6 +391,7 @@ public class EventMention implements TLinkable, MentionArgumentable {
 				}
 			}
 		} catch (JSONException e) {
+			e.printStackTrace();
 			return false;
 		}
 		
