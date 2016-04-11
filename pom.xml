@@ -6,6 +6,7 @@
   <packaging>jar</packaging>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <nd4j.version>0.4-rc3.8</nd4j.version> <!-- word2vec -->
   </properties>
   <build>
     <plugins>
@@ -27,6 +28,11 @@
 	</extensions>
   </build>
   <dependencies>
+  	<dependency>
+		<groupId>org.nd4j</groupId>
+		<artifactId>nd4j-x86</artifactId> 
+		<version>${nd4j.version}</version>
+	</dependency>
     <dependency>
  		<groupId>org.json</groupId>
  		<artifactId>json</artifactId>
