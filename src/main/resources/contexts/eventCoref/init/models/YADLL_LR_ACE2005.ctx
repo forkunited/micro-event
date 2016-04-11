@@ -1,30 +1,30 @@
-feature_set fs = FeatureSet(features=(${featuresEventCoref.fheadPosPair}
-									  ${featuresEventCoref.fheadLemmaPair}
-									  ${featuresEventCoref.fheadPosSame}
-									  ${featuresEventCoref.fheadLemmaSame}
-									  ${featuresEventCoref.fpredSenseSame}
-									  ${featuresEventCoref.fw2vHeadSimilarity}
-									  ${featuresEventCoref.fheadSynsetSimilarity}
-									  ${featuresEventCoref.fextentSimilarity}
-									  ${featuresEventCoref.fcontextB3Similarity}
-									  ${featuresEventCoref.fcontextA3Similarity}
-									  ${featuresEventCoref.fArg0LemmaSimilarity}
-									  ${featuresEventCoref.fArg1LemmaSimilarity}
-									  ${featuresEventCoref.fArg2LemmaSimilarity}
-									  ${featuresEventCoref.fArg3LemmaSimilarity}
-									  ${featuresEventCoref.fArg4LemmaSimilarity}
-									  ${featuresEventCoref.fArg5LemmaSimilarity}
-									  ${featuresEventCoref.fArgTmpLemmaSimilarity}
-									  ${featuresEventCoref.fArgLocLemmaSimilarity}
-									  ${featuresEventCoref.fArgMnrLemmaSimilarity}
-									  ${featuresEventCoref.fw2vArg0HeadSimilarity}
-									  ${featuresEventCoref.fw2vArg1HeadSimilarity}
-									  ${featuresEventCoref.fw2vArg2HeadSimilarity}
-									  ${featuresEventCoref.fw2vArg3HeadSimilarity}
-									  ${featuresEventCoref.fw2vArg4HeadSimilarity}
-									  ${featuresEventCoref.fw2vArg5HeadSimilarity}
-									  ${featuresEventCoref.fw2vArgTmpHeadSimilarity}
-									  ${featuresEventCoref.fw2vArgLocHeadSimilarity}
+feature_set fs = FeatureSet(features=(${featuresEventCoref.fheadPosPair},
+									  ${featuresEventCoref.fheadLemmaPair},
+									  ${featuresEventCoref.fheadPosSame},
+									  ${featuresEventCoref.fheadLemmaSame},
+									  ${featuresEventCoref.fpredSenseSame},
+									  ${featuresEventCoref.fw2vHeadSimilarity},
+									  ${featuresEventCoref.fheadSynsetSimilarity},
+									  ${featuresEventCoref.fextentSimilarity},
+									  ${featuresEventCoref.fcontextB3Similarity},
+									  ${featuresEventCoref.fcontextA3Similarity},
+									  ${featuresEventCoref.fArg0LemmaSimilarity},
+									  ${featuresEventCoref.fArg1LemmaSimilarity},
+									  ${featuresEventCoref.fArg2LemmaSimilarity},
+									  ${featuresEventCoref.fArg3LemmaSimilarity},
+									  ${featuresEventCoref.fArg4LemmaSimilarity},
+									  ${featuresEventCoref.fArg5LemmaSimilarity},
+									  ${featuresEventCoref.fArgTmpLemmaSimilarity},
+									  ${featuresEventCoref.fArgLocLemmaSimilarity},
+									  ${featuresEventCoref.fArgMnrLemmaSimilarity},
+									  ${featuresEventCoref.fw2vArg0HeadSimilarity},
+									  ${featuresEventCoref.fw2vArg1HeadSimilarity},
+									  ${featuresEventCoref.fw2vArg2HeadSimilarity},
+									  ${featuresEventCoref.fw2vArg3HeadSimilarity},
+									  ${featuresEventCoref.fw2vArg4HeadSimilarity},
+									  ${featuresEventCoref.fw2vArg5HeadSimilarity},
+									  ${featuresEventCoref.fw2vArgTmpHeadSimilarity},
+									  ${featuresEventCoref.fw2vArgLocHeadSimilarity},
 									  ${featuresEventCoref.fw2vArgMnrHeadSimilarity}), 
 								initData=(${dataEventCorefACE2005.trainData}));
 
