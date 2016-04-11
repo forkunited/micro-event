@@ -1,2 +1,2 @@
 array labels = ("BEFORE", "AFTER", "INCLUDES", "IS_INCLUDED", "SIMULTANEOUS", "VAGUE");
-array count = SizeArray(${labels});
+array count = SizeArray(array=${labels});
