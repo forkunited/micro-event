@@ -163,6 +163,18 @@ public class EventMentionPairDatum<L> extends Datum<L> {
 				}
 			});
 			
+			this.addTokenSpanExtractor(new TokenSpanExtractor<EventMentionPairDatum<L>, L>() {
+				@Override
+				public String toString() {
+					return "SourceTargetExtent";
+				}
+				
+				@Override
+				public TokenSpan[] extract(EventMentionPairDatum<L> datum) {
+					return new TokenSpan[] {  datum.getSourceMention().getExtent(),
+							datum.getTargetMention().getExtent() };
+				}
+			});
 			
 			this.addDatumIndicator(new DatumIndicator<EventMentionPairDatum<L>>() {
 				public String toString() { return "PositionWithinSentence"; }

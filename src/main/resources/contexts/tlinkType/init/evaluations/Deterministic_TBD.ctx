@@ -1,0 +1,61 @@
+classify_eval devAdjETPrecision = Precision(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeDet.adjET}, mode="MICRO");
+classify_eval devAdjETRecall = Recall(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeDet.adjET}, mode="MICRO");
+classify_eval testAdjETPrecision = Precision(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeDet.adjET}, mode="MICRO");
+classify_eval testAdjETRecall = Recall(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeDet.adjET}, mode="MICRO");
+
+classify_eval devGenGovPrecision = Precision(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeDet.genGov}, mode="MICRO");
+classify_eval devGenGovRecall = Recall(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeDet.genGov}, mode="MICRO");
+classify_eval testGenGovPrecision = Precision(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeDet.genGov}, mode="MICRO");
+classify_eval testGenGovRecall = Recall(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeDet.genGov}, mode="MICRO");
+
+classify_eval devReichenbachPrecision = Precision(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeDet.reichenbach}, mode="MICRO");
+classify_eval devReichenbachRecall = Recall(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeDet.reichenbach}, mode="MICRO");
+classify_eval testReichenbachPrecision = Precision(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeDet.reichenbach}, mode="MICRO");
+classify_eval testReichenbachRecall = Recall(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeDet.reichenbach}, mode="MICRO");
+
+classify_eval devRepGovPrecision = Precision(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeDet.repGov}, mode="MICRO");
+classify_eval devRepGovRecall = Recall(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeDet.repGov}, mode="MICRO");
+classify_eval testRepGovPrecision = Precision(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeDet.repGov}, mode="MICRO");
+classify_eval testRepGovRecall = Recall(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeDet.repGov}, mode="MICRO");
+
+classify_eval devTimeTimePrecision = Precision(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeDet.timeTime}, mode="MICRO");
+classify_eval devTimeTimeRecall = Recall(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeDet.timeTime}, mode="MICRO");
+classify_eval testTimeTimePrecision = Precision(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeDet.timeTime}, mode="MICRO");
+classify_eval testTimeTimeRecall = Recall(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeDet.timeTime}, mode="MICRO");
+
+classify_eval devWordNetPrecision = Precision(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeDet.wordNet}, mode="MICRO");
+classify_eval devWordNetRecall = Recall(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeDet.wordNet}, mode="MICRO");
+classify_eval testWordNetPrecision = Precision(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeDet.wordNet}, mode="MICRO");
+classify_eval testWordNetRecall = Recall(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeDet.wordNet}, mode="MICRO");
+
+classify_eval devReportingDCTPrecision = Precision(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeDet.reportingDCT}, mode="MICRO");
+classify_eval devReportingDCTRecall = Recall(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeDet.reportingDCT}, mode="MICRO");
+classify_eval testReportingDCTPrecision = Precision(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeDet.reportingDCT}, mode="MICRO");
+classify_eval testReportingDCTRecall = Recall(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeDet.reportingDCT}, mode="MICRO");
+
+classify_eval devAllVaguePrecision = Precision(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeDet.allVague}, mode="MICRO");
+classify_eval devAllVagueRecall = Recall(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeDet.allVague}, mode="MICRO");
+classify_eval testAllVaguePrecision = Precision(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeDet.allVague}, mode="MICRO");
+classify_eval testAllVagueRecall = Recall(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeDet.allVague}, mode="MICRO");
+
+value strEvals = 
+	OutputStrings(id="Evaluation_TLinkType_Deterministic_TBD", storage="EventString", collection="ExperimentEvaluationOutput", 
+                 refs=
+                 (
+	                 ${devAdjETPrecision}, ${devAdjETRecall},
+	                 ${testAdjETPrecision}, ${testAdjETRecall},
+	                 ${devGenGovPrecision}, ${devGenGovRecall},
+	                 ${testGenGovPrecision}, ${testGenGovRecall},
+	                 ${devReichenbachPrecision}, ${devReichenbachRecall},
+	                 ${testReichenbachPrecision}, ${testReichenbachRecall},
+	                 ${devRepGovPrecision}, ${devRepGovRecall},
+	                 ${testRepGovPrecision}, ${testRepGovRecall}, 
+	                 ${devTimeTimePrecision}, ${devTimeTimeRecall},
+	                 ${testTimeTimePrecision}, ${testTimeTimeRecall},     
+	                 ${devWordNetPrecision}, ${devWordNetRecall},
+	                 ${testWordNetPrecision}, ${testWordNetRecall},
+	                 ${devReportingDCTPrecision}, ${devReportingDCTRecall},
+	                 ${testReportingDCTPrecision}, ${testReportingDCTRecall},
+	                 ${devAllVaguePrecision}, ${devAllVagueRecall},
+	                 ${testAllVaguePrecision}, ${testAllVagueRecall}
+                 ));

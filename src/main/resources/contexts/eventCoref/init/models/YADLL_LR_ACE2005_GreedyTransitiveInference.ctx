@@ -1,0 +1,7 @@
+structure_fn graphPaths = GraphPaths(length="2");
+structure_fn greedyCorefTransitiveRules = GreedyStructureRules(rules=${rulesEventCorefTransitive.rules}, splitFn=${graphPaths});
+
+multi_classify_method sieve = Sieve(methods=(${modelsEventCorefYadllLr.yadll}),                                   
+                                    structurizers=(${dataEventCorefACE2005.docStruct}),
+                                    permutationMeasures=(${evalEventCorefYadllLr.devYadllPrecision}),
+                                    structureTransformFn=${greedyCorefTransitiveRules});
