@@ -46,7 +46,7 @@ public class StructurizerDocumentNLPGraphEventMentionPair<L> extends Structurize
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	protected List<WeightedStructureRelation> getDatumRelations(EventMentionPairDatum<L> datum, WeightedStructureGraph graph) {
-		return (List<WeightedStructureRelation>)(List)graph.getEdges(datum.getSourceMention().getId(), datum.getSourceMention().getId());
+		return (List<WeightedStructureRelation>)(List)graph.getEdges(datum.getSourceMention().getId(), datum.getTargetMention().getId());
 	}
 
 	@Override
