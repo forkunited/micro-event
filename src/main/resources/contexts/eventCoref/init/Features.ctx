@@ -2,6 +2,7 @@ ts_fn before3 = NGramContext(type="BEFORE", n="3");
 ts_fn after3 = NGramContext(type="AFTER", n="3");
 ts_fn inside1 = NGramInside(n="1");
 ts_fn head = Head();
+ts_str_fn strDef = String(cleanFn="BagOfWordsCleanFn");
 ts_str_fn str = String();
 ts_str_fn pos = PoS();
 ts_str_fn lemma = TokenAnnotation(annotationType="lemma");
