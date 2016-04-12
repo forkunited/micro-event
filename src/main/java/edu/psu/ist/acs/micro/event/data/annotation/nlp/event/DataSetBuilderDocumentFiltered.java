@@ -121,7 +121,7 @@ public abstract class DataSetBuilderDocumentFiltered<D extends Datum<L>, L> exte
 			String[] docNameParts = docName.split("_p");
 			if (docNameParts.length == 2) {
 				try {
-					Integer.parseInt(docNameParts[docNameParts.length]);
+					Integer.parseInt(docNameParts[docNameParts.length - 1]);
 					clusterName = docNameParts[0];
 				} catch (NumberFormatException e) {
 					
