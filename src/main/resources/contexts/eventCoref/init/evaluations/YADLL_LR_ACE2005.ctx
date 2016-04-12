@@ -1,14 +1,24 @@
-classify_eval devYadllPrecision = Precision(task=${dataEventCorefACE2005.devTask}, method=${modelsEventCorefYadllLr.yadll}, filterLabel="COREF", mode="MICRO");
-classify_eval devYadllRecall = Recall(task=${dataEventCorefACE2005.devTask}, method=${modelsEventCorefYadllLr.yadll}, filterLabel="COREF", mode="MICRO");
-classify_eval devYadllF = F(task=${dataEventCorefACE2005.devTask}, method=${modelsEventCorefYadllLr.yadll}, Beta="1", filterLabel="COREF", mode="MICRO");
-classify_eval testYadllPrecision = Precision(task=${dataEventCorefACE2005.testTask}, method=${modelsEventCorefYadllLr.yadll}, filterLabel="COREF", mode="MICRO");
-classify_eval testYadllRecall = Recall(task=${dataEventCorefACE2005.testTask}, method=${modelsEventCorefYadllLr.yadll}, filterLabel="COREF", mode="MICRO");
-classify_eval testYadllF = F(task=${dataEventCorefACE2005.testTask}, method=${modelsEventCorefYadllLr.yadll}, Beta="1", filterLabel="COREF", mode="MICRO");
+classify_eval devYadllPrecision = Precision(task=${dataEventCorefACE2005.devTask}, method=${modelsEventCorefYadllLr.yadll}, mode="MICRO");
+classify_eval devYadllRecall = Recall(task=${dataEventCorefACE2005.devTask}, method=${modelsEventCorefYadllLr.yadll}, mode="MICRO");
+classify_eval devYadllF = F(task=${dataEventCorefACE2005.devTask}, method=${modelsEventCorefYadllLr.yadll}, Beta="1", mode="MICRO");
+classify_eval testYadllPrecision = Precision(task=${dataEventCorefACE2005.testTask}, method=${modelsEventCorefYadllLr.yadll}, mode="MICRO");
+classify_eval testYadllRecall = Recall(task=${dataEventCorefACE2005.testTask}, method=${modelsEventCorefYadllLr.yadll}, mode="MICRO");
+classify_eval testYadllF = F(task=${dataEventCorefACE2005.testTask}, method=${modelsEventCorefYadllLr.yadll}, Beta="1", mode="MICRO");
+
+classify_eval devYadllPrecisionFiltered = Precision(task=${dataEventCorefACE2005.devTask}, method=${modelsEventCorefYadllLr.yadll}, filterLabel="COREF", mode="MICRO");
+classify_eval devYadllRecallFiltered = Recall(task=${dataEventCorefACE2005.devTask}, method=${modelsEventCorefYadllLr.yadll}, filterLabel="COREF", mode="MICRO");
+classify_eval devYadllFiltered = F(task=${dataEventCorefACE2005.devTask}, method=${modelsEventCorefYadllLr.yadll}, Beta="1", filterLabel="COREF", mode="MICRO");
+classify_eval testYadllPrecisionFiltered = Precision(task=${dataEventCorefACE2005.testTask}, method=${modelsEventCorefYadllLr.yadll}, filterLabel="COREF", mode="MICRO");
+classify_eval testYadllRecallFiltered = Recall(task=${dataEventCorefACE2005.testTask}, method=${modelsEventCorefYadllLr.yadll}, filterLabel="COREF", mode="MICRO");
+classify_eval testYadllFFiltered = F(task=${dataEventCorefACE2005.testTask}, method=${modelsEventCorefYadllLr.yadll}, Beta="1", filterLabel="COREF", mode="MICRO");
 
 value strEvals = 
 	OutputStrings(id="Evaluation_EventCoref_YADLL_LR_ACE2005", storage="EventString", collection="ExperimentEvaluationOutput", 
                  refs=
                  (
 	                 ${devYadllPrecision}, ${devYadllRecall}, ${devYadllF},
-	                 ${testYadllPrecision}, ${testYadllRecall}, ${testYadllF}
+	                 ${testYadllPrecision}, ${testYadllRecall}, ${testYadllF},
+	                 
+	                 ${devYadllPrecisionFiltered}, ${devYadllRecallFiltered}, ${devYadllFFiltered},
+	                 ${testYadllPrecisionFiltered}, ${testYadllRecallFiltered}, ${testYadllFFiltered}
                  ));
