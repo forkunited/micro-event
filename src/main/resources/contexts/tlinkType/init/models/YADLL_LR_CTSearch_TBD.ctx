@@ -72,7 +72,6 @@ data_features trainMatrixEEWS = DataFeatureMatrix(data=${dataTlinkTypeTBD.trainD
 data_features trainMatrixEEBS = DataFeatureMatrix(data=${dataTlinkTypeTBD.trainDataEEBS}, features=${fsEE});
 data_features trainMatrixEED = DataFeatureMatrix(data=${dataTlinkTypeTBD.trainDataEED}, features=${fsEE});
 
-	
 model yadll=YADLL(numEpochs="80", stepSize="2", 
 				  fnNodes=("Softmax", "NegativeLogLoss"), 
 				  fnParameters=("FanIn", "Zeros"), 
