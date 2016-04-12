@@ -12,7 +12,6 @@ import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.data.store.StoreReference;
 import edu.cmu.ml.rtw.generic.structure.WeightedStructureRelationBinary;
-import edu.cmu.ml.rtw.generic.structure.WeightedStructureRelationUnary;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
 
 public class EventMentionPairDatum<L> extends Datum<L> {
@@ -216,7 +215,6 @@ public class EventMentionPairDatum<L> extends Datum<L> {
 			});
 			
 			this.addGenericStructurizer(new StructurizerDocumentNLPGraphEventMentionPair<L>());
-			dataTools.addGenericWeightedStructure(new WeightedStructureRelationUnary("EM"));
 		}
 		
 		@Override

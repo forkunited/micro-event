@@ -8,6 +8,7 @@ import edu.cmu.ml.rtw.generic.data.Gazetteer;
 import edu.cmu.ml.rtw.generic.data.Serializer;
 import edu.cmu.ml.rtw.generic.data.SerializerJSONBSON;
 import edu.cmu.ml.rtw.generic.data.annotation.DatumContext;
+import edu.cmu.ml.rtw.generic.structure.WeightedStructureRelationUnary;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.CorefRelType;
@@ -73,6 +74,8 @@ public class EventDataTools extends DataTools {
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.ENTITY_MENTION);
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.VALUE_MENTION);
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.ACE_DOCUMENT_TYPE);
+		
+		this.addGenericWeightedStructure(new WeightedStructureRelationUnary("O"));
 	}
 	
 	@Override

@@ -299,7 +299,6 @@ public class TLinkDatum<L> extends Datum<L> {
 			});
 			
 			this.addGenericStructurizer(new StructurizerTLinkDocument<L>());
-			dataTools.addGenericWeightedStructure(new WeightedStructureRelationUnary("O"));
 		}
 		
 		@Override

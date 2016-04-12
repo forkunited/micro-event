@@ -1,7 +1,6 @@
 classify_eval devYadllPrecision = Precision(task=${dataEventCorefACE2005.devTask}, method=${modelsEventCorefYadllLr.yadll}, filterLabel="COREF");
 classify_eval devYadllRecall = Recall(task=${dataEventCorefACE2005.devTask}, method=${modelsEventCorefYadllLr.yadll}, filterLabel="COREF");
 classify_eval devYadllF = F(task=${dataEventCorefACE2005.devTask}, method=${modelsEventCorefYadllLr.yadll}, Beta="1", filterLabel="COREF");
-
 classify_eval testYadllPrecision = Precision(task=${dataEventCorefACE2005.testTask}, method=${modelsEventCorefYadllLr.yadll}, filterLabel="COREF");
 classify_eval testYadllRecall = Recall(task=${dataEventCorefACE2005.testTask}, method=${modelsEventCorefYadllLr.yadll}, filterLabel="COREF");
 classify_eval testYadllF = F(task=${dataEventCorefACE2005.testTask}, method=${modelsEventCorefYadllLr.yadll}, Beta="1", filterLabel="COREF");

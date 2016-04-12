@@ -25,8 +25,8 @@ public class StructurizerDocumentNLPGraphEventMentionPair<L> extends Structurize
 					label.toString(), 
 					this.context, 
 					String.valueOf(datum.getId()), 
-					new WeightedStructureRelationUnary("EM", this.context, datum.getSourceMention().getId()),
-					new WeightedStructureRelationUnary("EM", this.context, datum.getTargetMention().getId()),
+					new WeightedStructureRelationUnary("O", this.context, datum.getSourceMention().getId()),
+					new WeightedStructureRelationUnary("O", this.context, datum.getTargetMention().getId()),
 					false);
 	}
 
