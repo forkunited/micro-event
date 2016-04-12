@@ -7,3 +7,5 @@ classify_method yadll6 = CloneClassifyMethod(method=${modelsEventCorefYadllLr.ya
 classify_method yadll7 = CloneClassifyMethod(method=${modelsEventCorefYadllLr.yadll}, classificationThreshold=".7");
 classify_method yadll8 = CloneClassifyMethod(method=${modelsEventCorefYadllLr.yadll}, classificationThreshold=".8");
 classify_method yadll9 = CloneClassifyMethod(method=${modelsEventCorefYadllLr.yadll}, classificationThreshold=".9");
+classify_method yadll95 = CloneClassifyMethod(method=${modelsEventCorefYadllLr.yadll}, classificationThreshold=".95");
+classify_method yadll975 = CloneClassifyMethod(method=${modelsEventCorefYadllLr.yadll}, classificationThreshold=".975");

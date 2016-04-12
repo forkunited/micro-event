@@ -1,7 +1,9 @@
 structure_fn graphPaths = GraphPaths(length="2");
 structure_fn greedyCorefTransitiveRules = GreedyStructureRules(rules=${rulesEventCorefTransitive.rules}, splitFn=${graphPaths});
 
-multi_classify_method sieve = Sieve(methods=(${modelsEventCorefYadllLrCtClone.yadll9},
+multi_classify_method sieve = Sieve(methods=(${modelsEventCorefYadllLrCtClone.yadll975},
+                                             ${modelsEventCorefYadllLrCtClone.yadll95},
+                                             ${modelsEventCorefYadllLrCtClone.yadll9},
 											 ${modelsEventCorefYadllLrCtClone.yadll8},
 											 ${modelsEventCorefYadllLrCtClone.yadll7},
 											 ${modelsEventCorefYadllLrCtClone.yadll6},
@@ -13,6 +15,8 @@ multi_classify_method sieve = Sieve(methods=(${modelsEventCorefYadllLrCtClone.ya
 											 ${modelsEventCorefYadllLr.yadll}),                                   
                                     structurizers=(${dataEventCorefACE2005.docStruct},
 												   ${dataEventCorefACE2005.docStruct},
+                                                   ${dataEventCorefACE2005.docStruct},
+												   ${dataEventCorefACE2005.docStruct},
 												   ${dataEventCorefACE2005.docStruct},
 												   ${dataEventCorefACE2005.docStruct},
 												   ${dataEventCorefACE2005.docStruct},												   
@@ -21,7 +25,9 @@ multi_classify_method sieve = Sieve(methods=(${modelsEventCorefYadllLrCtClone.ya
 												   ${dataEventCorefACE2005.docStruct},
 												   ${dataEventCorefACE2005.docStruct},												   
                                     			   ${dataEventCorefACE2005.docStruct}),
-                                    permutationMeasures=(${evalEventCorefYadllLrCtClone.devYadll9Precision},
+                                    permutationMeasures=(${evalEventCorefYadllLrCtClone.devYadll975Precision},
+                                                         ${evalEventCorefYadllLrCtClone.devYadll95Precision},
+                                                         ${evalEventCorefYadllLrCtClone.devYadll9Precision},
                                                          ${evalEventCorefYadllLrCtClone.devYadll8Precision},
                                                          ${evalEventCorefYadllLrCtClone.devYadll7Precision},
                                                          ${evalEventCorefYadllLrCtClone.devYadll6Precision},
