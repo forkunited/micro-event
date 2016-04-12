@@ -18,14 +18,17 @@ context modelsEventCorefYadllLrGTI = EventMentionPairCoref(initScript="/eventCor
 multi_classify_task multiDevTask = MultiClassification(tasks=(${dataEventCorefACE2005.devTask}));
 multi_classify_task multiTestTask = MultiClassification(tasks=(${dataEventCorefACE2005.testTask}));
 
-multi_classify_eval multiDevPrecision = Precision(task=${multiDevTask}, method=${modelsEventCorefYadllLrGTI.sieve}, mode="MICRO");
-multi_classify_eval multiDevRecall = Recall(task=${multiDevTask}, method=${modelsEventCorefYadllLrGTI.sieve}, mode="MICRO");
-multi_classify_eval multiTestPrecision = Precision(task=${multiTestTask}, method=${modelsEventCorefYadllLrGTI.sieve}, mode="MICRO");
-multi_classify_eval multiTestRecall = Recall(task=${multiTestTask}, method=${modelsEventCorefYadllLrGTI.sieve}, mode="MICRO");
+multi_classify_eval multiDevPrecision = Precision(task=${multiDevTask}, method=${modelsEventCorefYadllLrGTI.sieve}, mode="MICRO", filterLabels=("COREF"));
+multi_classify_eval multiDevRecall = Recall(task=${multiDevTask}, method=${modelsEventCorefYadllLrGTI.sieve}, mode="MICRO", filterLabels=("COREF"));
+multi_classify_eval multiDevF = F(task=${multiDevTask}, method=${modelsEventCorefYadllLrGTI.sieve}, mode="MICRO", Beta="1", filterLabels=("COREF"));
+
+multi_classify_eval multiTestPrecision = Precision(task=${multiTestTask}, method=${modelsEventCorefYadllLrGTI.sieve}, mode="MICRO", filterLabels=("COREF"));
+multi_classify_eval multiTestRecall = Recall(task=${multiTestTask}, method=${modelsEventCorefYadllLrGTI.sieve}, mode="MICRO", filterLabels=("COREF"));
+multi_classify_eval multiTestF = Recall(task=${multiTestTask}, method=${modelsEventCorefYadllLrGTI.sieve}, mode="MICRO", Beta="1", filterLabels=("COREF"));
 
 value strEvals = OutputStrings(id="Evaluation_EventCoref_YADLL_LR_ACE2005_GreedyTransitiveInference", storage="EventString", collection="ExperimentEvaluationOutput", 
                  refs=
                  (
-	                 ${multiDevPrecision}, ${multiDevRecall},
-	                 ${multiTestPrecision}, ${multiTestRecall}
+	                 ${multiDevPrecision}, ${multiDevRecall}, ${multiDevF},
+	                 ${multiTestPrecision}, ${multiTestRecall}, ${multiTestF}
                  ));
