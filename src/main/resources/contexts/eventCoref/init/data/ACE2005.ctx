@@ -1,6 +1,6 @@
-data trainData = TLinkType(storage="EventBson", documents="ace_docs", filter=${dataACE2005.devTestDocs}, filterType="EXCLUDE", labelMode="ONLY_LABELED");
-data devData = TLinkType(storage="EventBson", documents="ace_docs", filter=${dataACE2005.devDocs}, filterType="INTERSECT", labelMode="ONLY_LABELED");
-data testData = TLinkType(storage="EventBson", documents="ace_docs", filter=${dataACE2005.testDocs}, filterType="INTERSECT", labelMode="ONLY_LABELED");
+data trainData = EventCoref(storage="EventBson", documents="ace_docs", filter=${dataACE2005.devTestDocs}, filterType="EXCLUDE", labelMode="ONLY_LABELED");
+data devData = EventCoref(storage="EventBson", documents="ace_docs", filter=${dataACE2005.devDocs}, filterType="INTERSECT", labelMode="ONLY_LABELED");
+data testData = EventCoref(storage="EventBson", documents="ace_docs", filter=${dataACE2005.testDocs}, filterType="INTERSECT", labelMode="ONLY_LABELED");
 
 value countACE2005EventCorefTrainData = SizeData(data=${trainData});
 value countACE2005EventCorefDevData = SizeData(data=${devData});
