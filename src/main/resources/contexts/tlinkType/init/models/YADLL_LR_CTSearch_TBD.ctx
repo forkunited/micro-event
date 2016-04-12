@@ -85,7 +85,7 @@ model yadll=YADLL(numEpochs="80", stepSize="2",
 };
 
 search yadllSearch=Grid() {
-	dimension classificationThreshold=Enumerated(values=("0.1", "0.3", "0.5", "0.7", "0.9"), stageIndex="1");
+	dimension classificationThreshold=Enumerated(values=("0.3", "0.5", "0.7"), stageIndex="1");
 };
 
 evaluation acc=Accuracy();
