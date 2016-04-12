@@ -3,6 +3,7 @@ value debug=Debug(file="TLinkType_CAEVO.out");
 value randomSeed=SetRandomSeed(seed="1");
 value cleanFn=BuildCleanFn(name="BagOfWordsCleanFn", fns=("Trim", "RemoveSymbols", "ReplaceNumbers", "UnderscoreToSpace", "Trim", "RemoveLongTokens", "Stem", "SpaceToUnderscore"));
 
+context dataTBD = TLinkType(initScript="/util/init/data/TBD.ctx");
 context dataTlinkTypeTBD = TLinkType(initScript="/tlinkType/init/data/TBD.ctx");
 context labelsTlinkTypeTBD = TLinkType(initScript="/tlinkType/init/labels/TBD.ctx");
 
@@ -25,7 +26,7 @@ multi_classify_eval multiDevRecall = Recall(task=${multiDevTask}, method=${model
 multi_classify_eval multiTestPrecision = Precision(task=${multiTestTask}, method=${modelsTlinkTypeCAEVO.sieve}, mode="MICRO");
 multi_classify_eval multiTestRecall = Recall(task=${multiTestTask}, method=${modelsTlinkTypeCAEVO.sieve}, mode="MICRO");
 
-value strEvals = OutputStrings(id="Evalation_CAEVO", storage="EventString", collection="ExperimentEvaluationOutput", 
+value strEvals = OutputStrings(id="Evaluation_CAEVO", storage="EventString", collection="ExperimentEvaluationOutput", 
                  refs=
                  (
 	                 ${multiDevPrecision}, ${multiDevRecall},

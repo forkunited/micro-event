@@ -261,7 +261,10 @@ public class EventMention implements TLinkable, MentionArgumentable {
 	}
 	
 	public Event getEvent() {
-		return this.dataTools.getStoredItemSetManager().resolveStoreReference(this.eventReference, true);
+		if (this.eventReference != null)
+			return this.dataTools.getStoredItemSetManager().resolveStoreReference(this.eventReference, true);
+		else 
+			return null;
 	}
 	
 	public int getArgumentCount() {
