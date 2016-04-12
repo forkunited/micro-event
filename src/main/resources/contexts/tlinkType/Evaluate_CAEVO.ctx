@@ -13,7 +13,7 @@ context modelsTlinkTypeDet = TLinkType(initScript="/tlinkType/init/models/Determ
 context modelsTlinkTypeYadllLrCTSearch = TLinkType(initScript="/tlinkType/init/models/YADLL_LR_CTSearch_TBD.ctx");
 
 context evalTlinkTypeDet = TLinkType(initScript="/tlinkType/init/evaluations/Deterministic_TBD.ctx");
-context evalTlinkTypeYadllLrCTSearch = TLinkType(initScript="/tlinkType/init/evaluations/TLinkType_YADLL_LR_CTSearch_TBD.ctx");
+context evalTlinkTypeYadllLrCTSearch = TLinkType(initScript="/tlinkType/init/evaluations/YADLL_LR_CTSearch_TBD.ctx");
 
 context rulesTlinkTypeTransitive = TLinkType(initScript="/tlinkType/init/rules/Transitive.ctx");
 context modelsTlinkTypeCAEVO = TLinkType(initScript="/tlinkType/init/models/CAEVO.ctx");
