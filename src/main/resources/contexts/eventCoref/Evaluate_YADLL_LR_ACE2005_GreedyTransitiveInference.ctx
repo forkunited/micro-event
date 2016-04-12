@@ -24,7 +24,7 @@ multi_classify_eval multiDevF = F(task=${multiDevTask}, method=${modelsEventCore
 
 multi_classify_eval multiTestPrecision = Precision(task=${multiTestTask}, method=${modelsEventCorefYadllLrGTI.sieve}, mode="MICRO", filterLabels=("COREF"));
 multi_classify_eval multiTestRecall = Recall(task=${multiTestTask}, method=${modelsEventCorefYadllLrGTI.sieve}, mode="MICRO", filterLabels=("COREF"));
-multi_classify_eval multiTestF = Recall(task=${multiTestTask}, method=${modelsEventCorefYadllLrGTI.sieve}, mode="MICRO", Beta="1", filterLabels=("COREF"));
+multi_classify_eval multiTestF = F(task=${multiTestTask}, method=${modelsEventCorefYadllLrGTI.sieve}, mode="MICRO", Beta="1", filterLabels=("COREF"));
 
 value strEvals = OutputStrings(id="Evaluation_EventCoref_YADLL_LR_ACE2005_GreedyTransitiveInference", storage="EventString", collection="ExperimentEvaluationOutput", 
                  refs=
