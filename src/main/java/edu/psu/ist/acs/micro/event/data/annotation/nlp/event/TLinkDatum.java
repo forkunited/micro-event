@@ -13,7 +13,6 @@ import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.data.store.StoreReference;
 import edu.cmu.ml.rtw.generic.structure.WeightedStructureRelationBinary;
-import edu.cmu.ml.rtw.generic.structure.WeightedStructureRelationUnary;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkable.Type;
