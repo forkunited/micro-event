@@ -13,4 +13,4 @@ array testDocs = ("APW19980227.0489.tml",
 				"PRI19980115.2000.0186.tml",
 				"PRI19980306.2000.1675.tml");
 
-array devTestDocs = ConcatenateArrays(array1=${devDocs}, array2=${testDocs});
+array devTestDocs = ConcatenateArrays(a1=${devDocs}, a2=${testDocs});

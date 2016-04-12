@@ -3,6 +3,7 @@ value debug=Debug(file="EventCoref_YADLL_LR_ACE2005_GreedyTransitiveInference.ou
 value randomSeed=SetRandomSeed(seed="1");
 value cleanFn=BuildCleanFn(name="BagOfWordsCleanFn", fns=("Trim", "RemoveSymbols", "ReplaceNumbers", "UnderscoreToSpace", "Trim", "RemoveLongTokens", "Stem", "SpaceToUnderscore"));
 
+context dataACE2005 = TLinkType(initScript="/util/init/data/ACE2005.ctx");
 context dataEventCorefACE2005 = EventMentionPairCoref(initScript="/eventCoref/init/data/ACE2005.ctx");
 context labelsEventCorefACE2005 = EventMentionPairCoref(initScript="/eventCoref/init/labels/ACE2005.ctx");
 

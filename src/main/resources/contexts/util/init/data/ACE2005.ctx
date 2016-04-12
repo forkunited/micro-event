@@ -70,4 +70,4 @@ array testDocs = ("AFP_ENG_20030401.0476",
 				"APW_ENG_20030324.0768",
 				"APW_ENG_20030325.0786");
 
-array devTestDocs = ConcatenateArrays(array1=${devDocs}, array2=${testDocs});
+array devTestDocs = ConcatenateArrays(a1=${devDocs}, a2=${testDocs});
