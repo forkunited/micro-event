@@ -50,7 +50,7 @@ feature ftPosB2 = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="
 feature ftTense = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="TIMEML_TENSE");
 feature ftAspect = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="TIMEML_ASPECT");
 feature ftClass = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="TIMEML_CLASS");
-feature ftDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${depLemma}));
+feature ftDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${depLemma});
 feature ftLemma = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${lemma});
 feature ftSynset = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${synset});
 feature fstToken = Conjunction(minFeatureOccurrence="2", features=(${fsToken}, ${ftToken}));
