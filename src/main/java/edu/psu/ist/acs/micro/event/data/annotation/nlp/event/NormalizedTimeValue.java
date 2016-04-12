@@ -527,7 +527,7 @@ public class NormalizedTimeValue implements Argumentable {
 		try {
 			if (json.has("id"))
 				this.id = json.getString("id");
-			if (json.has("value"))
+			if (json.has("name"))
 				this.value = json.getString("name");
 		} catch (JSONException e) {
 			return false;
