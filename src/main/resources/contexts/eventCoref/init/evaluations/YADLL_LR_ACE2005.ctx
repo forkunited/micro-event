@@ -7,7 +7,7 @@ classify_eval testYadllF = F(task=${dataEventCorefACE2005.testTask}, method=${mo
 
 classify_eval devYadllPrecisionFiltered = Precision(task=${dataEventCorefACE2005.devTask}, method=${modelsEventCorefYadllLr.yadll}, filterLabel="COREF", mode="MICRO");
 classify_eval devYadllRecallFiltered = Recall(task=${dataEventCorefACE2005.devTask}, method=${modelsEventCorefYadllLr.yadll}, filterLabel="COREF", mode="MICRO");
-classify_eval devYadllFiltered = F(task=${dataEventCorefACE2005.devTask}, method=${modelsEventCorefYadllLr.yadll}, Beta="1", filterLabel="COREF", mode="MICRO");
+classify_eval devYadllFFiltered = F(task=${dataEventCorefACE2005.devTask}, method=${modelsEventCorefYadllLr.yadll}, Beta="1", filterLabel="COREF", mode="MICRO");
 classify_eval testYadllPrecisionFiltered = Precision(task=${dataEventCorefACE2005.testTask}, method=${modelsEventCorefYadllLr.yadll}, filterLabel="COREF", mode="MICRO");
 classify_eval testYadllRecallFiltered = Recall(task=${dataEventCorefACE2005.testTask}, method=${modelsEventCorefYadllLr.yadll}, filterLabel="COREF", mode="MICRO");
 classify_eval testYadllFFiltered = F(task=${dataEventCorefACE2005.testTask}, method=${modelsEventCorefYadllLr.yadll}, Beta="1", filterLabel="COREF", mode="MICRO");
