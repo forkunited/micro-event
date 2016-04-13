@@ -16,6 +16,8 @@ context evalTlinkTypeDet = TLinkType(initScript="/tlinkType/init/evaluations/Det
 context evalTlinkTypeYadllLrCTSearch = TLinkType(initScript="/tlinkType/init/evaluations/YADLL_LR_CTSearch_TBD.ctx");
 
 context rulesTlinkTypeTransitive = TLinkType(initScript="/tlinkType/init/rules/Transitive.ctx");
+context rulesTlinkTypeConverse = TLinkType(initScript="/tlinkType/init/rules/Converse.ctx");
+
 context modelsTlinkTypeCAEVO = TLinkType(initScript="/tlinkType/init/models/CAEVO.ctx");
 
 multi_classify_task multiDevTask = MultiClassification(tasks=(${dataTlinkTypeTBD.devTask}));

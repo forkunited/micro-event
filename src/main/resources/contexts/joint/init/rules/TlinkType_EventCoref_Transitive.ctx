@@ -1,10 +1,3 @@
-coref->simultaneous
-before->not_coref
-after->not_coref
-includes->not_coref
-is_included->not_coref
-vague->not_coref
-
 rule_set rules = RuleSet(rules=(${rulesEventCorefTransitive.t_t_t}, 
                                 ${rulesEventCorefTransitive.t_f_f}, 
                                 ${rulesEventCorefTransitive.f_t_f},

@@ -33,6 +33,8 @@ context evalTlinkTypeYadllLrCTSearch = TLinkType(initScript="/tlinkType/init/eva
 context rulesTlinkTypeTransitive = TLinkType(initScript="/tlinkType/init/rules/Transitive.ctx");
 
 context rulesTTECTransitive = TLinkType(initScript="/joint/init/rules/TlinkType_EventCoref_Transitive.ctx");
+context rulesTTECJoint = TLinkType(initScript="/joint/init/rules/TlinkType_EventCoref_Joint.ctx");
+context rulesTlinkTypeConverse = TLinkType(initScript="/tlinkType/init/rules/Converse.ctx");
 context modelsTTECSieve = TLinkType(initScript="/joint/init/models/CAEVO_YADLL_LR_ACE2005_Sieve");
 
 
