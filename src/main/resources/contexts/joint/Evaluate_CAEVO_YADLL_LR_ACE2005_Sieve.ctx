@@ -35,7 +35,7 @@ context rulesTlinkTypeTransitive = TLinkType(initScript="/tlinkType/init/rules/T
 context rulesTTECTransitive = TLinkType(initScript="/joint/init/rules/TlinkType_EventCoref_Transitive.ctx");
 context rulesTTECJoint = TLinkType(initScript="/joint/init/rules/TlinkType_EventCoref_Joint.ctx");
 context rulesTlinkTypeConverse = TLinkType(initScript="/tlinkType/init/rules/Converse.ctx");
-context modelsTTECSieve = TLinkType(initScript="/joint/init/models/CAEVO_YADLL_LR_ACE2005_Sieve");
+context modelsTTECSieve = TLinkType(initScript="/joint/init/models/CAEVO_YADLL_LR_ACE2005_Sieve.ctx");
 
 
 multi_classify_task multiDevTask = MultiClassification(tasks=(${dataEventCorefACE2005.devTask}, ${dataTlinkTypeTBD.devTask}));
