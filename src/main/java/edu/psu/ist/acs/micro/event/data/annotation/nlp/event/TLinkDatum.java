@@ -298,7 +298,7 @@ public class TLinkDatum<L> extends Datum<L> {
 				public boolean indicator(TLinkDatum<L> datum) { return datum.getTLink().getPosition() == TLink.Position.BETWEEN_DOCUMENT; }
 			});
 			
-			this.addGenericStructurizer(new StructurizerTLinkDocument<L>());
+			this.addGenericStructurizer(new StructurizerDocumentNLPGraphTLink<L>());
 		}
 		
 		@Override

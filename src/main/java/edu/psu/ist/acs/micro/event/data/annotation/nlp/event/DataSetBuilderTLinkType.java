@@ -125,39 +125,39 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 			DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable> docs = getDocuments();
 			TreeMap<String, TLink> unlabeledLinks = new TreeMap<String, TLink>();
 			ThreadMapper<Entry<String, Set<String>>, Boolean> threads = new ThreadMapper<Entry<String, Set<String>>, Boolean>(
-					new Fn<Entry<String, Set<String>>, Boolean>() {
-						@Override
-						public Boolean apply(Entry<String, Set<String>> item) {
-							List<TLink> links = new ArrayList<TLink>();
-							
-							for (String docName1 : item.getValue()) {
-								DocumentNLP doc1 = docs.getDocumentByName(docName1, true);
-								List<Pair<TokenSpan, StoreReference>> doc1Mentions = doc1.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION);
-								doc1Mentions.addAll(doc1.getTokenSpanAnnotations(AnnotationTypeNLPEvent.TIME_EXPRESSION));
-								doc1Mentions.add(new Pair<TokenSpan, StoreReference>(null, doc1.getDocumentAnnotation(AnnotationTypeNLPEvent.CREATION_TIME)));
-								links = runAllPairs(doc1Mentions, fn, links, true); 
+				new Fn<Entry<String, Set<String>>, Boolean>() {
+					@Override
+					public Boolean apply(Entry<String, Set<String>> item) {
+						List<TLink> links = new ArrayList<TLink>();
+						
+						for (String docName1 : item.getValue()) {
+							DocumentNLP doc1 = docs.getDocumentByName(docName1, true);
+							List<Pair<TokenSpan, StoreReference>> doc1Mentions = doc1.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION);
+							doc1Mentions.addAll(doc1.getTokenSpanAnnotations(AnnotationTypeNLPEvent.TIME_EXPRESSION));
+							doc1Mentions.add(new Pair<TokenSpan, StoreReference>(null, doc1.getDocumentAnnotation(AnnotationTypeNLPEvent.CREATION_TIME)));
+							links = runAllPairs(doc1Mentions, fn, links, true); 
 
-								for (String docName2 : item.getValue()) {
-									if (docName1.equals(docName2))
-										continue;
-									
-									DocumentNLP doc2 = docs.getDocumentByName(docName2, true);
-									List<Pair<TokenSpan, StoreReference>> doc2Mentions = doc2.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION);
-									doc2Mentions.addAll(doc2.getTokenSpanAnnotations(AnnotationTypeNLPEvent.TIME_EXPRESSION));
-									doc2Mentions.add(new Pair<TokenSpan, StoreReference>(null, doc2.getDocumentAnnotation(AnnotationTypeNLPEvent.CREATION_TIME)));
-									
-									links = runAllPairs(doc1Mentions, doc2Mentions, fn, links); 
-								}
+							for (String docName2 : item.getValue()) {
+								if (docName1.equals(docName2))
+									continue;
+								
+								DocumentNLP doc2 = docs.getDocumentByName(docName2, true);
+								List<Pair<TokenSpan, StoreReference>> doc2Mentions = doc2.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION);
+								doc2Mentions.addAll(doc2.getTokenSpanAnnotations(AnnotationTypeNLPEvent.TIME_EXPRESSION));
+								doc2Mentions.add(new Pair<TokenSpan, StoreReference>(null, doc2.getDocumentAnnotation(AnnotationTypeNLPEvent.CREATION_TIME)));
+								
+								links = runAllPairs(doc1Mentions, doc2Mentions, fn, links); 
 							}
-							
-							synchronized (unlabeledLinks) {
-								for (TLink link : links)
-									unlabeledLinks.put(link.getId(), link);
-							}
-							
-							return true;
 						}
-					});
+						
+						synchronized (unlabeledLinks) {
+							for (TLink link : links)
+								unlabeledLinks.put(link.getId(), link);
+						}
+						
+						return true;
+					}
+				});
 			
 			threads.run(documentClusters.entrySet(), this.context.getMaxThreads());
 			
