@@ -1,11 +1,6 @@
-classify_method yadll1 = CloneClassifyMethod(method=${modelsEventCorefYadllLr.yadll}, classificationThreshold=".1");
-classify_method yadll2 = CloneClassifyMethod(method=${modelsEventCorefYadllLr.yadll}, classificationThreshold=".2");
-classify_method yadll3 = CloneClassifyMethod(method=${modelsEventCorefYadllLr.yadll}, classificationThreshold=".3");
-classify_method yadll4 = CloneClassifyMethod(method=${modelsEventCorefYadllLr.yadll}, classificationThreshold=".4");
-classify_method yadll5 = CloneClassifyMethod(method=${modelsEventCorefYadllLr.yadll}, classificationThreshold=".5");
-classify_method yadll6 = CloneClassifyMethod(method=${modelsEventCorefYadllLr.yadll}, classificationThreshold=".6");
-classify_method yadll7 = CloneClassifyMethod(method=${modelsEventCorefYadllLr.yadll}, classificationThreshold=".7");
-classify_method yadll8 = CloneClassifyMethod(method=${modelsEventCorefYadllLr.yadll}, classificationThreshold=".8");
-classify_method yadll9 = CloneClassifyMethod(method=${modelsEventCorefYadllLr.yadll}, classificationThreshold=".9");
+classify_method yadll80 = CloneClassifyMethod(method=${modelsEventCorefYadllLr.yadll}, classificationThreshold=".9");
+classify_method yadll90 = CloneClassifyMethod(method=${modelsEventCorefYadllLr.yadll}, classificationThreshold=".9");
+classify_method yadll93 = CloneClassifyMethod(method=${modelsEventCorefYadllLr.yadll}, classificationThreshold=".93");
 classify_method yadll95 = CloneClassifyMethod(method=${modelsEventCorefYadllLr.yadll}, classificationThreshold=".95");
-classify_method yadll975 = CloneClassifyMethod(method=${modelsEventCorefYadllLr.yadll}, classificationThreshold=".975");
+classify_method yadll97 = CloneClassifyMethod(method=${modelsEventCorefYadllLr.yadll}, classificationThreshold=".97");
+classify_method yadll99 = CloneClassifyMethod(method=${modelsEventCorefYadllLr.yadll}, classificationThreshold=".99");

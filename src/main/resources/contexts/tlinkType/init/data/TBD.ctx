@@ -30,3 +30,4 @@ classify_task devTask = Classification(data=${devData});
 classify_task testTask = Classification(data=${testData});
    
 structurizer docStruct = TLinkDocument(labelMapping="TBD");
+structurizer docStructMulti = TLinkDocument(graphEdgeMode="MULTI", graphNodeMode="MULTI", labelMapping="TBD");

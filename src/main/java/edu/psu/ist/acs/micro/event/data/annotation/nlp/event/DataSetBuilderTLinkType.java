@@ -73,7 +73,7 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 
 	@Override
 	public DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType> build() {
-		StoredItemSetInMemoryLazy<TLink, TLink> tlinkSet = 
+		StoredItemSetInMemoryLazy<TLink, TLink> tlinkSet = (this.tlinks == null) ? null :
 				this.context.getDataTools().getStoredItemSetManager().getItemSet(this.storage, this.tlinks);
 		
 		DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType> data = new DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType>(this.context.getDatumTools());
@@ -82,29 +82,31 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 		
 		Singleton<Integer> idObj = new Singleton<>(0);
 		
-		tlinkSet.map(new Fn<TLink, Boolean>() {
-			@Override
-			public Boolean apply(TLink tlink) {
-				DocumentNLP doc = tlink.getSource().getTokenSpan().getDocument();
-				if (!matchesFilter(doc))
-					return true;
-				
-				synchronized (data) {
-					if (!labeledPairs.containsKey(tlink.getSource().getId()))
-						labeledPairs.put(tlink.getSource().getId(), new HashSet<>());
-					labeledPairs.get(tlink.getSource().getId()).add(tlink.getTarget().getId());
+		if (tlinkSet != null) {
+			tlinkSet.map(new Fn<TLink, Boolean>() {
+				@Override
+				public Boolean apply(TLink tlink) {
+					DocumentNLP doc = tlink.getSource().getTokenSpan().getDocument();
+					if (!matchesFilter(doc))
+						return true;
 					
-					if (labelMode != LabelMode.ONLY_UNLABELED)	
-						data.add(new TLinkDatum<TimeMLRelType>(
-								Integer.valueOf(tlink.getId()), tlink, (labelMapping != null) ? labelMapping.map(tlink.getTimeMLRelType()) : tlink.getTimeMLRelType()));
-				
-					idObj.set(Math.max(idObj.get(), Integer.valueOf(tlink.getId())));
+					synchronized (data) {
+						if (!labeledPairs.containsKey(tlink.getSource().getId()))
+							labeledPairs.put(tlink.getSource().getId(), new HashSet<>());
+						labeledPairs.get(tlink.getSource().getId()).add(tlink.getTarget().getId());
+						
+						if (labelMode != LabelMode.ONLY_UNLABELED)	
+							data.add(new TLinkDatum<TimeMLRelType>(
+									Integer.valueOf(tlink.getId()), tlink, (labelMapping != null) ? labelMapping.map(tlink.getTimeMLRelType()) : tlink.getTimeMLRelType()));
+					
+						idObj.set(Math.max(idObj.get(), Integer.valueOf(tlink.getId())));
+					}
+					
+					return true;
 				}
 				
-				return true;
-			}
-			
-		}, this.context.getMaxThreads(), this.context.getDataTools().getGlobalRandom());
+			}, this.context.getMaxThreads(), this.context.getDataTools().getGlobalRandom());
+		}
 		
 		PairFn<Pair<TokenSpan, StoreReference>, TLink> fn = new PairFn<Pair<TokenSpan, StoreReference>, TLink>() {
 			@Override
