@@ -29,5 +29,5 @@ value debugTestData = OutputDebug(refs=(${countTBDTLinkTypeTestData}));
 classify_task devTask = Classification(data=${devData});
 classify_task testTask = Classification(data=${testData});
    
-structurizer docStruct = TLinkDocument(labelMapping="TBD");
-structurizer docStructMulti = TLinkDocument(graphEdgeMode="MULTI", graphNodeMode="MULTI", labelMapping="TBD");
+structurizer docStruct = DocumentNLPGraphTLink(labelMapping="TBD");
+structurizer docStructMulti = DocumentNLPGraphTLink(graphEdgeMode="MULTI", graphNodeMode="MULTI", labelMapping="TBD");
