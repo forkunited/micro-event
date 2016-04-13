@@ -27,7 +27,7 @@ public class StructurizerDocumentNLPGraphTLink<L> extends StructurizerDocumentNL
 					String.valueOf(datum.getId()), 
 					new WeightedStructureRelationUnary("O", this.context, datum.getTLink().getSource().getId()),
 					new WeightedStructureRelationUnary("O", this.context, datum.getTLink().getTarget().getId()),
-					false);
+					true);
 	}
 
 	@Override
