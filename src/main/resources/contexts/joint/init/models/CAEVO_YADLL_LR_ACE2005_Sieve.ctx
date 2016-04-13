@@ -1,7 +1,7 @@
 structure_fn graphPaths2 = GraphPaths(length="2", ignoreTypes=("VAGUE"));
 structure_fn graphPaths1 = GraphPaths(length="1");
 structure_fn greedyTransitiveRules = GreedyStructureRules(rules=(${rulesTTECTransitive.rules}, ${rulesTTECJoint.rules}, ${rulesTlinkTypeConverse.rules}), 
-                                                          splitFn=(${graphPaths2}, ${graphPaths1}, ${graphPaths1}));
+                                                          splitFns=(${graphPaths2}, ${graphPaths1}, ${graphPaths1}));
 
 multi_classify_method sieve = Sieve(methods=(${modelsTlinkTypeDet.adjET}, ${modelsTlinkTypeDet.timeTime},
                                              ${modelsTlinkTypeDet.repGov}, ${modelsTlinkTypeDet.reichenbach}, 
