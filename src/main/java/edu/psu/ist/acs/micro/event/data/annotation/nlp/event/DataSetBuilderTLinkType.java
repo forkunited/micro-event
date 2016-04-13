@@ -29,7 +29,8 @@ import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType
 
 public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLinkDatum<TimeMLRelType>, TimeMLRelType> {
 	private String tlinks;
-	private String[] parameterNames = { "tlinks" };
+	private int maxSentenceDistance = -1;
+	private String[] parameterNames = { "tlinks", "maxSentenceDistance" };
 	
 	public DataSetBuilderTLinkType() {
 		this(null);
@@ -52,6 +53,8 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 	public Obj getParameterValue(String parameter) {
 		if (parameter.equals("tlinks"))
 			return (this.tlinks == null) ? null : Obj.stringValue(this.tlinks.toString());
+		else if (parameter.equals("maxSentenceDistance"))
+			return Obj.stringValue(String.valueOf(this.maxSentenceDistance));
 		else
 			return super.getParameterValue(parameter);
 	}
@@ -60,6 +63,8 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 	public boolean setParameterValue(String parameter, Obj parameterValue) {
 		if (parameter.equals("tlinks"))
 			this.tlinks = (parameterValue == null) ? null : this.context.getMatchValue(parameterValue);
+		else if (parameter.equals("maxSentenceDistance"))
+			this.maxSentenceDistance = Integer.valueOf(this.context.getMatchValue(parameterValue));
 		else
 			return super.setParameterValue(parameter, parameterValue);
 		return true;
@@ -90,6 +95,14 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 					if (!matchesFilter(doc))
 						return true;
 					
+					int sourceSI = tlink.getSource().getTokenSpan().getSentenceIndex();
+					int targetSI = tlink.getTarget().getTokenSpan().getSentenceIndex();
+					if (maxSentenceDistance >= 0 && 
+							sourceSI >= 0 && targetSI >= 0 && 
+							Math.abs(sourceSI - targetSI) > maxSentenceDistance) {
+						return true;
+					}
+						
 					synchronized (data) {
 						if (!labeledPairs.containsKey(tlink.getSource().getId()))
 							labeledPairs.put(tlink.getSource().getId(), new HashSet<>());
@@ -113,6 +126,14 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 			public TLink apply(Pair<TokenSpan, StoreReference> o1, Pair<TokenSpan, StoreReference> o2) {
 				String id1 = o1.getSecond().getIndexValue(0).toString();
 				String id2 = o2.getSecond().getIndexValue(0).toString();
+				
+				if (maxSentenceDistance >= 0 && o1.getFirst() != null && o2.getFirst() != null) {
+					int si1 = o1.getFirst().getSentenceIndex();
+					int si2 = o2.getFirst().getSentenceIndex();
+					if (si1 >= 0 && si2 >= 0 && Math.abs(si1 - si2) > maxSentenceDistance)
+						return null;
+				}
+				
 				if (labeledPairs.containsKey(id1) && labeledPairs.get(id1).contains(id2))
 					return null;
 				else
