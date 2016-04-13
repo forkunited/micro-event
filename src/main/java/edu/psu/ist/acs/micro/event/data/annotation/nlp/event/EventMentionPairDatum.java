@@ -66,7 +66,6 @@ public class EventMentionPairDatum<L> extends Datum<L> {
 		for (CorefRelType relType : CorefRelType.values())
 			dataTools.addGenericWeightedStructure(new WeightedStructureRelationBinary(relType.toString(), false));
 		
-		tools.addGenericDataSetBuilder(new DataSetBuilderACE2005EventMentionPairCoref());
 		tools.addGenericDataSetBuilder(new DataSetBuilderEventCoref());
 		
 		return tools;
