@@ -60,5 +60,5 @@ value strEvals =
 	                 ${testYadll97Precision}, ${testYadll97Recall}, ${testYadll97F},
 	                 
 	                 ${devYadll99Precision}, ${devYadll99Recall}, ${devYadll99F},
-	                 ${testYadll99Precision}, ${testYadll99Recall}, ${testYadll99F},
+	                 ${testYadll99Precision}, ${testYadll99Recall}, ${testYadll99F}
                  ));
