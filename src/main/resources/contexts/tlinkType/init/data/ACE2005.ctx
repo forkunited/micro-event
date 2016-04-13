@@ -1,0 +1,33 @@
+data trainData = TLinkType(storage="EventBson", documents="ace_docs", filter=${dataACE2005.devTestDocs}, filterType="EXCLUDE", labelMode="ONLY_UNLABELED");
+data devData = TLinkType(storage="EventBson", documents="ace_docs", filter=${dataACE2005.devDocs}, filterType="INTERSECT", labelMode="ONLY_UNLABELED");
+data testData = TLinkType(storage="EventBson", documents="ace_docs", filter=${dataACE2005.testDocs}, filterType="INTERSECT", labelMode="ONLY_UNLABELED");
+
+data trainDataEE = FilterData(data=${trainData}, datumIndicator="TypeEventEvent");
+data trainDataET = FilterData(data=${trainData}, datumIndicator="TypeEventTime");
+
+data trainDataDCT = FilterData(data=${trainDataET}, datumIndicator="PositionDCT");
+data trainDataETWS = FilterData(data=${trainDataET}, datumIndicator="PositionWithinSentence");
+data trainDataETBS = FilterData(data=${trainDataET}, datumIndicator="PositionBetweenSentence");
+data trainDataEEWS = FilterData(data=${trainDataEE}, datumIndicator="PositionWithinSentence");
+data trainDataEEBS = FilterData(data=${trainDataEE}, datumIndicator="PositionBetweenSentence");
+data trainDataEED = FilterData(data=${trainDataEE}, datumIndicator="PositionWithinSentenceDominant");
+
+value ETDCTIndicator = ConjoinDatumIndicators(name="ETDCT", fns=("TypeEventTime", "PositionDCT"));
+value ETWSIndicator = ConjoinDatumIndicators(name="ETWS", fns=("TypeEventTime", "PositionWithinSentence"));
+value ETBSIndicator = ConjoinDatumIndicators(name="ETBS", fns=("TypeEventTime", "PositionBetweenSentence"));
+value EEWSIndicator = ConjoinDatumIndicators(name="EEWS", fns=("TypeEventEvent", "PositionWithinSentence"));
+value EEBSIndicator = ConjoinDatumIndicators(name="EEBS", fns=("TypeEventEvent", "PositionBetweenSentence"));
+value EEDIndicator = ConjoinDatumIndicators(name="EED", fns=("TypeEventEvent", "PositionWithinSentenceDominant"));
+
+value countTBDTLinkTypeTrainData = SizeData(data=${trainData});
+value countTBDTLinkTypeDevData = SizeData(data=${devData});
+value countTBDTLinkTypeTestData = SizeData(data=${testData});
+value debugTrainData = OutputDebug(refs=(${countTBDTLinkTypeTrainData}));
+value debugDevData = OutputDebug(refs=(${countTBDTLinkTypeDevData}));
+value debugTestData = OutputDebug(refs=(${countTBDTLinkTypeTestData}));
+
+classify_task devTask = Classification(data=${devData});
+classify_task testTask = Classification(data=${testData});
+   
+structurizer docStruct = TLinkDocument(labelMapping="TBD");
+structurizer docStructMulti = TLinkDocument(graphEdgeMode="MULTI", graphNodeMode="MULTI", labelMapping="TBD");
