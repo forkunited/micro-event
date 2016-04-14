@@ -74,8 +74,8 @@ data_features trainMatrixEED = DataFeatureMatrix(data=${dataTlinkTypeTBD.trainDa
 
 model yadll=YADLL(numEpochs="100", stepSize="2", 
 				  fnNodes=("Softmax", "NegativeLogLoss"), 
-				  fnParameters=("Ones", "Zeros"), 
-				  Softmax_0_input="Ones_0*x+Zeros_1", 
+				  fnParameters=("FanIn", "Zeros"), 
+				  Softmax_0_input="FanIn_0*x+Zeros_1", 
 				  Softmax_0_size=${labelsTlinkTypeTBD.count}, 
 				  NegativeLogLoss_1_input="Softmax_0", 
 				  NegativeLogLoss_1_size="1", 
