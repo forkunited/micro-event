@@ -88,6 +88,13 @@ search yadllSearch=Grid() {
 	dimension classificationThreshold=Enumerated(values=("0.3", "0.5", "0.7"), stageIndex="1");
 };
 
+search yadllDCTSearch = CloneSearch(search=${yadllSearch});
+search yadllETWSSearch = CloneSearch(search=${yadllSearch});
+search yadllETBSSearch = CloneSearch(search=${yadllSearch});
+search yadllEEWSSearch = CloneSearch(search=${yadllSearch});
+search yadllEEBSSearch = CloneSearch(search=${yadllSearch});
+search yadllEEDSearch = CloneSearch(search=${yadllSearch});
+
 evaluation acc=Accuracy();
 classify_method yadllDCTUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixDCT}, trainEvaluation=${acc});
 classify_method yadllETWSUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixETWS}, trainEvaluation=${acc});
@@ -110,9 +117,9 @@ classify_eval devEvalEEWS = F(task=${dataTlinkTypeTBD.devTask}, method=${yadllEE
 classify_eval devEvalEEBS = F(task=${dataTlinkTypeTBD.devTask}, method=${yadllEEBSSub}, Beta="1", mode="MICRO");
 classify_eval devEvalEED = F(task=${dataTlinkTypeTBD.devTask}, method=${yadllEEDSub}, Beta="1", mode="MICRO");
 
-classify_method yadllDCT = RunClassifyMethodSearch(fn=${devEvalDCT}, search=${yadllSearch});
-classify_method yadllETWS = RunClassifyMethodSearch(fn=${devEvalETWS}, search=${yadllSearch});
-classify_method yadllETBS = RunClassifyMethodSearch(fn=${devEvalETBS}, search=${yadllSearch});
-classify_method yadllEEWS = RunClassifyMethodSearch(fn=${devEvalEEWS}, search=${yadllSearch});
-classify_method yadllEEBS = RunClassifyMethodSearch(fn=${devEvalEEBS}, search=${yadllSearch});
-classify_method yadllEED = RunClassifyMethodSearch(fn=${devEvalEED}, search=${yadllSearch});
+classify_method yadllDCT = RunClassifyMethodSearch(fn=${devEvalDCT}, search=${yadllDCTSearch});
+classify_method yadllETWS = RunClassifyMethodSearch(fn=${devEvalETWS}, search=${yadllETWSSearch});
+classify_method yadllETBS = RunClassifyMethodSearch(fn=${devEvalETBS}, search=${yadllETBSSearch});
+classify_method yadllEEWS = RunClassifyMethodSearch(fn=${devEvalEEWS}, search=${yadllEEWSSearch});
+classify_method yadllEEBS = RunClassifyMethodSearch(fn=${devEvalEEBS}, search=${yadllEEBSSearch});
+classify_method yadllEED = RunClassifyMethodSearch(fn=${devEvalEED}, search=${yadllEEDSearch});

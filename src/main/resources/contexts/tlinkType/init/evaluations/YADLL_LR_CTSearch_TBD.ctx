@@ -43,5 +43,12 @@ value strEvals =
 	                 ${devYadllEEBSPrecision}, ${devYadllEEBSRecall},
 	                 ${testYadllEEBSPrecision}, ${testYadllEEBSRecall}, 
 	                 ${devYadllEEDPrecision}, ${devYadllEEDRecall},
-	                 ${testYadllEEDPrecision}, ${testYadllEEDRecall}
+	                 ${testYadllEEDPrecision}, ${testYadllEEDRecall},
+	                 
+	                 ${modelsTlinkTypeYadllLrCTSearch.yadllDCTSearch},
+	                 ${modelsTlinkTypeYadllLrCTSearch.yadllETWSSearch},
+	                 ${modelsTlinkTypeYadllLrCTSearch.yadllETBSSearch},
+	                 ${modelsTlinkTypeYadllLrCTSearch.yadllEEWSSearch},
+	                 ${modelsTlinkTypeYadllLrCTSearch.yadllEEBSSearch},
+	                 ${modelsTlinkTypeYadllLrCTSearch.yadllEEDSearch}
                  ));
