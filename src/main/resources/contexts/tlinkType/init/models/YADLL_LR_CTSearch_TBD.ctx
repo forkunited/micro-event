@@ -6,6 +6,7 @@ feature_set fsET = FeatureSet(features=(${featuresTlinkType.feventToken},
 										${featuresTlinkType.feventTense}, 
 										${featuresTlinkType.feventAspect}, 
 										${featuresTlinkType.feventClass}, 
+										${featuresTlinkType.feventDep},
 										${featuresTlinkType.feventLemma}, 
 										${featuresTlinkType.feventSynset},
 										${featuresTlinkType.ftimeToken}, 
@@ -27,6 +28,7 @@ feature_set fsEE = FeatureSet(features=(${featuresTlinkType.fsToken},
 										${featuresTlinkType.fsTense}, 
 										${featuresTlinkType.fsAspect}, 
 										${featuresTlinkType.fsClass}, 
+										${featuresTlinkType.fsDep}, 
 										${featuresTlinkType.fsLemma}, 
 										${featuresTlinkType.fsSynset},
 										${featuresTlinkType.ftToken}, 
@@ -37,6 +39,7 @@ feature_set fsEE = FeatureSet(features=(${featuresTlinkType.fsToken},
 										${featuresTlinkType.ftTense},
 										${featuresTlinkType.ftAspect}, 
 										${featuresTlinkType.ftClass}, 
+										${featuresTlinkType.ftDep}, 
 										${featuresTlinkType.ftLemma}, 
 										${featuresTlinkType.ftSynset},
 										${featuresTlinkType.fstToken}, 
@@ -69,10 +72,10 @@ data_features trainMatrixEEWS = DataFeatureMatrix(data=${dataTlinkTypeTBD.trainD
 data_features trainMatrixEEBS = DataFeatureMatrix(data=${dataTlinkTypeTBD.trainDataEEBS}, features=${fsEE});
 data_features trainMatrixEED = DataFeatureMatrix(data=${dataTlinkTypeTBD.trainDataEED}, features=${fsEE});
 
-model yadll=YADLL(numEpochs="80", stepSize="2", 
+model yadll=YADLL(numEpochs="100", stepSize="2", 
 				  fnNodes=("Softmax", "NegativeLogLoss"), 
-				  fnParameters=("Zeros", "Zeros"), 
-				  Softmax_0_input="Zeros_0*x+Zeros_1", 
+				  fnParameters=("FanIn", "Zeros"), 
+				  Softmax_0_input="FanIn_0*x+Zeros_1", 
 				  Softmax_0_size=${labelsTlinkTypeTBD.count}, 
 				  NegativeLogLoss_1_input="Softmax_0", 
 				  NegativeLogLoss_1_size="1", 
@@ -82,7 +85,7 @@ model yadll=YADLL(numEpochs="80", stepSize="2",
 };
 
 search yadllSearch=Grid() {
-	dimension classificationThreshold=Enumerated(values=("0.1", "0.3", "0.5", "0.7", "0.9"), stageIndex="1");
+	dimension classificationThreshold=Enumerated(values=("0.1", "0.3", "0.5", "0.7"), stageIndex="1");
 };
 
 search yadllDCTSearch = CloneSearch(search=${yadllSearch});
