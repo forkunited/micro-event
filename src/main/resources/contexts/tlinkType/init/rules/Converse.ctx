@@ -1,5 +1,3 @@
-rule s_s = (SIMULTANEOUS(r1=O(id=[id1]), r2=O(id=[id2]))) -> (SIMULTANEOUS(r1=O(id=${id2}), r2=O(id=${id1})));
-rule v_v = (VAGUE(r1=O(id=[id1]), r2=O(id=[id2]))) -> (VAGUE(r1=O(id=${id2}), r2=O(id=${id1})));
 rule b_a = (BEFORE(r1=O(id=[id1]), r2=O(id=[id2]))) -> (AFTER(r1=O(id=${id2}), r2=O(id=${id1})));
 rule a_b = (AFTER(r1=O(id=[id1]), r2=O(id=[id2]))) -> (BEFORE(r1=O(id=${id2}), r2=O(id=${id1})));
 rule i_ii = (INCLUDES(r1=O(id=[id1]), r2=O(id=[id2]))) -> (IS_INCLUDED(r1=O(id=${id2}), r2=O(id=${id1})));
@@ -7,4 +5,4 @@ rule ii_i = (IS_INCLUDED(r1=O(id=[id1]), r2=O(id=[id2]))) -> (INCLUDES(r1=O(id=$
 rule lb_l = (OVERLAPPED_BY(r1=O(id=[id1]), r2=O(id=[id2]))) -> (OVERLAPS(r1=O(id=${id2}), r2=O(id=${id1})));
 rule l_lb = (OVERLAPS(r1=O(id=[id1]), r2=O(id=[id2]))) -> (OVERLAPPED_BY(r1=O(id=${id2}), r2=O(id=${id1})));
 
-rule_set rules = RuleSet(rules=(${s_s}, ${v_v}, ${b_a}, ${a_b}, ${i_ii}, ${ii_i}, ${lb_l}, ${l_lb}));
+rule_set rules = RuleSet(rules=(${b_a}, ${a_b}, ${i_ii}, ${ii_i}, ${lb_l}, ${l_lb}));

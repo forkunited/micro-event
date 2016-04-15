@@ -125,7 +125,7 @@ public class TLinkDatum<L> extends Datum<L> {
 		tools.addGenericDataSetBuilder(new DataSetBuilderTLinkType());
 		
 		for (TimeMLRelType relType : TimeMLRelType.values())
-			dataTools.addGenericWeightedStructure(new WeightedStructureRelationBinary(relType.toString(), true));
+			dataTools.addGenericWeightedStructure(new WeightedStructureRelationBinary(relType.toString(), (relType != TimeMLRelType.VAGUE && relType != TimeMLRelType.SIMULTANEOUS)));
 		
 		return tools;
 	}

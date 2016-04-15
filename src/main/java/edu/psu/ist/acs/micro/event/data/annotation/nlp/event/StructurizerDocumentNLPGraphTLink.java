@@ -21,13 +21,14 @@ public class StructurizerDocumentNLPGraphTLink<L> extends StructurizerDocumentNL
 	
 	@Override
 	protected WeightedStructureRelation makeDatumStructure(TLinkDatum<L> datum, L label) {
-			return new WeightedStructureRelationBinary(
-					label.toString(), 
-					this.context, 
-					String.valueOf(datum.getId()), 
-					new WeightedStructureRelationUnary("O", this.context, datum.getTLink().getSource().getId()),
-					new WeightedStructureRelationUnary("O", this.context, datum.getTLink().getTarget().getId()),
-					true);
+		WeightedStructureRelationBinary binaryRel = (WeightedStructureRelationBinary)this.context.getDatumTools().getDataTools().makeWeightedStructure(label.toString(), this.context);
+		return new WeightedStructureRelationBinary(
+				label.toString(), 
+				this.context, 
+				String.valueOf(datum.getId()), 
+				new WeightedStructureRelationUnary("O", this.context, datum.getTLink().getSource().getId()),
+				new WeightedStructureRelationUnary("O", this.context, datum.getTLink().getTarget().getId()),
+				binaryRel.isOrdered());
 	}
 
 	@Override
