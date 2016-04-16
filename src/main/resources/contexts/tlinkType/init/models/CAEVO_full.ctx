@@ -1,0 +1,37 @@
+structure_fn graphPaths2 = GraphPaths(length="2", ignoreTypes=("VAGUE"));
+structure_fn graphPaths1 = GraphPaths(length="1", ignoreTypes=("VAGUE"));
+structure_fn greedyTlinkTransitiveRules = GreedyStructureRules(rules=(${rulesTlinkTypeTransitive.rules}, ${rulesTlinkTypeConverse.rules}), 
+                                                               splitFns=(${graphPaths2}, ${graphPaths1}));
+
+multi_classify_method sieve = Sieve(methods=(${modelsTlinkTypeDet.adjET}, ${modelsTlinkTypeDet.timeTime},
+                                             ${modelsTlinkTypeDet.repGov}, ${modelsTlinkTypeDet.reichenbach}, 
+                                             ${modelsTlinkTypeDet.genGov}, ${modelsTlinkTypeDet.wordNet},
+                                             ${modelsTlinkTypeDet.reportingDCT}, ${modelsTlinkTypeDet.allVague},
+                                             ${modelsTlinkTypeYadllLrCTSearch.yadllETWS}, 
+                                             ${modelsTlinkTypeYadllLrCTSearch.yadllEED},
+                                             ${modelsTlinkTypeYadllLrCTSearch.yadllEEWS}, 
+                                             ${modelsTlinkTypeYadllLrCTSearch.yadllDCT},  
+                                             ${modelsTlinkTypeYadllLrCTSearch.yadllETBS}, 
+                                             ${modelsTlinkTypeYadllLrCTSearch.yadllEEBS}),                                   
+                                    structurizers=(${dataTlinkTypeTBD.docStructConserve}, ${dataTlinkTypeTBD.docStructConserve},
+                                                   ${dataTlinkTypeTBD.docStructConserve}, ${dataTlinkTypeTBD.docStructConserve},
+                                                   ${dataTlinkTypeTBD.docStructConserve}, ${dataTlinkTypeTBD.docStructConserve},
+                                                   ${dataTlinkTypeTBD.docStructConserve}, ${dataTlinkTypeTBD.docStructConserve},
+                                                   ${dataTlinkTypeTBD.docStructConserve}, 
+                                                   ${dataTlinkTypeTBD.docStructConserve},
+                                                   ${dataTlinkTypeTBD.docStructConserve}, 
+                                                   ${dataTlinkTypeTBD.docStructConserve},
+                                                   ${dataTlinkTypeTBD.docStructConserve}, 
+                                                   ${dataTlinkTypeTBD.docStructConserve}),
+                                    permutationMeasures=(${evalTlinkTypeDet.devAdjETPrecision}, ${evalTlinkTypeDet.devTimeTimePrecision},
+                                                      ${evalTlinkTypeDet.devRepGovPrecision}, ${evalTlinkTypeDet.devReichenbachPrecision},
+                                                      ${evalTlinkTypeDet.devGenGovPrecision}, ${evalTlinkTypeDet.devWordNetPrecision},
+                                                      ${evalTlinkTypeDet.devReportingDCTPrecision}, ${evalTlinkTypeDet.devAllVaguePrecision}, 
+                                                      ${evalTlinkTypeYadllLrCTSearch.devYadllETWSPrecision}, 
+                                                      ${evalTlinkTypeYadllLrCTSearch.devYadllEEDPrecision}, 
+                                                      ${evalTlinkTypeYadllLrCTSearch.devYadllEEWSPrecision}, 
+                                                      ${evalTlinkTypeYadllLrCTSearch.devYadllDCTPrecision}, 
+                                                      ${evalTlinkTypeYadllLrCTSearch.devYadllETBSPrecision}, 
+                                                      ${evalTlinkTypeYadllLrCTSearch.devYadllEEBSPrecision}
+                                    ),
+                                    structureTransformFn=${greedyTlinkTransitiveRules});
