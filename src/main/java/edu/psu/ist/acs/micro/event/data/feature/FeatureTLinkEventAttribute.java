@@ -141,8 +141,8 @@ public class FeatureTLinkEventAttribute<L> extends Feature<TLinkDatum<L>, L>{
 		else if (this.attribute == Attribute.TIMEML_VERB_FORM)
 			vector.put(offset + this.vocabulary.get(e.getTimeMLVerbForm().toString()), 1.0);
 		else if (this.attribute == Attribute.MODALITY) {
-			System.out.println(e.getModality());
-			vector.put(offset + this.vocabulary.get((e.getModality() != null) ? e.getModality() : ""), 1.0);
+			if (e.getModality() == null || this.vocabulary.containsKey(e.getModality()))
+				vector.put(offset + this.vocabulary.get((e.getModality() != null) ? e.getModality() : ""), 1.0);
 		}
 		return vector;
 	}
