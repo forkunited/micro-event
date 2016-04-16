@@ -45,6 +45,7 @@ feature fsPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2"
 feature fsPosB = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${pos} o ${inside1} o ${before2}));
 feature fsPosB2 = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${pos} o ${before2}));
 feature fsPosA = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${pos} o ${inside1} o ${after2}));
+feature fsPosA2 = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${pos} o ${after2}));
 feature fsTense = TLinkEventAttribute(sourceOrTarget="SOURCE", attribute="TIMEML_TENSE");
 feature fsAspect = TLinkEventAttribute(sourceOrTarget="SOURCE", attribute="TIMEML_ASPECT");
 feature fsClass = TLinkEventAttribute(sourceOrTarget="SOURCE", attribute="TIMEML_CLASS");
@@ -60,6 +61,7 @@ feature ftPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2"
 feature ftPosB = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${pos} o ${inside1} o ${before2}));
 feature ftPosB2 = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${pos} o ${before2}));
 feature ftPosA = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${pos} o ${inside1} o ${after2}));
+feature ftPosA2 = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${pos} o ${after2}));
 feature ftTense = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="TIMEML_TENSE");
 feature ftAspect = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="TIMEML_ASPECT");
 feature ftClass = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="TIMEML_CLASS");
