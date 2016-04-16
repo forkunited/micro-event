@@ -18,6 +18,7 @@ feature feventPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence
 feature feventPosB = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${pos} o ${inside1} o ${before2}));
 feature feventPosB2 = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${pos} o ${before2}));
 feature feventPosA = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${pos} o ${inside1} o ${after2}));
+feature feventPosA2 = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${pos} o ${after2}));
 feature feventTense = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="TIMEML_TENSE");
 feature feventAspect = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="TIMEML_ASPECT");
 feature feventClass = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="TIMEML_CLASS");
