@@ -10,15 +10,11 @@ multi_classify_method sieve = Sieve(methods=(${modelsTlinkTypeDet.adjET}, ${mode
                                              ${modelsTlinkTypeYadllLrCTSearch.yadllETWS}, 
                                              ${modelsTlinkTypeYadllLrCTSearch.yadllEED},
                                              ${modelsTlinkTypeYadllLrCTSearch.yadllEEWS}, 
-                                             ${modelsTlinkTypeYadllLrCTSearch.yadllDCT},  
-                                             ${modelsTlinkTypeYadllLrCTSearch.yadllETBS}, 
-                                             ${modelsTlinkTypeYadllLrCTSearch.yadllEEBS}),                                   
+                                             ${modelsTlinkTypeYadllLrCTSearch.yadllDCT}),                                   
                                     structurizers=(${dataTlinkTypeTBD.docStructConserve}, ${dataTlinkTypeTBD.docStructConserve},
                                                    ${dataTlinkTypeTBD.docStructConserve}, ${dataTlinkTypeTBD.docStructConserve},
                                                    ${dataTlinkTypeTBD.docStructConserve}, ${dataTlinkTypeTBD.docStructConserve},
                                                    ${dataTlinkTypeTBD.docStructConserve}, ${dataTlinkTypeTBD.docStructConserve},
-                                                   ${dataTlinkTypeTBD.docStructConserve}, 
-                                                   ${dataTlinkTypeTBD.docStructConserve},
                                                    ${dataTlinkTypeTBD.docStructConserve}, 
                                                    ${dataTlinkTypeTBD.docStructConserve},
                                                    ${dataTlinkTypeTBD.docStructConserve}, 
@@ -30,8 +26,6 @@ multi_classify_method sieve = Sieve(methods=(${modelsTlinkTypeDet.adjET}, ${mode
                                                       ${evalTlinkTypeYadllLrCTSearch.devYadllETWSPrecision}, 
                                                       ${evalTlinkTypeYadllLrCTSearch.devYadllEEDPrecision}, 
                                                       ${evalTlinkTypeYadllLrCTSearch.devYadllEEWSPrecision}, 
-                                                      ${evalTlinkTypeYadllLrCTSearch.devYadllDCTPrecision}, 
-                                                      ${evalTlinkTypeYadllLrCTSearch.devYadllETBSPrecision}, 
-                                                      ${evalTlinkTypeYadllLrCTSearch.devYadllEEBSPrecision}
+                                                      ${evalTlinkTypeYadllLrCTSearch.devYadllDCTPrecision}
                                     ),
                                     structureTransformFn=${greedyTlinkTransitiveRules});
