@@ -94,7 +94,7 @@ public class FeatureTLinkEventAttribute<L> extends Feature<TLinkDatum<L>, L>{
 				@Override
 				public Boolean apply(TLinkDatum<L> datum) {
 					TLinkable source = datum.getTLink().getSource();
-					TLinkable target = datum.getTLink().getSource();
+					TLinkable target = datum.getTLink().getTarget();
 					if (source.getTLinkableType() == TLinkable.Type.EVENT)
 						counter.incrementCount(((EventMention)source).getModality() != null ? ((EventMention)source).getModality() : "");
 					if (target.getTLinkableType() == TLinkable.Type.EVENT)
