@@ -55,8 +55,7 @@ feature_set fsEE = FeatureSet(features=(${featuresTlinkType.fsToken},
 										${featuresTlinkType.fdomEE}), 
 						initData=(${dataTlinkTypeTBD.trainDataEE}));
 
-feature_set fsDCT = FeatureSet(features=(${featuresTlinkType.feventToken}, 
-										 ${featuresTlinkType.feventTokenB}, 
+feature_set fsDCT = FeatureSet(features=(${featuresTlinkType.feventTokenB}, 
 										 ${featuresTlinkType.feventTokenA}, 
 										 ${featuresTlinkType.feventPos},
 										 ${featuresTlinkType.feventPosB}, 
