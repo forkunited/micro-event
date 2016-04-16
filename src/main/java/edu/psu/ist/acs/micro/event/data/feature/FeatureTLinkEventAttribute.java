@@ -10,6 +10,8 @@ import edu.cmu.ml.rtw.generic.data.feature.Feature;
 import edu.cmu.ml.rtw.generic.parse.AssignmentList;
 import edu.cmu.ml.rtw.generic.parse.Obj;
 import edu.cmu.ml.rtw.generic.util.BidirectionalLookupTable;
+import edu.cmu.ml.rtw.generic.util.CounterTable;
+import edu.cmu.ml.rtw.generic.util.ThreadMapper;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkDatum;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkable;
@@ -86,9 +88,25 @@ public class FeatureTLinkEventAttribute<L> extends Feature<TLinkDatum<L>, L>{
 				this.vocabulary.put(verbForms[i].toString(), i);
 			}
 		} else if (this.attribute == Attribute.MODALITY) {
-			//TODO: This may be an issue. I believe the set of modalities should be captured as an enum, but since it's just a string
-			//		we have to compute the possible enums from the whole dataset. 
-			throw new UnsupportedOperationException();
+			CounterTable<String> counter = new CounterTable<String>();
+			
+			dataSet.map(new ThreadMapper.Fn<TLinkDatum<L>, Boolean>() {
+				@Override
+				public Boolean apply(TLinkDatum<L> datum) {
+					TLinkable source = datum.getTLink().getSource();
+					TLinkable target = datum.getTLink().getSource();
+					if (source.getTLinkableType() == TLinkable.Type.EVENT)
+						counter.incrementCount(((EventMention)source).getModality() != null ? ((EventMention)source).getModality() : "");
+					if (target.getTLinkableType() == TLinkable.Type.EVENT)
+						counter.incrementCount(((EventMention)target).getModality() != null ? ((EventMention)target).getModality() : "");
+				
+					return true;
+				}
+			}, this.context.getMaxThreads());
+			
+			counter.incrementCount("");
+			
+			this.vocabulary = new BidirectionalLookupTable<String, Integer>(counter.buildIndex());
 		}		
 		return true;
 	}
@@ -123,7 +141,7 @@ public class FeatureTLinkEventAttribute<L> extends Feature<TLinkDatum<L>, L>{
 		else if (this.attribute == Attribute.TIMEML_VERB_FORM)
 			vector.put(offset + this.vocabulary.get(e.getTimeMLVerbForm().toString()), 1.0);
 		else if (this.attribute == Attribute.MODALITY)
-			vector.put(offset + this.vocabulary.get(e.getModality()), 1.0);
+			vector.put(offset + this.vocabulary.get((e.getModality() != null) ? e.getModality() : ""), 1.0);
 	
 		return vector;
 	}

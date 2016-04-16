@@ -20,6 +20,8 @@ feature feventPosA = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrenc
 feature feventTense = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="TIMEML_TENSE");
 feature feventAspect = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="TIMEML_ASPECT");
 feature feventClass = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="TIMEML_CLASS");
+feature feventPolarity = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="TIMEML_POLARITY");
+feature feventModality = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="MODALITY");
 feature feventDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${depLemma});
 feature feventLemma = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${lemma});
 feature feventSynset = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${synset});
@@ -42,6 +44,8 @@ feature fsPosA = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2
 feature fsTense = TLinkEventAttribute(sourceOrTarget="SOURCE", attribute="TIMEML_TENSE");
 feature fsAspect = TLinkEventAttribute(sourceOrTarget="SOURCE", attribute="TIMEML_ASPECT");
 feature fsClass = TLinkEventAttribute(sourceOrTarget="SOURCE", attribute="TIMEML_CLASS");
+feature fsPolarity = TLinkEventAttribute(sourceOrTarget="SOURCE", attribute="TIMEML_POLARITY");
+feature fsModality = TLinkEventAttribute(sourceOrTarget="SOURCE", attribute="MODALITY");
 feature fsDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${depLemma});
 feature fsLemma = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${lemma});
 feature fsSynset = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${synset});
@@ -54,6 +58,8 @@ feature ftPosA = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2
 feature ftTense = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="TIMEML_TENSE");
 feature ftAspect = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="TIMEML_ASPECT");
 feature ftClass = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="TIMEML_CLASS");
+feature ftPolarity = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="TIMEML_POLARITY");
+feature ftModality = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="MODALITY");
 feature ftDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${depLemma});
 feature ftLemma = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${lemma});
 feature ftSynset = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${synset});
@@ -62,6 +68,8 @@ feature fstPos = Conjunction(minFeatureOccurrence="2", features=(${fsPos}, ${ftP
 feature fstTense = Conjunction(minFeatureOccurrence="2", features=(${fsTense}, ${ftTense}));
 feature fstAspect = Conjunction(minFeatureOccurrence="2", features=(${fsAspect}, ${ftAspect}));
 feature fstClass = Conjunction(minFeatureOccurrence="2", features=(${fsClass}, ${ftClass}));	
+feature fstPolarity = Conjunction(minFeatureOccurrence="2", features=(${fsPolarity}, ${ftPolarity}));	
+feature fstModality = Conjunction(minFeatureOccurrence="2", features=(${fsModality}, ${ftModality}));	
 feature fdepPathEE = DependencyPath(minFeatureOccurrence="2", sourceTokenExtractor="Source", targetTokenExtractor="Target", useRelationTypes="true");
 feature fconPathEE = ConstituencyPath(minFeatureOccurrence="2", sourceTokenExtractor="Source", targetTokenExtractor="Target");
 feature fdepTypeEE = DependencyPathType(sourceTokenExtractor="Source", targetTokenExtractor="Target");
