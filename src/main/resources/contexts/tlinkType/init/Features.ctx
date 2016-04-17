@@ -11,7 +11,7 @@ ts_str_fn nlpLemma = TokenAnnotation(annotationType="lemma");
 ts_str_fn lemma = WordNetLemma();
 ts_str_fn synset = WordNetSynset();
 ts_str_fn sentPos = SentencePosition();
-ts_str_fn depLemma=TokenSpanPathStr(mode="ALL", pathLength="1", spanFn1=${dep}, strFn=${lemma});
+ts_str_fn depStr=TokenSpanPathStr(mode="ALL", pathLength="1", spanFn1=${dep}, strFn=${strDef});
 
 feature feventToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${strDef});
 feature feventTokenB = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${strDef} o ${inside1} o ${before2}));
@@ -28,7 +28,7 @@ feature feventAspect = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="T
 feature feventClass = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="TIMEML_CLASS");
 feature feventPolarity = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="TIMEML_POLARITY");
 feature feventModality = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="MODALITY");
-feature feventDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${depLemma});
+feature feventDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${depStr});
 feature feventLemma = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${lemma});
 feature feventSynset = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${synset});
 feature feventW2v = Word2Vec(tokenExtractor="FirstEvent", mode="VECTOR", fn=(${str} o ${head}));
@@ -62,7 +62,7 @@ feature fsAspect = TLinkEventAttribute(sourceOrTarget="SOURCE", attribute="TIMEM
 feature fsClass = TLinkEventAttribute(sourceOrTarget="SOURCE", attribute="TIMEML_CLASS");
 feature fsPolarity = TLinkEventAttribute(sourceOrTarget="SOURCE", attribute="TIMEML_POLARITY");
 feature fsModality = TLinkEventAttribute(sourceOrTarget="SOURCE", attribute="MODALITY");
-feature fsDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${depLemma});
+feature fsDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${depStr});
 feature fsLemma = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${lemma});
 feature fsSynset = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${synset});
 feature fsW2v = Word2Vec(tokenExtractor="Source", mode="VECTOR", fn=(${str} o ${head}));
@@ -81,7 +81,7 @@ feature ftAspect = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="TIMEM
 feature ftClass = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="TIMEML_CLASS");
 feature ftPolarity = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="TIMEML_POLARITY");
 feature ftModality = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="MODALITY");
-feature ftDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${depLemma});
+feature ftDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${depStr});
 feature ftLemma = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${lemma});
 feature ftSynset = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${synset});
 feature ftW2v = Word2Vec(tokenExtractor="Target", mode="VECTOR", fn=(${str} o ${head}));
