@@ -1,11 +1,16 @@
 package edu.psu.ist.acs.micro.event.data.annotation.nlp.event;
 
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.cmu.ml.rtw.generic.data.DataTools;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.data.store.StoreReference;
+import edu.cmu.ml.rtw.generic.util.Pair;
 import edu.cmu.ml.rtw.generic.util.StoredJSONSerializable;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
 
 /**
  * TLink represents a TimeML TLink--a temporal
@@ -349,6 +354,25 @@ public class TLink implements StoredJSONSerializable {
 			return Type.TIME_TIME;
 		else
 			return Type.EVENT_TIME;
+	}
+	
+	private static final TokenSpan.Relation[] OVER_EVENT_RELATIONS = new TokenSpan.Relation[] { TokenSpan.Relation.CONTAINED_BY };
+	public boolean isOverEvent() {
+		if (getPosition() != Position.WITHIN_SENTENCE)
+			return false;
+		
+		TokenSpan source = getSource().getTokenSpan();
+		TokenSpan target = getTarget().getTokenSpan();
+		int startIndex = Math.min(source.getEndTokenIndex(), target.getEndTokenIndex());
+		int endIndex = Math.max(source.getStartTokenIndex(), source.getStartTokenIndex());
+		
+		for (int i = startIndex; i < endIndex; i++) {
+			List<Pair<TokenSpan, StoreReference>> es = source.getDocument().getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION, new TokenSpan(source.getDocument(), source.getSentenceIndex(), i, i + 1), OVER_EVENT_RELATIONS);
+			if (es != null && es.size() > 0)
+				return true;
+		}
+		
+		return false;
 	}
 	
 	@Override

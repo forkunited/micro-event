@@ -51,6 +51,7 @@ feature fdomET = ConstituencyParseRelation(sourceTokenExtractor="FirstEvent", ta
 feature fw2vSimET = Word2Vec(tokenExtractor="EventTime", mode="SIMILARITY", fn=(${str} o ${head}));
 feature fw2vDiffET = Word2Vec(tokenExtractor="EventTime", mode="DIFFERENCE", fn=(${str} o ${head}));
 feature fsourceType = TLinkableType(sourceOrTarget="SOURCE");
+feature foverEventET = TLinkAttribute(attribute="OVER_EVENT");
 
 feature fsToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${strDef});
 feature fsTokenB = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${strDef} o ${inside1} o ${beforeS2}));
@@ -107,5 +108,6 @@ feature fconPathEE = ConstituencyPath(minFeatureOccurrence="2", sourceTokenExtra
 feature fdepTypeEE = DependencyPathType(sourceTokenExtractor="Source", targetTokenExtractor="Target");
 feature fpredPathEE = PredicateArgumentPath(sourceTokenExtractor="Source", targetTokenExtractor="Target");
 feature fdomEE = ConstituencyParseRelation(sourceTokenExtractor="Source", targetTokenExtractor="Target");
+feature foverEventEE = TLinkAttribute(attribute="OVER_EVENT");
 feature fw2vSimEE = Word2Vec(tokenExtractor="SourceTarget", mode="SIMILARITY", fn=(${str} o ${head}));
 feature fw2vDiffEE = Word2Vec(tokenExtractor="SourceTarget", mode="DIFFERENCE", fn=(${str} o ${head}));

@@ -18,6 +18,7 @@ feature_set fsET = FeatureSet(features=(${featuresTlinkType.feventToken},
 										${featuresTlinkType.fconPathET}, 
 										${featuresTlinkType.fdepTypeET},
 										${featuresTlinkType.fdomET},
+										${featuresTlinkType.foverEventET},
 										${featuresTlinkType.fsourceType}), 
 								initData=(${dataTlinkTypeTBD.trainDataET}));
 
@@ -59,7 +60,8 @@ feature_set fsEE = FeatureSet(features=(${featuresTlinkType.fsToken},
 										${featuresTlinkType.fstSentPos},
 										${featuresTlinkType.fdepPathEE}, 
 										${featuresTlinkType.fconPathEE}, 
-										${featuresTlinkType.fdepTypeEE}, 
+										${featuresTlinkType.fdepTypeEE},
+										${featuresTlinkType.foverEventEE}, 
 										${featuresTlinkType.fdomEE}), 
 						initData=(${dataTlinkTypeTBD.trainDataEE}));
 

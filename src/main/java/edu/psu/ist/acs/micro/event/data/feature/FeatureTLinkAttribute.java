@@ -28,7 +28,8 @@ import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkDatum;
 public class FeatureTLinkAttribute<L> extends Feature<TLinkDatum<L>, L>{
 	public enum Attribute {
 		POSITION,
-		TYPE
+		TYPE,
+		OVER_EVENT
 	}
 	
 	// Determines which attribute to compute
@@ -63,11 +64,13 @@ public class FeatureTLinkAttribute<L> extends Feature<TLinkDatum<L>, L>{
 			TLink.Type[] types = TLink.Type.values();
 			for (int i = 0; i < types.length; i++)
 				this.vocabulary.put(types[i].toString(), this.vocabulary.size());
+		} else if (this.attribute == Attribute.OVER_EVENT) {
+			this.vocabulary.put("true", this.vocabulary.size());
 		}
 		
 		return true;
 	}
-
+	
 	/**
 	 * @param datum
 	 * @return sparse mapping from attribute value indices to indicators of
@@ -79,6 +82,9 @@ public class FeatureTLinkAttribute<L> extends Feature<TLinkDatum<L>, L>{
 			vector.put(offset + this.vocabulary.get(datum.getTLink().getPosition().toString()), 1.0);
 		else if (this.attribute == Attribute.TYPE)
 			vector.put(offset + this.vocabulary.get(datum.getTLink().getType().toString()), 1.0);
+		else if (this.attribute == Attribute.OVER_EVENT) {
+			vector.put(offset, (datum.getTLink().isOverEvent() ? 1.0 : 0.0));
+		}
 		
 		return vector;
 	}
