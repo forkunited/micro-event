@@ -89,7 +89,7 @@ model yadll=YADLL(numEpochs="40", stepSize="1",
 };
 
 search yadllSearch=Grid() {
-	dimension numEpochs=Enumerated(values=("10", "20", "40", "60", "80", "100", "150", "200"), stageIndex="0");
+	dimension numEpochs=Enumerated(values=("200"), stageIndex="0");
 };
 
 search yadllDCTSearch = CloneSearch(search=${yadllSearch});
