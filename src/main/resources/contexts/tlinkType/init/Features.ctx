@@ -47,7 +47,8 @@ feature ftimeW2v = Word2Vec(tokenExtractor="FirstTime", mode="VECTOR", fn=(${str
 feature feventTimeToken = Conjunction(minFeatureOccurrence="2", features=(${feventToken}, ${ftimeToken}));
 feature ftokenPathET = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="BetweenSourceTarget", fn=${strDef});
 feature fdepPathET = DependencyPath(minFeatureOccurrence="2", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime", useRelationTypes="true");
-feature fconPathET = ConstituencyPath(minFeatureOccurrence="2", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime");
+feature fconPathET = ConstituencyPath(minFeatureOccurrence="2", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime", noLeaves="true");
+feature fconPathPosET = ConstituencyPath(minFeatureOccurrence="2", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime", noLeaves="false");
 feature fdepTypeET = DependencyPathType(sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime");
 feature fpredPathET = PredicateArgumentPath(sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime");
 feature fdomET = ConstituencyParseRelation(sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime");
@@ -109,7 +110,8 @@ feature fstPolarity = Conjunction(minFeatureOccurrence="2", features=(${fsPolari
 feature fstModality = Conjunction(minFeatureOccurrence="2", features=(${fsModality}, ${ftModality}));	
 feature fstSentPos = Conjunction(minFeatureOccurrence="2", features=(${fsSentPos}, ${ftSentPos}));
 feature fdepPathEE = DependencyPath(minFeatureOccurrence="2", sourceTokenExtractor="Source", targetTokenExtractor="Target", useRelationTypes="true");
-feature fconPathEE = ConstituencyPath(minFeatureOccurrence="2", sourceTokenExtractor="Source", targetTokenExtractor="Target");
+feature fconPathPosEE = ConstituencyPath(minFeatureOccurrence="2", sourceTokenExtractor="Source", targetTokenExtractor="Target", noLeaves="false");
+feature fconPathEE = ConstituencyPath(minFeatureOccurrence="2", sourceTokenExtractor="Source", targetTokenExtractor="Target", noLeaves="true");
 feature fdepTypeEE = DependencyPathType(sourceTokenExtractor="Source", targetTokenExtractor="Target");
 feature fpredPathEE = PredicateArgumentPath(sourceTokenExtractor="Source", targetTokenExtractor="Target");
 feature fdomEE = ConstituencyParseRelation(sourceTokenExtractor="Source", targetTokenExtractor="Target");
