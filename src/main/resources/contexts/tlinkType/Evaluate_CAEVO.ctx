@@ -1,7 +1,9 @@
 value maxThreads="30";
 value debug=Debug(file="TLinkType_CAEVO.out");
 value randomSeed=SetRandomSeed(seed="1");
-value cleanFn=BuildCleanFn(name="BagOfWordsCleanFn", fns=("Trim", "RemoveSymbols", "ReplaceNumbers", "UnderscoreToSpace", "Trim", "RemoveLongTokens", "Stem", "SpaceToUnderscore"));
+value bowCleanFn=BuildCleanFn(name="BagOfWordsCleanFn", fns=("Trim", "ToLowerCase", "RemoveSymbols", "ReplaceNumbers", "UnderscoreToSpace", "Trim", "RemoveLongTokens", "Stem", "SpaceToUnderscore"));
+value lowerCleanFn=BuildCleanFn(name="LowerCaseCleanFn", fns=("Trim", "ToLowerCase" ));
+
 
 context dataTBD = TLinkType(initScript="/util/init/data/TBD.ctx");
 context dataTlinkTypeTBD = TLinkType(initScript="/tlinkType/init/data/TBD.ctx");

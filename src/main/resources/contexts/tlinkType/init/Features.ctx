@@ -5,7 +5,7 @@ ts_fn beforeI1 = NGramContext(type="BEFORE_INCLUDING", n="1");
 ts_fn afterI1 = NGramContext(type="AFTER_INCLUDING", n="1");
 ts_fn inside1 = NGramInside(n="1");
 ts_fn dep = DependencyRelation(mode="PARENTS_AND_CHILDREN");
-ts_str_fn strDef = String(cleanFn="BagOfWordsCleanFn");
+ts_str_fn strDef = String(cleanFn="LowerCaseCleanFn");
 ts_str_fn pos = PoS();
 ts_str_fn nlpLemma = TokenAnnotation(annotationType="lemma");
 ts_str_fn lemma = WordNetLemma();
