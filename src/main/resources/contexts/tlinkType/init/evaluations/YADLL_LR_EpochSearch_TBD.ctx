@@ -1,4 +1,4 @@
-classify_eval devYadllDCTPrecision = Precision(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllDCT}Epochmode="MICRO");
+classify_eval devYadllDCTPrecision = Precision(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllDCT}, mode="MICRO");
 classify_eval devYadllDCTRecall = Recall(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllDCT}, mode="MICRO");
 classify_eval testYadllDCTPrecision = Precision(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllDCT}, mode="MICRO");
 classify_eval testYadllDCTRecall = Recall(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllDCT}, mode="MICRO");
