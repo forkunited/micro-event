@@ -237,6 +237,23 @@ public class TLinkDatum<L> extends Datum<L> {
 				}
 			});
 			
+			this.addTokenSpanExtractor(new TokenSpanExtractor<TLinkDatum<L>, L>() {
+				@Override
+				public String toString() {
+					return "EventTime";
+				}
+				
+				@Override
+				public TokenSpan[] extract(TLinkDatum<L> tlinkDatum) {
+					if (tlinkDatum.getTLink().getSource().getTLinkableType() == Type.EVENT && tlinkDatum.getTLink().getTarget().getTLinkableType() == Type.TIME)
+						return new TokenSpan[] { tlinkDatum.getTLink().getSource().getTokenSpan(), tlinkDatum.getTLink().getTarget().getTokenSpan() };
+					else if (tlinkDatum.getTLink().getSource().getTLinkableType() == Type.TIME && tlinkDatum.getTLink().getTarget().getTLinkableType() == Type.EVENT)
+						return new TokenSpan[] { tlinkDatum.getTLink().getTarget().getTokenSpan(), tlinkDatum.getTLink().getSource().getTokenSpan() };
+					else
+						return new TokenSpan[0];
+				}
+			});
+			
 			this.addDatumIndicator(new DatumIndicator<TLinkDatum<L>>() {
 				public String toString() { return "TypeEventEvent"; }
 				public boolean indicator(TLinkDatum<L> datum) { return datum.getTLink().getType() == TLink.Type.EVENT_EVENT; }

@@ -40,8 +40,9 @@ feature fdepPathET = DependencyPath(minFeatureOccurrence="2", sourceTokenExtract
 feature fconPathET = ConstituencyPath(minFeatureOccurrence="2", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime");
 feature fdepTypeET = DependencyPathType(sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime");
 feature fdomET = ConstituencyParseRelation(sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime");
+feature fw2vSimilitaryET = Word2Vec(tokenExtractor="SourceTarget", mode="SIMILARITY", fn=(${str} o ${head}));
 feature fsourceType = TLinkableType(sourceOrTarget="SOURCE");
-	
+
 feature fsToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${strDef});
 feature fsTokenB = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${strDef} o ${inside1} o ${before2}));
 feature fsTokenA = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${strDef} o ${inside1} o ${after2}));
