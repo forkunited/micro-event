@@ -5,8 +5,6 @@ feature_set fsET = FeatureSet(features=(${featuresTlinkType.feventToken},
 										${featuresTlinkType.feventTense}, 
 										${featuresTlinkType.feventAspect}, 
 										${featuresTlinkType.feventClass}, 
-										${featuresTlinkType.feventModality}, 
-										${featuresTlinkType.feventPolarity},  
 										${featuresTlinkType.feventLemma}, 
 										${featuresTlinkType.feventSynset},
 										${featuresTlinkType.feventSentPos},
@@ -74,8 +72,6 @@ feature_set fsDCT = FeatureSet(features=(${featuresTlinkType.feventToken},
 										 ${featuresTlinkType.feventTense}, 
 										 ${featuresTlinkType.feventAspect}, 
 										 ${featuresTlinkType.feventClass},  
-										 ${featuresTlinkType.feventModality}, 
-										 ${featuresTlinkType.feventPolarity},  
 										 ${featuresTlinkType.feventLemma}, 
 										 ${featuresTlinkType.feventSynset},
 										 ${featuresTlinkType.feventSentPos},
@@ -102,7 +98,7 @@ model yadll=YADLL(numEpochs="40", stepSize="1",
 };
 
 search yadllSearch=Grid() {
-	dimension numEpochs=Enumerated(values=("50", "100", "150", "200", "300"), stageIndex="0");
+	dimension numEpochs=Enumerated(values=("50", "100", "150", "200"), stageIndex="0");
 };
 
 search yadllDCTSearch = CloneSearch(search=${yadllSearch});
