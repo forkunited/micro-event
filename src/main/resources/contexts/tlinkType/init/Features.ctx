@@ -7,6 +7,7 @@ ts_fn beforeI1 = NGramContext(type="BEFORE_INCLUDING", n="1");
 ts_fn afterI1 = NGramContext(type="AFTER_INCLUDING", n="1");
 ts_fn inside1 = NGramInside(n="1");
 ts_fn dep = DependencyRelation(mode="PARENTS_AND_CHILDREN");
+ts_fn prep = PrepositionOfClause();
 ts_str_fn strDef = String(cleanFn="LowerCaseCleanFn");
 ts_str_fn strTrim = String(cleanFn="TrimCleanFn");
 ts_str_fn pos = PoS();
@@ -32,6 +33,7 @@ feature feventClass = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="TI
 feature feventPolarity = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="TIMEML_POLARITY");
 feature feventModality = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="MODALITY");
 feature feventDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${depStr});
+feature feventPrep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${strDef} o ${prep}));
 feature feventLemma = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${lemma});
 feature feventSynset = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${synset});
 feature feventSentPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${sentPos});
@@ -40,6 +42,7 @@ feature feventW2v = Word2Vec(tokenExtractor="FirstEvent", mode="VECTOR", fn=(${s
 feature ftimeToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=${strDef});
 feature ftimeTokenh = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=(${strDef} o ${head}));
 feature ftimeSentPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=${sentPos});
+feature ftimePrep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=(${strDef} o ${prep}));
 feature ftimeW2v = Word2Vec(tokenExtractor="FirstTime", mode="VECTOR", fn=(${str} o ${head}));
 feature feventTimeToken = Conjunction(minFeatureOccurrence="2", features=(${feventToken}, ${ftimeToken}));
 feature ftokenPathET = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="BetweenSourceTarget", fn=${strDef});
@@ -69,6 +72,7 @@ feature fsClass = TLinkEventAttribute(sourceOrTarget="SOURCE", attribute="TIMEML
 feature fsPolarity = TLinkEventAttribute(sourceOrTarget="SOURCE", attribute="TIMEML_POLARITY");
 feature fsModality = TLinkEventAttribute(sourceOrTarget="SOURCE", attribute="MODALITY");
 feature fsDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${depStr});
+feature fsPrep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${strDef} o ${prep}));
 feature fsLemma = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${lemma});
 feature fsSynset = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${synset});
 feature fsW2v = Word2Vec(tokenExtractor="Source", mode="VECTOR", fn=(${str} o ${head}));
@@ -90,6 +94,7 @@ feature ftClass = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="TIMEML
 feature ftPolarity = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="TIMEML_POLARITY");
 feature ftModality = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="MODALITY");
 feature ftDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${depStr});
+feature ftPrep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${strDef} o ${prep}));
 feature ftLemma = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${lemma});
 feature ftSynset = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${synset});
 feature ftSentPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${sentPos});
