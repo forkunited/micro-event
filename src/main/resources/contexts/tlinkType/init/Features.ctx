@@ -31,16 +31,20 @@ feature feventModality = TLinkEventAttribute(sourceOrTarget="EITHER", attribute=
 feature feventDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${depLemma});
 feature feventLemma = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${lemma});
 feature feventSynset = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${synset});
+feature feventW2v = Word2Vec(tokenExtractor="FirstEvent", mode="VECTOR", fn=(${str} o ${head}));
 feature ftimeToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=${strDef});
 feature ftimeTokenh = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=(${strDef} o ${head}));
 feature ftimeSentPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=${sentPos});
+feature ftimeW2v = Word2Vec(tokenExtractor="FirstTime", mode="VECTOR", fn=(${str} o ${head}));
 feature feventTimeToken = Conjunction(minFeatureOccurrence="2", features=(${feventToken}, ${ftimeToken}));
 feature ftokenPathET = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="BetweenSourceTarget", fn=${strDef});
 feature fdepPathET = DependencyPath(minFeatureOccurrence="2", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime", useRelationTypes="true");
 feature fconPathET = ConstituencyPath(minFeatureOccurrence="2", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime");
 feature fdepTypeET = DependencyPathType(sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime");
+feature fpredPathET = PredicateArgumentPath(sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime");
 feature fdomET = ConstituencyParseRelation(sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime");
-feature fw2vSimilitaryET = Word2Vec(tokenExtractor="SourceTarget", mode="SIMILARITY", fn=(${str} o ${head}));
+feature fw2vSimET = Word2Vec(tokenExtractor="EventTime", mode="SIMILARITY", fn=(${str} o ${head}));
+feature fw2vDiffET = Word2Vec(tokenExtractor="EventTime", mode="DIFFERENCE", fn=(${str} o ${head}));
 feature fsourceType = TLinkableType(sourceOrTarget="SOURCE");
 
 feature fsToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${strDef});
@@ -61,6 +65,7 @@ feature fsModality = TLinkEventAttribute(sourceOrTarget="SOURCE", attribute="MOD
 feature fsDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${depLemma});
 feature fsLemma = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${lemma});
 feature fsSynset = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${synset});
+feature fsW2v = Word2Vec(tokenExtractor="Source", mode="VECTOR", fn=(${str} o ${head}));
 feature ftToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${strDef});
 feature ftTokenB = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${strDef} o ${inside1} o ${before2}));
 feature ftTokenA = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${strDef} o ${inside1} o ${after2}));
@@ -79,6 +84,7 @@ feature ftModality = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="MOD
 feature ftDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${depLemma});
 feature ftLemma = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${lemma});
 feature ftSynset = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${synset});
+feature ftW2v = Word2Vec(tokenExtractor="Target", mode="VECTOR", fn=(${str} o ${head}));
 feature fstToken = Conjunction(minFeatureOccurrence="2", features=(${fsToken}, ${ftToken}));
 feature fstPos = Conjunction(minFeatureOccurrence="2", features=(${fsPos}, ${ftPos}));
 feature fstTense = Conjunction(minFeatureOccurrence="2", features=(${fsTense}, ${ftTense}));
@@ -89,4 +95,7 @@ feature fstModality = Conjunction(minFeatureOccurrence="2", features=(${fsModali
 feature fdepPathEE = DependencyPath(minFeatureOccurrence="2", sourceTokenExtractor="Source", targetTokenExtractor="Target", useRelationTypes="true");
 feature fconPathEE = ConstituencyPath(minFeatureOccurrence="2", sourceTokenExtractor="Source", targetTokenExtractor="Target");
 feature fdepTypeEE = DependencyPathType(sourceTokenExtractor="Source", targetTokenExtractor="Target");
+feature fpredPathEE = PredicateArgumentPath(sourceTokenExtractor="Source", targetTokenExtractor="Target");
 feature fdomEE = ConstituencyParseRelation(sourceTokenExtractor="Source", targetTokenExtractor="Target");
+feature fw2vSimEE = Word2Vec(tokenExtractor="SourceTarget", mode="SIMILARITY", fn=(${str} o ${head}));
+feature fw2vDiffEE = Word2Vec(tokenExtractor="SourceTarget", mode="DIFFERENCE", fn=(${str} o ${head}));
