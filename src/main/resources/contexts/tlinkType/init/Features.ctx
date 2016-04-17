@@ -8,6 +8,7 @@ ts_fn afterI1 = NGramContext(type="AFTER_INCLUDING", n="1");
 ts_fn inside1 = NGramInside(n="1");
 ts_fn dep = DependencyRelation(mode="PARENTS_AND_CHILDREN");
 ts_str_fn strDef = String(cleanFn="LowerCaseCleanFn");
+ts_str_fn strTrim = String(cleanFn="TrimCleanFn");
 ts_str_fn pos = PoS();
 ts_str_fn nlpLemma = TokenAnnotation(annotationType="lemma");
 ts_str_fn lemma = WordNetLemma();
@@ -15,7 +16,7 @@ ts_str_fn synset = WordNetSynset();
 ts_str_fn sentPos = SentencePosition();
 ts_str_fn depStr=TokenSpanPathStr(mode="ALL", pathLength="1", spanFn1=${dep}, strFn=${strDef});
 
-feature feventToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${strDef});
+feature feventToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${strTrim});
 feature feventTokenB = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${strDef} o ${inside1} o ${beforeS2}));
 feature feventTokenA = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${strDef} o ${inside1} o ${afterS2}));
 feature feventPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${pos});
