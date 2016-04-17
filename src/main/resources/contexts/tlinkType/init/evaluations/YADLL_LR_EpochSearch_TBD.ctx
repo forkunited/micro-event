@@ -1,0 +1,54 @@
+classify_eval devYadllDCTPrecision = Precision(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllDCT}Epochmode="MICRO");
+classify_eval devYadllDCTRecall = Recall(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllDCT}, mode="MICRO");
+classify_eval testYadllDCTPrecision = Precision(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllDCT}, mode="MICRO");
+classify_eval testYadllDCTRecall = Recall(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllDCT}, mode="MICRO");
+
+classify_eval devYadllETWSPrecision = Precision(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllETWS}, mode="MICRO");
+classify_eval devYadllETWSRecall = Recall(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllETWS}, mode="MICRO");
+classify_eval testYadllETWSPrecision = Precision(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllETWS}, mode="MICRO");
+classify_eval testYadllETWSRecall = Recall(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllETWS}, mode="MICRO");
+
+classify_eval devYadllETBSPrecision = Precision(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllETBS}, mode="MICRO");
+classify_eval devYadllETBSRecall = Recall(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllETBS}, mode="MICRO");
+classify_eval testYadllETBSPrecision = Precision(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllETBS}, mode="MICRO");
+classify_eval testYadllETBSRecall = Recall(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllETBS}, mode="MICRO");
+
+classify_eval devYadllEEWSPrecision = Precision(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllEEWS}, mode="MICRO");
+classify_eval devYadllEEWSRecall = Recall(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllEEWS}, mode="MICRO");
+classify_eval testYadllEEWSPrecision = Precision(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllEEWS}, mode="MICRO");
+classify_eval testYadllEEWSRecall = Recall(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllEEWS}, mode="MICRO");
+
+classify_eval devYadllEEBSPrecision = Precision(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllEEBS}, mode="MICRO");
+classify_eval devYadllEEBSRecall = Recall(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllEEBS}, mode="MICRO");
+classify_eval testYadllEEBSPrecision = Precision(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllEEBS}, mode="MICRO");
+classify_eval testYadllEEBSRecall = Recall(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllEEBS}, mode="MICRO");
+
+classify_eval devYadllEEDPrecision = Precision(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllEED}, mode="MICRO");
+classify_eval devYadllEEDRecall = Recall(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllEED}, mode="MICRO");
+classify_eval testYadllEEDPrecision = Precision(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllEED}, mode="MICRO");
+classify_eval testYadllEEDRecall = Recall(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllEED}, mode="MICRO");
+
+value strEvals = 
+	OutputStrings(id="Evaluation_TLinkType_YADLL_LR_EpochSearch_TBD", storage="EventString", collection="ExperimentEvaluationOutput", 
+                 refs=
+                 (
+	                 ${devYadllDCTPrecision}, ${devYadllDCTRecall},
+	                 ${testYadllDCTPrecision}, ${testYadllDCTRecall},	                 
+	                 ${devYadllETWSPrecision}, ${devYadllETWSRecall},
+	                 ${testYadllETWSPrecision}, ${testYadllETWSRecall},        		              
+	                 ${devYadllETBSPrecision}, ${devYadllETBSRecall},
+	                 ${testYadllETBSPrecision}, ${testYadllETBSRecall}, 
+	                 ${devYadllEEWSPrecision}, ${devYadllEEWSRecall},
+	                 ${testYadllEEWSPrecision}, ${testYadllEEWSRecall}, 
+	                 ${devYadllEEBSPrecision}, ${devYadllEEBSRecall},
+	                 ${testYadllEEBSPrecision}, ${testYadllEEBSRecall}, 
+	                 ${devYadllEEDPrecision}, ${devYadllEEDRecall},
+	                 ${testYadllEEDPrecision}, ${testYadllEEDRecall},
+	                 
+	                 ${modelsTlinkTypeYadllLrEpochSearch.yadllDEpochSearch},
+	                 ${modelsTlinkTypeYadllLrEpochSearch.yadllETWSSearch},
+	                 ${modelsTlinkTypeYadllLrEpochSearch.yadllETBSSearch},
+	                 ${modelsTlinkTypeYadllLrEpochSearch.yadllEEWSSearch},
+	                 ${modelsTlinkTypeYadllLrEpochSearch.yadllEEBSSearch},
+	                 ${modelsTlinkTypeYadllLrEpochSearch.yadllEEDSearch}
+                 ));

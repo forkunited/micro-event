@@ -10,10 +10,10 @@ context labelsTlinkTypeTBD = TLinkType(initScript="/tlinkType/init/labels/TBD.ct
 context featuresTlinkType = TLinkType(initScript="/tlinkType/init/Features.ctx");
 
 context modelsTlinkTypeDet = TLinkType(initScript="/tlinkType/init/models/Deterministic_TBD.ctx");
-context modelsTlinkTypeYadllLrCTSearch = TLinkType(initScript="/tlinkType/init/models/YADLL_LR_CTSearch_TBD.ctx");
+context modelsTlinkTypeYadllLrEpochSearch = TLinkType(initScript="/tlinkType/init/models/YADLL_LR_EpochSearch_TBD.ctx");
 
 context evalTlinkTypeDet = TLinkType(initScript="/tlinkType/init/evaluations/Deterministic_TBD.ctx");
-context evalTlinkTypeYadllLrCTSearch = TLinkType(initScript="/tlinkType/init/evaluations/YADLL_LR_CTSearch_TBD.ctx");
+context evalTlinkTypeYadllLrEpochSearch = TLinkType(initScript="/tlinkType/init/evaluations/YADLL_LR_EpochSearch_TBD.ctx");
 
 context rulesTlinkTypeTransitive = TLinkType(initScript="/tlinkType/init/rules/Transitive.ctx");
 context rulesTlinkTypeConverse = TLinkType(initScript="/tlinkType/init/rules/Converse.ctx");
