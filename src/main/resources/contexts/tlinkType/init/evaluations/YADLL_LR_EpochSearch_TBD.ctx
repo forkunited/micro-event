@@ -45,7 +45,7 @@ value strEvals =
 	                 ${devYadllEEDPrecision}, ${devYadllEEDRecall},
 	                 ${testYadllEEDPrecision}, ${testYadllEEDRecall},
 	                 
-	                 ${modelsTlinkTypeYadllLrEpochSearch.yadllDEpochSearch},
+	                 ${modelsTlinkTypeYadllLrEpochSearch.yadllDCTSearch},
 	                 ${modelsTlinkTypeYadllLrEpochSearch.yadllETWSSearch},
 	                 ${modelsTlinkTypeYadllLrEpochSearch.yadllETBSSearch},
 	                 ${modelsTlinkTypeYadllLrEpochSearch.yadllEEWSSearch},
