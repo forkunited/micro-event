@@ -110,6 +110,12 @@ feature fstAspect = Conjunction(minFeatureOccurrence="2", features=(${fsAspect},
 feature fstClass = Conjunction(minFeatureOccurrence="2", features=(${fsClass}, ${ftClass}));	
 feature fstPolarity = Conjunction(minFeatureOccurrence="2", features=(${fsPolarity}, ${ftPolarity}));	
 feature fstModality = Conjunction(minFeatureOccurrence="2", features=(${fsModality}, ${ftModality}));	
+feature fstPosEq = Conjunction(mode="EQUALITY", minFeatureOccurrence="2", features=(${fsPos}, ${ftPos}));
+feature fstTenseEq = Conjunction(mode="EQUALITY", minFeatureOccurrence="2", features=(${fsTense}, ${ftTense}));
+feature fstAspectEq = Conjunction(mode="EQUALITY", minFeatureOccurrence="2", features=(${fsAspect}, ${ftAspect}));
+feature fstClassEq = Conjunction(mode="EQUALITY", minFeatureOccurrence="2", features=(${fsClass}, ${ftClass}));	
+feature fstPolarityEq = Conjunction(mode="EQUALITY", minFeatureOccurrence="2", features=(${fsPolarity}, ${ftPolarity}));	
+feature fstModalityEq = Conjunction(mode="EQUALITY", minFeatureOccurrence="2", features=(${fsModality}, ${ftModality}));	
 feature fstSentPos = Conjunction(minFeatureOccurrence="2", features=(${fsSentPos}, ${ftSentPos}));
 feature fdepPathEE = DependencyPath(minFeatureOccurrence="2", sourceTokenExtractor="Source", targetTokenExtractor="Target", useRelationTypes="true");
 feature fconPathPosEE = ConstituencyPath(minFeatureOccurrence="2", sourceTokenExtractor="Source", targetTokenExtractor="Target", noLeaves="false");
