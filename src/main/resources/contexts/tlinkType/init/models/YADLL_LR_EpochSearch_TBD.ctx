@@ -91,7 +91,7 @@ data_features trainMatrixEEWS = DataFeatureMatrix(data=${dataTlinkTypeTBD.trainD
 data_features trainMatrixEEBS = DataFeatureMatrix(data=${dataTlinkTypeTBD.trainDataEEBS}, features=${fsEE});
 data_features trainMatrixEED = DataFeatureMatrix(data=${dataTlinkTypeTBD.trainDataEED}, features=${fsEE});
 
-model yadll=YADLL(numEpochs="40", stepSize=".1", 
+model yadll=YADLL(numEpochs="40", stepSize=".5", 
 				  fnNodes=("Softmax", "NegativeLogLoss"), 
 				  fnParameters=("Zeros", "Zeros"), 
 				  Softmax_0_input="Zeros_0*x+Zeros_1", 
