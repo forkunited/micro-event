@@ -2,6 +2,8 @@ classify_eval devYadllDCTPrecision = Precision(task=${dataTlinkTypeTBD.devTask},
 classify_eval devYadllDCTRecall = Recall(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllDCT}, mode="MICRO");
 classify_eval testYadllDCTPrecision = Precision(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllDCT}, mode="MICRO");
 classify_eval testYadllDCTRecall = Recall(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllDCT}, mode="MICRO");
+classify_eval devYadllDCTConfusions = ConfusionMatrix(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllDCT});
+classify_eval testYadllDCTConfusions = ConfusionMatrix(task=${dataTlinkTypeTBD.testTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllDCT});
 
 classify_eval devYadllETWSPrecision = Precision(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllETWS}, mode="MICRO");
 classify_eval devYadllETWSRecall = Recall(task=${dataTlinkTypeTBD.devTask}, method=${modelsTlinkTypeYadllLrEpochSearch.yadllETWS}, mode="MICRO");
@@ -50,5 +52,8 @@ value strEvals =
 	                 ${modelsTlinkTypeYadllLrEpochSearch.yadllETBSSearch},
 	                 ${modelsTlinkTypeYadllLrEpochSearch.yadllEEWSSearch},
 	                 ${modelsTlinkTypeYadllLrEpochSearch.yadllEEBSSearch},
-	                 ${modelsTlinkTypeYadllLrEpochSearch.yadllEEDSearch}
+	                 ${modelsTlinkTypeYadllLrEpochSearch.yadllEEDSearch},
+	                 
+	                 ${devYadllDCTConfusions},
+	                 ${testYadllDCTConfusions}
                  ));
