@@ -116,7 +116,7 @@ classify_method yadllEEWSUnfiltered = SupervisedModel(model=${yadll}, data=${tra
 classify_method yadllEEBSUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixEEBS}, trainEvaluation=${acc});
 classify_method yadllEEDUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixEED}, trainEvaluation=${acc});
 
-classify_method yadllDCTUnfilteredP = CloneClassifyMethod(method=${yadllDCTUnfiltered}, numEpochs="1250");
+classify_method yadllDCTUnfilteredP = CloneClassifyMethod(method=${yadllDCTUnfiltered}, stepSize=".5", numEpochs="300");
 classify_method yadllETWSUnfilteredP = CloneClassifyMethod(method=${yadllETWSUnfiltered}, numEpochs="1000");
 classify_method yadllETBSUnfilteredP = CloneClassifyMethod(method=${yadllETBSUnfiltered}, numEpochs="1000");
 classify_method yadllEEWSUnfilteredP = CloneClassifyMethod(method=${yadllEEWSUnfiltered}, numEpochs="1000");
