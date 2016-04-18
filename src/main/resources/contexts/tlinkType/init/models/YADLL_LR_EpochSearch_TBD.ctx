@@ -94,7 +94,7 @@ data_features trainMatrixEEWS = DataFeatureMatrix(data=${dataTlinkTypeTBD.trainD
 data_features trainMatrixEEBS = DataFeatureMatrix(data=${dataTlinkTypeTBD.trainDataEEBS}, features=${fsEE});
 data_features trainMatrixEED = DataFeatureMatrix(data=${dataTlinkTypeTBD.trainDataEED}, features=${fsEE});
 
-model yadll=YADLL(numEpochs="40", stepSize=".05", 
+model yadll=YADLL(numEpochs="40", stepSize=".1", 
 				  fnNodes=("Softmax", "NegativeLogLoss"), 
 				  fnParameters=("Zeros", "Zeros"), 
 				  Softmax_0_input="Zeros_0*x+Zeros_1", 
@@ -107,7 +107,7 @@ model yadll=YADLL(numEpochs="40", stepSize=".05",
 };
 
 search yadllSearch=Grid() {
-	dimension numEpochs=Enumerated(values=("50", "75", "100", "125", "150"), stageIndex="0");
+	dimension numEpochs=Enumerated(values=("50", "75", "100", "125", "150", "175", "200"), stageIndex="0");
 };
 
 search yadllDCTSearch = CloneSearch(search=${yadllSearch});
