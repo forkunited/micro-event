@@ -42,8 +42,6 @@ feature_set fsEE = FeatureSet(features=(${featuresTlinkType.fsToken},
 										${featuresTlinkType.ftPos}, 
 										${featuresTlinkType.ftPosB}, 
 										${featuresTlinkType.ftPosBI}, 
-										${featuresTlinkType.ftPosA}, 
-										${featuresTlinkType.ftPosAI},
 										${featuresTlinkType.ftTense},
 										${featuresTlinkType.ftAspect}, 
 										${featuresTlinkType.ftClass}, 
@@ -110,7 +108,7 @@ model yadll=YADLL(numEpochs="40", stepSize=".1",
 };
 
 search yadllSearch=Grid() {
-	dimension numEpochs=Enumerated(values=("50", "75", "100", "125", "150", "175", "200"), stageIndex="0");
+	dimension numEpochs=Enumerated(values=("50", "100", "150"), stageIndex="0");
 };
 
 search yadllDCTSearch = CloneSearch(search=${yadllSearch});
