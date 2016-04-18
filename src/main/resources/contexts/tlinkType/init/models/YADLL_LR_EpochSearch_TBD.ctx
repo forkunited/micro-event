@@ -104,7 +104,7 @@ model yadll=YADLL(numEpochs="40", stepSize=".5",
 };
 
 search yadllSearch=Grid() {
-	dimension numEpochs=Enumerated(values=("50", "100", "150", "300", "450"), stageIndex="0");
+	dimension numEpochs=Enumerated(values=("50", "100", "150"), stageIndex="0");
 };
 
 search yadllDCTSearch = CloneSearch(search=${yadllSearch});
