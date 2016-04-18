@@ -108,10 +108,6 @@ model yadll=YADLL(numEpochs="40", stepSize=".01",
 	array validLabels=${labelsTlinkTypeTBD.labels};
 };
 
-search yadllSearch=Grid() {
-	dimension numEpochs=Enumerated(values=("1000"), stageIndex="0");
-};
-
 search yadllDCTSearch = CloneSearch(search=${yadllSearch});
 search yadllETWSSearch = CloneSearch(search=${yadllSearch});
 search yadllETBSSearch = CloneSearch(search=${yadllSearch});
@@ -127,23 +123,17 @@ classify_method yadllEEWSUnfiltered = SupervisedModel(model=${yadll}, data=${tra
 classify_method yadllEEBSUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixEEBS}, trainEvaluation=${acc});
 classify_method yadllEEDUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixEED}, trainEvaluation=${acc});
 	
-classify_method yadllDCTSub = FilterDatumIndicator(method=${yadllDCTUnfiltered}, datumIndicator="ETDCT");
-classify_method yadllETWSSub = FilterDatumIndicator(method=${yadllETWSUnfiltered}, datumIndicator="ETWS");
-classify_method yadllETBSSub = FilterDatumIndicator(method=${yadllETBSUnfiltered}, datumIndicator="ETBS");
-classify_method yadllEEWSSub = FilterDatumIndicator(method=${yadllEEWSUnfiltered}, datumIndicator="EEWS");
-classify_method yadllEEBSSub = FilterDatumIndicator(method=${yadllEEBSUnfiltered}, datumIndicator="EEBS");
-classify_method yadllEEDSub = FilterDatumIndicator(method=${yadllEEDUnfiltered}, datumIndicator="EED");
+classify_method yadllDCTSub = FilterDatumIndicator(method=${yadllDCTUnfiltered}, datumIndicator="ETDCT", numEpochs="3000");
+classify_method yadllETWSSub = FilterDatumIndicator(method=${yadllETWSUnfiltered}, datumIndicator="ETWS", numEpochs="1000");
+classify_method yadllETBSSub = FilterDatumIndicator(method=${yadllETBSUnfiltered}, datumIndicator="ETBS", numEpochs="1000");
+classify_method yadllEEWSSub = FilterDatumIndicator(method=${yadllEEWSUnfiltered}, datumIndicator="EEWS", numEpochs="1000");
+classify_method yadllEEBSSub = FilterDatumIndicator(method=${yadllEEBSUnfiltered}, datumIndicator="EEBS", numEpochs="1000");
+classify_method yadllEEDSub = FilterDatumIndicator(method=${yadllEEDUnfiltered}, datumIndicator="EED", numEpochs="1000");
 
-classify_eval devEvalDCT = F(task=${dataTlinkTypeTBD.devTask}, method=${yadllDCTSub}, Beta="1", mode="MICRO");
-classify_eval devEvalETWS = F(task=${dataTlinkTypeTBD.devTask}, method=${yadllETWSSub}, Beta="1", mode="MICRO");
-classify_eval devEvalETBS = F(task=${dataTlinkTypeTBD.devTask}, method=${yadllETBSSub}, Beta="1", mode="MICRO");
-classify_eval devEvalEEWS = F(task=${dataTlinkTypeTBD.devTask}, method=${yadllEEWSSub}, Beta="1", mode="MICRO");
-classify_eval devEvalEEBS = F(task=${dataTlinkTypeTBD.devTask}, method=${yadllEEBSSub}, Beta="1", mode="MICRO");
-classify_eval devEvalEED = F(task=${dataTlinkTypeTBD.devTask}, method=${yadllEEDSub}, Beta="1", mode="MICRO");
+classify_method yadllDCT = InitClassifyMethod(devData=${dataTlinkTypeTBD.devData}, method=${yadllDCTSub});
+classify_method yadllETWS = InitClassifyMethod(devData=${dataTlinkTypeTBD.devData}, method=${yadllETWSSub});
+classify_method yadllETBS = InitClassifyMethod(devData=${dataTlinkTypeTBD.devData}, method=${yadllETBSSub});
+classify_method yadllEEWS = InitClassifyMethod(devData=${dataTlinkTypeTBD.devData}, method=${yadllEEWSSub});
+classify_method yadllEEBS = InitClassifyMethod(devData=${dataTlinkTypeTBD.devData}, method=${yadllEEBSSub});
+classify_method yadllEED = InitClassifyMethod(devData=${dataTlinkTypeTBD.devData}, method=${yadllEEDSub});
 
-classify_method yadllDCT = RunClassifyMethodSearch(fn=${devEvalDCT}, search=${yadllDCTSearch});
-classify_method yadllETWS = RunClassifyMethodSearch(fn=${devEvalETWS}, search=${yadllETWSSearch});
-classify_method yadllETBS = RunClassifyMethodSearch(fn=${devEvalETBS}, search=${yadllETBSSearch});
-classify_method yadllEEWS = RunClassifyMethodSearch(fn=${devEvalEEWS}, search=${yadllEEWSSearch});
-classify_method yadllEEBS = RunClassifyMethodSearch(fn=${devEvalEEBS}, search=${yadllEEBSSearch});
-classify_method yadllEED = RunClassifyMethodSearch(fn=${devEvalEED}, search=${yadllEEDSearch});
