@@ -108,13 +108,6 @@ model yadll=YADLL(numEpochs="40", stepSize=".01",
 	array validLabels=${labelsTlinkTypeTBD.labels};
 };
 
-search yadllDCTSearch = CloneSearch(search=${yadllSearch});
-search yadllETWSSearch = CloneSearch(search=${yadllSearch});
-search yadllETBSSearch = CloneSearch(search=${yadllSearch});
-search yadllEEWSSearch = CloneSearch(search=${yadllSearch});
-search yadllEEBSSearch = CloneSearch(search=${yadllSearch});
-search yadllEEDSearch = CloneSearch(search=${yadllSearch});
-
 evaluation acc=Accuracy();
 classify_method yadllDCTUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixDCT}, trainEvaluation=${acc});
 classify_method yadllETWSUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixETWS}, trainEvaluation=${acc});
