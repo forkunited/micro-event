@@ -19,6 +19,7 @@ ts_str_fn lemma = WordNetLemma();
 ts_str_fn synset = WordNetSynset();
 ts_str_fn sentPos = SentencePosition();
 ts_str_fn depStr = TokenSpanPathStr(mode="ALL", pathLength="1", spanFn1=${dep}, strFn=${strDef});
+ts_str_fn pred = PredicateSense();
 
 feature feventToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${strTrim});
 feature feventTokenClean = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${strDef});
@@ -44,6 +45,7 @@ feature feventSynset = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurre
 feature feventSentPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${sentPos});
 feature feventSentPosPos = Conjunction(minFeatureOccurrence="2", features=(${feventSentPos}, ${feventPos}));
 feature feventW2v = Word2Vec(tokenExtractor="FirstEvent", mode="VECTOR", fn=(${str} o ${head}));
+feature feventPred= TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${pred} o ${head}));
 feature ftimeToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=${strDef});
 feature ftimeTokenh = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=(${strDef} o ${head}));
 feature ftimeSentPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=${sentPos});
@@ -85,6 +87,7 @@ feature fsSynset = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence=
 feature fsW2v = Word2Vec(tokenExtractor="Source", mode="VECTOR", fn=(${str} o ${head}));
 feature fsSentPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${sentPos});
 feature fsSentPosPos = Conjunction(minFeatureOccurrence="2", features=(${fsSentPos}, ${fsPos}));
+feature fsPred= TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${pred} o ${head}));
 feature ftToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${strTrim});
 feature ftTokenClean = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${strDef});
 feature ftTokenB = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${strDef} o ${inside1} o ${beforeS2}));
@@ -108,6 +111,7 @@ feature ftSynset = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence=
 feature ftSentPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${sentPos});
 feature ftSentPosPos = Conjunction(minFeatureOccurrence="2", features=(${ftSentPos}, ${ftPos}));
 feature ftW2v = Word2Vec(tokenExtractor="Target", mode="VECTOR", fn=(${str} o ${head}));
+feature ftPred= TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${pred} o ${head}));
 feature fstToken = Conjunction(minFeatureOccurrence="2", features=(${fsToken}, ${ftToken}));
 feature fstTokenClean = Conjunction(minFeatureOccurrence="2", features=(${fsTokenClean}, ${ftTokenClean}));
 feature fstPos = Conjunction(minFeatureOccurrence="2", features=(${fsPos}, ${ftPos}));
@@ -123,6 +127,7 @@ feature fstClassEq = Conjunction(mode="EQUALITY", minFeatureOccurrence="2", feat
 feature fstPolarityEq = Conjunction(mode="EQUALITY", minFeatureOccurrence="2", features=(${fsPolarity}, ${ftPolarity}));	
 feature fstModalityEq = Conjunction(mode="EQUALITY", minFeatureOccurrence="2", features=(${fsModality}, ${ftModality}));	
 feature fstSentPos = Conjunction(minFeatureOccurrence="2", features=(${fsSentPos}, ${ftSentPos}));
+feature fstPred = Conjunction(minFeatureOccurrence="2", features=(${fsPred}, ${ftPred}));
 feature fdepPathEE = DependencyPath(minFeatureOccurrence="2", sourceTokenExtractor="Source", targetTokenExtractor="Target", useRelationTypes="true");
 feature fconPathPosEE = ConstituencyPath(minFeatureOccurrence="2", sourceTokenExtractor="Source", targetTokenExtractor="Target", noLeaves="false");
 feature fconPathEE = ConstituencyPath(minFeatureOccurrence="2", sourceTokenExtractor="Source", targetTokenExtractor="Target", noLeaves="true");
