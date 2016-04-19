@@ -5,4 +5,4 @@ value debug=Debug(file=${resultsId});
 context util = TLinkType(initScript="/util/Util.ctx", initOnce="true");
 
 context evalSieve = TLinkType(initScript="/tlinkType/evaluations/Sieve.ctx", initOnce="false");
-context results = TLinkType(inputScript="/tlinkType/experiment/output/Test_CAEVO.ctx", initOnce="false");
+context results = TLinkType(initScript="/tlinkType/experiment/output/Test_CAEVO.ctx", initOnce="false");
