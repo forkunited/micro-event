@@ -1,15 +1,15 @@
-trainDocs="tbd_docs";
-devDocs="tbd_docs";
-testDocs="tbd_docs";
-trainTlinks="tbd_tlinks";
-devTlinks="tbd_tlinks";
-testTlinks="tbd_tlinks";
-trainLabelMode="ALL";
-devLabelMode="ALL";
-testLabelMode="ALL";
-trainMaxSentDist="1";
-devMaxSentDist="1";
-testMaxSentDist="1";
+value trainDocs="tbd_docs";
+value devDocs="tbd_docs";
+value testDocs="tbd_docs";
+value trainTlinks="tbd_tlinks";
+value devTlinks="tbd_tlinks";
+value testTlinks="tbd_tlinks";
+value trainLabelMode="ALL";
+value devLabelMode="ALL";
+value testLabelMode="ALL";
+value trainMaxSentDist="1";
+value devMaxSentDist="1";
+value testMaxSentDist="1";
 
 array labels = ("BEFORE", "AFTER", "INCLUDES", "IS_INCLUDED", "SIMULTANEOUS", "VAGUE");
 value labelCount = SizeArray(array=${labels});
