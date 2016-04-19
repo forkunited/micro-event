@@ -27,8 +27,7 @@ feature_set fsET = FeatureSet(features=(${features.feventTokenClean},
 										${features.fdomET},
 										${features.foverEventET},
 										${features.fsourceType},
-										${features.fw2vSimET},
-										${features.fw2vDiffET}), 
+										${features.fw2vSimET}), 
 								initData=(${data.trainDataET}));
 
 feature_set fsEE = FeatureSet(features=(${features.fsTokenClean}, 
@@ -80,8 +79,7 @@ feature_set fsEE = FeatureSet(features=(${features.fsTokenClean},
 										${features.fdepTypeEE},
 										${features.foverEventEE}, 
 										${features.fdomEE},
-										${features.fw2vSimEE},
-										${features.fw2vDiffEE}), 
+										${features.fw2vSimEE}), 
 						initData=(${data.trainDataEE}));
 
 feature_set fsDCT = FeatureSet(features=(${features.feventTokenClean},
