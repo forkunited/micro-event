@@ -2,10 +2,7 @@ value maxThreads="30";
 value debug=Debug(file="TLinkType_CAEVO.out");
 
 context util = TLinkType(initScript="/util/Util.ctx", initOnce="true");
-context evalSieve = TLinkType(initScript="/tlinkType/evaluations/Sieve.ctx");
-
-evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.
-evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDet.
+context evalSieve = TLinkType(initScript="/tlinkType/evaluations/Sieve.ctx", initOnce="true");
 
 value strEvals = OutputStrings(id="TLinkType_Test_CAEVO", storage="EventString", collection="ExperimentEvaluationOutput", 
                  refs=
