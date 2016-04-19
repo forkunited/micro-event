@@ -14,4 +14,3 @@ value testMaxSentDist="1";
 array labels = ("BEFORE", "AFTER", "INCLUDES", "IS_INCLUDED", "SIMULTANEOUS", "VAGUE");
 value labelCount = SizeArray(array=${labels});
 
-array devTestDocs = ConcatenateArrays(a1=${devDocs}, a2=${testDocs});
