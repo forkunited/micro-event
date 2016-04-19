@@ -21,6 +21,7 @@ ts_str_fn sentPos = SentencePosition();
 ts_str_fn depStr = TokenSpanPathStr(mode="ALL", pathLength="1", spanFn1=${dep}, strFn=${strDef});
 
 feature feventToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${strTrim});
+feature feventTokenClean = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${strDef});
 feature feventTokenB = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${strDef} o ${inside1} o ${beforeS2}));
 feature feventTokenA = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${strDef} o ${inside1} o ${afterS2}));
 feature feventTokenBA = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${strDef} o ${inside1} o ${beforeAfterS2}));
@@ -61,7 +62,8 @@ feature fw2vDiffET = Word2Vec(tokenExtractor="EventTime", mode="DIFFERENCE", fn=
 feature fsourceType = TLinkableType(sourceOrTarget="SOURCE");
 feature foverEventET = TLinkAttribute(attribute="OVER_EVENT");
 
-feature fsToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${strDef});
+feature fsToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${strTrim});
+feature fsTokenClean = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${strDef});
 feature fsTokenB = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${strDef} o ${inside1} o ${beforeS2}));
 feature fsTokenA = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${strDef} o ${inside1} o ${afterS2}));
 feature fsPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${pos});
@@ -83,7 +85,8 @@ feature fsSynset = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence=
 feature fsW2v = Word2Vec(tokenExtractor="Source", mode="VECTOR", fn=(${str} o ${head}));
 feature fsSentPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${sentPos});
 feature fsSentPosPos = Conjunction(minFeatureOccurrence="2", features=(${fsSentPos}, ${fsPos}));
-feature ftToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${strDef});
+feature ftToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${strTrim});
+feature ftTokenClean = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${strDef});
 feature ftTokenB = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${strDef} o ${inside1} o ${beforeS2}));
 feature ftTokenA = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${strDef} o ${inside1} o ${afterS2}));
 feature ftPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${pos});
@@ -106,6 +109,7 @@ feature ftSentPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence
 feature ftSentPosPos = Conjunction(minFeatureOccurrence="2", features=(${ftSentPos}, ${ftPos}));
 feature ftW2v = Word2Vec(tokenExtractor="Target", mode="VECTOR", fn=(${str} o ${head}));
 feature fstToken = Conjunction(minFeatureOccurrence="2", features=(${fsToken}, ${ftToken}));
+feature fstTokenClean = Conjunction(minFeatureOccurrence="2", features=(${fsTokenClean}, ${ftTokenClean}));
 feature fstPos = Conjunction(minFeatureOccurrence="2", features=(${fsPos}, ${ftPos}));
 feature fstTense = Conjunction(minFeatureOccurrence="2", features=(${fsTense}, ${ftTense}));
 feature fstAspect = Conjunction(minFeatureOccurrence="2", features=(${fsAspect}, ${ftAspect}));
