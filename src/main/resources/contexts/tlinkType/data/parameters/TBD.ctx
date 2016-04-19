@@ -1,0 +1,17 @@
+trainDocs="tbd_docs";
+devDocs="tbd_docs";
+testDocs="tbd_docs";
+trainTlinks="tbd_tlinks";
+devTlinks="tbd_tlinks";
+testTlinks="tbd_tlinks";
+trainLabelMode="ONLY_LABELED";
+devLabelMode="ONLY_LABELED";
+testLabelMode="ONLY_LABELED";
+trainMaxSentDist="1";
+devMaxSentDist="1";
+testMaxSentDist="1";
+
+array labels = ("BEFORE", "AFTER", "INCLUDES", "IS_INCLUDED", "SIMULTANEOUS", "VAGUE");
+value labelCount = SizeArray(array=${labels});
+
+array devTestDocs = ConcatenateArrays(a1=${devDocs}, a2=${testDocs});
