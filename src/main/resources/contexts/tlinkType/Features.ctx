@@ -13,6 +13,7 @@ ts_fn dep = DependencyRelation(mode="PARENTS_AND_CHILDREN");
 ts_fn prep = PrepositionOfClause();
 ts_str_fn strDef = String(cleanFn="LowerCaseCleanFn");
 ts_str_fn strTrim = String(cleanFn="TrimCleanFn");
+ts_str_fn str = String(cleanFn="TrimCleanFn");
 ts_str_fn pos = PoS();
 ts_str_fn nlpLemma = TokenAnnotation(annotationType="lemma");
 ts_str_fn lemma = WordNetLemma();
