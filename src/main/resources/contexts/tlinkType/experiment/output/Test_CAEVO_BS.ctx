@@ -26,10 +26,14 @@ value strEvals = OutputStrings(id=${resultsId}, storage="EventString", collectio
                   ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.devYadllEEWSRecall},
                   ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.devYadllEEDPrecision}, 
                   ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.devYadllEEDRecall},
-	                 
+                  ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.devYadllEEBSPrecision}, 
+                  ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.devYadllEEBSRecall},
+                  ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.devYadllETBSPrecision}, 
+                  ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.devYadllETBSRecall},
+                 
 	              ${evalSieve.multiDevPrecision}, 
-	              ${evalSieve.multiDevRecall},   
-	                 
+	              ${evalSieve.multiDevRecall},
+	              
 	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDet.testAdjETPrecision}, 
 	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDet.testAdjETRecall},   
 	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDet.testGenGovPrecision}, 
@@ -55,7 +59,12 @@ value strEvals = OutputStrings(id=${resultsId}, storage="EventString", collectio
 	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.testYadllEEWSRecall}, 
 	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.testYadllEEDPrecision}, 
 	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.testYadllEEDRecall},
-                
+                  ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.testYadllEEBSPrecision}, 
+                  ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.testYadllEEBSRecall},
+                  ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.testYadllETBSPrecision}, 
+                  ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.testYadllETBSRecall},
+                  
 	              ${evalSieve.multiTestPrecision}, 
 	              ${evalSieve.multiTestRecall}
                  )); 
+                 

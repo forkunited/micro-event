@@ -26,36 +26,12 @@ value strEvals = OutputStrings(id=${resultsId}, storage="EventString", collectio
                   ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.devYadllEEWSRecall},
                   ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.devYadllEEDPrecision}, 
                   ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.devYadllEEDRecall},
-	                 
+                  ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.devYadllEEBSPrecision}, 
+                  ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.devYadllEEBSRecall},
+                  ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.devYadllETBSPrecision}, 
+                  ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.devYadllETBSRecall},
+                 
 	              ${evalSieve.multiDevPrecision}, 
-	              ${evalSieve.multiDevRecall},   
-	                 
-	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDet.testAdjETPrecision}, 
-	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDet.testAdjETRecall},   
-	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDet.testGenGovPrecision}, 
-	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDet.testGenGovRecall},
-	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDet.testReichenbachPrecision}, 
-	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDet.testReichenbachRecall},
-	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDet.testRepGovPrecision}, 
-	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDet.testRepGovRecall}, 
-	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDet.testTimeTimePrecision}, 
-	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDet.testTimeTimeRecall},
-	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDet.testWordNetPrecision}, 
-	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDet.testWordNetRecall},
-	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDet.testReportingDCTPrecision}, 
-	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDet.testReportingDCTRecall},
-	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDet.testAllVaguePrecision}, 
-	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDet.testAllVagueRecall},
-	              
-	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.testYadllDCTPrecision}, 
-	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.testYadllDCTRecall},	                 
-	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.testYadllETWSPrecision}, 
-	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.testYadllETWSRecall},
-	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.testYadllEEWSPrecision}, 
-	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.testYadllEEWSRecall}, 
-	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.testYadllEEDPrecision}, 
-	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeYadll.testYadllEEDRecall},
-                
-	              ${evalSieve.multiTestPrecision}, 
-	              ${evalSieve.multiTestRecall}
+	              ${evalSieve.multiDevRecall}
                  )); 
+                 
