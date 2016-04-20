@@ -59,6 +59,7 @@ feature fconPathET = ConstituencyPath(minFeatureOccurrence="2", sourceTokenExtra
 feature fconPathPosET = ConstituencyPath(minFeatureOccurrence="2", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime", noLeaves="false");
 feature fdepTypeET = DependencyPathType(sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime");
 feature fpredPathET = PredicateArgumentPath(sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime");
+feature fpredPathNoSenseET = PredicateArgumentPath(sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime", useSenses="false");
 feature fdomET = ConstituencyParseRelation(sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime");
 feature fw2vSimET = Word2Vec(tokenExtractor="EventTime", mode="SIMILARITY", fn=(${str} o ${head}));
 feature fw2vDiffET = Word2Vec(tokenExtractor="EventTime", mode="DIFFERENCE", fn=(${str} o ${head}));
@@ -134,6 +135,7 @@ feature fconPathPosEE = ConstituencyPath(minFeatureOccurrence="2", sourceTokenEx
 feature fconPathEE = ConstituencyPath(minFeatureOccurrence="2", sourceTokenExtractor="Source", targetTokenExtractor="Target", noLeaves="true");
 feature fdepTypeEE = DependencyPathType(sourceTokenExtractor="Source", targetTokenExtractor="Target");
 feature fpredPathEE = PredicateArgumentPath(sourceTokenExtractor="Source", targetTokenExtractor="Target");
+feature fpredPathNoSenseEE = PredicateArgumentPath(sourceTokenExtractor="Source", targetTokenExtractor="Target", useSenses="false");
 feature fdomEE = ConstituencyParseRelation(sourceTokenExtractor="Source", targetTokenExtractor="Target");
 feature foverEventEE = TLinkAttribute(attribute="OVER_EVENT");
 feature fw2vSimEE = Word2Vec(tokenExtractor="SourceTarget", mode="SIMILARITY", fn=(${str} o ${head}));
