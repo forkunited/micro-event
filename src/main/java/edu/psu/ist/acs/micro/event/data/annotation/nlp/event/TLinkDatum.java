@@ -316,6 +316,7 @@ public class TLinkDatum<L> extends Datum<L> {
 			});
 			
 			this.addGenericStructurizer(new StructurizerGraphTLink<L>());
+			this.addGenericStructurizer(new StructurizerGraphTLinkByDocument<L>());
 		}
 		
 		@Override
