@@ -4,18 +4,18 @@ import java.util.List;
 
 import edu.cmu.ml.rtw.generic.data.annotation.DatumContext;
 import edu.cmu.ml.rtw.generic.data.annotation.Datum.Tools.Structurizer;
-import edu.cmu.ml.rtw.generic.data.annotation.nlp.StructurizerDocumentNLPGraph;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.StructurizerGraph;
 import edu.cmu.ml.rtw.generic.structure.WeightedStructureGraph;
 import edu.cmu.ml.rtw.generic.structure.WeightedStructureRelation;
 import edu.cmu.ml.rtw.generic.structure.WeightedStructureRelationBinary;
 import edu.cmu.ml.rtw.generic.structure.WeightedStructureRelationUnary;
 
-public class StructurizerDocumentNLPGraphEventMentionPair<L> extends StructurizerDocumentNLPGraph<EventMentionPairDatum<L>, L> {
-	public StructurizerDocumentNLPGraphEventMentionPair() {
+public class StructurizerGraphEventMentionPair<L> extends StructurizerGraph<EventMentionPairDatum<L>, L> {
+	public StructurizerGraphEventMentionPair() {
 		super();
 	}
 	
-	public StructurizerDocumentNLPGraphEventMentionPair(DatumContext<EventMentionPairDatum<L>, L> context) {
+	public StructurizerGraphEventMentionPair(DatumContext<EventMentionPairDatum<L>, L> context) {
 		super(context);
 	}
 	
@@ -31,7 +31,7 @@ public class StructurizerDocumentNLPGraphEventMentionPair<L> extends Structurize
 	}
 
 	@Override
-	protected String getDocumentNLPStructureId(EventMentionPairDatum<L> datum) {
+	protected String getStructureId(EventMentionPairDatum<L> datum) {
 		String id = datum.getSourceMention().getTokenSpan().getDocument().getName();
 		String id2 = datum.getTargetMention().getTokenSpan().getDocument().getName();
 		if (!id2.equals(id)) {
@@ -51,11 +51,11 @@ public class StructurizerDocumentNLPGraphEventMentionPair<L> extends Structurize
 
 	@Override
 	public Structurizer<EventMentionPairDatum<L>, L, WeightedStructureGraph> makeInstance(DatumContext<EventMentionPairDatum<L>, L> context) {
-		return new StructurizerDocumentNLPGraphEventMentionPair<L>(context);
+		return new StructurizerGraphEventMentionPair<L>(context);
 	}
 
 	@Override
 	public String getGenericName() {
-		return "DocumentNLPGraphEventMentionPair";
+		return "GraphEventMentionPair";
 	}
 }

@@ -10,6 +10,9 @@ value testLabelMode="ONLY_UNLABELED";
 value trainMaxSentDist="1";
 value devMaxSentDist="1";
 value testMaxSentDist="1";
+value trainCrossDocMode="NONE";
+value devCrossDocMode="NONE";
+value testCrossDocMode="NONE";
 
 array labels = ("BEFORE", "AFTER", "INCLUDES", "IS_INCLUDED", "SIMULTANEOUS", "VAGUE");
 value labelCount = SizeArray(array=${labels});

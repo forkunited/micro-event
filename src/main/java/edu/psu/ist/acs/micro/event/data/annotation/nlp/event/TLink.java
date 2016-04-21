@@ -325,6 +325,11 @@ public class TLink implements StoredJSONSerializable {
 		return this.syntax;
 	}
 	
+	public boolean isBetweenDocuments() {
+		Position p = getPosition();
+		return p == Position.DCT_DCT || p == Position.DCT_BETWEEN_DOCUMENT || p == Position.BETWEEN_DOCUMENT;
+	}
+	
 	public Position getPosition() {
 		int sourceSentenceIndex = getSource().getTokenSpan().getSentenceIndex();
 		int targetSentenceIndex = getTarget().getTokenSpan().getSentenceIndex();

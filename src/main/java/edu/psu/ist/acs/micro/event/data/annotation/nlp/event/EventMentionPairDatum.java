@@ -214,7 +214,7 @@ public class EventMentionPairDatum<L> extends Datum<L> {
 				public boolean indicator(EventMentionPairDatum<L> datum) { return !datum.isWithinDocument(); }
 			});
 			
-			this.addGenericStructurizer(new StructurizerDocumentNLPGraphEventMentionPair<L>());
+			this.addGenericStructurizer(new StructurizerGraphEventMentionPair<L>());
 		}
 		
 		@Override

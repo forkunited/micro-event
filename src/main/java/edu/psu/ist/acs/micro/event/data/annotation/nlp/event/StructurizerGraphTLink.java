@@ -4,18 +4,18 @@ import java.util.List;
 
 import edu.cmu.ml.rtw.generic.data.annotation.DatumContext;
 import edu.cmu.ml.rtw.generic.data.annotation.Datum.Tools.Structurizer;
-import edu.cmu.ml.rtw.generic.data.annotation.nlp.StructurizerDocumentNLPGraph;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.StructurizerGraph;
 import edu.cmu.ml.rtw.generic.structure.WeightedStructureGraph;
 import edu.cmu.ml.rtw.generic.structure.WeightedStructureRelation;
 import edu.cmu.ml.rtw.generic.structure.WeightedStructureRelationBinary;
 import edu.cmu.ml.rtw.generic.structure.WeightedStructureRelationUnary;
 
-public class StructurizerDocumentNLPGraphTLink<L> extends StructurizerDocumentNLPGraph<TLinkDatum<L>, L> {
-	public StructurizerDocumentNLPGraphTLink() {
+public class StructurizerGraphTLink<L> extends StructurizerGraph<TLinkDatum<L>, L> {
+	public StructurizerGraphTLink() {
 		super();
 	}
 	
-	public StructurizerDocumentNLPGraphTLink(DatumContext<TLinkDatum<L>, L> context) {
+	public StructurizerGraphTLink(DatumContext<TLinkDatum<L>, L> context) {
 		super(context);
 	}
 	
@@ -32,17 +32,8 @@ public class StructurizerDocumentNLPGraphTLink<L> extends StructurizerDocumentNL
 	}
 
 	@Override
-	protected String getDocumentNLPStructureId(TLinkDatum<L> datum) {
-		TLink tlink = datum.getTLink();
-		String id = tlink.getSource().getTokenSpan().getDocument().getName();
-		String targetName = tlink.getTarget().getTokenSpan().getDocument().getName();
-		if (!targetName.equals(id)) {
-			if (id.compareTo(targetName) < 0)
-				id = id + "_" + targetName;
-			else 
-				id = targetName + "_" + id;
-		}
-		return id;
+	protected String getStructureId(TLinkDatum<L> datum) {
+		return "0";
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -53,11 +44,11 @@ public class StructurizerDocumentNLPGraphTLink<L> extends StructurizerDocumentNL
 
 	@Override
 	public Structurizer<TLinkDatum<L>, L, WeightedStructureGraph> makeInstance(DatumContext<TLinkDatum<L>, L> context) {
-		return new StructurizerDocumentNLPGraphTLink<L>(context);
+		return new StructurizerGraphTLink<L>(context);
 	}
 
 	@Override
 	public String getGenericName() {
-		return "DocumentNLPGraphTLink";
+		return "GraphTLink";
 	}
 }

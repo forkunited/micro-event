@@ -26,11 +26,19 @@ import edu.cmu.ml.rtw.generic.util.ThreadMapper;
 import edu.cmu.ml.rtw.generic.util.ThreadMapper.Fn;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.Type;
 
 public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLinkDatum<TimeMLRelType>, TimeMLRelType> {
+	private enum CrossDocumentMode {
+		NONE,
+		TIME_TIME,
+		ALL
+	}
+	
 	private String tlinks;
 	private int maxSentenceDistance = -1;
-	private String[] parameterNames = { "tlinks", "maxSentenceDistance" };
+	private CrossDocumentMode crossDocMode = CrossDocumentMode.NONE;
+	private String[] parameterNames = { "tlinks", "maxSentenceDistance", "crossDocMode" };
 	
 	public DataSetBuilderTLinkType() {
 		this(null);
@@ -55,6 +63,8 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 			return (this.tlinks == null) ? null : Obj.stringValue(this.tlinks.toString());
 		else if (parameter.equals("maxSentenceDistance"))
 			return Obj.stringValue(String.valueOf(this.maxSentenceDistance));
+		else if (parameter.equals("crossDocMode"))
+			return Obj.stringValue(String.valueOf(this.crossDocMode));
 		else
 			return super.getParameterValue(parameter);
 	}
@@ -65,6 +75,8 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 			this.tlinks = (parameterValue == null) ? null : this.context.getMatchValue(parameterValue);
 		else if (parameter.equals("maxSentenceDistance"))
 			this.maxSentenceDistance = Integer.valueOf(this.context.getMatchValue(parameterValue));
+		else if (parameter.equals("crossDocMode"))
+			this.crossDocMode = CrossDocumentMode.valueOf(this.context.getMatchValue(parameterValue));
 		else
 			return super.setParameterValue(parameter, parameterValue);
 		return true;
@@ -76,6 +88,16 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 		return new DataSetBuilderTLinkType(context);
 	}
 
+	private boolean linkMeetsCrossDocumentMode(TLink link, boolean labeled) {
+		if (!link.isBetweenDocuments() || this.crossDocMode == CrossDocumentMode.ALL)
+			return true;
+		else if (this.crossDocMode == CrossDocumentMode.NONE)
+			return false;
+		else if (this.crossDocMode == CrossDocumentMode.TIME_TIME)
+			return link.getType() == Type.TIME_TIME;
+		return false;
+	}
+	
 	@Override
 	public DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType> build() {
 		StoredItemSetInMemoryLazy<TLink, TLink> tlinkSet = (this.tlinks == null) ? null :
@@ -106,12 +128,12 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 					synchronized (data) {
 						if (!labeledPairs.containsKey(tlink.getSource().getId()))
 							labeledPairs.put(tlink.getSource().getId(), new HashSet<>());
-						labeledPairs.get(tlink.getSource().getId()).add(tlink.getTarget().getId());
+						labeledPairs.get(tlink.getSource().getId()).add(tlink.getTarget().getId());				
 						
-						if (labelMode != LabelMode.ONLY_UNLABELED)	
+						if (labelMode != LabelMode.ONLY_UNLABELED && linkMeetsCrossDocumentMode(tlink, true)) {	
 							data.add(new TLinkDatum<TimeMLRelType>(
-									Integer.valueOf(tlink.getId()), tlink, (labelMapping != null) ? labelMapping.map(tlink.getTimeMLRelType()) : tlink.getTimeMLRelType()));
-					
+								Integer.valueOf(tlink.getId()), tlink, (labelMapping != null) ? labelMapping.map(tlink.getTimeMLRelType()) : tlink.getTimeMLRelType()));
+						}
 						idObj.set(Math.max(idObj.get(), Integer.valueOf(tlink.getId())));
 					}
 					
@@ -157,15 +179,20 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 							doc1Mentions.addAll(doc1.getTokenSpanAnnotations(AnnotationTypeNLPEvent.TIME_EXPRESSION));
 							doc1Mentions.add(new Pair<TokenSpan, StoreReference>(null, doc1.getDocumentAnnotation(AnnotationTypeNLPEvent.CREATION_TIME)));
 							links = runAllPairs(doc1Mentions, fn, links, true); 
-
+							
+							if (crossDocMode == CrossDocumentMode.NONE)
+								continue;
+							
 							for (String docName2 : item.getValue()) {
 								if (docName1.equals(docName2))
 									continue;
 								
 								DocumentNLP doc2 = docs.getDocumentByName(docName2, true);
-								List<Pair<TokenSpan, StoreReference>> doc2Mentions = doc2.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION);
-								doc2Mentions.addAll(doc2.getTokenSpanAnnotations(AnnotationTypeNLPEvent.TIME_EXPRESSION));
+								List<Pair<TokenSpan, StoreReference>> doc2Mentions = doc2.getTokenSpanAnnotations(AnnotationTypeNLPEvent.TIME_EXPRESSION);
 								doc2Mentions.add(new Pair<TokenSpan, StoreReference>(null, doc2.getDocumentAnnotation(AnnotationTypeNLPEvent.CREATION_TIME)));
+								
+								if (crossDocMode == CrossDocumentMode.ALL)
+									doc2Mentions.addAll(doc2.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION));
 								
 								links = runAllPairs(doc1Mentions, doc2Mentions, fn, links); 
 							}
