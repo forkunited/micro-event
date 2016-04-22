@@ -21,6 +21,9 @@ public class StructurizerGraphTLink<L> extends StructurizerGraph<TLinkDatum<L>, 
 	
 	@Override
 	protected WeightedStructureRelation makeDatumStructure(TLinkDatum<L> datum, L label) {
+		if (label == null)
+			return null;
+		
 		WeightedStructureRelationBinary binaryRel = (WeightedStructureRelationBinary)this.context.getDatumTools().getDataTools().makeWeightedStructure(label.toString(), this.context);
 		return new WeightedStructureRelationBinary(
 				label.toString(), 

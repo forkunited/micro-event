@@ -21,7 +21,9 @@ public class StructurizerGraphEventMentionPair<L> extends StructurizerGraph<Even
 	
 	@Override
 	protected WeightedStructureRelation makeDatumStructure(EventMentionPairDatum<L> datum, L label) {
-			return new WeightedStructureRelationBinary(
+		if (label == null)
+			return null;	
+		return new WeightedStructureRelationBinary(
 					label.toString(), 
 					this.context, 
 					String.valueOf(datum.getId()), 
