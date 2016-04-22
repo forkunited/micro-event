@@ -178,7 +178,7 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 							if (labelMode != LabelMode.ONLY_LABELED)
 								links = runAllPairs(doc1Mentions, fn, links, true); 
 							
-							if (crossDocMode == CrossDocumentMode.ALL)
+							if (crossDocMode != CrossDocumentMode.ALL)
 								continue;
 							
 							for (String docName2 : item.getValue()) {
