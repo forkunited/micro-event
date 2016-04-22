@@ -11,6 +11,7 @@ import edu.cmu.ml.rtw.generic.parse.Obj;
 import edu.cmu.ml.rtw.generic.task.classify.MethodClassification;
 import edu.cmu.ml.rtw.generic.util.Pair;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.Position;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkDatum;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression;
@@ -82,6 +83,8 @@ public class MethodClassificationTLinkTypeTimeTime extends MethodClassification<
 			TLink tlink = datum.getTLink();
 			if (tlink.getType() != TLink.Type.TIME_TIME)
 				continue;
+			if (tlink.getPosition() == Position.BETWEEN_DOCUMENT || tlink.getPosition() == Position.DCT_DCT)
+				throw new UnsupportedOperationException("Found between doc link!");
 			
 			TimeExpression t1 = (TimeExpression)tlink.getSource();
 			TimeExpression t2 = (TimeExpression)tlink.getTarget();
