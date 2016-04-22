@@ -83,8 +83,6 @@ public class MethodClassificationTLinkTypeTimeTime extends MethodClassification<
 			TLink tlink = datum.getTLink();
 			if (tlink.getType() != TLink.Type.TIME_TIME)
 				continue;
-			if (tlink.getPosition() == Position.BETWEEN_DOCUMENT || tlink.getPosition() == Position.DCT_DCT)
-				throw new UnsupportedOperationException("Found between doc link!");
 			
 			TimeExpression t1 = (TimeExpression)tlink.getSource();
 			TimeExpression t2 = (TimeExpression)tlink.getTarget();
