@@ -292,12 +292,24 @@ public class TimeExpression implements TLinkable, MentionArgumentable {
 					return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
 			}
 			
-			if (thisCt < timeCt && thisCtTimeCt <= 0)
-				return TLink.TimeMLRelType.BEFORE;
-			else if (timeCt < thisCt && thisCtTimeCt >= 0)
-				return TLink.TimeMLRelType.AFTER;
-			else
-				return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
+			if (thisCtTimeCt == 0) {
+				if (thisCt < timeCt)
+					return TLink.TimeMLRelType.BEFORE;
+				else if (timeCt < thisCt)
+					return TLink.TimeMLRelType.AFTER;
+				else 
+					return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
+			} else if (thisCtTimeCt < 0) {
+				if (thisCt <= 0 && timeCt >= 0)
+					return TLink.TimeMLRelType.BEFORE;
+				else 
+					return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
+			} else {
+				if (timeCt <= 0 && thisCt >= 0)
+					return TLink.TimeMLRelType.AFTER;
+				else 
+					return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
+			}
 		}
 		
 		Pair<Calendar, Calendar> thisInterval = thisValue.getRange();

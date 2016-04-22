@@ -120,6 +120,36 @@ public class TLinkDatum<L> extends Datum<L> {
 				return "TBD";
 			}
 		});
+		
+		tools.addLabelMapping(new LabelMapping<TimeMLRelType>() {
+			public TimeMLRelType map(TimeMLRelType label) { if (label == TimeMLRelType.BEFORE) return label; else return null; }
+			public String toString() { return "OnlyB"; }
+		});
+		
+		tools.addLabelMapping(new LabelMapping<TimeMLRelType>() {
+			public TimeMLRelType map(TimeMLRelType label) { if (label == TimeMLRelType.AFTER) return label; else return null; }
+			public String toString() { return "OnlyA"; }
+		});
+		
+		tools.addLabelMapping(new LabelMapping<TimeMLRelType>() {
+			public TimeMLRelType map(TimeMLRelType label) { if (label == TimeMLRelType.INCLUDES) return label; else return null; }
+			public String toString() { return "OnlyI"; }
+		});
+		
+		tools.addLabelMapping(new LabelMapping<TimeMLRelType>() {
+			public TimeMLRelType map(TimeMLRelType label) { if (label == TimeMLRelType.IS_INCLUDED) return label; else return null; }
+			public String toString() { return "OnlyII"; }
+		});
+		
+		tools.addLabelMapping(new LabelMapping<TimeMLRelType>() {
+			public TimeMLRelType map(TimeMLRelType label) { if (label == TimeMLRelType.SIMULTANEOUS) return label; else return null; }
+			public String toString() { return "OnlyS"; }
+		});
+		
+		tools.addLabelMapping(new LabelMapping<TimeMLRelType>() {
+			public TimeMLRelType map(TimeMLRelType label) { if (label == TimeMLRelType.VAGUE) return label; else return null; }
+			public String toString() { return "OnlyV"; }
+		});
 
 		tools.addGenericDataSetBuilder(new DataSetBuilderTimeBankDense());
 		tools.addGenericDataSetBuilder(new DataSetBuilderTLinkType());
