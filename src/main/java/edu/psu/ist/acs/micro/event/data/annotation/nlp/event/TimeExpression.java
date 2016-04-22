@@ -265,9 +265,9 @@ public class TimeExpression implements TLinkable, MentionArgumentable {
 					thisCt = -1;
 				else if (thisCtRelation == TLink.TimeMLRelType.AFTER)
 					thisCt = 1;
-				else if (getTimeMLDocumentFunction() == TimeMLDocumentFunction.CREATION_TIME &&
+				/*else if (getTimeMLDocumentFunction() == TimeMLDocumentFunction.CREATION_TIME &&
 						(thisCtRelation == TLink.TimeMLRelType.SIMULTANEOUS || thisCtRelation == TLink.TimeMLRelType.IS_INCLUDED))
-					thisCt = 0;
+					thisCt = 0;*/
 				else
 					return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
 			}
@@ -287,9 +287,9 @@ public class TimeExpression implements TLinkable, MentionArgumentable {
 					timeCt = -1;
 				else if (timeCtRelation == TLink.TimeMLRelType.AFTER)
 					timeCt = 1;
-				else if (time.getTimeMLDocumentFunction() == TimeMLDocumentFunction.CREATION_TIME &&
+				/*else if (time.getTimeMLDocumentFunction() == TimeMLDocumentFunction.CREATION_TIME &&
 							(timeCtRelation == TLink.TimeMLRelType.SIMULTANEOUS || timeCtRelation == TLink.TimeMLRelType.IS_INCLUDED))
-					timeCt = 0;
+					timeCt = 0;*/
 				else
 					return (unknownVague) ? TLink.TimeMLRelType.VAGUE : null;
 			}
