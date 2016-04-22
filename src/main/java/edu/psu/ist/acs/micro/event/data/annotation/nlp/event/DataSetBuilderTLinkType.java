@@ -87,10 +87,7 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 	}
 
 	private boolean linkMeetsCrossDocumentMode(TLink link, boolean labeled) {
-		if (!link.isBetweenDocuments() || this.crossDocMode == CrossDocumentMode.ALL)
-			return true;
-		else 
-			return false;
+		return !link.isBetweenDocuments() || this.crossDocMode == CrossDocumentMode.ALL;
 	}
 	
 	@Override

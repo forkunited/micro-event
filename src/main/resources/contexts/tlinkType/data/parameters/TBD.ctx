@@ -13,6 +13,9 @@ value testMaxSentDist="1";
 value trainCrossDocMode="NONE";
 value devCrossDocMode="NONE";
 value testCrossDocMode="NONE";
+value trainClusterMode="POST";
+value devClusterMode="POST";
+value testClusterMode="POST";
 
 array labels = ("BEFORE", "AFTER", "INCLUDES", "IS_INCLUDED", "SIMULTANEOUS", "VAGUE");
 value labelCount = SizeArray(array=${labels});

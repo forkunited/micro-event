@@ -3,7 +3,7 @@ value resultsId = "TLinkType_Dev_4Fold_CAEVO_CD";
 value debug=Debug(file=${resultsId});
 context util = TLinkType(initScript="/util/Util.ctx", initOnce="true");
 
-context dataParamsTlinkType = TLinkType(initScript="/tlinkType/data/parameters/TBDPlusCDTT.ctx", initOnce="false");
+context dataParamsTlinkType = TLinkType(initScript="/tlinkType/data/parameters/TBDPlusCDDevTest.ctx", initOnce="false");
 
 value resultsId = "TLinkType_Dev_4Fold_CAEVO_CD_0";
 context trainDevTestDocsTlinkType = TLinkType(initScript="/util/data/docs/TBD4Fold_0.ctx", initOnce="true");

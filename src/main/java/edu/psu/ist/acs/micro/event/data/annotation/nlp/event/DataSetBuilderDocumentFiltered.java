@@ -39,14 +39,20 @@ public abstract class DataSetBuilderDocumentFiltered<D extends Datum<L>, L> exte
 		ALL
 	}
 	
+	public enum ClusterMode {
+		POST,
+		GLOBAL
+	}
+	
 	protected String storage;
 	protected String documents;
 	protected Set<String> filter;
 	protected FilterType filterType = FilterType.INTERSECT;
 	protected LabelMode labelMode = LabelMode.ONLY_LABELED;
+	protected ClusterMode clusterMode = ClusterMode.POST;
 	protected LabelMapping<L> labelMapping;
 	
-	private String[] parameterNames = { "storage", "documents", "filter", "filterType", "labelMode", "labelMapping" };
+	private String[] parameterNames = { "storage", "documents", "filter", "filterType", "labelMode", "labelMapping", "clusterMode" };
 	
 	private DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable> docs;
 	
@@ -78,6 +84,8 @@ public abstract class DataSetBuilderDocumentFiltered<D extends Datum<L>, L> exte
 			return Obj.stringValue(String.valueOf(this.labelMode));
 		else if (parameter.equals("labelMapping"))
 			return this.labelMapping == null ? null : Obj.stringValue(this.labelMapping.toString());
+		else if (parameter.equals("clusterMode"))
+			return Obj.stringValue(this.clusterMode.toString());
 		return null;
 	}
 	
@@ -110,12 +118,22 @@ public abstract class DataSetBuilderDocumentFiltered<D extends Datum<L>, L> exte
 			this.labelMode = LabelMode.valueOf(this.context.getMatchValue(parameterValue));
 		else if (parameter.equals("labelMapping"))
 			this.labelMapping = (parameterValue == null) ? null : this.context.getDatumTools().getLabelMapping(this.context.getMatchValue(parameterValue));
+		else if (parameter.equals("clusterMode"))
+			this.clusterMode = ClusterMode.valueOf(this.context.getMatchValue(parameterValue));
 		else
 			return false;
 		return true;
 	}
 	
 	protected String getClusterName(String docName) {
+		if (this.clusterMode == ClusterMode.GLOBAL)
+			return "0";
+		else
+			return getDocumentNameWithoutPost(docName);
+		
+	}
+	
+	private String getDocumentNameWithoutPost(String docName) {
 		String clusterName = docName;
 		if (docName.indexOf("_p") >= 0) {
 			String[] docNameParts = docName.split("_p");
@@ -133,7 +151,7 @@ public abstract class DataSetBuilderDocumentFiltered<D extends Datum<L>, L> exte
 	}
 	
 	protected boolean matchesFilter(DocumentNLP document) {
-		return clusterMatchesFilter(getClusterName(document.getName()));
+		return nameMatchesFilter(getDocumentNameWithoutPost(document.getName()));
 	}
 	
 	protected DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable> getDocuments() {
@@ -154,7 +172,7 @@ public abstract class DataSetBuilderDocumentFiltered<D extends Datum<L>, L> exte
 				String docName = doc.getName();
 				String clusterName = getClusterName(docName);
 				
-				if (!clusterMatchesFilter(clusterName))
+				if (!nameMatchesFilter(getDocumentNameWithoutPost(docName)))
 					return true;
 				
 				synchronized (clusters) {
@@ -203,7 +221,7 @@ public abstract class DataSetBuilderDocumentFiltered<D extends Datum<L>, L> exte
 		return results;
 	}
 	
-	private boolean clusterMatchesFilter(String documentName) {
+	private boolean nameMatchesFilter(String documentName) {
 		if (this.filterType == FilterType.NONE)
 			return true;
 		else if (this.filterType == FilterType.INTERSECT) {
