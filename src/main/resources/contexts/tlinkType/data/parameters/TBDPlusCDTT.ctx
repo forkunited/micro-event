@@ -5,14 +5,14 @@ value trainTlinks="tbd_tlinks";
 value devTlinks="tbd_tlinks";
 value testTlinks="tbd_tlinks";
 value trainLabelMode="ONLY_LABELED";
-value devLabelMode="ALL";
-value testLabelMode="ALL";
+value devLabelMode="ONLY_LABELED";
+value testLabelMode="ONLY_LABELED";
 value trainMaxSentDist="1";
 value devMaxSentDist="1";
 value testMaxSentDist="1";
 value trainCrossDocMode="NONE";
-value devCrossDocMode="TIME_TIME";
-value testCrossDocMode="TIME_TIME";
+value devCrossDocMode="ALL";
+value testCrossDocMode="ALL";
 
 array labels = ("BEFORE", "AFTER", "INCLUDES", "IS_INCLUDED", "SIMULTANEOUS", "VAGUE");
 value labelCount = SizeArray(array=${labels});

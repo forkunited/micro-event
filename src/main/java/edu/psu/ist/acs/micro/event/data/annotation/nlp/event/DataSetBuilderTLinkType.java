@@ -26,12 +26,10 @@ import edu.cmu.ml.rtw.generic.util.ThreadMapper;
 import edu.cmu.ml.rtw.generic.util.ThreadMapper.Fn;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.Type;
 
 public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLinkDatum<TimeMLRelType>, TimeMLRelType> {
 	private enum CrossDocumentMode {
 		NONE,
-		TIME_TIME,
 		ALL
 	}
 	
@@ -91,11 +89,8 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 	private boolean linkMeetsCrossDocumentMode(TLink link, boolean labeled) {
 		if (!link.isBetweenDocuments() || this.crossDocMode == CrossDocumentMode.ALL)
 			return true;
-		else if (this.crossDocMode == CrossDocumentMode.NONE)
+		else 
 			return false;
-		else if (this.crossDocMode == CrossDocumentMode.TIME_TIME)
-			return link.getType() == Type.TIME_TIME;
-		return false;
 	}
 	
 	@Override
@@ -152,18 +147,19 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 				if (maxSentenceDistance >= 0 && o1.getFirst() != null && o2.getFirst() != null) {
 					int si1 = o1.getFirst().getSentenceIndex();
 					int si2 = o2.getFirst().getSentenceIndex();
-					if (si1 >= 0 && si2 >= 0 && Math.abs(si1 - si2) > maxSentenceDistance)
+					if (o1.getFirst().getDocument().getName().equals(o2.getFirst().getDocument().getName()) 
+							&& si1 >= 0 && si2 >= 0 && Math.abs(si1 - si2) > maxSentenceDistance)
 						return null;
 				}
 				
 				if (labeledPairs.containsKey(id1) && labeledPairs.get(id1).contains(id2))
 					return null;
 				else
-					return new TLink(context.getDataTools(), null, id1 + "_" + id2, null,o1.getSecond(), o2.getSecond(), null,null,null);
+					return new TLink(context.getDataTools(), null, id1 + "_" + id2, null, o1.getSecond(), o2.getSecond(), null,null,null);
 			}
 		};
 		
-		if (this.labelMode != LabelMode.ONLY_LABELED) {
+		if (this.labelMode != LabelMode.ONLY_LABELED || this.crossDocMode == CrossDocumentMode.ALL) {
 			Map<String, Set<String>> documentClusters = getDocumentClusters();
 			DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable> docs = getDocuments();
 			TreeMap<String, TLink> unlabeledLinks = new TreeMap<String, TLink>();
@@ -178,9 +174,11 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 							List<Pair<TokenSpan, StoreReference>> doc1Mentions = doc1.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION);
 							doc1Mentions.addAll(doc1.getTokenSpanAnnotations(AnnotationTypeNLPEvent.TIME_EXPRESSION));
 							doc1Mentions.add(new Pair<TokenSpan, StoreReference>(null, doc1.getDocumentAnnotation(AnnotationTypeNLPEvent.CREATION_TIME)));
-							links = runAllPairs(doc1Mentions, fn, links, true); 
 							
-							if (crossDocMode == CrossDocumentMode.NONE)
+							if (labelMode != LabelMode.ONLY_LABELED)
+								links = runAllPairs(doc1Mentions, fn, links, true); 
+							
+							if (crossDocMode == CrossDocumentMode.ALL)
 								continue;
 							
 							for (String docName2 : item.getValue()) {
@@ -190,9 +188,7 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 								DocumentNLP doc2 = docs.getDocumentByName(docName2, true);
 								List<Pair<TokenSpan, StoreReference>> doc2Mentions = doc2.getTokenSpanAnnotations(AnnotationTypeNLPEvent.TIME_EXPRESSION);
 								doc2Mentions.add(new Pair<TokenSpan, StoreReference>(null, doc2.getDocumentAnnotation(AnnotationTypeNLPEvent.CREATION_TIME)));
-								
-								if (crossDocMode == CrossDocumentMode.ALL)
-									doc2Mentions.addAll(doc2.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION));
+								doc2Mentions.addAll(doc2.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION));
 								
 								links = runAllPairs(doc1Mentions, doc2Mentions, fn, links); 
 							}
