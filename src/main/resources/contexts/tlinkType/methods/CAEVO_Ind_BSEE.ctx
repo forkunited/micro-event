@@ -61,7 +61,7 @@ multi_classify_method sieve = Sieve(methods=(${modelsTlinkTypeDetInd.adjETB},
                                              ${modelsTlinkTypeYadllInd.yadllEEDII},
                                              ${modelsTlinkTypeYadllInd.yadllEEWSII}, 
                                              ${modelsTlinkTypeYadllInd.yadllDCTII},
-                                             ${modelsTlinkTypeYadllInd.yadllEEBSII}
+                                             ${modelsTlinkTypeYadllInd.yadllEEBSII},
                                              
                                              ${modelsTlinkTypeDetInd.adjETS}, 
                                              ${modelsTlinkTypeDetInd.timeTimeS},
