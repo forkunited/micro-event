@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>edu.psu.ist.acs</groupId>
   <artifactId>micro-event</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.4-SNAPSHOT</version>
   <packaging>jar</packaging>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -46,12 +46,12 @@
   	<dependency>
  		<groupId>edu.cmu.ml.rtw</groupId>
  		<artifactId>micro-cat</artifactId>
- 		<version>0.0.1-SNAPSHOT</version>
+ 		<version>0.0.4-SNAPSHOT</version>
     </dependency>
   	<dependency>
  		<groupId>edu.cmu.ml.rtw</groupId>
  		<artifactId>micro-util</artifactId>
- 		<version>0.0.2-SNAPSHOT</version>
+ 		<version>0.0.4-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
