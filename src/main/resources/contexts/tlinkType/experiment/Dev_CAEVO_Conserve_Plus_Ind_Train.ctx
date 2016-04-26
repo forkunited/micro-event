@@ -1,5 +1,5 @@
 value maxThreads="30";
-value resultsId = "TLinkType_Dev_CAEVO_Conserve_Plus_Ind";
+value resultsId = "TLinkType_Dev_CAEVO_Conserve_Plus_Ind_Train";
 value debug=Debug(file=${resultsId});
 
 context util = TLinkType(initScript="/util/Util.ctx", initOnce="true");
