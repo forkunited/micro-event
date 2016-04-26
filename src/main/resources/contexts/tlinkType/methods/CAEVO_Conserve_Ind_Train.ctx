@@ -235,4 +235,5 @@ multi_classify_method sieve = Sieve(methods=(${modelsTlinkTypeDetInd.adjETB},
                                                          ${evalTlinkTypeDetInd.devAllVaguePrecision}
                                     ),
                                     structureTransformFn=${greedyTlinkTransitiveRules},
-                                    trainOnInit="true");
+                                    trainOnInit="true",
+                                    trainIters="80");
