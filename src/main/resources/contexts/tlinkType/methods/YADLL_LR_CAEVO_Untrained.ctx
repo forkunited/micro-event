@@ -20,10 +20,10 @@ model yadll=YADLL(numEpochs="40", stepSize=".01",
 };
 
 evaluation acc=Accuracy();
-classify_method yadllDCTUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixDCT}, trainEvaluation=${acc}, trainOnInit="false");
-classify_method yadllETWSUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixETWS}, trainEvaluation=${acc}, trainOnInit="false");
-classify_method yadllEEWSUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixEEWS}, trainEvaluation=${acc}, trainOnInit="false");
-classify_method yadllEEDUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixEED}, trainEvaluation=${acc}, trainOnInit="false");
+classify_method yadllDCTUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixDCT}, trainEvaluation=${acc}, trainOnInit="true");
+classify_method yadllETWSUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixETWS}, trainEvaluation=${acc}, trainOnInit="true");
+classify_method yadllEEWSUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixEEWS}, trainEvaluation=${acc}, trainOnInit="true");
+classify_method yadllEEDUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixEED}, trainEvaluation=${acc}, trainOnInit="true");
 
 classify_method yadllDCTUnfilteredP = CloneClassifyMethod(method=${yadllDCTUnfiltered}, stepSize=".5", numEpochs="1");
 classify_method yadllETWSUnfilteredP = CloneClassifyMethod(method=${yadllETWSUnfiltered}, numEpochs="4");
