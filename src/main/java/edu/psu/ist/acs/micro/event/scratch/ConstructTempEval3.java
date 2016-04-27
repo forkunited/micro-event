@@ -420,7 +420,8 @@ public class ConstructTempEval3 {
 			lemmas[i] = sentenceLemmas.toArray(new Pair[0]);
 
 			if (lemmas[i].length != document.getSentenceTokenCount(i)) {
-				throw new UnsupportedOperationException("Mismatching token count (" + lemmas[i].length + "," + document.getSentenceTokenCount(i) + ") for lemmas of " + document.getName() + " " + i + "\n" + document.getSentence(i));
+				System.out.println("WARNING: Mismatching token count (" + lemmas[i].length + "," + document.getSentenceTokenCount(i) + ") for lemmas of " + document.getName() + " " + i + "\n" + document.getSentence(i));
+				lemmas[i] = null;	
 			}
 			
 			List<Pair<TokenSpan, Predicate>> sentenceSrl = tempDocument.getTokenSpanAnnotations(AnnotationTypeNLP.PREDICATE);
