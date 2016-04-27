@@ -421,7 +421,8 @@ public class ConstructTempEval3 {
 
 			if (lemmas[i].length != document.getSentenceTokenCount(i)) {
 				System.out.println("WARNING: Mismatching token count (" + lemmas[i].length + "," + document.getSentenceTokenCount(i) + ") for lemmas of " + document.getName() + " " + i + "\n" + document.getSentence(i));
-				lemmas[i] = null;	
+				for (int j = 0; j < lemmas.length; j++)
+					System.out.println(lemmas[i][j]);
 			}
 			
 			List<Pair<TokenSpan, Predicate>> sentenceSrl = tempDocument.getTokenSpanAnnotations(AnnotationTypeNLP.PREDICATE);
