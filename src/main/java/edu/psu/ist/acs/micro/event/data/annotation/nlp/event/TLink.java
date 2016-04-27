@@ -37,6 +37,12 @@ public class TLink implements StoredJSONSerializable {
 		BETWEEN_DOCUMENT
 	}
 	
+	public enum TextDirection {
+		FORWARD,
+		BACKWARD,
+		NONE
+	}
+	
 	public enum TimeMLRelType {
 		OVERLAPS,      // Additional relation for transitivity (shown at http://www.ics.uci.edu/~alspaugh/cls/shr/allen.html)
 		OVERLAPPED_BY, // Additional relation for transitivity (shown at http://www.ics.uci.edu/~alspaugh/cls/shr/allen.html)
@@ -328,6 +334,31 @@ public class TLink implements StoredJSONSerializable {
 	public boolean isBetweenDocuments() {
 		Position p = getPosition();
 		return p == Position.DCT_DCT || p == Position.DCT_BETWEEN_DOCUMENT || p == Position.BETWEEN_DOCUMENT;
+	}
+	
+	public TextDirection getTextDirection() {
+		if (isBetweenDocuments())
+			return TextDirection.NONE;
+		
+		Position p = getPosition();
+		if (p == Position.DCT)
+			return TextDirection.NONE;
+		
+		TokenSpan sourceSpan = getSource().getTokenSpan();
+		TokenSpan targetSpan = getTarget().getTokenSpan();
+		
+		if (sourceSpan.getSentenceIndex() < targetSpan.getSentenceIndex())
+			return TextDirection.FORWARD;
+		else if (sourceSpan.getSentenceIndex() > targetSpan.getSentenceIndex())
+			return TextDirection.BACKWARD;
+		else {
+			if (sourceSpan.getStartTokenIndex() < targetSpan.getStartTokenIndex())
+				return TextDirection.FORWARD;
+			else if (sourceSpan.getStartTokenIndex() > targetSpan.getStartTokenIndex())
+				return TextDirection.BACKWARD;
+			else
+				return TextDirection.NONE;
+		}
 	}
 	
 	public Position getPosition() {

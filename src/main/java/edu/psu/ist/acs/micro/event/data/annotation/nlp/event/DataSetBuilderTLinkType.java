@@ -25,6 +25,7 @@ import edu.cmu.ml.rtw.generic.util.Singleton;
 import edu.cmu.ml.rtw.generic.util.ThreadMapper;
 import edu.cmu.ml.rtw.generic.util.ThreadMapper.Fn;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TextDirection;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType;
 
 public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLinkDatum<TimeMLRelType>, TimeMLRelType> {
@@ -33,10 +34,17 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 		ALL
 	}
 	
+	private enum DirectionMode {
+		FORWARD,
+		BACKWARD,
+		ALL
+	}
+	
+	private DirectionMode directionMode = DirectionMode.FORWARD;
 	private String tlinks;
 	private int maxSentenceDistance = -1;
 	private CrossDocumentMode crossDocMode = CrossDocumentMode.NONE;
-	private String[] parameterNames = { "tlinks", "maxSentenceDistance", "crossDocMode" };
+	private String[] parameterNames = { "directionMode", "tlinks", "maxSentenceDistance", "crossDocMode" };
 	
 	public DataSetBuilderTLinkType() {
 		this(null);
@@ -63,6 +71,8 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 			return Obj.stringValue(String.valueOf(this.maxSentenceDistance));
 		else if (parameter.equals("crossDocMode"))
 			return Obj.stringValue(String.valueOf(this.crossDocMode));
+		else if (parameter.equals("directionMode"))
+			return Obj.stringValue(String.valueOf(this.directionMode));
 		else
 			return super.getParameterValue(parameter);
 	}
@@ -75,6 +85,8 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 			this.maxSentenceDistance = Integer.valueOf(this.context.getMatchValue(parameterValue));
 		else if (parameter.equals("crossDocMode"))
 			this.crossDocMode = CrossDocumentMode.valueOf(this.context.getMatchValue(parameterValue));
+		else if (parameter.equals("directionMode"))
+			this.directionMode = DirectionMode.valueOf(this.context.getMatchValue(parameterValue));
 		else
 			return super.setParameterValue(parameter, parameterValue);
 		return true;
@@ -116,6 +128,12 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 							Math.abs(sourceSI - targetSI) > maxSentenceDistance) {
 						return true;
 					}
+					
+					TextDirection d = tlink.getTextDirection();
+					if (directionMode == DirectionMode.FORWARD && d != TextDirection.FORWARD && d != TextDirection.NONE)
+						return true;
+					if (directionMode == DirectionMode.BACKWARD && d != TextDirection.BACKWARD && d != TextDirection.NONE)
+						return true;
 						
 					synchronized (data) {
 						if (!labeledPairs.containsKey(tlink.getSource().getId()))
@@ -149,10 +167,17 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 						return null;
 				}
 				
+				TLink link = new TLink(context.getDataTools(), null, id1 + "_" + id2, null, o1.getSecond(), o2.getSecond(), null,null,null);
+				TextDirection d = link.getTextDirection();
+				if (directionMode == DirectionMode.FORWARD && d != TextDirection.FORWARD && d != TextDirection.NONE)
+					return null;
+				if (directionMode == DirectionMode.BACKWARD && d != TextDirection.BACKWARD && d != TextDirection.NONE)
+					return null;
+
 				if (labeledPairs.containsKey(id1) && labeledPairs.get(id1).contains(id2))
 					return null;
 				else
-					return new TLink(context.getDataTools(), null, id1 + "_" + id2, null, o1.getSecond(), o2.getSecond(), null,null,null);
+					return link;
 			}
 		};
 		
