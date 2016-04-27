@@ -1,6 +1,7 @@
 context dataParamsTlinkType = TLinkType(initScript="/tlinkType/data/parameters/TE3.ctx", initOnce="true", initOverrideByName="true");
+context docsTlinkType = TLinkType(initScript="/util/data/docs/TE3Small.ctx", initOnce="true", initOverrideByName="true");
 
-data data = TLinkType(storage="EventBson", documents=${dataParamsTlinkType.docs}, tlinks=${dataParamsTlinkType.tlinks}, labelMode=${dataParamsTlinkType.labelMode}, labelMapping="TBD", maxSentenceDistance=${dataParamsTlinkType.maxSentDist}, crossDocMode=${dataParamsTlinkType.crossDocMode}, clusterMode=${dataParamsTlinkType.clusterMode}, filterType="NONE");
+data data = TLinkType(storage="EventBson", documents=${dataParamsTlinkType.docs}, tlinks=${dataParamsTlinkType.tlinks}, labelMode=${dataParamsTlinkType.labelMode}, labelMapping="TBD", maxSentenceDistance=${dataParamsTlinkType.maxSentDist}, crossDocMode=${dataParamsTlinkType.crossDocMode}, clusterMode=${dataParamsTlinkType.clusterMode}, filter=${docsTlinkType.docs});
 
 value countTLinkTypeData = SizeData(data=${data});
 value debugData = OutputDebug(refs=(${countTLinkTypeData}));
