@@ -63,14 +63,16 @@ import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression.Time
 public class ConstructTempEval3 {
 	private static EventDataTools dataTools;
 	
-	public static final String DOCUMENT_COLLECTION = "te3_docs";
-	public static final String EVENT_MENTION_COLLECTION = "te3_ementions";
-	public static final String TIME_EXPRESSION_COLLECTION = "te3_timexes";
-	public static final String TIME_VALUE_COLLECTION = "te3_tvalues";
-	public static final String TLINK_COLLECTION = "te3_tlinks";
+	public static final String TBD_DOCUMENT_COLLECTION = "tbd_docs";
+	public static final String DOCUMENT_COLLECTION = "te3_minus_tbd_docs";
+	public static final String EVENT_MENTION_COLLECTION = "te3_minus_tbd_ementions";
+	public static final String TIME_EXPRESSION_COLLECTION = "te3_minus_tbd_timexes";
+	public static final String TIME_VALUE_COLLECTION = "te3_minus_tbd_tvalues";
+	public static final String TLINK_COLLECTION = "te3_minus_tbd_tlinks";
 	//public static final String SIGNAL_COLLECTION = "TimeBankDenseSignals";
 	
 	private static String storageName;
+	private static DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable> tbdDocuments;
 	private static DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable> storedDocuments;
 	private static StoredItemSetInMemoryLazy<EventMention, EventMention> storedEventMentions;
 	private static StoredItemSetInMemoryLazy<TimeExpression, TimeExpression> storedTimeExpressions;
@@ -115,7 +117,11 @@ public class ConstructTempEval3 {
 		//	storage.deleteCollection(SIGNAL_COLLECTION);
 		
 		Map<String, Serializer<?, ?>> serializers = dataTools.getSerializers();
+	
 		
+		tbdDocuments = new DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable>(
+				dataTools.getStoredItemSetManager()
+				.getItemSet(storageName, TBD_DOCUMENT_COLLECTION, false, (Serializer<DocumentNLPMutable, Document>)serializers.get("DocumentNLPBSON")));
 		storedDocuments = new DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable>(
 				dataTools.getStoredItemSetManager()
 				.getItemSet(storageName, DOCUMENT_COLLECTION, true, (Serializer<DocumentNLPMutable, Document>)serializers.get("DocumentNLPBSON")));
@@ -172,6 +178,9 @@ public class ConstructTempEval3 {
 		
 		if (name == null)
 			return false;
+		
+		if (tbdDocuments.getDocumentByName(name, false) != null)
+			System.out.println("Skipping document " + name + " from tbd...");
 		
 		System.out.println("Loading document " + name + "...");
 		
