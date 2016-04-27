@@ -179,9 +179,10 @@ public class ConstructTempEval3 {
 		if (name == null)
 			return false;
 		
-		if (tbdDocuments.getDocumentByName(name, false) != null)
+		if (tbdDocuments.getDocumentByName(name, false) != null) {
 			System.out.println("Skipping document " + name + " from tbd...");
-		
+			return true;
+		}
 		System.out.println("Loading document " + name + "...");
 		
 		PipelineNLPExtendable pipeline = new PipelineNLPExtendable();
