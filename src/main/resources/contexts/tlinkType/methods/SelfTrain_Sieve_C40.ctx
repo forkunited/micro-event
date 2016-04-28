@@ -4,7 +4,7 @@ context evalSieve = TLinkType(initScript="/tlinkType/evaluations/Sieve.ctx", ini
 
 multi_classify_method st = SelfTrain(method=${modelsTlinkTypeSieve.sieve}, 
                                      unlabeledData=(${unlabeledData.data}), 
-                                     trainIters="10",
+                                     trainIters="4",
                                      trainOnInit="true", 
                                      evaluations=(${evalSieve.multiDevPrecision}, ${evalSieve.multiDevRecall}),
                                      weightData="false",
