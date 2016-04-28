@@ -5,3 +5,13 @@ data data = TLinkType(storage="EventBson", documents=${fullDataParamsTlinkType.d
 
 value countTLinkTypeData = SizeData(data=${data});
 value debugData = OutputDebug(refs=(${countTLinkTypeData}));
+
+data dataEE = FilterData(data=${data}, datumIndicator="TypeEventEvent");
+data dataET = FilterData(data=${data}, datumIndicator="TypeEventTime");
+
+data dataDCT = FilterData(data=${dataET}, datumIndicator="PositionDCT");
+data dataETWS = FilterData(data=${dataET}, datumIndicator="PositionWithinSentence");
+data dataETBS = FilterData(data=${dataET}, datumIndicator="PositionBetweenSentence");
+data dataEEWS = FilterData(data=${dataEE}, datumIndicator="PositionWithinSentence");
+data dataEEBS = FilterData(data=${dataEE}, datumIndicator="PositionBetweenSentence");
+data dataEED = FilterData(data=${dataEE}, datumIndicator="PositionWithinSentenceDominant");

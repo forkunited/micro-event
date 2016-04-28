@@ -3,7 +3,7 @@ value resultsId = "TLinkType_Dev_SelfTrain_C60_CAEVO_Conserve_Plus_Simple";
 value debug=Debug(file=${resultsId});
 
 context util = TLinkType(initScript="/util/Util.ctx", initOnce="true");
-context featureSetsTlinkType = TLinkType(initScript="/tlinkType/featureSets/CAEVO_Plus.ctx", initOnce="false");
+context featureSetsTlinkType = TLinkType(initScript="/tlinkType/featureSets/CAEVO_Plus_TE3.ctx", initOnce="false");
 context modelsTlinkTypeYadll = TLinkType(initScript="/tlinkType/methods/YADLL_LR_CAEVO_Simple.ctx", initOnce="false");
 context modelsTlinkTypeSieve = TLinkType(initScript="/tlinkType/methods/CAEVO_Conserve.ctx", initOnce="false");
 context evalSieve = TLinkType(initScript="/tlinkType/evaluations/Sieve.ctx", initOnce="false");
