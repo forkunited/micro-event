@@ -11,7 +11,7 @@ context modelsTlinkTypeYadll = TLinkType(initScript="/tlinkType/methods/YADLL_LR
 context modelsTlinkTypeSieve = TLinkType(initScript="/tlinkType/methods/CAEVO_Conserve_Ind.ctx", initOnce="false");
 context evalSieve = TLinkType(initScript="/tlinkType/evaluations/Sieve.ctx", initOnce="false");
 context selfTrainSieve = TLinkType(initScript="/tlinkType/methods/SelfTrain_Sieve_Inc300_NL.ctx", initOnce="false");
-context results = TLinkType(initScript="/tlinkType/experiment/output/Dev_CAEVO.ctx", initOnce="false");
+context results = TLinkType(initScript="/tlinkType/experiment/output/Dev_CAEVO_Ind.ctx", initOnce="false");
 
 value resultsId = "TLinkType_Dev_4Fold_SelfTrain_Inc300_NL_CAEVO_Conserve_Plus_Ind_Simple_Full_1";
 context trainDevTestDocsTlinkType = TLinkType(initScript="/util/data/docs/TBD4Fold_1.ctx", initOnce="true");
@@ -20,7 +20,7 @@ context modelsTlinkTypeYadll = TLinkType(initScript="/tlinkType/methods/YADLL_LR
 context modelsTlinkTypeSieve = TLinkType(initScript="/tlinkType/methods/CAEVO_Conserve_Ind.ctx", initOnce="false");
 context evalSieve = TLinkType(initScript="/tlinkType/evaluations/Sieve.ctx", initOnce="false");
 context selfTrainSieve = TLinkType(initScript="/tlinkType/methods/SelfTrain_Sieve_Inc300_NL.ctx", initOnce="false");
-context results = TLinkType(initScript="/tlinkType/experiment/output/Dev_CAEVO.ctx", initOnce="false");
+context results = TLinkType(initScript="/tlinkType/experiment/output/Dev_CAEVO_Ind.ctx", initOnce="false");
 
 value resultsId = "TLinkType_Dev_4Fold_SelfTrain_Inc300_NL_CAEVO_Conserve_Plus_Ind_Simple_Full_2";
 context trainDevTestDocsTlinkType = TLinkType(initScript="/util/data/docs/TBD4Fold_2.ctx", initOnce="true");
@@ -29,7 +29,7 @@ context modelsTlinkTypeYadll = TLinkType(initScript="/tlinkType/methods/YADLL_LR
 context modelsTlinkTypeSieve = TLinkType(initScript="/tlinkType/methods/CAEVO_Conserve_Ind.ctx", initOnce="false");
 context evalSieve = TLinkType(initScript="/tlinkType/evaluations/Sieve.ctx", initOnce="false");
 context selfTrainSieve = TLinkType(initScript="/tlinkType/methods/SelfTrain_Sieve_Inc300_NL.ctx", initOnce="false");
-context results = TLinkType(initScript="/tlinkType/experiment/output/Dev_CAEVO.ctx", initOnce="false");
+context results = TLinkType(initScript="/tlinkType/experiment/output/Dev_CAEVO_Ind.ctx", initOnce="false");
 
 value resultsId = "TLinkType_Dev_4Fold_SelfTrain_Inc300_NL_CAEVO_Conserve_Plus_Ind_Simple_Full_3";
 context trainDevTestDocsTlinkType = TLinkType(initScript="/util/data/docs/TBD4Fold_3.ctx", initOnce="true");
@@ -38,4 +38,4 @@ context modelsTlinkTypeYadll = TLinkType(initScript="/tlinkType/methods/YADLL_LR
 context modelsTlinkTypeSieve = TLinkType(initScript="/tlinkType/methods/CAEVO_Conserve_Ind.ctx", initOnce="false");
 context evalSieve = TLinkType(initScript="/tlinkType/evaluations/Sieve.ctx", initOnce="false");
 context selfTrainSieve = TLinkType(initScript="/tlinkType/methods/SelfTrain_Sieve_Inc300_NL.ctx", initOnce="false");
-context results = TLinkType(initScript="/tlinkType/experiment/output/Dev_CAEVO.ctx", initOnce="false");
+context results = TLinkType(initScript="/tlinkType/experiment/output/Dev_CAEVO_Ind.ctx", initOnce="false");
