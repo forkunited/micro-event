@@ -12,7 +12,7 @@ model yadll=YADLL(numEpochs="40", stepSize=".01",
 				  fnParameters=("FanIn", "Zeros", "FanIn", "Zeros"), 
 				  Relu_0_input="FanIn_0*x+Zeros_1", 
 				  Relu_0_size=1,
-				  Softmax_1_input="FanIn_2*Relu_0+Zeros_3"
+				  Softmax_1_input="FanIn_2*Relu_0+Zeros_3",
 				  Softmax_1_size=${dataParamsTlinkType.labelCount}, 
 				  NegativeLogLoss_2_input="Softmax_1", 
 				  NegativeLogLoss_2_size="1", 
