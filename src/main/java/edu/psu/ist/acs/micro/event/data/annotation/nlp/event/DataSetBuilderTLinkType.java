@@ -31,7 +31,8 @@ import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType
 public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLinkDatum<TimeMLRelType>, TimeMLRelType> {
 	private enum CrossDocumentMode {
 		NONE,
-		ALL
+		ALL,
+		ONLY_TIME_TIME
 	}
 	
 	private enum DirectionMode {
@@ -99,7 +100,7 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 	}
 
 	private boolean linkMeetsCrossDocumentMode(TLink link, boolean labeled) {
-		return !link.isBetweenDocuments() || this.crossDocMode == CrossDocumentMode.ALL;
+		return !link.isBetweenDocuments() || this.crossDocMode == CrossDocumentMode.ALL || (this.crossDocMode == CrossDocumentMode.ONLY_TIME_TIME && link.getType() == TLink.Type.TIME_TIME);
 	}
 	
 	@Override
@@ -176,8 +177,10 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 
 				if (labeledPairs.containsKey(id1) && labeledPairs.get(id1).contains(id2))
 					return null;
-				else
+				else if (linkMeetsCrossDocumentMode(link, false))
 					return link;
+				else
+					return null;
 			}
 		};
 		
@@ -200,7 +203,7 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 							if (labelMode != LabelMode.ONLY_LABELED)
 								links = runAllPairs(doc1Mentions, fn, links, true); 
 							
-							if (crossDocMode != CrossDocumentMode.ALL)
+							if (crossDocMode == CrossDocumentMode.NONE)
 								continue;
 							
 							for (String docName2 : item.getValue()) {
