@@ -184,7 +184,7 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 			}
 		};
 		
-		if (this.labelMode != LabelMode.ONLY_LABELED || this.crossDocMode == CrossDocumentMode.ALL) {
+		if (this.labelMode != LabelMode.ONLY_LABELED || this.crossDocMode != CrossDocumentMode.NONE) {
 			Map<String, Set<String>> documentClusters = getDocumentClusters();
 			DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable> docs = getDocuments();
 			TreeMap<String, TLink> unlabeledLinks = new TreeMap<String, TLink>();
