@@ -122,6 +122,36 @@ public class TLinkDatum<L> extends Datum<L> {
 		});
 		
 		tools.addLabelMapping(new LabelMapping<TimeMLRelType>() {
+			@Override
+			public TimeMLRelType map(TimeMLRelType label) {
+				if (label == null)
+					return null;
+				else if (label == TimeMLRelType.AFTER)
+					return TimeMLRelType.AFTER;
+				else if (label == TimeMLRelType.BEFORE)
+					return TimeMLRelType.BEFORE;
+				else if (label == TimeMLRelType.IS_INCLUDED)
+					return TimeMLRelType.IS_INCLUDED;
+				else if (label == TimeMLRelType.INCLUDES)
+					return TimeMLRelType.INCLUDES;
+				else if (label == TimeMLRelType.SIMULTANEOUS)
+					return TimeMLRelType.SIMULTANEOUS;
+				else if (label == TimeMLRelType.NONE_VAGUE)
+					return null;
+				else if (label == TimeMLRelType.PARTIAL_VAGUE)
+					return null;
+				else 
+					return TimeMLRelType.VAGUE;
+			}
+			
+			@Override
+			public String toString() {
+				return "TBD_NoPVNV";
+			}
+		});
+		
+		
+		tools.addLabelMapping(new LabelMapping<TimeMLRelType>() {
 			public TimeMLRelType map(TimeMLRelType label) { if (label == TimeMLRelType.BEFORE) return label; else return null; }
 			public String toString() { return "OnlyB"; }
 		});

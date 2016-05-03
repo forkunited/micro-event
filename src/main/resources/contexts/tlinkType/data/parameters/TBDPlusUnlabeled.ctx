@@ -16,6 +16,9 @@ value testCrossDocMode="NONE";
 value trainClusterMode="POST";
 value devClusterMode="POST";
 value testClusterMode="POST";
+value trainLM="TBD";
+value devLM="TBD";
+value testLM="TBD";
 
 array labels = ("BEFORE", "AFTER", "INCLUDES", "IS_INCLUDED", "SIMULTANEOUS", "VAGUE");
 value labelCount = SizeArray(array=${labels});
