@@ -74,25 +74,15 @@ public class MethodClassificationTLinkTypeTimeTime extends MethodClassification<
 	public String getGenericName() {
 		return "TimeTime";
 	}
-	
+
 	@Override
-	public Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> classify(DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType> data) {
-		Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> map = new HashMap<TLinkDatum<TimeMLRelType>, TimeMLRelType>();
-		
-		for (TLinkDatum<TimeMLRelType> datum : data) {
-			TLink tlink = datum.getTLink();
-			if (tlink.getType() != TLink.Type.TIME_TIME)
-				continue;
-			
-			TimeExpression t1 = (TimeExpression)tlink.getSource();
-			TimeExpression t2 = (TimeExpression)tlink.getTarget();
-			TimeMLRelType rel = t1.getRelationToTime(t2, false);
-			if (rel != null) {
-				map.put(datum, rel);
-			}
-		}
-	
-		return map;
+	public boolean hasTrainable() {
+		return false;
+	}
+
+	@Override
+	public Trainable<TLinkDatum<TimeMLRelType>, TimeMLRelType> getTrainable() {
+		return null;
 	}
 	
 	@Override
@@ -104,14 +94,43 @@ public class MethodClassificationTLinkTypeTimeTime extends MethodClassification<
 			scores.put(entry.getKey(), new Pair<TimeMLRelType, Double>(entry.getValue(), 1.0));
 		return scores;
 	}
-
+	
 	@Override
-	public boolean hasTrainable() {
-		return false;
+	public Pair<TimeMLRelType, Double> classifyWithScore(
+			TLinkDatum<TimeMLRelType> datum) {
+		TimeMLRelType label = classify(datum);
+		if (label != null)
+			return new Pair<TimeMLRelType, Double>(label, 1.0);
+		else
+			return null;
 	}
-
+	
 	@Override
-	public Trainable<TLinkDatum<TimeMLRelType>, TimeMLRelType> getTrainable() {
-		return null;
+	public Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> classify(DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType> data) {
+		Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> map = new HashMap<TLinkDatum<TimeMLRelType>, TimeMLRelType>();
+		
+		for (TLinkDatum<TimeMLRelType> datum : data) {
+			TimeMLRelType label = classify(datum);
+			if (label != null)
+				map.put(datum, label);
+		}
+	
+		return map;
+	}
+	
+	@Override
+	public TimeMLRelType classify(TLinkDatum<TimeMLRelType> datum) {		
+		TLink tlink = datum.getTLink();
+		if (tlink.getType() != TLink.Type.TIME_TIME)
+			return null;
+		
+		TimeExpression t1 = (TimeExpression)tlink.getSource();
+		TimeExpression t2 = (TimeExpression)tlink.getTarget();
+		TimeMLRelType rel = t1.getRelationToTime(t2, false);
+		if (rel != null) {
+			return rel;
+		} else {
+			return null;
+		}
 	}
 }

@@ -78,37 +78,15 @@ public class MethodClassificationTLinkTypeReportingDCT extends MethodClassificat
 	public String getGenericName() {
 		return "ReportingDCT";
 	}
-	
+
 	@Override
-	public Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> classify(DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType> data) {
-		Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> map = new HashMap<TLinkDatum<TimeMLRelType>, TimeMLRelType>();
-		
-		for (TLinkDatum<TimeMLRelType> datum : data) {
-			TLink tlink = datum.getTLink();
-			
-			if (tlink.getPosition() != TLink.Position.DCT || tlink.getType() != TLink.Type.EVENT_TIME)
-				continue;
-			
-			EventMention mention = null;
-			boolean eventSource = true;
-			if (tlink.getSource().getTLinkableType() == TLinkable.Type.EVENT) {
-				mention = (EventMention)tlink.getSource();
-			} else {
-				mention = (EventMention)tlink.getTarget();
-				eventSource = false;
-			}
-			
-			if (mention.getTimeMLClass() == TimeMLClass.REPORTING 
-					&& mention.getTimeMLTense() == TimeMLTense.PAST
-					&& mention.getTimeMLAspect() == TimeMLAspect.PERFECTIVE) {
-				if (eventSource)
-					map.put(datum, TimeMLRelType.IS_INCLUDED);
-				else
-					map.put(datum, TimeMLRelType.INCLUDES);
-			}
-		}
-	
-		return map;
+	public boolean hasTrainable() {
+		return false;
+	}
+
+	@Override
+	public Trainable<TLinkDatum<TimeMLRelType>, TimeMLRelType> getTrainable() {
+		return null;
 	}
 	
 	@Override
@@ -120,14 +98,55 @@ public class MethodClassificationTLinkTypeReportingDCT extends MethodClassificat
 			scores.put(entry.getKey(), new Pair<TimeMLRelType, Double>(entry.getValue(), 1.0));
 		return scores;
 	}
-
+	
 	@Override
-	public boolean hasTrainable() {
-		return false;
+	public Pair<TimeMLRelType, Double> classifyWithScore(
+			TLinkDatum<TimeMLRelType> datum) {
+		TimeMLRelType label = classify(datum);
+		if (label != null)
+			return new Pair<TimeMLRelType, Double>(label, 1.0);
+		else
+			return null;
 	}
-
+	
 	@Override
-	public Trainable<TLinkDatum<TimeMLRelType>, TimeMLRelType> getTrainable() {
+	public Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> classify(DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType> data) {
+		Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> map = new HashMap<TLinkDatum<TimeMLRelType>, TimeMLRelType>();
+		
+		for (TLinkDatum<TimeMLRelType> datum : data) {
+			TimeMLRelType label = classify(datum);
+			if (label != null)
+				map.put(datum, label);
+		}
+	
+		return map;
+	}
+	
+	@Override
+	public TimeMLRelType classify(TLinkDatum<TimeMLRelType> datum) {		
+		TLink tlink = datum.getTLink();
+		
+		if (tlink.getPosition() != TLink.Position.DCT || tlink.getType() != TLink.Type.EVENT_TIME)
+			return null;
+		
+		EventMention mention = null;
+		boolean eventSource = true;
+		if (tlink.getSource().getTLinkableType() == TLinkable.Type.EVENT) {
+			mention = (EventMention)tlink.getSource();
+		} else {
+			mention = (EventMention)tlink.getTarget();
+			eventSource = false;
+		}
+		
+		if (mention.getTimeMLClass() == TimeMLClass.REPORTING 
+				&& mention.getTimeMLTense() == TimeMLTense.PAST
+				&& mention.getTimeMLAspect() == TimeMLAspect.PERFECTIVE) {
+			if (eventSource)
+				return TimeMLRelType.IS_INCLUDED;
+			else
+				return TimeMLRelType.INCLUDES;
+		}
+		
 		return null;
 	}
 }

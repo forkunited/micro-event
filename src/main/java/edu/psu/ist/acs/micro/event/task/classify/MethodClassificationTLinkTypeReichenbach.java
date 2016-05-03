@@ -90,106 +90,143 @@ public class MethodClassificationTLinkTypeReichenbach extends MethodClassificati
 	public String getGenericName() {
 		return "Reichenbach";
 	}
+
+	@Override
+	public boolean hasTrainable() {
+		return false;
+	}
+
+	@Override
+	public Trainable<TLinkDatum<TimeMLRelType>, TimeMLRelType> getTrainable() {
+		return null;
+	}
+	
+	@Override
+	public Map<TLinkDatum<TimeMLRelType>, Pair<TimeMLRelType, Double>> classifyWithScore(
+			DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType> data) {
+		Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> classifications = classify(data);
+		Map<TLinkDatum<TimeMLRelType>, Pair<TimeMLRelType, Double>> scores = new HashMap<>();
+		for (Entry<TLinkDatum<TimeMLRelType>, TimeMLRelType> entry : classifications.entrySet())
+			scores.put(entry.getKey(), new Pair<TimeMLRelType, Double>(entry.getValue(), 1.0));
+		return scores;
+	}
+	
+	@Override
+	public Pair<TimeMLRelType, Double> classifyWithScore(
+			TLinkDatum<TimeMLRelType> datum) {
+		TimeMLRelType label = classify(datum);
+		if (label != null)
+			return new Pair<TimeMLRelType, Double>(label, 1.0);
+		else
+			return null;
+	}
 	
 	@Override
 	public Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> classify(DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType> data) {
 		Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> map = new HashMap<TLinkDatum<TimeMLRelType>, TimeMLRelType>();
 		
 		for (TLinkDatum<TimeMLRelType> datum : data) {
-			TLink tlink = datum.getTLink();
-			if (tlink.getType() != TLink.Type.EVENT_EVENT)
-				continue;
-			
-			EventMention e1 = (EventMention)tlink.getSource();
-			EventMention e2 = (EventMention)tlink.getTarget();
-			
-			TokenSpan e1Span = e1.getTokenSpan();
-			TokenSpan e2Span = e2.getTokenSpan();
-			if (!e1.getTokenSpan().getDocument().getName().equals(e2.getTokenSpan().getDocument().getName()))
-				continue;
-			
-			if (e1Span.getSentenceIndex() == e2Span.getSentenceIndex() && !SAME_SENTENCE)
-				continue;
-			
-			if (Math.abs(e1Span.getSentenceIndex() - e2Span.getSentenceIndex()) > SENTENCE_WINDOW)
-				continue;
-			
-			DocumentNLP document = e1.getTokenSpan().getDocument();
-			PoSTag pos1 = document.getPoSTag(e1.getTokenSpan().getSentenceIndex(), e1.getTokenSpan().getStartTokenIndex());
-			PoSTag pos2 = document.getPoSTag(e2.getTokenSpan().getSentenceIndex(), e2.getTokenSpan().getStartTokenIndex());
-
-			if (!PoSTagClass.classContains(PoSTagClass.VB, pos1) || !PoSTagClass.classContains(PoSTagClass.VB, pos2))
-				continue;
-			
-			
-			
-			if (SAME_TENSE && e1.getTimeMLTense() != e2.getTimeMLTense())
-				continue;
-			
-			TimeMLTense e1Tense = simplifyTense((USE_EXTENDED_TENSE) ? e1.getTimeMLExtendedTense() : e1.getTimeMLTense());
-			TimeMLTense e2Tense = simplifyTense((USE_EXTENDED_TENSE) ? e2.getTimeMLExtendedTense() : e2.getTimeMLTense());
-			TimeMLAspect e1Aspect = simplifyAspect(e1.getTimeMLAspect());
-			TimeMLAspect e2Aspect = simplifyAspect(e2.getTimeMLAspect());
-			
-			boolean e1Past = (e1Tense == TimeMLTense.PAST);
-			boolean e2Past = (e2Tense == TimeMLTense.PAST);
-			boolean e1Pres = (e1Tense == TimeMLTense.PRESENT);
-			boolean e2Pres = (e2Tense == TimeMLTense.PRESENT);		
-			boolean e1Future = (e1Tense == TimeMLTense.FUTURE);
-			boolean e2Future = (e2Tense == TimeMLTense.FUTURE);
-			boolean e1Perf = (e1Aspect == TimeMLAspect.PERFECTIVE);
-			boolean e1None = (e1Aspect == TimeMLAspect.NONE);
-			boolean e2Perf = (e2Aspect == TimeMLAspect.PERFECTIVE);
-			boolean e2None = (e2Aspect == TimeMLAspect.NONE);
-			
-			TimeMLRelType rel = null;
-			if (e1Past && e1None && e2Past && e2Perf) 
-				rel = TimeMLRelType.AFTER;    
-			if (e1Past && e1None && e2Future && e2None) 
-				rel = TimeMLRelType.BEFORE;
-			if (e1Past && e1None && e2Future && e2Perf) 
-				rel = TimeMLRelType.BEFORE; 
-			if (e1Past && e1Perf && e2Past && e2None) 
-				rel = TimeMLRelType.BEFORE ;
-			if (e1Past && e1Perf && e2Pres && e2None) 
-				rel = TimeMLRelType.BEFORE;
-			if (e1Past && e1Perf && e2Pres && e2Perf) 
-				rel = TimeMLRelType.BEFORE; 
-			if (e1Past && e1Perf && e2Future && e2None) 
-				rel = TimeMLRelType.BEFORE;
-			if (e1Past && e1Perf && e2Future && e2Perf) 
-				rel = TimeMLRelType.BEFORE;
-			if (e1Pres && e1None && e2Past && e2Perf) 
-				rel = TimeMLRelType.AFTER;
-			if (e1Pres && e1None && e2Future && e2None) 
-				rel = TimeMLRelType.BEFORE; 
-			if (e1Pres && e1Perf && e2Past && e2Perf) 
-				rel = TimeMLRelType.AFTER;    
-			if (e1Pres && e1Perf && e2Future && e2None) 
-				rel = TimeMLRelType.BEFORE;
-			if (e1Pres && e1Perf && e2Future && e2Perf) 
-				rel = TimeMLRelType.BEFORE;
-			if (e1Future && e1None && e2Past && e2None) 
-				rel = TimeMLRelType.AFTER;
-			if (e1Future && e1None && e2Past && e2Perf) 
-				rel = TimeMLRelType.AFTER; 
-			if (e1Future && e1None && e2Pres && e2None) 
-				rel = TimeMLRelType.AFTER; 
-			if (e1Future && e1None && e2Pres && e2Perf) 
-				rel = TimeMLRelType.AFTER;
-			if (e1Future && e1Perf && e2Past && e2None) 
-				rel = TimeMLRelType.AFTER;  
-			if (e1Future && e1Perf && e2Past && e2Perf) 
-				rel = TimeMLRelType.AFTER;
-			if (e1Future && e1Perf && e2Pres && e2Perf) 
-				rel = TimeMLRelType.AFTER;    
-
-			if (rel != null) {
-				map.put(datum, rel);
-			}
+			TimeMLRelType label = classify(datum);
+			if (label != null)
+				map.put(datum, label);
 		}
 	
 		return map;
+	}
+	
+	@Override
+	public TimeMLRelType classify(TLinkDatum<TimeMLRelType> datum) {
+		TLink tlink = datum.getTLink();
+		if (tlink.getType() != TLink.Type.EVENT_EVENT)
+			return null;
+		
+		EventMention e1 = (EventMention)tlink.getSource();
+		EventMention e2 = (EventMention)tlink.getTarget();
+		
+		TokenSpan e1Span = e1.getTokenSpan();
+		TokenSpan e2Span = e2.getTokenSpan();
+		if (!e1.getTokenSpan().getDocument().getName().equals(e2.getTokenSpan().getDocument().getName()))
+			return null;
+		
+		if (e1Span.getSentenceIndex() == e2Span.getSentenceIndex() && !SAME_SENTENCE)
+			return null;
+		
+		if (Math.abs(e1Span.getSentenceIndex() - e2Span.getSentenceIndex()) > SENTENCE_WINDOW)
+			return null;
+		
+		DocumentNLP document = e1.getTokenSpan().getDocument();
+		PoSTag pos1 = document.getPoSTag(e1.getTokenSpan().getSentenceIndex(), e1.getTokenSpan().getStartTokenIndex());
+		PoSTag pos2 = document.getPoSTag(e2.getTokenSpan().getSentenceIndex(), e2.getTokenSpan().getStartTokenIndex());
+
+		if (!PoSTagClass.classContains(PoSTagClass.VB, pos1) || !PoSTagClass.classContains(PoSTagClass.VB, pos2))
+			return null;
+		
+		if (SAME_TENSE && e1.getTimeMLTense() != e2.getTimeMLTense())
+			return null;
+		
+		TimeMLTense e1Tense = simplifyTense((USE_EXTENDED_TENSE) ? e1.getTimeMLExtendedTense() : e1.getTimeMLTense());
+		TimeMLTense e2Tense = simplifyTense((USE_EXTENDED_TENSE) ? e2.getTimeMLExtendedTense() : e2.getTimeMLTense());
+		TimeMLAspect e1Aspect = simplifyAspect(e1.getTimeMLAspect());
+		TimeMLAspect e2Aspect = simplifyAspect(e2.getTimeMLAspect());
+		
+		boolean e1Past = (e1Tense == TimeMLTense.PAST);
+		boolean e2Past = (e2Tense == TimeMLTense.PAST);
+		boolean e1Pres = (e1Tense == TimeMLTense.PRESENT);
+		boolean e2Pres = (e2Tense == TimeMLTense.PRESENT);		
+		boolean e1Future = (e1Tense == TimeMLTense.FUTURE);
+		boolean e2Future = (e2Tense == TimeMLTense.FUTURE);
+		boolean e1Perf = (e1Aspect == TimeMLAspect.PERFECTIVE);
+		boolean e1None = (e1Aspect == TimeMLAspect.NONE);
+		boolean e2Perf = (e2Aspect == TimeMLAspect.PERFECTIVE);
+		boolean e2None = (e2Aspect == TimeMLAspect.NONE);
+		
+		TimeMLRelType rel = null;
+		if (e1Past && e1None && e2Past && e2Perf) 
+			rel = TimeMLRelType.AFTER;    
+		if (e1Past && e1None && e2Future && e2None) 
+			rel = TimeMLRelType.BEFORE;
+		if (e1Past && e1None && e2Future && e2Perf) 
+			rel = TimeMLRelType.BEFORE; 
+		if (e1Past && e1Perf && e2Past && e2None) 
+			rel = TimeMLRelType.BEFORE ;
+		if (e1Past && e1Perf && e2Pres && e2None) 
+			rel = TimeMLRelType.BEFORE;
+		if (e1Past && e1Perf && e2Pres && e2Perf) 
+			rel = TimeMLRelType.BEFORE; 
+		if (e1Past && e1Perf && e2Future && e2None) 
+			rel = TimeMLRelType.BEFORE;
+		if (e1Past && e1Perf && e2Future && e2Perf) 
+			rel = TimeMLRelType.BEFORE;
+		if (e1Pres && e1None && e2Past && e2Perf) 
+			rel = TimeMLRelType.AFTER;
+		if (e1Pres && e1None && e2Future && e2None) 
+			rel = TimeMLRelType.BEFORE; 
+		if (e1Pres && e1Perf && e2Past && e2Perf) 
+			rel = TimeMLRelType.AFTER;    
+		if (e1Pres && e1Perf && e2Future && e2None) 
+			rel = TimeMLRelType.BEFORE;
+		if (e1Pres && e1Perf && e2Future && e2Perf) 
+			rel = TimeMLRelType.BEFORE;
+		if (e1Future && e1None && e2Past && e2None) 
+			rel = TimeMLRelType.AFTER;
+		if (e1Future && e1None && e2Past && e2Perf) 
+			rel = TimeMLRelType.AFTER; 
+		if (e1Future && e1None && e2Pres && e2None) 
+			rel = TimeMLRelType.AFTER; 
+		if (e1Future && e1None && e2Pres && e2Perf) 
+			rel = TimeMLRelType.AFTER;
+		if (e1Future && e1Perf && e2Past && e2None) 
+			rel = TimeMLRelType.AFTER;  
+		if (e1Future && e1Perf && e2Past && e2Perf) 
+			rel = TimeMLRelType.AFTER;
+		if (e1Future && e1Perf && e2Pres && e2Perf) 
+			rel = TimeMLRelType.AFTER;    
+
+		if (rel != null) {
+			return rel;
+		}
+	
+		return null;
 	}
 	
 	private TimeMLTense simplifyTense(TimeMLTense tense){
@@ -210,25 +247,5 @@ public class MethodClassificationTLinkTypeReichenbach extends MethodClassificati
 			return aspect;
 		else 
 			return null; 
-	}
-	
-	@Override
-	public Map<TLinkDatum<TimeMLRelType>, Pair<TimeMLRelType, Double>> classifyWithScore(
-			DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType> data) {
-		Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> classifications = classify(data);
-		Map<TLinkDatum<TimeMLRelType>, Pair<TimeMLRelType, Double>> scores = new HashMap<>();
-		for (Entry<TLinkDatum<TimeMLRelType>, TimeMLRelType> entry : classifications.entrySet())
-			scores.put(entry.getKey(), new Pair<TimeMLRelType, Double>(entry.getValue(), 1.0));
-		return scores;
-	}
-
-	@Override
-	public boolean hasTrainable() {
-		return false;
-	}
-
-	@Override
-	public Trainable<TLinkDatum<TimeMLRelType>, TimeMLRelType> getTrainable() {
-		return null;
 	}
 }

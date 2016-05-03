@@ -83,66 +83,105 @@ public class MethodClassificationTLinkTypeGeneralGovernor extends MethodClassifi
 	public String getGenericName() {
 		return "GeneralGovernor";
 	}
+
+	@Override
+	public boolean hasTrainable() {
+		return false;
+	}
+	
+	@Override
+	public Trainable<TLinkDatum<TimeMLRelType>, TimeMLRelType> getTrainable() {
+		return null;
+	}
+	
+	@Override
+	public Map<TLinkDatum<TimeMLRelType>, Pair<TimeMLRelType, Double>> classifyWithScore(
+			DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType> data) {
+		Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> classifications = classify(data);
+		Map<TLinkDatum<TimeMLRelType>, Pair<TimeMLRelType, Double>> scores = new HashMap<>();
+		for (Entry<TLinkDatum<TimeMLRelType>, TimeMLRelType> entry : classifications.entrySet())
+			scores.put(entry.getKey(), new Pair<TimeMLRelType, Double>(entry.getValue(), 1.0));
+		return scores;
+	}
+	
+	@Override
+	public Pair<TimeMLRelType, Double> classifyWithScore(
+			TLinkDatum<TimeMLRelType> datum) {
+		TimeMLRelType label = classify(datum);
+		if (label != null)
+			return new Pair<TimeMLRelType, Double>(label, 1.0);
+		else
+			return null;
+	}
 	
 	@Override
 	public Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> classify(DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType> data) {
 		Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> map = new HashMap<TLinkDatum<TimeMLRelType>, TimeMLRelType>();
-
+		
 		for (TLinkDatum<TimeMLRelType> datum : data) {
-			TLink tlink = datum.getTLink();
-			if (tlink.getType() != TLink.Type.EVENT_EVENT
-					|| tlink.getPosition() != TLink.Position.WITHIN_SENTENCE)
-				continue;
-			
-			EventMention e1 = (EventMention)tlink.getSource();
-			EventMention e2 = (EventMention)tlink.getTarget();
-			
-			TokenSpan e1Span = e1.getTokenSpan();
-			TokenSpan e2Span = e2.getTokenSpan();
-			DocumentNLP document = e1.getTokenSpan().getDocument();
-			DependencyPath path = document.getDependencyParse(e1Span.getSentenceIndex()).getPath(e1Span.getStartTokenIndex(), e2Span.getStartTokenIndex());
-			if (path == null || path.getDependencyLength() != 1)
-				continue;
+			TimeMLRelType label = classify(datum);
+			if (label != null)
+				map.put(datum, label);
+		}
+	
+		return map;
+	}
+	
+	@Override
+	public TimeMLRelType classify(TLinkDatum<TimeMLRelType> datum) {		
+		TLink tlink = datum.getTLink();
+		if (tlink.getType() != TLink.Type.EVENT_EVENT
+				|| tlink.getPosition() != TLink.Position.WITHIN_SENTENCE)
+			return null;
+		
+		EventMention e1 = (EventMention)tlink.getSource();
+		EventMention e2 = (EventMention)tlink.getTarget();
+		
+		TokenSpan e1Span = e1.getTokenSpan();
+		TokenSpan e2Span = e2.getTokenSpan();
+		DocumentNLP document = e1.getTokenSpan().getDocument();
+		DependencyPath path = document.getDependencyParse(e1Span.getSentenceIndex()).getPath(e1Span.getStartTokenIndex(), e2Span.getStartTokenIndex());
+		if (path == null || path.getDependencyLength() != 1)
+			return null;
 
-			String type = path.getDependencyType(0);
-			EventMention eGov = null;
-			EventMention eDep = null;
-			if (path.isAllGoverning()) {
-				eGov = e1;
-				eDep = e2;
-			} else {
-				eGov = e2;
-				eDep = e1;
-			}
-			
-			TimeMLRelType govDepRel = null;
-			if (type.equals("xcomp"))
-				govDepRel = classifyEventPair_xcomp(eGov, eDep);
-			else if (type.equals("ccomp"))
-				govDepRel = classifyEventPair_ccomp(eGov, eDep);
-			else if (type.equals("conj_and"))
-				govDepRel = classifyEventPair_conj_and(eGov, eDep);
-			else if (type.equals("nsubj")) 
-				govDepRel = classifyEventPair_nsubj(eGov, eDep);
-			else if (type.equals("advcl")) 
-				govDepRel = classifyEventPair_advcl(eGov, eDep);
-			else if (type.equals("conj_but"))
-				govDepRel = classifyEventPair_conj_but(eGov, eDep);
-			else if (type.equals("conj_or"))
-				govDepRel = classifyEventPair_conj_or(eGov, eDep);
-			else if (type.equals("dobj"))
-				govDepRel = classifyEventPair_dobj(eGov, eDep);
-			 
-			if (govDepRel != null) {
-				TimeMLRelType rel = govDepRel;
-				if (!e1.getId().equals(eGov.getId()))
-					rel = TLink.getConverseTimeMLRelType(govDepRel);
-				
-				map.put(datum, rel);
-			}
+		String type = path.getDependencyType(0);
+		EventMention eGov = null;
+		EventMention eDep = null;
+		if (path.isAllGoverning()) {
+			eGov = e1;
+			eDep = e2;
+		} else {
+			eGov = e2;
+			eDep = e1;
 		}
 		
-		return map;
+		TimeMLRelType govDepRel = null;
+		if (type.equals("xcomp"))
+			govDepRel = classifyEventPair_xcomp(eGov, eDep);
+		else if (type.equals("ccomp"))
+			govDepRel = classifyEventPair_ccomp(eGov, eDep);
+		else if (type.equals("conj_and"))
+			govDepRel = classifyEventPair_conj_and(eGov, eDep);
+		else if (type.equals("nsubj")) 
+			govDepRel = classifyEventPair_nsubj(eGov, eDep);
+		else if (type.equals("advcl")) 
+			govDepRel = classifyEventPair_advcl(eGov, eDep);
+		else if (type.equals("conj_but"))
+			govDepRel = classifyEventPair_conj_but(eGov, eDep);
+		else if (type.equals("conj_or"))
+			govDepRel = classifyEventPair_conj_or(eGov, eDep);
+		else if (type.equals("dobj"))
+			govDepRel = classifyEventPair_dobj(eGov, eDep);
+		 
+		if (govDepRel != null) {
+			TimeMLRelType rel = govDepRel;
+			if (!e1.getId().equals(eGov.getId()))
+				rel = TLink.getConverseTimeMLRelType(govDepRel);
+			
+			return rel;
+		}
+	
+		return null;
 	}
 	
 	private TimeMLRelType classifyEventPair_conj_or(EventMention eGov, EventMention eDep) {
@@ -285,26 +324,6 @@ public class MethodClassificationTLinkTypeGeneralGovernor extends MethodClassifi
 				return TimeMLRelType.VAGUE;
 		}
 		
-		return null;
-	}
-	
-	@Override
-	public Map<TLinkDatum<TimeMLRelType>, Pair<TimeMLRelType, Double>> classifyWithScore(
-			DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType> data) {
-		Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> classifications = classify(data);
-		Map<TLinkDatum<TimeMLRelType>, Pair<TimeMLRelType, Double>> scores = new HashMap<>();
-		for (Entry<TLinkDatum<TimeMLRelType>, TimeMLRelType> entry : classifications.entrySet())
-			scores.put(entry.getKey(), new Pair<TimeMLRelType, Double>(entry.getValue(), 1.0));
-		return scores;
-	}
-
-	@Override
-	public boolean hasTrainable() {
-		return false;
-	}
-	
-	@Override
-	public Trainable<TLinkDatum<TimeMLRelType>, TimeMLRelType> getTrainable() {
 		return null;
 	}
 }

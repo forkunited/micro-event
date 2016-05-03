@@ -77,50 +77,15 @@ public class MethodClassificationTLinkTypeWordNet extends MethodClassification<T
 	public String getGenericName() {
 		return "WordNet";
 	}
-	
-	@Override
-	public Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> classify(DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType> data) {
-		Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> map = new HashMap<TLinkDatum<TimeMLRelType>, TimeMLRelType>();
-		WordNet wordNet = this.context.getDataTools().getWordNet();
-		
-		for (TLinkDatum<TimeMLRelType> datum : data) {
-			TLink tlink = datum.getTLink();
-			
-			if (tlink.getType() != TLink.Type.TIME_TIME && tlink.getType() != TLink.Type.EVENT_EVENT)
-				continue;
-			
-			TokenSpan sourceSpan = datum.getTLink().getSource().getTokenSpan();
-			TokenSpan targetSpan = datum.getTLink().getTarget().getTokenSpan();
-			if (sourceSpan.getSentenceIndex() < 0 || targetSpan.getSentenceIndex() < 0)
-				continue;
-			
-			DocumentNLP sourceDocument = sourceSpan.getDocument();
-			DocumentNLP targetDocument = targetSpan.getDocument();
 
-			String sourceWord = sourceDocument.getTokenStr(sourceSpan.getSentenceIndex(), sourceSpan.getEndTokenIndex() - 1);
-			String targetWord = targetDocument.getTokenStr(targetSpan.getSentenceIndex(), targetSpan.getEndTokenIndex() - 1);
-			PoSTag sourcePos = sourceDocument.getPoSTag(sourceSpan.getSentenceIndex(), sourceSpan.getEndTokenIndex() - 1);
-			PoSTag targetPos = targetDocument.getPoSTag(targetSpan.getSentenceIndex(), targetSpan.getEndTokenIndex() - 1);
-			String sourceLemma = wordNet.getLemma(sourceWord, sourcePos);
-			String targetLemma = wordNet.getLemma(targetWord, targetPos);
-			
-			TimeMLRelType rel = null;
-			if (tlink.getType() == TLink.Type.TIME_TIME) {
-				if (sourceLemma != null && sourceLemma.equals(targetLemma))
-					rel = TimeMLRelType.SIMULTANEOUS;
-			} else { // EVENT_EVENT
-				if (wordNet.areSynonyms(sourceWord, sourcePos, targetWord, targetPos))
-					rel = TimeMLRelType.VAGUE;
-				else if (sourceLemma != null && sourceLemma.equals(targetLemma))
-					rel = TimeMLRelType.VAGUE;
-			}
-			
-			if (rel != null) {
-				map.put(datum, rel);
-			}
-		}
-	
-		return map;
+	@Override
+	public boolean hasTrainable() {
+		return false;
+	}
+
+	@Override
+	public Trainable<TLinkDatum<TimeMLRelType>, TimeMLRelType> getTrainable() {
+		return null;
 	}
 	
 	@Override
@@ -132,14 +97,69 @@ public class MethodClassificationTLinkTypeWordNet extends MethodClassification<T
 			scores.put(entry.getKey(), new Pair<TimeMLRelType, Double>(entry.getValue(), 1.0));
 		return scores;
 	}
-
+	
 	@Override
-	public boolean hasTrainable() {
-		return false;
+	public Pair<TimeMLRelType, Double> classifyWithScore(
+			TLinkDatum<TimeMLRelType> datum) {
+		TimeMLRelType label = classify(datum);
+		if (label != null)
+			return new Pair<TimeMLRelType, Double>(label, 1.0);
+		else
+			return null;
 	}
-
+	
 	@Override
-	public Trainable<TLinkDatum<TimeMLRelType>, TimeMLRelType> getTrainable() {
-		return null;
+	public Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> classify(DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType> data) {
+		Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> map = new HashMap<TLinkDatum<TimeMLRelType>, TimeMLRelType>();
+		
+		for (TLinkDatum<TimeMLRelType> datum : data) {
+			TimeMLRelType label = classify(datum);
+			if (label != null)
+				map.put(datum, label);
+		}
+	
+		return map;
+	}
+	
+	@Override
+	public TimeMLRelType classify(TLinkDatum<TimeMLRelType> datum) {
+		WordNet wordNet = this.context.getDataTools().getWordNet();
+		
+		TLink tlink = datum.getTLink();
+		
+		if (tlink.getType() != TLink.Type.TIME_TIME && tlink.getType() != TLink.Type.EVENT_EVENT)
+			return null;
+		
+		TokenSpan sourceSpan = datum.getTLink().getSource().getTokenSpan();
+		TokenSpan targetSpan = datum.getTLink().getTarget().getTokenSpan();
+		if (sourceSpan.getSentenceIndex() < 0 || targetSpan.getSentenceIndex() < 0)
+			return null;
+		
+		DocumentNLP sourceDocument = sourceSpan.getDocument();
+		DocumentNLP targetDocument = targetSpan.getDocument();
+
+		String sourceWord = sourceDocument.getTokenStr(sourceSpan.getSentenceIndex(), sourceSpan.getEndTokenIndex() - 1);
+		String targetWord = targetDocument.getTokenStr(targetSpan.getSentenceIndex(), targetSpan.getEndTokenIndex() - 1);
+		PoSTag sourcePos = sourceDocument.getPoSTag(sourceSpan.getSentenceIndex(), sourceSpan.getEndTokenIndex() - 1);
+		PoSTag targetPos = targetDocument.getPoSTag(targetSpan.getSentenceIndex(), targetSpan.getEndTokenIndex() - 1);
+		String sourceLemma = wordNet.getLemma(sourceWord, sourcePos);
+		String targetLemma = wordNet.getLemma(targetWord, targetPos);
+		
+		TimeMLRelType rel = null;
+		if (tlink.getType() == TLink.Type.TIME_TIME) {
+			if (sourceLemma != null && sourceLemma.equals(targetLemma))
+				rel = TimeMLRelType.SIMULTANEOUS;
+		} else { // EVENT_EVENT
+			if (wordNet.areSynonyms(sourceWord, sourcePos, targetWord, targetPos))
+				rel = TimeMLRelType.VAGUE;
+			else if (sourceLemma != null && sourceLemma.equals(targetLemma))
+				rel = TimeMLRelType.VAGUE;
+		}
+		
+		if (rel != null) {
+			return rel;
+		} else {
+			return null;
+		}
 	}
 }

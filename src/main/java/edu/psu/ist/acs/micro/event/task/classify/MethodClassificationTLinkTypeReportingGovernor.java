@@ -82,65 +82,6 @@ public class MethodClassificationTLinkTypeReportingGovernor extends MethodClassi
 		return "ReportingGovernor";
 	}
 	
-	@Override
-	public Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> classify(DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType> data) {
-		Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> map = new HashMap<TLinkDatum<TimeMLRelType>, TimeMLRelType>();
-		
-		for (TLinkDatum<TimeMLRelType> datum : data) {
-			TLink tlink = datum.getTLink();
-			if (tlink.getType() != TLink.Type.EVENT_EVENT
-					|| tlink.getPosition() != TLink.Position.WITHIN_SENTENCE)
-				continue;
-			
-			EventMention e1 = (EventMention)tlink.getSource();
-			EventMention e2 = (EventMention)tlink.getTarget();
-			
-			TokenSpan e1Span = e1.getTokenSpan();
-			TokenSpan e2Span = e2.getTokenSpan();
-			DocumentNLP document = e1.getTokenSpan().getDocument();
-						
-			DependencyParse deps = document.getDependencyParse(e1Span.getSentenceIndex());
-			
-			EventMention eGov = null;
-			EventMention eDep = null;
-			if (deps != null && deps.isDirectlyGoverning(e1Span.getStartTokenIndex(), e2Span.getStartTokenIndex())) {
-				eGov = e1;
-				eDep = e2;
-			} else if (deps != null && deps.isDirectlyGoverning(e2Span.getStartTokenIndex(), e1Span.getStartTokenIndex())) {
-				eGov = e2;
-				eDep = e1;
-			} else {
-				ConstituencyParse parse = document.getConstituencyParse(e1Span.getSentenceIndex());
-				if (parse == null)
-					continue;
-				
-				if (parse.isDominating(e1Span.getStartTokenIndex(), e2Span.getStartTokenIndex())) {
-					eGov = e1;
-					eDep = e2;
-				} else if (parse.isDominating(e2Span.getStartTokenIndex(), e1Span.getStartTokenIndex())) {
-					eGov = e2;
-					eDep = e1;
-				} else {
-					continue;
-				}
-			}
-			
-			if (eGov.getTimeMLClass() != TimeMLClass.REPORTING || eDep.getTimeMLClass() == TimeMLClass.REPORTING)
-				continue;
-			
-			TimeMLRelType govDepRel = getRelation(eGov.getTimeMLTense(), eGov.getTimeMLAspect(), eDep.getTimeMLTense(), eDep.getTimeMLAspect());
-			if (govDepRel != null) {
-				TimeMLRelType rel = govDepRel;
-				if (!e1.getId().equals(eGov.getId()))
-					rel = TLink.getConverseTimeMLRelType(govDepRel);
-				
-				map.put(datum, rel);
-			}
-		}
-	
-		return map;
-	}
-	
 	/**
 	 * Determine the event-event relation from just the tenses and aspects.
 	 * @param t1 Governing event's tense
@@ -271,6 +212,16 @@ public class MethodClassificationTLinkTypeReportingGovernor extends MethodClassi
 		}
 		return relation;
 	}
+
+	@Override
+	public boolean hasTrainable() {
+		return false;
+	}
+
+	@Override
+	public Trainable<TLinkDatum<TimeMLRelType>, TimeMLRelType> getTrainable() {
+		return null;
+	}
 	
 	@Override
 	public Map<TLinkDatum<TimeMLRelType>, Pair<TimeMLRelType, Double>> classifyWithScore(
@@ -281,14 +232,82 @@ public class MethodClassificationTLinkTypeReportingGovernor extends MethodClassi
 			scores.put(entry.getKey(), new Pair<TimeMLRelType, Double>(entry.getValue(), 1.0));
 		return scores;
 	}
-
+	
 	@Override
-	public boolean hasTrainable() {
-		return false;
+	public Pair<TimeMLRelType, Double> classifyWithScore(
+			TLinkDatum<TimeMLRelType> datum) {
+		TimeMLRelType label = classify(datum);
+		if (label != null)
+			return new Pair<TimeMLRelType, Double>(label, 1.0);
+		else
+			return null;
 	}
-
+	
 	@Override
-	public Trainable<TLinkDatum<TimeMLRelType>, TimeMLRelType> getTrainable() {
-		return null;
+	public Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> classify(DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType> data) {
+		Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> map = new HashMap<TLinkDatum<TimeMLRelType>, TimeMLRelType>();
+		
+		for (TLinkDatum<TimeMLRelType> datum : data) {
+			TimeMLRelType label = classify(datum);
+			if (label != null)
+				map.put(datum, label);
+		}
+	
+		return map;
+	}
+	
+	@Override
+	public TimeMLRelType classify(TLinkDatum<TimeMLRelType> datum) {		
+		TLink tlink = datum.getTLink();
+		if (tlink.getType() != TLink.Type.EVENT_EVENT
+				|| tlink.getPosition() != TLink.Position.WITHIN_SENTENCE)
+			return null;
+		
+		EventMention e1 = (EventMention)tlink.getSource();
+		EventMention e2 = (EventMention)tlink.getTarget();
+		
+		TokenSpan e1Span = e1.getTokenSpan();
+		TokenSpan e2Span = e2.getTokenSpan();
+		DocumentNLP document = e1.getTokenSpan().getDocument();
+					
+		DependencyParse deps = document.getDependencyParse(e1Span.getSentenceIndex());
+		
+		EventMention eGov = null;
+		EventMention eDep = null;
+		if (deps != null && deps.isDirectlyGoverning(e1Span.getStartTokenIndex(), e2Span.getStartTokenIndex())) {
+			eGov = e1;
+			eDep = e2;
+		} else if (deps != null && deps.isDirectlyGoverning(e2Span.getStartTokenIndex(), e1Span.getStartTokenIndex())) {
+			eGov = e2;
+			eDep = e1;
+		} else {
+			ConstituencyParse parse = document.getConstituencyParse(e1Span.getSentenceIndex());
+			if (parse == null)
+				return null;
+			
+			if (parse.isDominating(e1Span.getStartTokenIndex(), e2Span.getStartTokenIndex())) {
+				eGov = e1;
+				eDep = e2;
+			} else if (parse.isDominating(e2Span.getStartTokenIndex(), e1Span.getStartTokenIndex())) {
+				eGov = e2;
+				eDep = e1;
+			} else {
+				return null;
+			}
+		}
+		
+		if (eGov.getTimeMLClass() != TimeMLClass.REPORTING || eDep.getTimeMLClass() == TimeMLClass.REPORTING)
+			return null;
+		
+		TimeMLRelType govDepRel = getRelation(eGov.getTimeMLTense(), eGov.getTimeMLAspect(), eDep.getTimeMLTense(), eDep.getTimeMLAspect());
+		if (govDepRel != null) {
+			TimeMLRelType rel = govDepRel;
+			if (!e1.getId().equals(eGov.getId()))
+				rel = TLink.getConverseTimeMLRelType(govDepRel);
+			
+			return rel;
+		} else {
+			return null;
+		}
 	}
 }

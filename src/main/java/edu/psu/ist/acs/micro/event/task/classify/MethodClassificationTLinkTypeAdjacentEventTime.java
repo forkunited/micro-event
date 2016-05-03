@@ -86,85 +86,6 @@ public class MethodClassificationTLinkTypeAdjacentEventTime extends MethodClassi
 	public String getGenericName() {
 		return "AdjacentEventTime";
 	}
-	
-	@Override
-	public Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> classify(DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType> data) {
-		Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> map = new HashMap<TLinkDatum<TimeMLRelType>, TimeMLRelType>();
-		
-		for (TLinkDatum<TimeMLRelType> datum : data) {
-			TLink tlink = datum.getTLink();
-			if (tlink.getPosition() != Position.WITHIN_SENTENCE 
-					|| tlink.getType() != TLink.Type.EVENT_TIME)
-				continue;
-			
-			TimeExpression time = tlink.getFirstTime();
-			EventMention event = tlink.getFirstEvent();
-			
-			if (time.getValue().getType() == NormalizedTimeValue.Type.PART_OF_YEAR)
-				continue;
-			
-			TokenSpan eventSpan = event.getTokenSpan();
-			if (eventSpan.getLength() > 1)
-				continue;
-			
-			DocumentNLP document = eventSpan.getDocument();
-			int sentenceIndex = event.getTokenSpan().getSentenceIndex();
-			int eventIndex = eventSpan.getStartTokenIndex();
-			int timeIndex = time.getTokenSpan().getStartTokenIndex();
-			DependencyParse.DependencyPath path = document.getDependencyParse(sentenceIndex).getPath(eventIndex, timeIndex);
-
-			PoSTag eventTag = document.getPoSTag(eventSpan.getSentenceIndex(), eventIndex);
-			if (!PoSTagClass.classContains(PoSTagClass.VB, eventTag))
-				continue;
-			
-			int eventToTimexDist = this.context.getDatumTools().getTokenSpanExtractor("BetweenSourceTarget").extract(datum)[0].getLength();
-			boolean eventBeforeTime = timeIndex - eventIndex >= 0;
-			boolean eventGovernsTime = path != null && path.getDependencyLength() == 1 && path.isAllGoverning();
-			
-			TimeMLRelType etRel = null;
-			if (eventBeforeTime && eventToTimexDist <= MAX_DISTANCE) { // Timex after event adjacent
-				if (eventToTimexDist == 0)
-					etRel = TimeMLRelType.IS_INCLUDED;
-				else if (timeIndex > 0 && document.getPoSTag(sentenceIndex, timeIndex - 1) == PoSTag.IN)
-					etRel = getTypeFromPreposition(document.getTokenStr(sentenceIndex, timeIndex - 1));
-				else 
-					etRel = TimeMLRelType.IS_INCLUDED;
-			/* NOTE: This bit was left out of CAEVO because it makes performance alot worse
-			} else if (!eventBeforeTime && eventToTimexDist <= MAX_DISTANCE) { // Event after timex adjacent
-				if (!eventGovernsTime)
-					etRel = TimeMLRelType.VAGUE;
-				else if (time.getValue().getReference() == Reference.PRESENT && event.getTimeMLAspect() == TimeMLAspect.PROGRESSIVE)
-					etRel = TimeMLRelType.INCLUDES;
-				else if (time.getValue().getReference() == Reference.PRESENT)
-					etRel = TimeMLRelType.VAGUE;
-				else if (eventToTimexDist == 0)
-					etRel = TimeMLRelType.IS_INCLUDED;
-				else if (timeIndex > 1 && document.getTokenStr(sentenceIndex, timeIndex - 1).toLowerCase().equals("said"))
-					etRel = TimeMLRelType.VAGUE;
-				else 
-					etRel = TimeMLRelType.IS_INCLUDED;*/
-			} else if (eventGovernsTime) { // Event governs time
-				if (time.getValue().getReference() == Reference.PRESENT && event.getTimeMLAspect() == TimeMLAspect.PROGRESSIVE)
-					etRel = TimeMLRelType.INCLUDES;
-				else if (time.getValue().getReference() == Reference.PRESENT)
-					etRel = TimeMLRelType.VAGUE;
-				else 
-					etRel = TimeMLRelType.IS_INCLUDED;
-			} else if (path != null && path.getDependencyLength() == 1 && path.isAllGovernedBy()) { // Timex governs event
-				etRel = TimeMLRelType.IS_INCLUDED;
-			}
-			
-			if (etRel != null) {
-				TimeMLRelType rel = etRel;
-				if (tlink.getSource().getTLinkableType() != Type.EVENT)
-					rel = TLink.getConverseTimeMLRelType(etRel);
-				
-				map.put(datum, rel);
-			}
-		}
-	
-		return map;
-	}
 		
 	private TimeMLRelType getTypeFromPreposition(String text) {
 		text = text.toLowerCase();
@@ -199,6 +120,16 @@ public class MethodClassificationTLinkTypeAdjacentEventTime extends MethodClassi
 	}
 
 	@Override
+	public boolean hasTrainable() {
+		return false;
+	}
+
+	@Override
+	public Trainable<TLinkDatum<TimeMLRelType>, TimeMLRelType> getTrainable() {
+		return null;
+	}
+
+	@Override
 	public Map<TLinkDatum<TimeMLRelType>, Pair<TimeMLRelType, Double>> classifyWithScore(
 			DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType> data) {
 		Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> classifications = classify(data);
@@ -207,14 +138,101 @@ public class MethodClassificationTLinkTypeAdjacentEventTime extends MethodClassi
 			scores.put(entry.getKey(), new Pair<TimeMLRelType, Double>(entry.getValue(), 1.0));
 		return scores;
 	}
-
+	
 	@Override
-	public boolean hasTrainable() {
-		return false;
+	public Pair<TimeMLRelType, Double> classifyWithScore(
+			TLinkDatum<TimeMLRelType> datum) {
+		TimeMLRelType label = classify(datum);
+		if (label != null)
+			return new Pair<TimeMLRelType, Double>(label, 1.0);
+		else
+			return null;
 	}
-
+	
 	@Override
-	public Trainable<TLinkDatum<TimeMLRelType>, TimeMLRelType> getTrainable() {
-		return null;
+	public Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> classify(DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType> data) {
+		Map<TLinkDatum<TimeMLRelType>, TimeMLRelType> map = new HashMap<TLinkDatum<TimeMLRelType>, TimeMLRelType>();
+		
+		for (TLinkDatum<TimeMLRelType> datum : data) {
+			TimeMLRelType label = classify(datum);
+			if (label != null)
+				map.put(datum, label);
+		}
+	
+		return map;
+	}
+	
+	@Override
+	public TimeMLRelType classify(TLinkDatum<TimeMLRelType> datum) {
+		TLink tlink = datum.getTLink();
+		if (tlink.getPosition() != Position.WITHIN_SENTENCE 
+				|| tlink.getType() != TLink.Type.EVENT_TIME)
+			return null;
+		
+		TimeExpression time = tlink.getFirstTime();
+		EventMention event = tlink.getFirstEvent();
+		
+		if (time.getValue().getType() == NormalizedTimeValue.Type.PART_OF_YEAR)
+			return null;
+		
+		TokenSpan eventSpan = event.getTokenSpan();
+		if (eventSpan.getLength() > 1)
+			return null;
+		
+		DocumentNLP document = eventSpan.getDocument();
+		int sentenceIndex = event.getTokenSpan().getSentenceIndex();
+		int eventIndex = eventSpan.getStartTokenIndex();
+		int timeIndex = time.getTokenSpan().getStartTokenIndex();
+		DependencyParse.DependencyPath path = document.getDependencyParse(sentenceIndex).getPath(eventIndex, timeIndex);
+
+		PoSTag eventTag = document.getPoSTag(eventSpan.getSentenceIndex(), eventIndex);
+		if (!PoSTagClass.classContains(PoSTagClass.VB, eventTag))
+			return null;
+		
+		int eventToTimexDist = this.context.getDatumTools().getTokenSpanExtractor("BetweenSourceTarget").extract(datum)[0].getLength();
+		boolean eventBeforeTime = timeIndex - eventIndex >= 0;
+		boolean eventGovernsTime = path != null && path.getDependencyLength() == 1 && path.isAllGoverning();
+		
+		TimeMLRelType etRel = null;
+		if (eventBeforeTime && eventToTimexDist <= MAX_DISTANCE) { // Timex after event adjacent
+			if (eventToTimexDist == 0)
+				etRel = TimeMLRelType.IS_INCLUDED;
+			else if (timeIndex > 0 && document.getPoSTag(sentenceIndex, timeIndex - 1) == PoSTag.IN)
+				etRel = getTypeFromPreposition(document.getTokenStr(sentenceIndex, timeIndex - 1));
+			else 
+				etRel = TimeMLRelType.IS_INCLUDED;
+		/* NOTE: This bit was left out of CAEVO because it makes performance alot worse
+		} else if (!eventBeforeTime && eventToTimexDist <= MAX_DISTANCE) { // Event after timex adjacent
+			if (!eventGovernsTime)
+				etRel = TimeMLRelType.VAGUE;
+			else if (time.getValue().getReference() == Reference.PRESENT && event.getTimeMLAspect() == TimeMLAspect.PROGRESSIVE)
+				etRel = TimeMLRelType.INCLUDES;
+			else if (time.getValue().getReference() == Reference.PRESENT)
+				etRel = TimeMLRelType.VAGUE;
+			else if (eventToTimexDist == 0)
+				etRel = TimeMLRelType.IS_INCLUDED;
+			else if (timeIndex > 1 && document.getTokenStr(sentenceIndex, timeIndex - 1).toLowerCase().equals("said"))
+				etRel = TimeMLRelType.VAGUE;
+			else 
+				etRel = TimeMLRelType.IS_INCLUDED;*/
+		} else if (eventGovernsTime) { // Event governs time
+			if (time.getValue().getReference() == Reference.PRESENT && event.getTimeMLAspect() == TimeMLAspect.PROGRESSIVE)
+				etRel = TimeMLRelType.INCLUDES;
+			else if (time.getValue().getReference() == Reference.PRESENT)
+				etRel = TimeMLRelType.VAGUE;
+			else 
+				etRel = TimeMLRelType.IS_INCLUDED;
+		} else if (path != null && path.getDependencyLength() == 1 && path.isAllGovernedBy()) { // Timex governs event
+			etRel = TimeMLRelType.IS_INCLUDED;
+		}
+		
+		if (etRel != null) {
+			TimeMLRelType rel = etRel;
+			if (tlink.getSource().getTLinkableType() != Type.EVENT)
+				rel = TLink.getConverseTimeMLRelType(etRel);
+			return rel;
+		} else {
+			return null;
+		}
 	}
 }
