@@ -14,4 +14,5 @@ structure_fn greedyTlinkTransitiveRules = GreedyStructureRules(rules=(${rulesTli
 multi_classify_method sieve = Sieve(methods=(${modelsTlinkTypeYadll.yadllEEWS}),                                   
                                     structurizers=(${trainDevTestDataTlinkType.docStructConserve}),
                                     permutationMeasures=(${evalTlinkTypeYadll.devYadllEEWSPrecision}),
-                                    structureTransformFn=${greedyTlinkTransitiveRules});
+                                    structureTransformFn=${greedyTlinkTransitiveRules},
+                                    useScoreWeights="true");
