@@ -23,7 +23,7 @@ value ETBSIndicator = ConjoinDatumIndicators(name="ETBS", fns=("TypeEventTime", 
 value EEWSIndicator = ConjoinDatumIndicators(name="EEWS", fns=("TypeEventEvent", "PositionWithinSentence"));
 value EEBSIndicator = ConjoinDatumIndicators(name="EEBS", fns=("TypeEventEvent", "PositionBetweenSentence"));
 value EEDIndicator = ConjoinDatumIndicators(name="EED", fns=("TypeEventEvent", "PositionWithinSentenceDominant"));
-value EENDIndicator = ConjoinDatumIndicators(name="EED", fns=("TypeEventEvent", "PositionWithinSentenceNotDominant"));
+value EENDIndicator = ConjoinDatumIndicators(name="EEND", fns=("TypeEventEvent", "PositionWithinSentenceNotDominant"));
 
 value countTBDTLinkTypeTrainData = SizeData(data=${trainData});
 value countTBDTLinkTypeDevData = SizeData(data=${devData});
