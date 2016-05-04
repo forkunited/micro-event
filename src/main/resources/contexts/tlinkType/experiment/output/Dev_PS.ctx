@@ -9,6 +9,8 @@ value strEvals = OutputStrings(id=${resultsId}, storage="EventString", collectio
                   ${evalPS.modelsTlinkTypePS.evalTlinkTypeYadll.devYadllEEWSRecall},
                   ${evalPS.modelsTlinkTypePS.evalTlinkTypeYadll.devYadllEEDPrecision}, 
                   ${evalPS.modelsTlinkTypePS.evalTlinkTypeYadll.devYadllEEDRecall},
+                  ${evalPS.modelsTlinkTypePS.evalTlinkTypeYadll.devYadllEENDPrecision}, 
+                  ${evalPS.modelsTlinkTypePS.evalTlinkTypeYadll.devYadllEENDRecall},
                  
 	              ${evalPS.multiDevPrecision}, 
 	              ${evalPS.multiDevRecall}
