@@ -104,12 +104,5 @@ feature_set fsDCT = FeatureSet(features=(${features.feventTokenClean},
 										 ${features.feventW2v}), 
 						initData=(${data.trainDataDCT}));
 						
-feature_set fsTT = FeatureSet(features=(${features.fwordNet},
-										${features.fsmlType},
-										${features.fsref},
-										${features.fsvalType},
-										${features.ftmlType},
-										${features.ftref},
-										${features.ftvalType}, 
-										${features.ftimeTime}), 
+feature_set fsTT = FeatureSet(features=(${features.ftimeTime}), 
 						initData=(${data.trainDataTT}));
