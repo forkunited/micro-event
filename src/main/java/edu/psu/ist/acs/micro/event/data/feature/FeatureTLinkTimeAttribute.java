@@ -111,7 +111,7 @@ public class FeatureTLinkTimeAttribute<L> extends Feature<TLinkDatum<L>, L>{
 		
 		if (this.attribute == Attribute.TIMEML_TYPE)
 			vector.put(offset + this.vocabulary.get(t.getTimeMLType().toString()), 1.0);
-		else if (this.attribute == Attribute.VALUE_TYPE)
+		else if (this.attribute == Attribute.VALUE_TYPE && t.getValue().getType() != null)
 			vector.put(offset + this.vocabulary.get(t.getValue().getType().toString()), 1.0);
 		else if (this.attribute == Attribute.REFERENCE)
 			vector.put(offset + this.vocabulary.get(t.getValue().getReference().toString()), 1.0);
