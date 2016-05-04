@@ -148,16 +148,16 @@ feature frepGov = MethodClassification(method=${modelsTlinkTypeDet.repGov});
 
 feature fwordNet = MethodClassification(method=${modelsTlinkTypeDet.wordNet});
 
-fsmlType = TLinkTimeAttribute(sourceOrTarget="SOURCE", attribute="TIMEML_TYPE");
-fsref = TLinkTimeAttribute(sourceOrTarget="SOURCE", attribute="REFERENCE");
-fsvalType = TLinkTimeAttribute(sourceOrTarget="SOURCE", attribute="VALUE_TYPE");
-ftmlType = TLinkTimeAttribute(sourceOrTarget="TARGET", attribute="TIMEML_TYPE");
-ftref = TLinkTimeAttribute(sourceOrTarget="TARGET", attribute="REFERENCE");
-ftvalType = TLinkTimeAttribute(sourceOrTarget="TARGET", attribute="VALUE_TYPE");
-fstmlType = Conjunction(minFeatureOccurrence="2", features=(${fsmlType}, ${ftmlType}));
-fstRef = Conjunction(minFeatureOccurrence="2", features=(${fsref}, ${ftref}));
-fstvalType = Conjunction(minFeatureOccurrence="2", features=(${fsvalType}, ${ftvalType}));
-fstmlTypeEq = Conjunction(mode="EQUALITY", minFeatureOccurrence="2", features=(${fsmlType}, ${ftmlType}));
-fstRefEq = Conjunction(mode="EQUALITY", minFeatureOccurrence="2", features=(${fsref}, ${ftref}));
-fstvalTypeEq = Conjunction(mode="EQUALITY", minFeatureOccurrence="2", features=(${fsvalType}, ${ftvalType}));
+feature fsmlType = TLinkTimeAttribute(sourceOrTarget="SOURCE", attribute="TIMEML_TYPE");
+feature fsref = TLinkTimeAttribute(sourceOrTarget="SOURCE", attribute="REFERENCE");
+feature fsvalType = TLinkTimeAttribute(sourceOrTarget="SOURCE", attribute="VALUE_TYPE");
+feature ftmlType = TLinkTimeAttribute(sourceOrTarget="TARGET", attribute="TIMEML_TYPE");
+feature ftref = TLinkTimeAttribute(sourceOrTarget="TARGET", attribute="REFERENCE");
+feature ftvalType = TLinkTimeAttribute(sourceOrTarget="TARGET", attribute="VALUE_TYPE");
+feature fstmlType = Conjunction(minFeatureOccurrence="2", features=(${fsmlType}, ${ftmlType}));
+feature fstRef = Conjunction(minFeatureOccurrence="2", features=(${fsref}, ${ftref}));
+feature fstvalType = Conjunction(minFeatureOccurrence="2", features=(${fsvalType}, ${ftvalType}));
+feature fstmlTypeEq = Conjunction(mode="EQUALITY", minFeatureOccurrence="2", features=(${fsmlType}, ${ftmlType}));
+feature fstRefEq = Conjunction(mode="EQUALITY", minFeatureOccurrence="2", features=(${fsref}, ${ftref}));
+feature fstvalTypeEq = Conjunction(mode="EQUALITY", minFeatureOccurrence="2", features=(${fsvalType}, ${ftvalType}));
 feature ftimeTime = MethodClassification(method=${modelsTlinkTypeDet.timeTime});
