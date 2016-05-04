@@ -10,6 +10,7 @@ import edu.cmu.ml.rtw.generic.data.feature.Feature;
 import edu.cmu.ml.rtw.generic.parse.AssignmentList;
 import edu.cmu.ml.rtw.generic.parse.Obj;
 import edu.cmu.ml.rtw.generic.util.BidirectionalLookupTable;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.NormalizedTimeValue;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkDatum;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkable;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression;
@@ -34,7 +35,9 @@ import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkable.Type;
  */
 public class FeatureTLinkTimeAttribute<L> extends Feature<TLinkDatum<L>, L>{
 	public enum Attribute {
-		TIMEML_TYPE
+		TIMEML_TYPE,
+		REFERENCE,
+		VALUE_TYPE
 	}
 	
 	public enum SourceOrTarget {
@@ -68,10 +71,21 @@ public class FeatureTLinkTimeAttribute<L> extends Feature<TLinkDatum<L>, L>{
 	public boolean init(DataSet<TLinkDatum<L>, L> dataSet) {
 		if (this.attribute == Attribute.TIMEML_TYPE) {
 			TimeExpression.TimeMLType[] types = TimeExpression.TimeMLType.values();
-			for (int i = 0 ; i < types.length; i++){
+			for (int i = 0 ; i < types.length; i++) {
 				this.vocabulary.put(types[i].toString(), i);
 			}
-		} 
+		} else if (this.attribute == Attribute.VALUE_TYPE) {
+			NormalizedTimeValue.Type[] types = NormalizedTimeValue.Type.values();
+			for (int i = 0; i < types.length; i++) {
+				this.vocabulary.put(types[i].toString(), i);
+			}
+		} else if (this.attribute == Attribute.REFERENCE) {
+			NormalizedTimeValue.Reference[] refs = NormalizedTimeValue.Reference.values();
+			for (int i = 0; i < refs.length; i++) {
+				this.vocabulary.put(refs[i].toString(), i);
+			}
+		}
+		
 		return true;
 	}
 
@@ -97,7 +111,11 @@ public class FeatureTLinkTimeAttribute<L> extends Feature<TLinkDatum<L>, L>{
 		
 		if (this.attribute == Attribute.TIMEML_TYPE)
 			vector.put(offset + this.vocabulary.get(t.getTimeMLType().toString()), 1.0);
-	
+		else if (this.attribute == Attribute.VALUE_TYPE)
+			vector.put(offset + this.vocabulary.get(t.getValue().getType().toString()), 1.0);
+		else if (this.attribute == Attribute.REFERENCE)
+			vector.put(offset + this.vocabulary.get(t.getValue().getReference().toString()), 1.0);
+		
 		return vector;
 	}
 

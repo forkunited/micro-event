@@ -32,3 +32,14 @@ classify_eval devYadllEEDPrecision = Precision(task=${trainDevTestDataTlinkType.
 classify_eval devYadllEEDRecall = Recall(task=${trainDevTestDataTlinkType.devTask}, method=${modelsTlinkTypeYadll.yadllEED}, mode="MICRO");
 classify_eval testYadllEEDPrecision = Precision(task=${trainDevTestDataTlinkType.testTask}, method=${modelsTlinkTypeYadll.yadllEED}, mode="MICRO");
 classify_eval testYadllEEDRecall = Recall(task=${trainDevTestDataTlinkType.testTask}, method=${modelsTlinkTypeYadll.yadllEED}, mode="MICRO");
+
+classify_eval devYadllEENDPrecision = Precision(task=${trainDevTestDataTlinkType.devTask}, method=${modelsTlinkTypeYadll.yadllEEND}, mode="MICRO");
+classify_eval devYadllEENDRecall = Recall(task=${trainDevTestDataTlinkType.devTask}, method=${modelsTlinkTypeYadll.yadllEEND}, mode="MICRO");
+classify_eval testYadllEENDPrecision = Precision(task=${trainDevTestDataTlinkType.testTask}, method=${modelsTlinkTypeYadll.yadllEEND}, mode="MICRO");
+classify_eval testYadllEENDRecall = Recall(task=${trainDevTestDataTlinkType.testTask}, method=${modelsTlinkTypeYadll.yadllEEND}, mode="MICRO");
+
+classify_eval devYadllTTPrecision = Precision(task=${trainDevTestDataTlinkType.devTask}, method=${modelsTlinkTypeYadll.yadllTT}, mode="MICRO");
+classify_eval devYadllTTRecall = Recall(task=${trainDevTestDataTlinkType.devTask}, method=${modelsTlinkTypeYadll.yadllTT}, mode="MICRO");
+classify_eval testYadllTTPrecision = Precision(task=${trainDevTestDataTlinkType.testTask}, method=${modelsTlinkTypeYadll.yadllTT}, mode="MICRO");
+classify_eval testYadllTTRecall = Recall(task=${trainDevTestDataTlinkType.testTask}, method=${modelsTlinkTypeYadll.yadllTT}, mode="MICRO");
+

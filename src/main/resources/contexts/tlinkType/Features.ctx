@@ -1,4 +1,5 @@
 context util = TLinkType(initScript="/util/Util.ctx", initOnce="true");
+context modelsTlinkTypeDet = TLinkType(initScript="/tlinkType/methods/Deterministic_TBD.ctx", initOnce="true", initOverrideByName="true");
 
 ts_fn head = Head();
 ts_fn after2 = NGramContext(type="AFTER", n="2");
@@ -65,6 +66,7 @@ feature fw2vSimET = Word2Vec(tokenExtractor="EventTime", mode="SIMILARITY", fn=(
 feature fw2vDiffET = Word2Vec(tokenExtractor="EventTime", mode="DIFFERENCE", fn=(${str} o ${head}));
 feature fsourceType = TLinkableType(sourceOrTarget="SOURCE");
 feature foverEventET = TLinkAttribute(attribute="OVER_EVENT");
+feature fadjET = MethodClassification(method=${modelsTlinkTypeDet.adjET});
 
 feature fsToken = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${strTrim});
 feature fsTokenClean = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${strDef});
@@ -140,3 +142,22 @@ feature fdomEE = ConstituencyParseRelation(sourceTokenExtractor="Source", target
 feature foverEventEE = TLinkAttribute(attribute="OVER_EVENT");
 feature fw2vSimEE = Word2Vec(tokenExtractor="SourceTarget", mode="SIMILARITY", fn=(${str} o ${head}));
 feature fw2vDiffEE = Word2Vec(tokenExtractor="SourceTarget", mode="DIFFERENCE", fn=(${str} o ${head}));
+feature fgenGov = MethodClassification(method=${modelsTlinkTypeDet.genGov});
+feature freichenbach = MethodClassification(method=${modelsTlinkTypeDet.reichenbach});
+feature frepGov = MethodClassification(method=${modelsTlinkTypeDet.repGov});
+
+feature fwordNet = MethodClassification(method=${modelsTlinkTypeDet.wordNet});
+
+fsmlType = TLinkTimeAttribute(sourceOrTarget="SOURCE", attribute="TIMEML_TYPE");
+fsref = TLinkTimeAttribute(sourceOrTarget="SOURCE", attribute="REFERENCE");
+fsvalType = TLinkTimeAttribute(sourceOrTarget="SOURCE", attribute="VALUE_TYPE");
+ftmlType = TLinkTimeAttribute(sourceOrTarget="TARGET", attribute="TIMEML_TYPE");
+ftref = TLinkTimeAttribute(sourceOrTarget="TARGET", attribute="REFERENCE");
+ftvalType = TLinkTimeAttribute(sourceOrTarget="TARGET", attribute="VALUE_TYPE");
+fstmlType = Conjunction(minFeatureOccurrence="2", features=(${fsmlType}, ${ftmlType}));
+fstRef = Conjunction(minFeatureOccurrence="2", features=(${fsref}, ${ftref}));
+fstvalType = Conjunction(minFeatureOccurrence="2", features=(${fsvalType}, ${ftvalType}));
+fstmlTypeEq = Conjunction(mode="EQUALITY", minFeatureOccurrence="2", features=(${fsmlType}, ${ftmlType}));
+fstRefEq = Conjunction(mode="EQUALITY", minFeatureOccurrence="2", features=(${fsref}, ${ftref}));
+fstvalTypeEq = Conjunction(mode="EQUALITY", minFeatureOccurrence="2", features=(${fsvalType}, ${ftvalType}));
+feature ftimeTime = MethodClassification(method=${modelsTlinkTypeDet.timeTime});

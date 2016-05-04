@@ -8,6 +8,7 @@ value debugData = OutputDebug(refs=(${countTLinkTypeData}));
 
 data dataEE = FilterData(data=${data}, datumIndicator="TypeEventEvent");
 data dataET = FilterData(data=${data}, datumIndicator="TypeEventTime");
+data dataTT = FilterData(data=${data}, datumIndicator="TypeTimeTime");
 
 data dataDCT = FilterData(data=${dataET}, datumIndicator="PositionDCT");
 data dataETWS = FilterData(data=${dataET}, datumIndicator="PositionWithinSentence");
@@ -15,3 +16,4 @@ data dataETBS = FilterData(data=${dataET}, datumIndicator="PositionBetweenSenten
 data dataEEWS = FilterData(data=${dataEE}, datumIndicator="PositionWithinSentence");
 data dataEEBS = FilterData(data=${dataEE}, datumIndicator="PositionBetweenSentence");
 data dataEED = FilterData(data=${dataEE}, datumIndicator="PositionWithinSentenceDominant");
+data dataEEND = FilterData(data=${dataEE}, datumIndicator="PositionWithinSentenceNotDominant");

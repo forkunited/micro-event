@@ -356,6 +356,22 @@ public class TLinkDatum<L> extends Datum<L> {
 			});
 			
 			this.addDatumIndicator(new DatumIndicator<TLinkDatum<L>>() {
+				public String toString() { return "PositionWithinSentenceNotDominant"; }
+				public boolean indicator(TLinkDatum<L> datum) { 
+					if (datum.getTLink().getPosition() != TLink.Position.WITHIN_SENTENCE)
+						return false;
+					
+					TLink link = datum.getTLink();
+					DocumentNLP document = link.getSource().getTokenSpan().getDocument();
+					ConstituencyParse parse = document.getConstituencyParse(link.getSource().getTokenSpan().getSentenceIndex());
+					if (parse == null)
+						return false;
+					
+					return parse.getRelation(link.getSource().getTokenSpan(), link.getTarget().getTokenSpan()) == ConstituencyParse.Relation.NONE;
+				}
+			});
+			
+			this.addDatumIndicator(new DatumIndicator<TLinkDatum<L>>() {
 				public String toString() { return "PositionBetweenSentence"; }
 				public boolean indicator(TLinkDatum<L> datum) { return datum.getTLink().getPosition() == TLink.Position.BETWEEN_SENTENCE; }
 			});

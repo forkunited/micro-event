@@ -7,6 +7,7 @@ data testData = TLinkType(storage="EventBson", documents=${dataParamsTlinkType.t
 
 data trainDataEE = FilterData(data=${trainData}, datumIndicator="TypeEventEvent");
 data trainDataET = FilterData(data=${trainData}, datumIndicator="TypeEventTime");
+data trainDataTT = FilterData(data=${trainData}, datumIndicator="TypeTimeTime");
 
 data trainDataDCT = FilterData(data=${trainDataET}, datumIndicator="PositionDCT");
 data trainDataETWS = FilterData(data=${trainDataET}, datumIndicator="PositionWithinSentence");
@@ -14,6 +15,7 @@ data trainDataETBS = FilterData(data=${trainDataET}, datumIndicator="PositionBet
 data trainDataEEWS = FilterData(data=${trainDataEE}, datumIndicator="PositionWithinSentence");
 data trainDataEEBS = FilterData(data=${trainDataEE}, datumIndicator="PositionBetweenSentence");
 data trainDataEED = FilterData(data=${trainDataEE}, datumIndicator="PositionWithinSentenceDominant");
+data trainDataEEND = FilterData(data=${trainDataEE}, datumIndicator="PositionWithinSentenceNotDominant");
 
 value ETDCTIndicator = ConjoinDatumIndicators(name="ETDCT", fns=("TypeEventTime", "PositionDCT"));
 value ETWSIndicator = ConjoinDatumIndicators(name="ETWS", fns=("TypeEventTime", "PositionWithinSentence"));
@@ -21,6 +23,7 @@ value ETBSIndicator = ConjoinDatumIndicators(name="ETBS", fns=("TypeEventTime", 
 value EEWSIndicator = ConjoinDatumIndicators(name="EEWS", fns=("TypeEventEvent", "PositionWithinSentence"));
 value EEBSIndicator = ConjoinDatumIndicators(name="EEBS", fns=("TypeEventEvent", "PositionBetweenSentence"));
 value EEDIndicator = ConjoinDatumIndicators(name="EED", fns=("TypeEventEvent", "PositionWithinSentenceDominant"));
+value EENDIndicator = ConjoinDatumIndicators(name="EED", fns=("TypeEventEvent", "PositionWithinSentenceNotDominant"));
 
 value countTBDTLinkTypeTrainData = SizeData(data=${trainData});
 value countTBDTLinkTypeDevData = SizeData(data=${devData});

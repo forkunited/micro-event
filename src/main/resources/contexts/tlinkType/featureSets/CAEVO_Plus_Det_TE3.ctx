@@ -1,5 +1,11 @@
 context features = TLinkType(initScript="/tlinkType/Features.ctx", initOnce="true");
 context data = TLinkType(initScript="/tlinkType/data/LoadTrainDevTest.ctx", initOnce="true");
+context unlabeledData = TLinkType(initScript="/tlinkType/data/Load.ctx", initOnce="true");
+
+data allDataTT = UnionData(data=(${data.trainDataTT}, ${unlabeledData.dataTT}));
+data allDataET = UnionData(data=(${data.trainDataET}, ${unlabeledData.dataET}));
+data allDataEE = UnionData(data=(${data.trainDataEE}, ${unlabeledData.dataEE}));
+data allDataDCT = UnionData(data=(${data.trainDataDCT}, ${unlabeledData.dataDCT}));
 
 feature_set fsET = FeatureSet(features=(${features.feventTokenClean}, 
 										${features.feventPos},
@@ -26,8 +32,9 @@ feature_set fsET = FeatureSet(features=(${features.feventTokenClean},
 										${features.fdomET},
 										${features.foverEventET},
 										${features.fsourceType},
-										${features.fpredPathNoSenseET}), 
-								initData=(${data.trainDataET}));
+										${features.fpredPathET},
+										${features.fadjET}), 
+								initData=(${allDataET}));
 
 feature_set fsEE = FeatureSet(features=(${features.fsTokenClean}, 
 										${features.fsPos}, 
@@ -43,7 +50,7 @@ feature_set fsEE = FeatureSet(features=(${features.fsTokenClean},
 										${features.fsSentPos},
 										${features.fsPrep},
 										${features.fsSentPosPos},
-										${features.fsPred},
+										${features.fsW2v},
 										${features.ftTokenClean},  
 										${features.ftPos}, 
 										${features.ftPosB}, 
@@ -58,8 +65,7 @@ feature_set fsEE = FeatureSet(features=(${features.fsTokenClean},
 										${features.ftSentPos},
 										${features.ftPrep},
 										${features.ftSentPosPos},
-										${features.ftPred},
-										${features.fstPred},
+										${features.ftW2v},
 										${features.fstTokenClean}, 
 										${features.fstPos}, 
 										${features.fstTense}, 
@@ -79,8 +85,13 @@ feature_set fsEE = FeatureSet(features=(${features.fsTokenClean},
 										${features.fdepTypeEE},
 										${features.foverEventEE}, 
 										${features.fdomEE},
-										${features.fpredPathNoSenseEE}), 
-						initData=(${data.trainDataEE}));
+										${features.fw2vSimEE},
+										${features.fw2vDiffEE},
+										${features.fgenGov},
+										${features.frepGov},
+										${features.freichenbach},
+										${features.fwordNet}), 
+						initData=(${allDataEE}));
 
 feature_set fsDCT = FeatureSet(features=(${features.feventTokenClean},
 										 ${features.feventTokenBA},
@@ -96,8 +107,8 @@ feature_set fsDCT = FeatureSet(features=(${features.feventTokenClean},
 										 ${features.feventSynset},
 										 ${features.feventSentPos},
 										 ${features.feventSentPosPos},
-										 ${features.feventPred}), 
-						initData=(${data.trainDataDCT}));
+										 ${features.feventW2v}), 
+						initData=(${allDataDCT}));
 
 feature_set fsTT = FeatureSet(features=(${features.fwordNet},
 										${features.fsmlType},
@@ -113,4 +124,4 @@ feature_set fsTT = FeatureSet(features=(${features.fwordNet},
 										${features.fstRefEq},
 										${features.fstvalTypeEq}, 
 										${features.ftimeTime}), 
-						initData=(${data.trainDataTT}));
+						initData=(${allDataTT}));
