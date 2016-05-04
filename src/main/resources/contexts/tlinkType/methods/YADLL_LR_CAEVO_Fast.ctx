@@ -48,6 +48,7 @@ classify_method yadllEEDSub = FilterDatumIndicator(method=${yadllEEDUnfilteredP}
 classify_method yadllEENDSub = FilterDatumIndicator(method=${yadllEENDUnfilteredP}, datumIndicator="EEND");
 classify_method yadllEEBSSub = FilterDatumIndicator(method=${yadllEEBSUnfilteredP}, datumIndicator="EEBS");
 
+classify_method yadllTT = InitClassifyMethod(devData=${trainDevTestDataTlinkType.devData}, method=${yadllTTSub});
 classify_method yadllDCT = InitClassifyMethod(devData=${trainDevTestDataTlinkType.devData}, method=${yadllDCTSub});
 classify_method yadllETWS = InitClassifyMethod(devData=${trainDevTestDataTlinkType.devData}, method=${yadllETWSSub});
 classify_method yadllEEWS = InitClassifyMethod(devData=${trainDevTestDataTlinkType.devData}, method=${yadllEEWSSub});
