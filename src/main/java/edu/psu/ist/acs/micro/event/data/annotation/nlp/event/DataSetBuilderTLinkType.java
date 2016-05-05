@@ -41,6 +41,9 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 		ALL
 	}
 	
+	// FIXME This will only work with one set of labeled data currently
+	private static final Singleton<Integer> CUR_DATUM_ID = new Singleton<>(0); 
+	
 	private DirectionMode directionMode = DirectionMode.FORWARD;
 	private String tlinks;
 	private int maxSentenceDistance = -1;
@@ -112,8 +115,6 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 		
 		Map<String, Set<String>> labeledPairs = new HashMap<>();
 		
-		Singleton<Integer> idObj = new Singleton<>(0);
-		
 		if (tlinkSet != null) {
 			tlinkSet.map(new Fn<TLink, Boolean>() {
 				@Override
@@ -145,7 +146,7 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 							data.add(new TLinkDatum<TimeMLRelType>(
 								Integer.valueOf(tlink.getId()), tlink, (labelMapping != null) ? labelMapping.map(tlink.getTimeMLRelType()) : tlink.getTimeMLRelType()));
 						}
-						idObj.set(Math.max(idObj.get(), Integer.valueOf(tlink.getId())));
+						CUR_DATUM_ID.set(Math.max(CUR_DATUM_ID.get(), Integer.valueOf(tlink.getId())));
 					}
 					
 					return true;
@@ -230,12 +231,12 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 			
 			threads.run(documentClusters.entrySet(), this.context.getMaxThreads());
 			
-			int id = idObj.get() + 1;
+			int id = CUR_DATUM_ID.get() + 1;
 			for (Entry<String, TLink> entry : unlabeledLinks.entrySet()) {
 				data.add(new TLinkDatum<TimeMLRelType>(id, entry.getValue(), null));
 				id++;
 			}
-				
+			CUR_DATUM_ID.set(id);	
 		}
 		
 		return data;

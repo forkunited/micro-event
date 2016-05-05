@@ -100,7 +100,7 @@ public class MethodClassificationTLinkTypeTimeTime extends MethodClassification<
 			TLinkDatum<TimeMLRelType> datum) {
 		TimeMLRelType label = classify(datum);
 		if (label != null)
-			return new Pair<TimeMLRelType, Double>(label, 1.00001);
+			return new Pair<TimeMLRelType, Double>(label, 1.0);
 		else
 			return null;
 	}
