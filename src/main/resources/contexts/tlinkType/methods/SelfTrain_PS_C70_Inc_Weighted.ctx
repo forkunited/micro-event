@@ -8,6 +8,7 @@ multi_classify_method st = SelfTrain(method=${modelsTlinkTypePS.ps},
                                      trainOnInit="true", 
                                      evaluations=(${evalPS.multiDevPrecision}, ${evalPS.multiDevRecall}),
                                      incremental="true",
+                                     incrementByLabel="false",
                                      incrementSize="-1",
                                      weightData="true",
                                      dataScoreThreshold=".7");
