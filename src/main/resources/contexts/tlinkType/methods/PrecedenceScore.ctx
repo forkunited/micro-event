@@ -21,4 +21,9 @@ multi_classify_method ps = PrecedenceScore(methods=(${modelsTlinkTypeDet.timeTim
                                                    ${trainDevTestDataTlinkType.docStructConserve}, 
                                                    ${trainDevTestDataTlinkType.docStructConserve},
                                                    ${trainDevTestDataTlinkType.docStructConserve}),
+                                    measures=(${evalTlinkTypeDet.devTimeTimePrecision},
+                                              ${evalTlinkTypeYadll.devYadllETWSPrecision}, 
+                                              ${evalTlinkTypeYadll.devYadllEEDPrecision}, 
+                                              ${evalTlinkTypeYadll.devYadllEEWSPrecision}, 
+                                              ${evalTlinkTypeYadll.devYadllDCTPrecision}),
                                     structureTransformFn=${greedyTlinkTransitiveRules});
