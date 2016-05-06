@@ -2,6 +2,7 @@ context features = TLinkType(initScript="/tlinkType/Features.ctx", initOnce="tru
 context data = TLinkType(initScript="/tlinkType/data/LoadTrainDevTest.ctx", initOnce="true");
 context unlabeledData = TLinkType(initScript="/tlinkType/data/Load.ctx", initOnce="true");
 
+data allDataTT = UnionData(data=(${data.trainDataTT}, ${unlabeledData.dataTT}));
 data allDataET = UnionData(data=(${data.trainDataET}, ${unlabeledData.dataET}));
 data allDataEE = UnionData(data=(${data.trainDataEE}, ${unlabeledData.dataEE}));
 data allDataDCT = UnionData(data=(${data.trainDataDCT}, ${unlabeledData.dataDCT}));
