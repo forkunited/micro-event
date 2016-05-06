@@ -21,7 +21,6 @@ import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.data.store.StoreReference;
 import edu.cmu.ml.rtw.generic.parse.Obj;
 import edu.cmu.ml.rtw.generic.util.Pair;
-import edu.cmu.ml.rtw.generic.util.Singleton;
 import edu.cmu.ml.rtw.generic.util.ThreadMapper;
 import edu.cmu.ml.rtw.generic.util.ThreadMapper.Fn;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
@@ -40,9 +39,6 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 		BACKWARD,
 		ALL
 	}
-	
-	// FIXME This will only work with one set of labeled data currently
-	private static final Singleton<Integer> CUR_DATUM_ID = new Singleton<>(0); 
 	
 	private DirectionMode directionMode = DirectionMode.FORWARD;
 	private String tlinks;
@@ -114,7 +110,7 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 		DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType> data = new DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType>(this.context.getDatumTools());
 		
 		Map<String, Set<String>> labeledPairs = new HashMap<>();
-		
+		TreeMap<Integer, TLink> labeledLinks = new TreeMap<>();
 		if (tlinkSet != null) {
 			tlinkSet.map(new Fn<TLink, Boolean>() {
 				@Override
@@ -137,22 +133,28 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 					if (directionMode == DirectionMode.BACKWARD && d != TextDirection.BACKWARD && d != TextDirection.NONE)
 						return true;
 						
-					synchronized (data) {
+					synchronized (labeledLinks) {
 						if (!labeledPairs.containsKey(tlink.getSource().getId()))
 							labeledPairs.put(tlink.getSource().getId(), new HashSet<>());
 						labeledPairs.get(tlink.getSource().getId()).add(tlink.getTarget().getId());				
 						
 						if (labelMode != LabelMode.ONLY_UNLABELED && linkMeetsCrossDocumentMode(tlink, true)) {	
-							data.add(new TLinkDatum<TimeMLRelType>(
-								Integer.valueOf(tlink.getId()), tlink, (labelMapping != null) ? labelMapping.map(tlink.getTimeMLRelType()) : tlink.getTimeMLRelType()));
+							labeledLinks.put(Integer.valueOf(tlink.getId()), tlink);
 						}
-						CUR_DATUM_ID.set(Math.max(CUR_DATUM_ID.get(), Integer.valueOf(tlink.getId())));
 					}
 					
 					return true;
 				}
 				
 			}, this.context.getMaxThreads(), this.context.getDataTools().getGlobalRandom());
+		}
+		
+		Pair<Integer, Integer> idRange = this.context.getDataTools().getIncrementIdRange(labeledLinks.size());
+		int i = idRange.getFirst();
+		for (Entry<Integer, TLink> entry : labeledLinks.entrySet()) {
+			data.add(new TLinkDatum<TimeMLRelType>(
+					i,  entry.getValue(), (labelMapping != null) ? labelMapping.map(entry.getValue().getTimeMLRelType()) : entry.getValue().getTimeMLRelType()));
+			i++;
 		}
 		
 		PairFn<Pair<TokenSpan, StoreReference>, TLink> fn = new PairFn<Pair<TokenSpan, StoreReference>, TLink>() {
@@ -231,12 +233,12 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 			
 			threads.run(documentClusters.entrySet(), this.context.getMaxThreads());
 			
-			int id = CUR_DATUM_ID.get() + 1;
+			idRange = this.context.getDataTools().getIncrementIdRange(labeledLinks.size());
+			i = idRange.getFirst();
 			for (Entry<String, TLink> entry : unlabeledLinks.entrySet()) {
-				data.add(new TLinkDatum<TimeMLRelType>(id, entry.getValue(), null));
-				id++;
+				data.add(new TLinkDatum<TimeMLRelType>(i, entry.getValue(), null));
+				i++;
 			}
-			CUR_DATUM_ID.set(id);	
 		}
 		
 		return data;
