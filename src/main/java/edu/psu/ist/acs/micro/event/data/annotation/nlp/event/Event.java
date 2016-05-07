@@ -108,6 +108,7 @@ public class Event implements Argumentable {
 	private ACEGenericity aceGenericity;
 	private ACESubtype aceSubtype;
 	private List<Pair<StoreReference, String>> argumentReferences;
+	private List<StoreReference> someMentionReferences;
 	
 	private StoreReference reference;
 	private DataTools dataTools;
@@ -129,7 +130,8 @@ public class Event implements Argumentable {
 				ACEType aceType,
 				ACEGenericity aceGenericity,
 				ACESubtype aceSubtype,
-				List<Pair<StoreReference, String>> argumentReferences) {
+				List<Pair<StoreReference, String>> argumentReferences,
+				List<StoreReference> someMentionReferences) {
 		this.dataTools = dataTools;
 		this.reference = reference;
 		this.id = id;
@@ -137,6 +139,7 @@ public class Event implements Argumentable {
 		this.aceGenericity = aceGenericity;
 		this.aceSubtype = aceSubtype;
 		this.argumentReferences = argumentReferences;
+		this.someMentionReferences = someMentionReferences;
 	}
 
 	public String getId() {
@@ -174,6 +177,14 @@ public class Event implements Argumentable {
 		return this.dataTools.getStoredItemSetManager().resolveStoreReference(this.argumentReferences.get(index).getFirst(), true);
 	}
 	
+	public int getSomeMentionCount() {
+		return this.someMentionReferences.size();
+	}
+	
+	public EventMention getSomeMention(int index) {
+		return this.dataTools.getStoredItemSetManager().resolveStoreReference(this.someMentionReferences.get(index), true);
+	}
+	
 	@Override
 	public JSONObject toJSON() {
 		JSONObject json = new JSONObject();
@@ -197,6 +208,15 @@ public class Event implements Argumentable {
 					jsonArgs.put(jsonArg);
 				}
 				json.put("args", jsonArgs);
+			}
+			
+			if (this.someMentionReferences != null) {
+				JSONArray jsonMentions = new JSONArray();
+				for (int i = 0; i < this.someMentionReferences.size(); i++) {
+					StoreReference ref = this.someMentionReferences.get(i);
+					jsonMentions.put(ref.toJSON());
+				}
+				json.put("someMentions", jsonMentions);
 			}
 		} catch (JSONException e) {
 			return null;
@@ -224,6 +244,15 @@ public class Event implements Argumentable {
 					String role = jsonArg.getString("role");
 					StoreReference ref = StoreReference.makeFromJSON(jsonArg.getJSONObject("ref"));
 					this.argumentReferences.add(new Pair<StoreReference, String>(ref, role));
+				}
+			}
+			
+			if (json.has("someMentions")) {
+				this.someMentionReferences = new ArrayList<>();
+				JSONArray jsonMentions = json.getJSONArray("someMentions");
+				for (int i = 0; i < jsonMentions.length(); i++) {
+					StoreReference ref = StoreReference.makeFromJSON(jsonMentions.getJSONObject(i));
+					this.someMentionReferences.add(ref);
 				}
 			}
 		} catch (JSONException e) {

@@ -1,9 +1,12 @@
 package edu.psu.ist.acs.micro.event.data.annotation.nlp.event;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -154,6 +157,8 @@ public class NormalizedTimeValue implements Argumentable {
 	private StoreReference reference;
 	private DataTools dataTools;
 	
+	private List<StoreReference> someExpressionReferences;
+	
 	public NormalizedTimeValue(DataTools dataTools) {
 		this.dataTools = dataTools;
 	}
@@ -163,11 +168,12 @@ public class NormalizedTimeValue implements Argumentable {
 		this.reference = reference;
 	}
 	
-	public NormalizedTimeValue(DataTools dataTools, StoreReference reference, String id, String value) {
+	public NormalizedTimeValue(DataTools dataTools, StoreReference reference, String id, String value, List<StoreReference> someExpressionReferences) {
 		this.dataTools = dataTools;
 		this.reference = reference;
 		this.id = id;
 		this.value = value;
+		this.someExpressionReferences = someExpressionReferences;
 	
 		initPattern();
 	}
@@ -464,7 +470,7 @@ public class NormalizedTimeValue implements Argumentable {
 	
 	public NormalizedTimeValue toDate() {			
   		if(this.value.matches("^\\d\\d\\d\\d-\\d\\d-\\d\\d.+") ) {
-  			return new NormalizedTimeValue(this.dataTools, this.reference, this.getId(), this.value.substring(0, 10));
+  			return new NormalizedTimeValue(this.dataTools, this.reference, this.getId(), this.value.substring(0, 10), this.someExpressionReferences);
   		} else {
   			return null;
   		}
@@ -515,6 +521,12 @@ public class NormalizedTimeValue implements Argumentable {
 				json.put("id", this.id);
 			if (this.value != null)
 				json.put("name", this.value);
+			if (this.someExpressionReferences != null) {
+				JSONArray expRefs = new JSONArray();
+				for (int i = 0; i < this.someExpressionReferences.size(); i++)
+					expRefs.put(this.someExpressionReferences.get(i).toJSON());
+				json.put("someExprs", expRefs);
+			}
 		} catch (JSONException e) {
 			return null;
 		}
@@ -529,6 +541,12 @@ public class NormalizedTimeValue implements Argumentable {
 				this.id = json.getString("id");
 			if (json.has("name"))
 				this.value = json.getString("name");
+			if (json.has("someExprs")) {
+				this.someExpressionReferences = new ArrayList<>();
+				JSONArray expRefs = json.getJSONArray("someExprs");
+				for (int i = 0; i < expRefs.length(); i++)
+					this.someExpressionReferences.add(StoreReference.makeFromJSON(expRefs.getJSONObject(i)));
+			}
 		} catch (JSONException e) {
 			return false;
 		}
@@ -542,9 +560,21 @@ public class NormalizedTimeValue implements Argumentable {
 	public String getId() {
 		return this.id;
 	}
+	
+	public String getValue() {
+		return this.value;
+	}
 
 	@Override
 	public Argumentable.Type getArgumentableType() {
 		return Argumentable.Type.TIME;
+	}
+	
+	public int getSomeExpressionCount() {
+		return this.someExpressionReferences.size();
+	}
+	
+	public TimeExpression getSomeExpression(int index) {
+		return this.dataTools.getStoredItemSetManager().resolveStoreReference(this.someExpressionReferences.get(index), true);
 	}
 }

@@ -252,12 +252,13 @@ public class ConstructACE2005 {
 		parseAndOutputEntityMentions(annotationsRoot, annotatedDocs, charseqSpans); 
 		parseAndOutputValues(annotationsRoot, annotatedDocs);
 		parseAndOutputValueMentions(annotationsRoot, annotatedDocs, charseqSpans); 
-		parseAndOutputEvents(annotationsRoot, annotatedDocs);
-		parseAndOutputEventMentions(annotationsRoot, annotatedDocs, charseqSpans); 
+		parseAndOutputEvents(annotationsRoot, annotatedDocs,
+			parseAndOutputEventMentions(annotationsRoot, annotatedDocs, charseqSpans));
+		
 		parseAndOutputRelations(annotationsRoot, annotatedDocs);
 		parseAndOutputRelationMentions(annotationsRoot, annotatedDocs, charseqSpans); 
-		parseAndOutputTimeValues(annotationsRoot, annotatedDocs);
-		parseAndOutputTimeExpressions(annotationsRoot, annotatedDocs, charseqSpans, docs); 
+		parseAndOutputTimeValues(annotationsRoot, annotatedDocs,
+			parseAndOutputTimeExpressions(annotationsRoot, annotatedDocs, charseqSpans, docs));
 	
 		for (DocumentNLPMutable annotatedDoc : annotatedDocs.values())
 			storedDocuments.addItem(annotatedDoc);
@@ -419,7 +420,7 @@ public class ConstructACE2005 {
 		return true;
 	}
 	
-	private static boolean parseAndOutputEvents(Element annotationsRoot, Map<String, DocumentNLPMutable> docs) {
+	private static boolean parseAndOutputEvents(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<String, List<StoreReference>> eventMentions) {
 		List<Element> eventElements = annotationsRoot.getChild("document").getChildren("event");
 		for (Element eventElement : eventElements) {
 			String id = eventElement.getAttributeValue("ID");
@@ -454,13 +455,16 @@ public class ConstructACE2005 {
 				}	
 			}
 			
+			List<StoreReference> mentionRefs = eventMentions.containsKey(id) ? eventMentions.get(id) : new ArrayList<StoreReference>();
+			
 			Event event = new Event(dataTools,
 									ref, 
 									id,
 									aceType,
 									aceGenericity,
 									aceSubtype,
-									argRefs);
+									argRefs,
+									mentionRefs);
 			
 			storedEvents.addItem(event);
 		}
@@ -468,12 +472,13 @@ public class ConstructACE2005 {
 		return true;
 	}
 	
-	private static boolean parseAndOutputEventMentions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Pair<Integer, Integer>, TokenSpan> seqSpans) {
+	private static Map<String, List<StoreReference>> parseAndOutputEventMentions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Pair<Integer, Integer>, TokenSpan> seqSpans) {
 		Map<String, List<Triple<TokenSpan, StoreReference, Double>>> annotations = new HashMap<>();
 		List<Element> eventElements = annotationsRoot.getChild("document").getChildren("event");
-
+		Map<String, List<StoreReference>> eventsToMentions = new HashMap<>();
 		for (Element eventElement : eventElements) {
-			StoreReference eventRef = new StoreReference(storageName, EVENT_COLLECTION, "id", String.valueOf(eventElement.getAttributeValue("ID")));
+			String eventId = String.valueOf(eventElement.getAttributeValue("ID"));
+			StoreReference eventRef = new StoreReference(storageName, EVENT_COLLECTION, "id", eventId);
 			String modality = eventElement.getAttributeValue("MODALITY");
 			TimeMLTense tense = getTimeMLTense(eventElement.getAttributeValue("TENSE"));
 			TimeMLPolarity polarity = null;
@@ -537,7 +542,13 @@ public class ConstructACE2005 {
 						eventRef,
 						argRefs);
 				
+				
+				
 				storedEventMentions.addItem(mention);
+				
+				if (!eventsToMentions.containsKey(eventId))
+					eventsToMentions.put(eventId, new ArrayList<>());
+				eventsToMentions.get(eventId).add(ref);
 				
 				if (!annotations.containsKey(anchor.getDocument().getName()))
 					annotations.put(anchor.getDocument().getName(), new ArrayList<>());
@@ -561,7 +572,7 @@ public class ConstructACE2005 {
 			pipeline.run(doc);
 		}
 		
-		return true;
+		return eventsToMentions;
 	}
 	
 	private static boolean parseAndOutputRelations(Element annotationsRoot, Map<String, DocumentNLPMutable> docs) {
@@ -693,26 +704,29 @@ public class ConstructACE2005 {
 		return true;
 	}
 	
-	private static boolean parseAndOutputTimeValues(Element annotationsRoot, Map<String, DocumentNLPMutable> docs) {
+	private static boolean parseAndOutputTimeValues(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<String, List<StoreReference>> timesToExprs) {
 		List<Element> timexElements = annotationsRoot.getChild("document").getChildren("timex2");
 		for (Element timexElement : timexElements) {
 			String id = timexElement.getAttributeValue("ID");
 			StoreReference ref = new StoreReference(storageName, TIME_VALUE_COLLECTION, "id", String.valueOf(id));
 			String value = timexElement.getAttributeValue("VAL");
 			
-			NormalizedTimeValue tvalue = new NormalizedTimeValue(dataTools, ref, id, value);
+			List<StoreReference> exprs = (timesToExprs.containsKey(id)) ? timesToExprs.get(id) : new ArrayList<>();
+			NormalizedTimeValue tvalue = new NormalizedTimeValue(dataTools, ref, id, value, exprs);
 			storedTimeValues.addItem(tvalue);
 		}
 		
 		return true;
 	}
 	
-	private static boolean parseAndOutputTimeExpressions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Pair<Integer, Integer>, TokenSpan> seqSpans, List<ACESourceDocument> sourceDocs) {		
+	private static Map<String, List<StoreReference>> parseAndOutputTimeExpressions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Pair<Integer, Integer>, TokenSpan> seqSpans, List<ACESourceDocument> sourceDocs) {		
 		Map<String, List<Triple<TokenSpan, StoreReference, Double>>> annotations = new HashMap<>();
 		List<Element> timexElements = annotationsRoot.getChild("document").getChildren("timex2");
-
+		
+		Map<String, List<StoreReference>> timesToExprs = new HashMap<>();
 		for (Element timexElement : timexElements) {
-			StoreReference valueRef = new StoreReference(storageName, TIME_VALUE_COLLECTION, "id", String.valueOf(timexElement.getAttributeValue("ID")));
+			String valueId = String.valueOf(timexElement.getAttributeValue("ID"));
+			StoreReference valueRef = new StoreReference(storageName, TIME_VALUE_COLLECTION, "id", valueId);
 			TimeMLMod mod = timexElement.getAttributeValue("MOD") != null ? TimeMLMod.valueOf(timexElement.getAttributeValue("MOD")) : null;
 			
 			List<Element> mentionElements = timexElement.getChildren("timex2_mention");
@@ -773,6 +787,10 @@ public class ConstructACE2005 {
 															  null,
 															  mod);
 				
+				if (!timesToExprs.containsKey(valueId))
+					timesToExprs.put(valueId, new ArrayList<>());
+				timesToExprs.get(valueId).add(ref);
+				
 				storedTimeExpressions.addItem(mention);
 				
 				if (fn != TimeMLDocumentFunction.CREATION_TIME) {
@@ -799,7 +817,7 @@ public class ConstructACE2005 {
 			pipeline.run(doc);
 		}
 		
-		return true;
+		return timesToExprs;
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })

@@ -47,6 +47,7 @@ import edu.cmu.ml.rtw.generic.util.Triple;
 import edu.psu.ist.acs.micro.event.data.EventDataTools;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Event;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.NormalizedTimeValue;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkable;
@@ -69,6 +70,7 @@ public class ConstructTimeBankDense {
 	
 	public static final String DOCUMENT_COLLECTION = "tbd_docs";
 	public static final String EVENT_MENTION_COLLECTION = "tbd_ementions";
+	public static final String EVENT_COLLECTION = "tbd_events";
 	public static final String TIME_EXPRESSION_COLLECTION = "tbd_timexes";
 	public static final String TIME_VALUE_COLLECTION = "tbd_tvalues";
 	public static final String TLINK_COLLECTION = "tbd_tlinks";
@@ -77,6 +79,7 @@ public class ConstructTimeBankDense {
 	private static String storageName;
 	private static DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable> storedDocuments;
 	private static StoredItemSetInMemoryLazy<EventMention, EventMention> storedEventMentions;
+	private static StoredItemSetInMemoryLazy<Event, Event> storedEvents;
 	private static StoredItemSetInMemoryLazy<TimeExpression, TimeExpression> storedTimeExpressions;
 	private static StoredItemSetInMemoryLazy<NormalizedTimeValue, NormalizedTimeValue> storedTimeValues;
 	private static StoredItemSetInMemoryLazy<TLink, TLink> storedTLinks;
@@ -88,9 +91,11 @@ public class ConstructTimeBankDense {
 	private static Map<String, Map<String, Map<String, TimeMLRelType>>> tlinkTypes;
 	private static int linkId = 0;
 	private static int eventId = 0;
+	private static int eventMentionId = 0;
 	private static int timexId = 0;
 	private static int timeValueId = 0;
 	private static Map<String, Map<String, StoreReference>> references = new HashMap<String, Map<String, StoreReference>>(); 
+	private static Map<String, Pair<NormalizedTimeValue, List<StoreReference>>> timeValues = new HashMap<>();
 	
 	private static PipelineNLP extraAnnotationPipeline;
 	
@@ -112,6 +117,8 @@ public class ConstructTimeBankDense {
 			storage.deleteCollection(DOCUMENT_COLLECTION);
 		if (storage.hasCollection(EVENT_MENTION_COLLECTION))
 			storage.deleteCollection(EVENT_MENTION_COLLECTION);
+		if (storage.hasCollection(EVENT_COLLECTION))
+			storage.deleteCollection(EVENT_COLLECTION);
 		if (storage.hasCollection(TIME_EXPRESSION_COLLECTION))
 			storage.deleteCollection(TIME_EXPRESSION_COLLECTION);
 		if (storage.hasCollection(TIME_VALUE_COLLECTION))
@@ -128,6 +135,8 @@ public class ConstructTimeBankDense {
 				.getItemSet(storageName, DOCUMENT_COLLECTION, true, (Serializer<DocumentNLPMutable, Document>)serializers.get("DocumentNLPBSON")));
 		storedEventMentions = dataTools.getStoredItemSetManager()
 				.getItemSet(storageName, EVENT_MENTION_COLLECTION, true,(Serializer<EventMention, Document>)serializers.get("JSONBSONEventMention"));
+		storedEvents = dataTools.getStoredItemSetManager()
+				.getItemSet(storageName, EVENT_COLLECTION, true,(Serializer<Event, Document>)serializers.get("JSONBSONEvent"));
 		storedTimeExpressions = dataTools.getStoredItemSetManager()
 				.getItemSet(storageName, TIME_EXPRESSION_COLLECTION, true,(Serializer<TimeExpression, Document>)serializers.get("JSONBSONTimeExpression"));
 		storedTimeValues = dataTools.getStoredItemSetManager()
@@ -157,6 +166,13 @@ public class ConstructTimeBankDense {
 			}
 			
 			i++;
+		}
+		
+		for (Pair<NormalizedTimeValue, List<StoreReference>> timeValue : timeValues.values()) {
+			if (!storedTimeValues.addItem(timeValue.getFirst())) {
+				System.out.println("Failed to store time value.");
+				return;
+			}
 		}
 		
 		System.out.println("Timex count: " + timexIds.size());
@@ -589,6 +605,8 @@ public class ConstructTimeBankDense {
 		else
 			return null;
 		
+		StoreReference reference = makeTimexReference(document.getName(), id);
+		
 		TimeMLType timeMLType = null;
 		if (hasTimeMLType)
 			timeMLType = TimeMLType.valueOf(element.getAttributeValue("type"));
@@ -615,9 +633,10 @@ public class ConstructTimeBankDense {
 		NormalizedTimeValue value = null;
 		StoreReference valueRef = null;
 		if (hasValue) {
-			valueRef = makeTimeValueReference();
-			value = new NormalizedTimeValue(dataTools, valueRef, valueRef.getIndexValue(0).toString(), element.getAttributeValue("value"));
+			value = makeTimeValue(document.getName(), element.getAttributeValue("value"), reference);
+			valueRef = value.getStoreReference();
 		}
+		
 		String quant = null;
 		if (hasQuant)
 			quant = element.getAttributeValue("quant");
@@ -650,8 +669,6 @@ public class ConstructTimeBankDense {
 		if (hasTimeMLMod)
 			timeMLMod = TimeMLMod.valueOf(element.getAttributeValue("mod"));
 		
-		StoreReference reference = makeTimexReference(document.getName(), id);
-		
 		TimeExpression timeExpression = new TimeExpression(dataTools, 
 														  reference,
 														  tokenSpan,
@@ -670,9 +687,6 @@ public class ConstructTimeBankDense {
 														  timeMLMod);
 		
 		timexIds.add(document.getName() + "_" + id);
-		
-		if (!storedTimeValues.addItem(value))
-			return null;
 		
 		if (!storedTimeExpressions.addItem(timeExpression))
 			return null;
@@ -782,10 +796,13 @@ public class ConstructTimeBankDense {
 			if (hasCardinality)
 				cardinality = element.getAttributeValue("cardinality");
 			
-			StoreReference reference = makeEventReference(document.getName(), id);
+			StoreReference mentionRef = makeEventMentionReference(document.getName(), id);
+			StoreReference eventRef = makeEventReference();
+			List<StoreReference> mentionRefs = new ArrayList<StoreReference>();
+			mentionRefs.add(mentionRef);
 			EventMention eventMention = new EventMention(dataTools,
-					reference, 
-					reference.getIndexValue(0).toString(), 
+					mentionRef, 
+					mentionRef.getIndexValue(0).toString(), 
 					sourceId,
 					eiid,
 					tokenSpan,
@@ -800,12 +817,26 @@ public class ConstructTimeBankDense {
 					modality,
 					cardinality,
 					null,
-					null,
+					eventRef,
 					null);
+			
+			Event event = new Event(dataTools,
+					eventRef, 
+					eiid,
+					null,
+					null,
+					null,
+					new ArrayList<>(),
+					mentionRefs);
 			
 			eventIds.add(document.getName() + "_" + id);
 			
 			if (!storedEventMentions.addItem(eventMention)) {
+				System.out.println("ERROR: Failed to add event mention " + id + " to storage.");
+				return null;
+			}
+			
+			if (!storedEvents.addItem(event)) {
 				System.out.println("ERROR: Failed to add event " + id + " to storage.");
 				return null;
 			}
@@ -852,7 +883,7 @@ public class ConstructTimeBankDense {
 		if (hasSourceId) {
 			String sourceId = element.getAttributeValue("event1");
 			if (sourceId.startsWith("e"))
-				sourceReference = makeEventReference(document.getName(), sourceId);
+				sourceReference = makeEventMentionReference(document.getName(), sourceId);
 			else
 				sourceReference = makeTimexReference(document.getName(), sourceId);
 		}
@@ -861,7 +892,7 @@ public class ConstructTimeBankDense {
 		if (hasTargetId) {
 			String targetId = element.getAttributeValue("event2");
 			if (targetId.startsWith("e"))
-				targetReference = makeEventReference(document.getName(), targetId);
+				targetReference = makeEventMentionReference(document.getName(), targetId);
 			else
 				targetReference = makeTimexReference(document.getName(), targetId);
 		}
@@ -923,12 +954,12 @@ public class ConstructTimeBankDense {
 		return tlink;
 	}
 	
-	private static StoreReference makeEventReference(String documentName, String sourceId) {
+	private static StoreReference makeEventMentionReference(String documentName, String sourceId) {
 		if (!references.containsKey(documentName))
 			references.put(documentName, new HashMap<String, StoreReference>());
 		if (!references.get(documentName).containsKey(sourceId)) {
-			eventId++;
-			references.get(documentName).put(sourceId, new StoreReference(storageName, EVENT_MENTION_COLLECTION, "id", String.valueOf(eventId)));
+			eventMentionId++;
+			references.get(documentName).put(sourceId, new StoreReference(storageName, EVENT_MENTION_COLLECTION, "id", String.valueOf(eventMentionId)));
 		}
 		
 		return references.get(documentName).get(sourceId);
@@ -945,9 +976,25 @@ public class ConstructTimeBankDense {
 		return references.get(documentName).get(sourceId);
 	}
 	
-	private static StoreReference makeTimeValueReference() {
+	private static NormalizedTimeValue makeTimeValue(String documentName, String value, StoreReference exprRef) {
+		String docSpecId = documentName + "_" + value;
+		if (timeValues.containsKey(docSpecId)) {
+			timeValues.get(docSpecId).getSecond().add(exprRef);
+			return timeValues.get(docSpecId).getFirst();
+		}
+	
 		timeValueId++;
-		return new StoreReference(storageName, TIME_VALUE_COLLECTION, "id", String.valueOf(timeValueId));
+		StoreReference ref = new StoreReference(storageName, TIME_VALUE_COLLECTION, "id", String.valueOf(timeValueId));
+		List<StoreReference> exprRefs = new ArrayList<>();
+		NormalizedTimeValue timeValue = new NormalizedTimeValue(dataTools,ref, ref.getIndexValue(0).toString(), value, exprRefs);
+		timeValues.put(docSpecId, new Pair<NormalizedTimeValue, List<StoreReference>>(timeValue, exprRefs));
+		
+		return timeValue;
+	}
+	
+	private static StoreReference makeEventReference() {
+		eventId++;
+		return new StoreReference(storageName, EVENT_COLLECTION, "id", String.valueOf(eventId));
 	}
 
 	/*
