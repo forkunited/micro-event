@@ -788,7 +788,7 @@ public class ConstructTempEval3 {
 			
 			Event event = new Event(dataTools,
 					eventRef, 
-					eiid,
+					eventRef.getIndexValue(0).toString(),
 					null,
 					null,
 					null,
