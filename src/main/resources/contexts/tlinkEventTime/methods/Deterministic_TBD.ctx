@@ -1,0 +1,6 @@
+classify_method adjETSieveUM = AdjacentEventTime();
+classify_method reportingDCTSieveUM = ReportingDCT();
+
+classify_method adjET = LabelMapping(method=${adjETSieveUM}, labelMapping="TBD");
+classify_method reportingDCT = LabelMapping(method=${reportingDCTSieveUM}, labelMapping="TBD");
+classify_method allVague = Constant(label="VAGUE");
