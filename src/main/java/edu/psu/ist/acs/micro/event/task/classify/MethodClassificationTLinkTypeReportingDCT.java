@@ -13,12 +13,11 @@ import edu.cmu.ml.rtw.generic.task.classify.Trainable;
 import edu.cmu.ml.rtw.generic.util.Pair;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention.TimeMLAspect;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention.TimeMLClass;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention.TimeMLTense;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkDatum;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkable;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression;
+import edu.psu.ist.acs.micro.event.task.classify.tlink.det.DetReportingDCT;
 
 public class MethodClassificationTLinkTypeReportingDCT extends MethodClassification<TLinkDatum<TimeMLRelType>, TimeMLRelType> {
 	private DatumContext<TLinkDatum<TimeMLRelType>, TimeMLRelType> context;
@@ -130,23 +129,23 @@ public class MethodClassificationTLinkTypeReportingDCT extends MethodClassificat
 			return null;
 		
 		EventMention mention = null;
+		TimeExpression time = null;
 		boolean eventSource = true;
 		if (tlink.getSource().getTLinkableType() == TLinkable.Type.EVENT) {
 			mention = (EventMention)tlink.getSource();
+			time = (TimeExpression)tlink.getTarget();
 		} else {
 			mention = (EventMention)tlink.getTarget();
+			time = (TimeExpression)tlink.getSource();
 			eventSource = false;
 		}
 		
-		if (mention.getTimeMLClass() == TimeMLClass.REPORTING 
-				&& mention.getTimeMLTense() == TimeMLTense.PAST
-				&& mention.getTimeMLAspect() == TimeMLAspect.PERFECTIVE) {
-			if (eventSource)
-				return TimeMLRelType.IS_INCLUDED;
-			else
-				return TimeMLRelType.INCLUDES;
-		}
-		
-		return null;
+		TimeMLRelType eDCT = DetReportingDCT.determineRelation(mention, time);
+		if (eDCT == null)
+			return null;
+		else if (eventSource)
+			return eDCT;
+		else
+			return TLink.getConverseTimeMLRelType(eDCT);
 	}
 }

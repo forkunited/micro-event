@@ -13,6 +13,7 @@ import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.data.store.StoreReference;
 import edu.cmu.ml.rtw.generic.structure.WeightedStructureRelationBinary;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
+import edu.psu.ist.acs.micro.event.data.feature.FeatureEventMentionAttribute;
 
 public class EventMentionPairDatum<L> extends Datum<L> {
 	private EventMention sourceMention;
@@ -66,7 +67,7 @@ public class EventMentionPairDatum<L> extends Datum<L> {
 		for (CorefRelType relType : CorefRelType.values())
 			dataTools.addGenericWeightedStructure(new WeightedStructureRelationBinary(relType.toString(), false));
 		
-		tools.addGenericDataSetBuilder(new DataSetBuilderEventCoref());
+		tools.addGenericDataSetBuilder(new DataSetBuilderEventMentionCoref());
 		
 		return tools;
 	}
@@ -95,9 +96,11 @@ public class EventMentionPairDatum<L> extends Datum<L> {
 		return tools;
 	}
 	
-	public static abstract class Tools<L> extends Datum.Tools<EventMentionPairDatum<L>, L> { 
+	public static abstract class Tools<L> extends EventDatumTools<EventMentionPairDatum<L>, L> { 
 		public Tools(DataTools dataTools) {
 			super(dataTools);
+			
+			this.addGenericFeature(new FeatureEventMentionAttribute<EventMentionPairDatum<L>, L>());
 			
 			this.addTokenSpanExtractor(new TokenSpanExtractor<EventMentionPairDatum<L>, L>() {
 				@Override
@@ -179,6 +182,42 @@ public class EventMentionPairDatum<L> extends Datum<L> {
 					
 					return new TokenSpan[] {  sourceExtent,
 							targetExtent };
+				}
+			});
+			
+			this.addEventMentionExtractor(new EventMentionExtractor<EventMentionPairDatum<L>, L>() {
+				@Override
+				public String toString() {
+					return "Source";
+				}
+				
+				@Override
+				public EventMention[] extract(EventMentionPairDatum<L> datum) {
+					return new EventMention[] { datum.getSourceMention() };
+				}
+			});
+			
+			this.addEventMentionExtractor(new EventMentionExtractor<EventMentionPairDatum<L>, L>() {
+				@Override
+				public String toString() {
+					return "Target";
+				}
+				
+				@Override
+				public EventMention[] extract(EventMentionPairDatum<L> datum) {
+					return new EventMention[] { datum.getTargetMention() };
+				}
+			});
+			
+			this.addEventMentionExtractor(new EventMentionExtractor<EventMentionPairDatum<L>, L>() {
+				@Override
+				public String toString() {
+					return "SourceTarget";
+				}
+				
+				@Override
+				public EventMention[] extract(EventMentionPairDatum<L> datum) {
+					return new EventMention[] { datum.getSourceMention(), datum.getTargetMention() };
 				}
 			});
 			

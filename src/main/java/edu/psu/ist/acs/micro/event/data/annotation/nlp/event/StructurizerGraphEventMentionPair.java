@@ -34,8 +34,10 @@ public class StructurizerGraphEventMentionPair<L> extends StructurizerGraph<Even
 
 	@Override
 	protected String getStructureId(EventMentionPairDatum<L> datum) {
-		String id = datum.getSourceMention().getTokenSpan().getDocument().getName();
-		String id2 = datum.getTargetMention().getTokenSpan().getDocument().getName();
+		String id = DataSetBuilderDocumentFiltered.getDocumentNameWithoutPost(
+				datum.getSourceMention().getTokenSpan().getDocument().getName());
+		String id2 = DataSetBuilderDocumentFiltered.getDocumentNameWithoutPost(
+				datum.getTargetMention().getTokenSpan().getDocument().getName());
 		if (!id2.equals(id)) {
 			if (id.compareTo(id2) < 0)
 				id = id + "_" + id2;

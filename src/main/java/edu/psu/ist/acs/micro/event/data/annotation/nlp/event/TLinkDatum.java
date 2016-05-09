@@ -16,6 +16,7 @@ import edu.cmu.ml.rtw.generic.structure.WeightedStructureRelationBinary;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkable.Type;
+import edu.psu.ist.acs.micro.event.data.feature.FeatureEventMentionAttribute;
 import edu.psu.ist.acs.micro.event.data.feature.FeatureTLinkAttribute;
 import edu.psu.ist.acs.micro.event.data.feature.FeatureTLinkEventAttribute;
 import edu.psu.ist.acs.micro.event.data.feature.FeatureTLinkTimeAttribute;
@@ -181,7 +182,6 @@ public class TLinkDatum<L> extends Datum<L> {
 			public String toString() { return "OnlyV"; }
 		});
 
-		tools.addGenericDataSetBuilder(new DataSetBuilderTimeBankDense());
 		tools.addGenericDataSetBuilder(new DataSetBuilderTLinkType());
 		
 		for (TimeMLRelType relType : TimeMLRelType.values())
@@ -190,7 +190,7 @@ public class TLinkDatum<L> extends Datum<L> {
 		return tools;
 	}
 	
-	public static abstract class Tools<L> extends Datum.Tools<TLinkDatum<L>, L> { 
+	public static abstract class Tools<L> extends EventDatumTools<TLinkDatum<L>, L> { 
 		public Tools(DataTools dataTools) {
 			super(dataTools);
 			
@@ -199,6 +199,7 @@ public class TLinkDatum<L> extends Datum<L> {
 			this.addGenericFeature(new FeatureTLinkEventAttribute<L>());
 			this.addGenericFeature(new FeatureTLinkTimeAttribute<L>());
 			this.addGenericFeature(new FeatureTLinkTimeRelation<L>());
+			this.addGenericFeature(new FeatureEventMentionAttribute<TLinkDatum<L>, L>());
 			
 			this.addTokenSpanExtractor(new TokenSpanExtractor<TLinkDatum<L>, L>() {
 				@Override
@@ -311,6 +312,57 @@ public class TLinkDatum<L> extends Datum<L> {
 						return new TokenSpan[] { tlinkDatum.getTLink().getTarget().getTokenSpan(), tlinkDatum.getTLink().getSource().getTokenSpan() };
 					else
 						return new TokenSpan[0];
+				}
+			});
+			
+			this.addEventMentionExtractor(new EventMentionExtractor<TLinkDatum<L>, L>() {
+				@Override
+				public String toString() {
+					return "Source";
+				}
+				
+				@Override
+				public EventMention[] extract(TLinkDatum<L> datum) {
+					return new EventMention[] { (EventMention)datum.getTLink().getSource() };
+				}
+			});
+			
+			this.addEventMentionExtractor(new EventMentionExtractor<TLinkDatum<L>, L>() {
+				@Override
+				public String toString() {
+					return "Target";
+				}
+				
+				@Override
+				public EventMention[] extract(TLinkDatum<L> datum) {
+					return new EventMention[] { (EventMention)datum.getTLink().getTarget() };
+				}
+			});
+			
+			this.addEventMentionExtractor(new EventMentionExtractor<TLinkDatum<L>, L>() {
+				@Override
+				public String toString() {
+					return "SourceTarget";
+				}
+				
+				@Override
+				public EventMention[] extract(TLinkDatum<L> datum) {
+					return new EventMention[] { (EventMention)datum.getTLink().getSource(), (EventMention)datum.getTLink().getTarget() };
+				}
+			});
+			
+			this.addEventMentionExtractor(new EventMentionExtractor<TLinkDatum<L>, L>() {
+				@Override
+				public String toString() {
+					return "FirstEvent";
+				}
+				
+				@Override
+				public EventMention[] extract(TLinkDatum<L> datum) {
+					if (datum.getTLink().getSource().getTLinkableType() == Type.EVENT)
+						return new EventMention[] { (EventMention)datum.getTLink().getSource() };
+					else
+						return new EventMention[] { (EventMention)datum.getTLink().getTarget() };
 				}
 			});
 			

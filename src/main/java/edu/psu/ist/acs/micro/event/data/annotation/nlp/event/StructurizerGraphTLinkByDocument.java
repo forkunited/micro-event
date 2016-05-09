@@ -16,8 +16,10 @@ public class StructurizerGraphTLinkByDocument<L> extends StructurizerGraphTLink<
 	@Override
 	protected String getStructureId(TLinkDatum<L> datum) {
 		TLink tlink = datum.getTLink();
-		String id = tlink.getSource().getTokenSpan().getDocument().getName();
-		String targetName = tlink.getTarget().getTokenSpan().getDocument().getName();
+		String id = DataSetBuilderDocumentFiltered.getDocumentNameWithoutPost(
+				tlink.getSource().getTokenSpan().getDocument().getName());
+		String targetName = DataSetBuilderDocumentFiltered.getDocumentNameWithoutPost(
+						 tlink.getTarget().getTokenSpan().getDocument().getName());
 		if (!targetName.equals(id)) {
 			if (id.compareTo(targetName) < 0)
 				id = id + "_" + targetName;

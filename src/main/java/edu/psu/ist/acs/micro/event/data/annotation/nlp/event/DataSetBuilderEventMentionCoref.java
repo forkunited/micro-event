@@ -22,21 +22,21 @@ import edu.cmu.ml.rtw.generic.util.ThreadMapper.Fn;
 import edu.cmu.ml.rtw.generic.util.Triple;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
 
-public class DataSetBuilderEventCoref extends DataSetBuilderDocumentFiltered<EventMentionPairDatum<CorefRelType>, CorefRelType> {
+public class DataSetBuilderEventMentionCoref extends DataSetBuilderDocumentFiltered<EventMentionPairDatum<CorefRelType>, CorefRelType> {
 	//private String[] parameterNames = {  };
 	
-	public DataSetBuilderEventCoref() {
+	public DataSetBuilderEventMentionCoref() {
 		this(null);
 	}
 	
-	public DataSetBuilderEventCoref(DatumContext<EventMentionPairDatum<CorefRelType>, CorefRelType> context) {
+	public DataSetBuilderEventMentionCoref(DatumContext<EventMentionPairDatum<CorefRelType>, CorefRelType> context) {
 		this.context = context;
 	}
 	
 	@Override
 	public DataSetBuilder<EventMentionPairDatum<CorefRelType>, CorefRelType> makeInstance(
 			DatumContext<EventMentionPairDatum<CorefRelType>, CorefRelType> context) {
-		return new DataSetBuilderEventCoref(context);
+		return new DataSetBuilderEventMentionCoref(context);
 	}
 
 	@Override
@@ -110,10 +110,11 @@ public class DataSetBuilderEventCoref extends DataSetBuilderDocumentFiltered<Eve
 		
 		threads.run(documentClusters.entrySet(), this.context.getMaxThreads());
 		
-		int id = 1;
+		Pair<Integer, Integer> idRange = this.context.getDataTools().getIncrementIdRange(datums.size());
+		int i = idRange.getFirst();
 		for (Entry<String, Triple<EventMention, EventMention, CorefRelType>> entry : datums.entrySet()) {
-			data.add(new EventMentionPairDatum<CorefRelType>(id, entry.getValue().getFirst(), entry.getValue().getSecond(), entry.getValue().getThird()));
-			id++;
+			data.add(new EventMentionPairDatum<CorefRelType>(i, entry.getValue().getFirst(), entry.getValue().getSecond(), entry.getValue().getThird()));
+			i++;
 		}
 				
 		return data;
@@ -121,7 +122,7 @@ public class DataSetBuilderEventCoref extends DataSetBuilderDocumentFiltered<Eve
 
 	@Override
 	public String getGenericName() {
-		return "EventCoref";
+		return "EventMentionCoref";
 	}
 
 }

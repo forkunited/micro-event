@@ -15,6 +15,7 @@ import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkDatum;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression;
+import edu.psu.ist.acs.micro.event.task.classify.tlink.det.DetTimeTime;
 
 public class MethodClassificationTLinkTypeTimeTime extends MethodClassification<TLinkDatum<TimeMLRelType>, TimeMLRelType> {
 	private DatumContext<TLinkDatum<TimeMLRelType>, TimeMLRelType> context;
@@ -126,11 +127,6 @@ public class MethodClassificationTLinkTypeTimeTime extends MethodClassification<
 		
 		TimeExpression t1 = (TimeExpression)tlink.getSource();
 		TimeExpression t2 = (TimeExpression)tlink.getTarget();
-		TimeMLRelType rel = t1.getRelationToTime(t2, false);
-		if (rel != null) {
-			return rel;
-		} else {
-			return null;
-		}
+		return DetTimeTime.determineRelation(t1, t2);
 	}
 }

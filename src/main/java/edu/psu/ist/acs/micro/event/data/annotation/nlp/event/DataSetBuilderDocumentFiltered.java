@@ -133,7 +133,7 @@ public abstract class DataSetBuilderDocumentFiltered<D extends Datum<L>, L> exte
 		
 	}
 	
-	private String getDocumentNameWithoutPost(String docName) {
+	public static String getDocumentNameWithoutPost(String docName) {
 		String clusterName = docName;
 		if (docName.indexOf("_p") >= 0) {
 			String[] docNameParts = docName.split("_p");

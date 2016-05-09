@@ -17,6 +17,8 @@ import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EntityMention;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Event;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMentionPairDatum;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventPairDatum;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventTimeDatum;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.NormalizedTimeValue;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Relation;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.RelationMention;
@@ -25,6 +27,7 @@ import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkDatum;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimePairDatum;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Value;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.ValueMention;
 import edu.psu.ist.acs.micro.event.util.EventProperties;
@@ -67,6 +70,11 @@ public class EventDataTools extends DataTools {
 		this.addGenericContext(new DatumContext<EventMentionPairDatum<CorefRelType>, CorefRelType>(EventMentionPairDatum.getCorefRelTypeTools(this), "EventMentionPairCoref"));
 		this.addGenericContext(new DatumContext<EventMentionPairDatum<Boolean>, Boolean>(EventMentionPairDatum.getBooleanTools(this), "EventMentionPairBoolean"));
 
+		this.addGenericContext(new DatumContext<EventPairDatum<CorefRelType>, CorefRelType>(EventPairDatum.getCorefRelTypeTools(this), "EventCoref"));
+		this.addGenericContext(new DatumContext<EventPairDatum<TimeMLRelType>, TimeMLRelType>(EventPairDatum.getTLinkTypeTools(this), "EventTLink"));
+		this.addGenericContext(new DatumContext<TimePairDatum<TimeMLRelType>, TimeMLRelType>(TimePairDatum.getTLinkTypeTools(this), "TimeTLink"));
+		this.addGenericContext(new DatumContext<EventTimeDatum<TimeMLRelType>, TimeMLRelType>(EventTimeDatum.getTLinkTypeTools(this), "EventTimeTLink"));
+		
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.CREATION_TIME);
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.TIME_EXPRESSION);
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.EVENT_MENTION);
