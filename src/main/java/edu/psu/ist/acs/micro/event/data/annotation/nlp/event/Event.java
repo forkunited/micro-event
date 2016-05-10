@@ -254,6 +254,7 @@ public class Event implements Argumentable {
 					StoreReference ref = StoreReference.makeFromJSON(jsonMentions.getJSONObject(i));
 					if (ref == null)
 						System.out.println("Failed to load " + this.id + " " + jsonMentions.getJSONObject(i));
+					System.out.println(jsonMentions.getJSONObject(i));
 					this.someMentionReferences.add(ref);
 				}
 			} else {
