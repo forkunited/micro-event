@@ -15,7 +15,9 @@ import edu.cmu.ml.rtw.generic.data.store.StoreReference;
 import edu.cmu.ml.rtw.generic.structure.WeightedStructureRelationBinary;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression.TimeMLDocumentFunction;
 import edu.psu.ist.acs.micro.event.data.feature.FeatureEventMentionAttribute;
+import edu.psu.ist.acs.micro.event.data.feature.FeatureTimeExpressionAttribute;
 import edu.psu.ist.acs.micro.event.task.classify.MethodClassificationEventTimeTLinkDet;
 
 public class EventTimeDatum<L> extends Datum<L> {
@@ -183,6 +185,7 @@ public class EventTimeDatum<L> extends Datum<L> {
 			super(dataTools);
 			
 			this.addGenericFeature(new FeatureEventMentionAttribute<EventTimeDatum<L>, L>());
+			this.addGenericFeature(new FeatureTimeExpressionAttribute<EventTimeDatum<L>, L>());
 			
 			this.addTokenSpanExtractor(new TokenSpanExtractor<EventTimeDatum<L>, L>() {
 				@Override
@@ -272,6 +275,41 @@ public class EventTimeDatum<L> extends Datum<L> {
 					for (int i = 0; i < datum.getEvent().getSomeMentionCount(); i++)
 						mentions[i] = datum.getEvent().getSomeMention(i);
 					return mentions;
+				}
+			});
+			
+			this.addTimeExpressionExtractor(new TimeExpressionExtractor<EventTimeDatum<L>, L>() {
+				@Override
+				public String toString() {
+					return "Time";
+				}
+				
+				@Override
+				public TimeExpression[] extract(EventTimeDatum<L> datum) {
+					TimeExpression[] expressions = new TimeExpression[datum.getTime().getSomeExpressionCount()];
+					for (int i = 0; i < datum.getTime().getSomeExpressionCount(); i++)
+						expressions[i] = datum.getTime().getSomeExpression(i);
+					return expressions;
+				}
+			});
+			
+			this.addDatumIndicator(new DatumIndicator<EventTimeDatum<L>>() {
+				public String toString() { return "SomeWithinSentenceOrDCT"; }
+				public boolean indicator(EventTimeDatum<L> datum) { 					
+					for (int i = 0; i < datum.getTime().getSomeExpressionCount(); i++) {
+						if (datum.getTime().getSomeExpression(i).getTimeMLDocumentFunction() == TimeMLDocumentFunction.CREATION_TIME)
+							return true;
+						for (int j = 0; j < datum.getEvent().getSomeMentionCount(); j++) {
+							TimeExpression time = datum.getTime().getSomeExpression(i);
+							EventMention event = datum.getEvent().getSomeMention(j);
+							
+							if (time.getTokenSpan().getDocument().getName().equals(event.getTokenSpan().getDocument().getName())
+									&& time.getTokenSpan().getSentenceIndex() == event.getTokenSpan().getSentenceIndex())
+								return true;
+						}
+					}
+					
+					return false;
 				}
 			});
 			

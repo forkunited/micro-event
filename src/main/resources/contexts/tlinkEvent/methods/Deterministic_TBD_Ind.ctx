@@ -1,4 +1,4 @@
-context modelsEventTLinkDet = TLinkType(initScript="/tlinkEvent/methods/Deterministic_TBD.ctx", initOnce="true", initOverrideByName="true");
+context modelsEventTLinkDet = EventTLink(initScript="/tlinkEvent/methods/Deterministic_TBD.ctx", initOnce="true", initOverrideByName="true");
 
 classify_method genGovB = LabelMapping(method=${modelsEventTLinkDet.genGovSieveUM}, labelMapping="OnlyB");
 classify_method reichenbachB = LabelMapping(method=${modelsEventTLinkDet.reichenbachSieveUM}, labelMapping="OnlyB");

@@ -28,12 +28,6 @@ public class FeatureEventMentionAttribute<D extends Datum<L>, L> extends Feature
 		MODALITY
 	}
 	
-	public enum SourceOrTarget {
-		SOURCE,
-		TARGET,
-		EITHER
-	}
-	
 	private EventMentionExtractor<D, L> mentionExtractor;
 	private Attribute attribute;
 	private String[] parameterNames = { "mentionExtractor", "attribute" };

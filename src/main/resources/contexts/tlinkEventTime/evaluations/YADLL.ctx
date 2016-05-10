@@ -1,0 +1,9 @@
+context trainDevTestDataEventTimeTLink = EventTimeTLink(initScript="/tlinkEventTime/data/LoadTrainDevTest.ctx", initOnce="true", initOverrideByName="true");
+context modelsEventTimeTLinkYadll = EventTimeTLink(initScript="/tlinkEventTime/methods/YADLL_LR_CAEVO_Simple.ctx", initOnce="true", initOverrideByName="true");
+
+classify_eval devYadllWSDCTPrecision = Precision(task=${trainDevTestDataEventTimeTLink.devTask}, method=${modelsEventTimeTLinkYadll.yadllWSDCT}, mode="MICRO");
+classify_eval devYadllWSDCTRecall = Recall(task=${trainDevTestDataEventTimeTLink.devTask}, method=${modelsEventTimeTLinkYadll.yadllWSDCT}, mode="MICRO");
+classify_eval devYadllWSDCTConfusions = ConfusionMatrix(task=${trainDevTestDataEventTimeTLink.devTask}, method=${modelsEventTimeTLinkYadll.yadllWSDCT});
+classify_eval testYadllWSDCTPrecision = Precision(task=${trainDevTestDataEventTimeTLink.testTask}, method=${modelsEventTimeTLinkYadll.yadllWSDCT}, mode="MICRO");
+classify_eval testYadllWSDCTRecall = Recall(task=${trainDevTestDataEventTimeTLink.testTask}, method=${modelsEventTimeTLinkYadll.yadllWSDCT}, mode="MICRO");
+classify_eval testYadllWSDCTConfusions = ConfusionMatrix(task=${trainDevTestDataEventTimeTLink.testTask}, method=${modelsEventTimeTLinkYadll.yadllWSDCT});

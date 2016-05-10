@@ -1,0 +1,29 @@
+context trainDevTestDataEventTimeTLink = EventTimeTLink(initScript="/tlinkEventTime/data/LoadTrainDevTest.ctx", initOnce="true", initOverrideByName="true");
+context modelsEventTimeTLinkYadllInd = EventTimeTLink(initScript="/tlinkEventTime/methods/YADLL_Ind.ctx", initOnce="true", initOverrideByName="true");
+
+
+classify_eval devYadllWSDCTBPrecision = Precision(task=${trainDevTestDataEventTimeTLink.devTask}, method=${modelsEventTimeTLinkYadllInd.yadllWSDCTB}, mode="MICRO");
+classify_eval devYadllWSDCTBRecall = Recall(task=${trainDevTestDataEventTimeTLink.devTask}, method=${modelsEventTimeTLinkYadllInd.yadllWSDCTB}, mode="MICRO");
+classify_eval testYadllWSDCTBPrecision = Precision(task=${trainDevTestDataEventTimeTLink.testTask}, method=${modelsEventTimeTLinkYadllInd.yadllWSDCTB}, mode="MICRO");
+classify_eval testYadllWSDCTBRecall = Recall(task=${trainDevTestDataEventTimeTLink.testTask}, method=${modelsEventTimeTLinkYadllInd.yadllWSDCTB}, mode="MICRO");
+classify_eval devYadllWSDCTAPrecision = Precision(task=${trainDevTestDataEventTimeTLink.devTask}, method=${modelsEventTimeTLinkYadllInd.yadllWSDCTA}, mode="MICRO");
+classify_eval devYadllWSDCTARecall = Recall(task=${trainDevTestDataEventTimeTLink.devTask}, method=${modelsEventTimeTLinkYadllInd.yadllWSDCTA}, mode="MICRO");
+classify_eval testYadllWSDCTAPrecision = Precision(task=${trainDevTestDataEventTimeTLink.testTask}, method=${modelsEventTimeTLinkYadllInd.yadllWSDCTA}, mode="MICRO");
+classify_eval testYadllWSDCTARecall = Recall(task=${trainDevTestDataEventTimeTLink.testTask}, method=${modelsEventTimeTLinkYadllInd.yadllWSDCTA}, mode="MICRO");
+classify_eval devYadllWSDCTIPrecision = Precision(task=${trainDevTestDataEventTimeTLink.devTask}, method=${modelsEventTimeTLinkYadllInd.yadllWSDCTI}, mode="MICRO");
+classify_eval devYadllWSDCTIRecall = Recall(task=${trainDevTestDataEventTimeTLink.devTask}, method=${modelsEventTimeTLinkYadllInd.yadllWSDCTI}, mode="MICRO");
+classify_eval testYadllWSDCTIPrecision = Precision(task=${trainDevTestDataEventTimeTLink.testTask}, method=${modelsEventTimeTLinkYadllInd.yadllWSDCTI}, mode="MICRO");
+classify_eval testYadllWSDCTIRecall = Recall(task=${trainDevTestDataEventTimeTLink.testTask}, method=${modelsEventTimeTLinkYadllInd.yadllWSDCTI}, mode="MICRO");
+classify_eval devYadllWSDCTIIPrecision = Precision(task=${trainDevTestDataEventTimeTLink.devTask}, method=${modelsEventTimeTLinkYadllInd.yadllWSDCTII}, mode="MICRO");
+classify_eval devYadllWSDCTIIRecall = Recall(task=${trainDevTestDataEventTimeTLink.devTask}, method=${modelsEventTimeTLinkYadllInd.yadllWSDCTII}, mode="MICRO");
+classify_eval testYadllWSDCTIIPrecision = Precision(task=${trainDevTestDataEventTimeTLink.testTask}, method=${modelsEventTimeTLinkYadllInd.yadllWSDCTII}, mode="MICRO");
+classify_eval testYadllWSDCTIIRecall = Recall(task=${trainDevTestDataEventTimeTLink.testTask}, method=${modelsEventTimeTLinkYadllInd.yadllWSDCTII}, mode="MICRO");
+classify_eval devYadllWSDCTSPrecision = Precision(task=${trainDevTestDataEventTimeTLink.devTask}, method=${modelsEventTimeTLinkYadllInd.yadllWSDCTS}, mode="MICRO");
+classify_eval devYadllWSDCTSRecall = Recall(task=${trainDevTestDataEventTimeTLink.devTask}, method=${modelsEventTimeTLinkYadllInd.yadllWSDCTS}, mode="MICRO");
+classify_eval testYadllWSDCTSPrecision = Precision(task=${trainDevTestDataEventTimeTLink.testTask}, method=${modelsEventTimeTLinkYadllInd.yadllWSDCTS}, mode="MICRO");
+classify_eval testYadllWSDCTSRecall = Recall(task=${trainDevTestDataEventTimeTLink.testTask}, method=${modelsEventTimeTLinkYadllInd.yadllWSDCTS}, mode="MICRO");
+classify_eval devYadllWSDCTVPrecision = Precision(task=${trainDevTestDataEventTimeTLink.devTask}, method=${modelsEventTimeTLinkYadllInd.yadllWSDCTV}, mode="MICRO");
+classify_eval devYadllWSDCTVRecall = Recall(task=${trainDevTestDataEventTimeTLink.devTask}, method=${modelsEventTimeTLinkYadllInd.yadllWSDCTV}, mode="MICRO");
+classify_eval testYadllWSDCTVPrecision = Precision(task=${trainDevTestDataEventTimeTLink.testTask}, method=${modelsEventTimeTLinkYadllInd.yadllWSDCTV}, mode="MICRO");
+classify_eval testYadllWSDCTVRecall = Recall(task=${trainDevTestDataEventTimeTLink.testTask}, method=${modelsEventTimeTLinkYadllInd.yadllWSDCTV}, mode="MICRO");
+

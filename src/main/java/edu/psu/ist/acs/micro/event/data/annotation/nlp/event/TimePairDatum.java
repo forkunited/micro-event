@@ -15,6 +15,7 @@ import edu.cmu.ml.rtw.generic.data.store.StoreReference;
 import edu.cmu.ml.rtw.generic.structure.WeightedStructureRelationBinary;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType;
+import edu.psu.ist.acs.micro.event.data.feature.FeatureTimeExpressionAttribute;
 import edu.psu.ist.acs.micro.event.task.classify.MethodClassificationTimePairTLinkDet;
 
 public class TimePairDatum<L> extends Datum<L> {
@@ -179,6 +180,8 @@ public class TimePairDatum<L> extends Datum<L> {
 	public static abstract class Tools<L> extends Datum.Tools<TimePairDatum<L>, L> { 
 		public Tools(DataTools dataTools) {
 			super(dataTools);
+			
+			this.addGenericFeature(new FeatureTimeExpressionAttribute<TimePairDatum<L>, L>());
 			
 			this.addTokenSpanExtractor(new TokenSpanExtractor<TimePairDatum<L>, L>() {
 				@Override

@@ -343,6 +343,24 @@ public class EventPairDatum<L> extends Datum<L> {
 				}
 			});
 			
+			this.addDatumIndicator(new DatumIndicator<EventPairDatum<L>>() {
+				public String toString() { return "SomeWithinSentence"; }
+				public boolean indicator(EventPairDatum<L> datum) { 
+					for (int i = 0; i < datum.getSource().getSomeMentionCount(); i++) {
+						for (int j = 0; j < datum.getTarget().getSomeMentionCount(); j++) {
+							EventMention source = datum.getSource().getSomeMention(i);
+							EventMention target = datum.getTarget().getSomeMention(j);
+							
+							if (source.getTokenSpan().getDocument().getName().equals(target.getTokenSpan().getDocument().getName())
+									&& source.getTokenSpan().getSentenceIndex() == target.getTokenSpan().getSentenceIndex())
+								return true;
+						}
+					}
+					
+					return false;
+				}
+			});
+			
 			this.addGenericStructurizer(new StructurizerGraphEventPair<L>());
 		}
 		

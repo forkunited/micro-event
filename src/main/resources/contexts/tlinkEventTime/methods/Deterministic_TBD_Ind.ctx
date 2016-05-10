@@ -1,4 +1,4 @@
-context modelsEventTimeTLinkDet = TLinkType(initScript="/tlinkEventTime/methods/Deterministic_TBD.ctx", initOnce="true", initOverrideByName="true");
+context modelsEventTimeTLinkDet = EventTimeTLink(initScript="/tlinkEventTime/methods/Deterministic_TBD.ctx", initOnce="true", initOverrideByName="true");
 
 classify_method adjETB = LabelMapping(method=${modelsEventTimeTLinkDet.adjETSieveUM}, labelMapping="OnlyB");
 classify_method reportingDCTB = LabelMapping(method=${modelsEventTimeTLinkDet.reportingDCTSieveUM}, labelMapping="OnlyB");
