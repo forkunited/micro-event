@@ -256,6 +256,8 @@ public class Event implements Argumentable {
 						System.out.println("Failed to load " + this.id + " " + jsonMentions.getJSONObject(i));
 					this.someMentionReferences.add(ref);
 				}
+			} else {
+				System.out.println("Failed to load from " + this.id);
 			}
 		} catch (JSONException e) {
 			return false;
