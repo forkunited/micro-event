@@ -160,6 +160,7 @@ public class DataSetBuilderEventTLink extends DataSetBuilderDocumentFiltered<Eve
 			
 			List<StoreReference> em1Ref = new ArrayList<>();
 			em1Ref.add(em1.getStoreReference());
+			System.out.println(em1.getStoreReference());
 			
 			List<StoreReference> em2Ref = new ArrayList<>();
 			em2Ref.add(em2.getStoreReference());

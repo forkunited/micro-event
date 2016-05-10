@@ -182,7 +182,6 @@ public class Event implements Argumentable {
 	}
 	
 	public EventMention getSomeMention(int index) {
-		System.out.println(index + " " + this.someMentionReferences + " " + this.someMentionReferences.get(index));
 		return this.dataTools.getStoredItemSetManager().resolveStoreReference(this.someMentionReferences.get(index), true);
 	}
 	
