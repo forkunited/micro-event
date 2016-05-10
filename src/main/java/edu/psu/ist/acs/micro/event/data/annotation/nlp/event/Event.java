@@ -182,7 +182,6 @@ public class Event implements Argumentable {
 	}
 	
 	public EventMention getSomeMention(int index) {
-		System.out.println(this.someMentionReferences.get(index).toJSON());
 		return this.dataTools.getStoredItemSetManager().resolveStoreReference(this.someMentionReferences.get(index), true);
 	}
 	
@@ -253,6 +252,8 @@ public class Event implements Argumentable {
 				JSONArray jsonMentions = json.getJSONArray("someMentions");
 				for (int i = 0; i < jsonMentions.length(); i++) {
 					StoreReference ref = StoreReference.makeFromJSON(jsonMentions.getJSONObject(i));
+					if (ref == null)
+						System.out.println("Failed to load " + this.id + " " + jsonMentions.getJSONObject(i));
 					this.someMentionReferences.add(ref);
 				}
 			}
