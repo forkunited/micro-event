@@ -575,6 +575,7 @@ public class NormalizedTimeValue implements Argumentable {
 	}
 	
 	public TimeExpression getSomeExpression(int index) {
+		System.out.println(this.id + " " + index);
 		return this.dataTools.getStoredItemSetManager().resolveStoreReference(this.someExpressionReferences.get(index), true);
 	}
 }
