@@ -22,7 +22,7 @@ structure_fn greedyTlinkTransitiveRules = GreedyStructureRules(rules=(${rulesTli
 multi_classify_method ps = PrecedenceScore(methods=(${modelsTimeTLinkDet.timeTime},
                                                     ${modelsEventTimeTLinkYadll.yadllWSDCT}, 
                                                     ${modelsEventTLinkYadll.yadllWS}),                                   
-                                    structurizers=({trainDevTestDataTimeTLink.docStructConserve},
+                                    structurizers=(${trainDevTestDataTimeTLink.docStructConserve},
                                                    ${trainDevTestDataEventTimeTLink.docStructConserve},
                                                    ${trainDevTestDataEventTLink.docStructConserve}),
                                     measures=(${evalTimeTLinkDet.devTimeTimePrecision},
