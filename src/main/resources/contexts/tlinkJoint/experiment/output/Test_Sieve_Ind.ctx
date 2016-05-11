@@ -286,5 +286,5 @@ value strEvals = OutputStrings(id=${resultsId}, storage="EventString", collectio
                   ${evalSieve.modelsJointTLinkSieve.evalEventTLinkYadll.testYadllWSVRecall},
 	              
 	              ${evalSieve.multiTestPrecision}, 
-	              ${evalSieve.multiTestRecall},   
+	              ${evalSieve.multiTestRecall} 
                  )); 
