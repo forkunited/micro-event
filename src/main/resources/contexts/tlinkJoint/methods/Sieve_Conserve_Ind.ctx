@@ -75,9 +75,9 @@ multi_classify_method sieve = Sieve(methods=(${modelsEventTLinkDetInd.repGovB},
                                              ${modelsEventTimeTLinkDetInd.reportingDCTS},
                                              ${modelsEventTimeTLinkDetInd.reportingDCTV},
                                              
-                                             ${modelsEventTLinkDetInd.modelsEventTimeTLinkDet.allVague}, 
+                                             ${modelsEventTLinkDetInd.modelsEventTLinkDet.allVague}, 
                                              
-                                             ${modelsTimeTLinkDetInd.modelsEventTimeTLinkDet.allVague},
+                                             ${modelsTimeTLinkDetInd.modelsTimeTLinkDet.allVague},
                                              
                                              ${modelsEventTimeTLinkDetInd.modelsEventTimeTLinkDet.allVague},
                                              
