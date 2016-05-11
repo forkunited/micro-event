@@ -35,10 +35,10 @@ feature fsPosA = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2
 feature fsPosAI = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${pos} o ${afterI1}));
 feature fsPosA2 = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${pos} o ${after2}));
 feature fsTense = EventMentionAttribute(mentionExtractor="Source", attribute="TIMEML_TENSE");
-feature fsAspect = EventMentionAttribute(mentionExtractor="Source" attribute="TIMEML_ASPECT");
-feature fsClass = EventMentionAttribute(mentionExtractor="Source" attribute="TIMEML_CLASS");
-feature fsPolarity = EventMentionAttribute(mentionExtractor="Source" attribute="TIMEML_POLARITY");
-feature fsModality = EventMentionAttribute(mentionExtractor="Source" attribute="MODALITY");
+feature fsAspect = EventMentionAttribute(mentionExtractor="Source", attribute="TIMEML_ASPECT");
+feature fsClass = EventMentionAttribute(mentionExtractor="Source", attribute="TIMEML_CLASS");
+feature fsPolarity = EventMentionAttribute(mentionExtractor="Source", attribute="TIMEML_POLARITY");
+feature fsModality = EventMentionAttribute(mentionExtractor="Source", attribute="MODALITY");
 feature fsDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${depStr});
 feature fsPrep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${strDef} o ${prep}));
 feature fsLemma = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${lemma});
