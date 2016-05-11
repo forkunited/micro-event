@@ -164,7 +164,7 @@ multi_classify_method sieve = Sieve(methods=(${modelsEventTLinkDet.repGovB},
                                                    ${trainDevTestDataEventTimeTLink.docStructConserve}, 
                                                    ${trainDevTestDataEventTimeTLink.docStructConserve}, 
                                                    
-                                                   ${trainDevTestDataEventTLink.docStructConserve}
+                                                   ${trainDevTestDataEventTLink.docStructConserve},
                                                    ${trainDevTestDataEventTLink.docStructConserve}, 
                                                    ${trainDevTestDataEventTLink.docStructConserve}, 
                                                    ${trainDevTestDataEventTLink.docStructConserve}, 
