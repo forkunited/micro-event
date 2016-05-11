@@ -106,7 +106,7 @@ public class FeatureEventMentionAttribute<D extends Datum<L>, L> extends Feature
 		
 		for (EventMention e : mentions) {
 			if (this.attribute == Attribute.TIMEML_TENSE) {
-				System.out.println(e + "\n" + e.getTimeMLTense());
+				System.out.println(e + " " + e.getTimeMLTense() + " " + this.vocabulary.get(e.getTimeMLTense().toString()));
 				vector.put(offset + this.vocabulary.get(e.getTimeMLTense().toString()), 1.0);
 			} else if (this.attribute == Attribute.TIMEML_ASPECT)
 				vector.put(offset + this.vocabulary.get(e.getTimeMLAspect().toString()), 1.0);
