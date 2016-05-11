@@ -915,6 +915,7 @@ public class ConstructTempEval3 {
 		timeValueId++;
 		StoreReference ref = new StoreReference(storageName, TIME_VALUE_COLLECTION, "id", String.valueOf(timeValueId));
 		List<StoreReference> exprRefs = new ArrayList<>();
+		exprRefs.add(exprRef);
 		NormalizedTimeValue timeValue = new NormalizedTimeValue(dataTools,ref, ref.getIndexValue(0).toString(), value, exprRefs);
 		timeValues.put(docSpecId, new Pair<NormalizedTimeValue, List<StoreReference>>(timeValue, exprRefs));
 		
