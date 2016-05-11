@@ -16,7 +16,11 @@ public class DetReportingGovernor {
 		TokenSpan e1Span = e1.getTokenSpan();
 		TokenSpan e2Span = e2.getTokenSpan();
 		DocumentNLP document = e1.getTokenSpan().getDocument();
-					
+		
+		if (!e1Span.getDocument().getName().equals(e2Span.getDocument().getName()) 
+				|| e1Span.getSentenceIndex() != e2Span.getSentenceIndex())
+			return null;
+		
 		DependencyParse deps = document.getDependencyParse(e1Span.getSentenceIndex());
 		
 		EventMention eGov = null;
