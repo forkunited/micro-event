@@ -391,6 +391,8 @@ public class EventMention implements TLinkable, MentionArgumentable {
 					this.argumentReferences.add(new Pair<StoreReference, String>(ref, role));
 				}
 			}
+			
+			System.out.println("JSON Ref" + this.reference);
 		} catch (JSONException e) {
 			e.printStackTrace();
 			return false;
@@ -406,6 +408,7 @@ public class EventMention implements TLinkable, MentionArgumentable {
 
 	@Override
 	public StoreReference getStoreReference() {
+		System.out.println("Ref" + this.reference);
 		return this.reference;
 	}
 
