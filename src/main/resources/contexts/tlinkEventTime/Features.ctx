@@ -55,7 +55,7 @@ feature ftimePrep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence
 feature ftimeW2v = Word2Vec(tokenExtractor="Time", mode="VECTOR", fn=(${str} o ${head}));
 feature ftimeFunc = TimeExpressionAttribute(expressionExtractor="Time", attribute="TIMEML_DOCUMENT_FUNCTION");
 feature feventTimeToken = Conjunction(minFeatureOccurrence="2", features=(${feventToken}, ${ftimeToken}));
-feature ftokenPathET = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="BetweenEventTime, fn=${strDef});
+feature ftokenPathET = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="BetweenEventTime", fn=${strDef});
 feature fdepPathET = DependencyPath(minFeatureOccurrence="2", sourceTokenExtractor="Event", targetTokenExtractor="Time", useRelationTypes="true");
 feature fconPathET = ConstituencyPath(minFeatureOccurrence="2", sourceTokenExtractor="Event", targetTokenExtractor="Time", noLeaves="true");
 feature fconPathPosET = ConstituencyPath(minFeatureOccurrence="2", sourceTokenExtractor="Event", targetTokenExtractor="Time", noLeaves="false");
