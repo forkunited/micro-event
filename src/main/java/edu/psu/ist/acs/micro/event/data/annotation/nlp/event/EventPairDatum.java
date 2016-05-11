@@ -204,7 +204,7 @@ public class EventPairDatum<L> extends Datum<L> {
 			super(dataTools);
 			
 			this.addGenericFeature(new FeatureEventMentionAttribute<EventPairDatum<L>, L>());
-			
+		
 			this.addTokenSpanExtractor(new TokenSpanExtractor<EventPairDatum<L>, L>() {
 				@Override
 				public String toString() {
