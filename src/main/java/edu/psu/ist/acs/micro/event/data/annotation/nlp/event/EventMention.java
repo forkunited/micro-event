@@ -401,7 +401,6 @@ public class EventMention implements TLinkable, MentionArgumentable {
 
 	@Override
 	public StoredJSONSerializable makeInstance(StoreReference reference) {
-		System.out.println("Init ref" + reference);
 		return new EventMention(this.dataTools, reference);
 	}
 
