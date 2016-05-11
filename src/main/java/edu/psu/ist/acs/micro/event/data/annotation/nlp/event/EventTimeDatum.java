@@ -314,6 +314,7 @@ public class EventTimeDatum<L> extends Datum<L> {
 			});
 			
 			this.addGenericStructurizer(new StructurizerGraphEventTime<L>());
+			this.addGenericStructurizer(new StructurizerGraphEventTimeByDocument<L>());
 		}
 		
 		@Override

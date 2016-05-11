@@ -245,6 +245,7 @@ public class TimePairDatum<L> extends Datum<L> {
 			});
 			
 			this.addGenericStructurizer(new StructurizerGraphTimePair<L>());
+			this.addGenericStructurizer(new StructurizerGraphTimePairByDocument<L>());
 		}
 		
 		@Override

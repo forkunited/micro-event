@@ -362,6 +362,7 @@ public class EventPairDatum<L> extends Datum<L> {
 			});
 			
 			this.addGenericStructurizer(new StructurizerGraphEventPair<L>());
+			this.addGenericStructurizer(new StructurizerGraphEventPairByDocument<L>());
 		}
 		
 		@Override
