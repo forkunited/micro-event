@@ -253,20 +253,22 @@ public class DataSetBuilderEventTimeTLink extends DataSetBuilderDocumentFiltered
 	
 	private EventTimeDatum<TimeMLRelType> makeDatum(int id, TLink link, TimeMLRelType type) {
 		EventMention em = null;
-		NormalizedTimeValue t = null;
+		TimeExpression te = null;
 		if (link.getSource().getTLinkableType() == TLinkable.Type.EVENT) {
 			em = (EventMention)link.getSource();
-			t = ((TimeExpression)link.getTarget()).getValue();
+			te = ((TimeExpression)link.getTarget());
 		} else {
 			em = (EventMention)link.getTarget();
-			t = ((TimeExpression)link.getSource()).getValue();
+			te = ((TimeExpression)link.getSource());
 			type = TLink.getConverseTimeMLRelType(type);
 		}
 		
 		List<StoreReference> emRef = new ArrayList<>();
 		emRef.add(em.getStoreReference());
-		
-		
+	
+		List<StoreReference> teRef = new ArrayList<>();
+		teRef.add(te.getStoreReference());
+	
 		Event e = new Event(context.getDataTools(), 
 				 null, 
 				 em.getId(),
@@ -276,6 +278,13 @@ public class DataSetBuilderEventTimeTLink extends DataSetBuilderDocumentFiltered
 				 new ArrayList<Pair<StoreReference, String>>(),
 				 emRef);
 		
+	
+		NormalizedTimeValue t = new NormalizedTimeValue(context.getDataTools(), 
+				null, 
+				te.getId(),
+				te.getValue().toString(),
+				teRef);
+			
 		return new EventTimeDatum<TimeMLRelType>(
 				id, e, t, (labelMapping != null) ? labelMapping.map(type) : type);
 	}

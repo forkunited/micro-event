@@ -155,8 +155,26 @@ public class DataSetBuilderTimeTLink extends DataSetBuilderDocumentFiltered<Time
 		int i = idRange.getFirst();
 		for (Entry<Integer, TLink> entry : labeledLinks.entrySet()) {
 			TLink link = entry.getValue();
-			NormalizedTimeValue t1 = ((TimeExpression)link.getSource()).getValue();
-			NormalizedTimeValue t2 = ((TimeExpression)link.getTarget()).getValue();
+			TimeExpression te1 = (TimeExpression)link.getSource();
+			TimeExpression te2 = (TimeExpression)link.getTarget();
+			
+			List<StoreReference> te1Ref = new ArrayList<>();
+			te1Ref.add(te1.getStoreReference());
+		
+			List<StoreReference> te2Ref = new ArrayList<>();
+			te2Ref.add(te2.getStoreReference());
+		
+			NormalizedTimeValue t1 = new NormalizedTimeValue(context.getDataTools(), 
+					null, 
+					te1.getId(),
+					te1.getValue().toString(),
+					te1Ref);
+
+			NormalizedTimeValue t2 = new NormalizedTimeValue(context.getDataTools(), 
+					null, 
+					te2.getId(),
+					te2.getValue().toString(),
+					te2Ref);
 			
 			data.add(new TimePairDatum<TimeMLRelType>(
 					i, t1, t2, (labelMapping != null) ? labelMapping.map(entry.getValue().getTimeMLRelType()) : entry.getValue().getTimeMLRelType()));
@@ -241,8 +259,26 @@ public class DataSetBuilderTimeTLink extends DataSetBuilderDocumentFiltered<Time
 			i = idRange.getFirst();
 			for (Entry<String, TLink> entry : unlabeledLinks.entrySet()) {
 				TLink link = entry.getValue();
-				NormalizedTimeValue t1 = ((TimeExpression)link.getSource()).getValue();
-				NormalizedTimeValue t2 = ((TimeExpression)link.getTarget()).getValue();
+				TimeExpression te1 = (TimeExpression)link.getSource();
+				TimeExpression te2 = (TimeExpression)link.getTarget();
+				
+				List<StoreReference> te1Ref = new ArrayList<>();
+				te1Ref.add(te1.getStoreReference());
+			
+				List<StoreReference> te2Ref = new ArrayList<>();
+				te2Ref.add(te2.getStoreReference());
+			
+				NormalizedTimeValue t1 = new NormalizedTimeValue(context.getDataTools(), 
+						null, 
+						te1.getId(),
+						te1.getValue().toString(),
+						te1Ref);
+
+				NormalizedTimeValue t2 = new NormalizedTimeValue(context.getDataTools(), 
+						null, 
+						te2.getId(),
+						te2.getValue().toString(),
+						te2Ref);
 				
 				data.add(new TimePairDatum<TimeMLRelType>(i, t1, t2, null));
 				i++;
