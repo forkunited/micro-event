@@ -1,4 +1,4 @@
-classify_method timeTimeSieveUM = TimeTime();
+classify_method timeTimeSieveUM = Det(rule="TIME_TIME");
 classify_method wordNetSieveUM = Det(rule="WORD_NET");
 
 classify_method timeTime = LabelMapping(method=${timeTimeSieveUM}, labelMapping="TBD");

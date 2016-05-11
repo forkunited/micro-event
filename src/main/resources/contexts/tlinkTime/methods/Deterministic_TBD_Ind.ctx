@@ -1,4 +1,4 @@
-context modelsTimeTLinkDet = TLinkType(initScript="/tlinkTime/methods/Deterministic_TBD.ctx", initOnce="true", initOverrideByName="true");
+context modelsTimeTLinkDet = TimeTLink(initScript="/tlinkTime/methods/Deterministic_TBD.ctx", initOnce="true", initOverrideByName="true");
 
 classify_method timeTimeB = LabelMapping(method=${modelsTimeTLinkDet.timeTimeSieveUM}, labelMapping="OnlyB");
 classify_method wordNetB = LabelMapping(method=${modelsTimeTLinkDet.wordNetSieveUM}, labelMapping="OnlyB");

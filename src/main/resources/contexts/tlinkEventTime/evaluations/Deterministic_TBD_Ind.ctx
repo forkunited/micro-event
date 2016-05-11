@@ -1,5 +1,5 @@
-context trainDevTestDataEventTimeTLink = TLinkType(initScript="/tlinkEventTime/data/LoadTrainDevTest.ctx", initOnce="true", initOverrideByName="true");
-context modelsEventTimeTLinkDetInd = TLinkType(initScript="/tlinkEventTime/methods/Deterministic_TBD_Ind.ctx", initOnce="true", initOverrideByName="true");
+context trainDevTestDataEventTimeTLink = EventTimeTLink(initScript="/tlinkEventTime/data/LoadTrainDevTest.ctx", initOnce="true", initOverrideByName="true");
+context modelsEventTimeTLinkDetInd = EventTimeTLink(initScript="/tlinkEventTime/methods/Deterministic_TBD_Ind.ctx", initOnce="true", initOverrideByName="true");
 
 classify_eval devAdjETBPrecision = Precision(task=${trainDevTestDataEventTimeTLink.devTask}, method=${modelsEventTimeTLinkDetInd.adjETB}, mode="MICRO");
 classify_eval devAdjETBRecall = Recall(task=${trainDevTestDataEventTimeTLink.devTask}, method=${modelsEventTimeTLinkDetInd.adjETB}, mode="MICRO");
