@@ -145,7 +145,8 @@ public class MethodClassificationEventPairTLinkDet extends MethodClassification<
 				TimeMLRelType curRel = determineRelation(datum.getSource().getSomeMention(i), datum.getTarget().getSomeMention(j));
 				if (rel != null && curRel != null && curRel != rel)
 					return null;
-				rel = curRel;
+				if (curRel != null)
+					rel = curRel;
 			}
 		}
 		
