@@ -1,6 +1,6 @@
-value trainDocs="ace2005_docs";
-value devDocs="ace2005_docs";
-value testDocs="ace2005_docs";
+value trainDocs="ace_docs";
+value devDocs="ace_docs";
+value testDocs="ace_docs";
 value trainLabelMode="ONLY_LABELED";
 value devLabelMode="ONLY_LABELED";
 value testLabelMode="ONLY_LABELED";
