@@ -1,6 +1,6 @@
-context dataParamsEventCoref = EventCoref(initScript="/tlinkEvent/data/parameters/ACE2005.ctx", initOnce="true", initOverrideByName="true");
-context featureSetsEventCoref = EventCoref(initScript="/tlinkEvent/featureSets/Base.ctx", initOnce="true", initOverrideByName="true");
-context trainDevTestDataEventCoref = EventCoref(initScript="/tlinkEvent/data/LoadTrainDevTest.ctx", initOnce="true", initOverrideByName="true");
+context dataParamsEventCoref = EventCoref(initScript="/corefEvent/data/parameters/ACE2005.ctx", initOnce="true", initOverrideByName="true");
+context featureSetsEventCoref = EventCoref(initScript="/corefEvent/featureSets/Base.ctx", initOnce="true", initOverrideByName="true");
+context trainDevTestDataEventCoref = EventCoref(initScript="/corefEvent/data/LoadTrainDevTest.ctx", initOnce="true", initOverrideByName="true");
 
 data_features trainMatrix = DataFeatureMatrix(data=${trainDevTestDataEventCoref.trainData}, features=${featureSetsEventCoref.fs});
 

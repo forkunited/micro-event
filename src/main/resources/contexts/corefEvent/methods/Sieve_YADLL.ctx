@@ -3,7 +3,7 @@ context modelsEventCorefDet = EventCoref(initScript="/corefEvent/methods/Determi
 context modelsEventCorefYadllCT = EventCoref(initScript="/corefEvent/methods/YADLL_CTClone.ctx", initOnce="true", initOverrideByName="true");
 context evalEventCorefYadllCT = EventCoref(initScript="/corefEvent/evaluations/YADLL_CTClone.ctx", initOnce="true", initOverrideByName="true");
 context evalEventCorefDet = EventCoref(initScript="/corefEvent/evaluations/Deterministic.ctx", initOnce="true", initOverrideByName="true");
-context trainDevTestDataEventCoref = EventTLink(initScript="/tlinkEvent/data/LoadTrainDevTest.ctx", initOnce="true", initOverrideByName="true");
+context trainDevTestDataEventCoref = EventCoref(initScript="/corefEvent/data/LoadTrainDevTest.ctx", initOnce="true", initOverrideByName="true");
 
 structure_fn graphPaths2 = GraphPaths(length="2");
 structure_fn greedyTlinkTransitiveRules = GreedyStructureRules(rules=(${rulesEventCorefTransitive.rules}), 
