@@ -1,0 +1,7 @@
+context trainDevTestDataEventCoref = EventTLink(initScript="/corefEvent/data/LoadTrainDevTest.ctx", initOnce="true", initOverrideByName="true");
+context modelsEventCorefDet = EventTLink(initScript="/corefEvent/methods/Deterministic.ctx", initOnce="true", initOverrideByName="true");
+
+classify_eval devAllNotCorefPrecision = Precision(task=${trainDevTestDataEventCoref.devTask}, method=${modelsEventCorefDet.allNotCoref}, mode="MICRO");
+classify_eval devAllNotCorefRecall = Recall(task=${trainDevTestDataEventCoref.devTask}, method=${modelsEventCorefDet.allNotCoref}, mode="MICRO");
+classify_eval testAllNotCorefPrecision = Precision(task=${trainDevTestDataEventCoref.testTask}, method=${modelsEventCorefDet.allNotCoref}, mode="MICRO");
+classify_eval testAllNotCorefRecall = Recall(task=${trainDevTestDataEventCoref.testTask}, method=${modelsEventCorefDet.allNotCoref}, mode="MICRO");
