@@ -20,6 +20,6 @@ multi_classify_method sieve = Sieve(methods=(${modelsEventCorefYadllCT.yadllCore
                                                    ${trainDevTestDataEventCoref.docStructConserve},
                                                    ${trainDevTestDataEventCoref.docStructConserve},
                                                    ${trainDevTestDataEventCoref.docStructConserve},
-                                                   ${trainDevTestDataEventCoref.allNotCoref}
+                                                   ${trainDevTestDataEventCoref.docStructConserve}
                                                    ),
                                     structureTransformFn=${greedyTlinkTransitiveRules});
