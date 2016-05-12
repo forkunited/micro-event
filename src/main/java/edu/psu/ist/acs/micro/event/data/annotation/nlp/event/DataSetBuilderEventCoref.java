@@ -43,18 +43,26 @@ public class DataSetBuilderEventCoref extends DataSetBuilderDocumentFiltered<Eve
 	public DataSet<EventPairDatum<CorefRelType>, CorefRelType> build() {
 		DataSet<EventPairDatum<CorefRelType>, CorefRelType> data = new DataSet<EventPairDatum<CorefRelType>, CorefRelType>(this.context.getDatumTools());
 
-		PairFn<Event, Triple<Event, Event, CorefRelType>> fn = new PairFn<Event, Triple<Event, Event, CorefRelType>>() {
+		PairFn<Pair<Event, Event>, Triple<Event, Event, CorefRelType>> fn = new PairFn<Pair<Event, Event>, Triple<Event, Event, CorefRelType>>() {
 			@Override
-			public Triple<Event, Event, CorefRelType> apply(Event event1, Event event2) {
-				if (event1 == null || event2 == null) {
+			public Triple<Event, Event, CorefRelType> apply(Pair<Event, Event> singleActualEvent1, Pair<Event, Event> singleActualEvent2) {
+				Event singleEvent1 = singleActualEvent1.getFirst();
+				Event singleEvent2 = singleActualEvent2.getFirst();
+				Event actualEvent1 = singleActualEvent1.getSecond();
+				Event actualEvent2 = singleActualEvent2.getSecond();
+				
+				if (actualEvent1 == null || actualEvent2 == null) {
 					if (labelMode == LabelMode.ONLY_LABELED)
 						return null;
-					return new Triple<Event, Event, CorefRelType>(event1, event2, null);
+					return new Triple<Event, Event, CorefRelType>(singleEvent1, singleEvent2, null);
 				} else {
 					if (labelMode == LabelMode.ONLY_UNLABELED)
 						return null;
-					return new Triple<Event, Event, CorefRelType>(event1, event2, 
-							(event1.getId().equals(event2.getId()) ? CorefRelType.COREF : CorefRelType.NOT_COREF));
+					else if (labelMode == LabelMode.ALL_AS_UNLABELED)
+						return new Triple<Event, Event, CorefRelType>(singleEvent1, singleEvent2, null);
+					else 
+						return new Triple<Event, Event, CorefRelType>(singleEvent1, singleEvent2, 
+							(actualEvent1.getId().equals(actualEvent2.getId()) ? CorefRelType.COREF : CorefRelType.NOT_COREF));
 				}
 			}
 		};
@@ -73,7 +81,7 @@ public class DataSetBuilderEventCoref extends DataSetBuilderDocumentFiltered<Eve
 						DocumentNLP doc1 = docs.getDocumentByName(docName1, true);
 						
 						List<Pair<TokenSpan, StoreReference>> spanMentions1 = doc1.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION);
-						List<Event> events1 = new ArrayList<>();
+						List<Pair<Event, Event>> singleActualEvents1 = new ArrayList<>();
 						for (Pair<TokenSpan, StoreReference> spanMention : spanMentions1) {
 							EventMention mention = context.getDataTools().getStoredItemSetManager().resolveStoreReference(spanMention.getSecond(), true);
 							List<StoreReference> singleMentions = new ArrayList<>();
@@ -87,10 +95,12 @@ public class DataSetBuilderEventCoref extends DataSetBuilderDocumentFiltered<Eve
 															 new ArrayList<Pair<StoreReference, String>>(),
 															 singleMentions);
 															 
-							events1.add(singletonEvent);
+							Event actualEvent = mention.getEvent();
+							
+							singleActualEvents1.add(new Pair<Event, Event>(singletonEvent, actualEvent));
 						}
 						
-						cDatums = runAllPairs(events1, fn, cDatums, false);
+						cDatums = runAllPairs(singleActualEvents1, fn, cDatums, false);
 						
 						doneDocs.add(docName1);
 						for (String docName2 : item.getValue()) {
@@ -99,7 +109,7 @@ public class DataSetBuilderEventCoref extends DataSetBuilderDocumentFiltered<Eve
 							
 							DocumentNLP doc2 = docs.getDocumentByName(docName2, true);
 							List<Pair<TokenSpan, StoreReference>> spanMentions2 = doc2.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION);
-							List<Event> events2 = new ArrayList<>();
+							List<Pair<Event, Event>> singleActualEvents2 = new ArrayList<>();
 							for (Pair<TokenSpan, StoreReference> spanMention : spanMentions2) {
 								EventMention mention = context.getDataTools().getStoredItemSetManager().resolveStoreReference(spanMention.getSecond(), true);
 								List<StoreReference> singleMentions = new ArrayList<>();
@@ -112,11 +122,13 @@ public class DataSetBuilderEventCoref extends DataSetBuilderDocumentFiltered<Eve
 																 mention.getEvent().getACESubtype(),
 																 new ArrayList<Pair<StoreReference, String>>(),
 																 singleMentions);
-																 
-								events2.add(singletonEvent);
+								Event actualEvent = mention.getEvent();
+								
+								
+								singleActualEvents2.add(new Pair<Event, Event>(singletonEvent, actualEvent));
 							}
 							
-							cDatums = runAllPairs(events1, events2, fn, cDatums); 
+							cDatums = runAllPairs(singleActualEvents1, singleActualEvents2, fn, cDatums); 
 						}
 					}
 					

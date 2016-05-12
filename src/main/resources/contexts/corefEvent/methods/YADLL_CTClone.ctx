@@ -1,0 +1,10 @@
+context modelsEventCorefYadll = EventCoref(initScript="/corefEvent/methods/YADLL_LR_Simple.ctx", initOnce="true", initOverrideByName="true");
+
+classify_method yadllCoref = LabelMapping(method=${modelsEventCorefYadll.yadll}, labelMapping="OnlyCoref");
+
+classify_method yadllCoref50 = CloneClassifyMethod(method=${yadllCoref}, classificationThreshold=".50");
+classify_method yadllCoref60 = CloneClassifyMethod(method=${yadllCoref}, classificationThreshold=".60");
+classify_method yadllCoref70 = CloneClassifyMethod(method=${yadllCoref}, classificationThreshold=".70");
+classify_method yadllCoref80 = CloneClassifyMethod(method=${yadllCoref}, classificationThreshold=".80");
+classify_method yadllCoref90 = CloneClassifyMethod(method=${yadllCoref}, classificationThreshold=".90");
+

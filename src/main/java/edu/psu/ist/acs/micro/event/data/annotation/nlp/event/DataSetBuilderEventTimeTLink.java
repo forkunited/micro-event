@@ -156,7 +156,10 @@ public class DataSetBuilderEventTimeTLink extends DataSetBuilderDocumentFiltered
 		int i = idRange.getFirst();
 		for (Entry<Integer, TLink> entry : labeledLinks.entrySet()) {
 			TLink link = entry.getValue();
-			data.add(makeDatum(i, link, entry.getValue().getTimeMLRelType()));			
+			if (labelMode != LabelMode.ALL_AS_UNLABELED)
+				data.add(makeDatum(i, link, entry.getValue().getTimeMLRelType()));	
+			else
+				data.add(makeDatum(i, link, null));
 			i++;
 		}
 		

@@ -176,8 +176,13 @@ public class DataSetBuilderTimeTLink extends DataSetBuilderDocumentFiltered<Time
 					te2.getValue().toString(),
 					te2Ref);
 			
-			data.add(new TimePairDatum<TimeMLRelType>(
+			if (this.labelMode != LabelMode.ALL_AS_UNLABELED)
+				data.add(new TimePairDatum<TimeMLRelType>(
 					i, t1, t2, (labelMapping != null) ? labelMapping.map(entry.getValue().getTimeMLRelType()) : entry.getValue().getTimeMLRelType()));
+			else
+				data.add(new TimePairDatum<TimeMLRelType>(
+						i, t1, t2, null));
+
 			i++;
 		}
 		

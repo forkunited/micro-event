@@ -152,8 +152,12 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 		Pair<Integer, Integer> idRange = this.context.getDataTools().getIncrementIdRange(labeledLinks.size());
 		int i = idRange.getFirst();
 		for (Entry<Integer, TLink> entry : labeledLinks.entrySet()) {
-			data.add(new TLinkDatum<TimeMLRelType>(
+			if (this.labelMode != LabelMode.ALL_AS_UNLABELED)
+				data.add(new TLinkDatum<TimeMLRelType>(
 					i,  entry.getValue(), (labelMapping != null) ? labelMapping.map(entry.getValue().getTimeMLRelType()) : entry.getValue().getTimeMLRelType()));
+			else
+				data.add(new TLinkDatum<TimeMLRelType>(i,  entry.getValue(), null));
+
 			i++;
 		}
 		

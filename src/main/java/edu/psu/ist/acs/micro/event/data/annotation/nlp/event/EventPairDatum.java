@@ -63,6 +63,11 @@ public class EventPairDatum<L> extends Datum<L> {
 		
 		tools.addGenericDataSetBuilder(new DataSetBuilderEventCoref());
 		
+		tools.addLabelMapping(new LabelMapping<CorefRelType>() {
+			public CorefRelType map(CorefRelType label) { if (label == CorefRelType.COREF) return label; else return null; }
+			public String toString() { return "OnlyCoref"; }
+		});
+		
 		return tools;
 	}
 	

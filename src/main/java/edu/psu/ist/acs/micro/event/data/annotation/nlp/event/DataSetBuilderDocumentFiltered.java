@@ -36,6 +36,7 @@ public abstract class DataSetBuilderDocumentFiltered<D extends Datum<L>, L> exte
 	public enum LabelMode {
 		ONLY_LABELED,
 		ONLY_UNLABELED,
+		ALL_AS_UNLABELED,
 		ALL
 	}
 	

@@ -1,5 +1,5 @@
-context rulesTlinkTypeTransitive = EventTLink(initScript="/tlinkType/rules/Transitive.ctx", initOnce="true");
-context rulesTlinkTypeConverse = EventTLink(initScript="/tlinkType/rules/Converse.ctx", initOnce="true");
+context rulesTlinkTypeTransitive = EventTLink(initScript="/tlinkJoint/rules/Transitive.ctx", initOnce="true");
+context rulesTlinkTypeConverse = EventTLink(initScript="/tlinkJoint/rules/Converse.ctx", initOnce="true");
 context modelsEventTLinkDet = EventTLink(initScript="/tlinkEvent/methods/Deterministic_TBD.ctx", initOnce="true", initOverrideByName="true");
 context modelsEventTLinkYadll = EventTLink(initScript="/tlinkEvent/methods/YADLL_LR_CAEVO_Simple.ctx", initOnce="true", initOverrideByName="true");
 context modelsEventTimeTLinkDet = EventTimeTLink(initScript="/tlinkEventTime/methods/Deterministic_TBD.ctx", initOnce="true", initOverrideByName="true");

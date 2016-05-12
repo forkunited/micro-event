@@ -22,6 +22,7 @@ import edu.cmu.ml.rtw.generic.util.ThreadMapper.Fn;
 import edu.cmu.ml.rtw.generic.util.Triple;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
 
+// FIXME This needs to be updated to handle ALL_AS_UNLABELED label mode
 public class DataSetBuilderEventMentionCoref extends DataSetBuilderDocumentFiltered<EventMentionPairDatum<CorefRelType>, CorefRelType> {
 	//private String[] parameterNames = {  };
 	

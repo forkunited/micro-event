@@ -182,8 +182,13 @@ public class DataSetBuilderEventTLink extends DataSetBuilderDocumentFiltered<Eve
 					 new ArrayList<Pair<StoreReference, String>>(),
 					 em2Ref);
 			
-			data.add(new EventPairDatum<TimeMLRelType>(
+			if (this.labelMode != LabelMode.ALL_AS_UNLABELED)
+				data.add(new EventPairDatum<TimeMLRelType>(
 					i, e1, e2, (labelMapping != null) ? labelMapping.map(entry.getValue().getTimeMLRelType()) : entry.getValue().getTimeMLRelType()));
+			else
+				data.add(new EventPairDatum<TimeMLRelType>(
+						i, e1, e2, null));
+
 			i++;
 		}
 		

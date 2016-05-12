@@ -1,0 +1,40 @@
+value strEvals = OutputStrings(id=${resultsId}, storage="EventString", collection="ExperimentEvaluationOutput", 
+                 refs=
+                 (
+
+                  ${evalSieve.modelsEventCorefSieve.evalEventCorefDet.devAllNotCorefPrecision}, 
+                  ${evalSieve.modelsEventCorefSieve.evalEventCorefDet.devAllNotCorefRecall}, 
+                  ${evalSieve.modelsEventCorefSieve.evalEventCorefYadllCT.devYadllCoref50Precision}, 
+                  ${evalSieve.modelsEventCorefSieve.evalEventCorefYadllCT.devYadllCoref50Recall}, 
+                  ${evalSieve.modelsEventCorefSieve.evalEventCorefYadllCT.devYadllCoref60Precision}, 
+                  ${evalSieve.modelsEventCorefSieve.evalEventCorefYadllCT.devYadllCoref60Recall}, 
+             	  ${evalSieve.modelsEventCorefSieve.evalEventCorefYadllCT.devYadllCoref70Precision}, 
+                  ${evalSieve.modelsEventCorefSieve.evalEventCorefYadllCT.devYadllCoref70Recall}, 
+                  ${evalSieve.modelsEventCorefSieve.evalEventCorefYadllCT.devYadllCoref80Precision}, 
+                  ${evalSieve.modelsEventCorefSieve.evalEventCorefYadllCT.devYadllCoref80Recall},     
+                  ${evalSieve.modelsEventCorefSieve.evalEventCorefYadllCT.devYadllCoref90Precision}, 
+                  ${evalSieve.modelsEventCorefSieve.evalEventCorefYadllCT.devYadllCoref90Recall},
+                  ${evalSieve.modelsEventCorefSieve.evalEventCorefYadllCT.devYadllPrecision}, 
+                  ${evalSieve.modelsEventCorefSieve.evalEventCorefYadllCT.devYadllRecall},
+	              
+	              ${evalSieve.multiDevPrecision}, 
+	              ${evalSieve.multiDevRecall},   
+	                 
+                  ${evalSieve.modelsEventCorefSieve.evalEventCorefDet.testAllNotCorefPrecision}, 
+                  ${evalSieve.modelsEventCorefSieve.evalEventCorefDet.testAllNotCorefRecall}, 
+                  ${evalSieve.modelsEventCorefSieve.evalEventCorefYadllCT.testYadllCoref50Precision}, 
+                  ${evalSieve.modelsEventCorefSieve.evalEventCorefYadllCT.testYadllCoref50Recall}, 
+                  ${evalSieve.modelsEventCorefSieve.evalEventCorefYadllCT.testYadllCoref60Precision}, 
+                  ${evalSieve.modelsEventCorefSieve.evalEventCorefYadllCT.testYadllCoref60Recall}, 
+             	  ${evalSieve.modelsEventCorefSieve.evalEventCorefYadllCT.testYadllCoref70Precision}, 
+                  ${evalSieve.modelsEventCorefSieve.evalEventCorefYadllCT.testYadllCoref70Recall}, 
+                  ${evalSieve.modelsEventCorefSieve.evalEventCorefYadllCT.testYadllCoref80Precision}, 
+                  ${evalSieve.modelsEventCorefSieve.evalEventCorefYadllCT.testYadllCoref80Recall},     
+                  ${evalSieve.modelsEventCorefSieve.evalEventCorefYadllCT.testYadllCoref90Precision}, 
+                  ${evalSieve.modelsEventCorefSieve.evalEventCorefYadllCT.testYadllCoref90Recall},
+                  ${evalSieve.modelsEventCorefSieve.evalEventCorefYadllCT.testYadllPrecision}, 
+                  ${evalSieve.modelsEventCorefSieve.evalEventCorefYadllCT.testYadllRecall},
+	              
+	              ${evalSieve.multiTestPrecision}, 
+	              ${evalSieve.multiTestRecall}
+                 )); 
