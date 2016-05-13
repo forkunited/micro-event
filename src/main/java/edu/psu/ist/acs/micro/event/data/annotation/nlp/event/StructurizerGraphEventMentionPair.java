@@ -1,7 +1,9 @@
 package edu.psu.ist.acs.micro.event.data.annotation.nlp.event;
 
 import java.util.List;
+import java.util.Map;
 
+import edu.cmu.ml.rtw.generic.data.annotation.DataSet;
 import edu.cmu.ml.rtw.generic.data.annotation.DatumContext;
 import edu.cmu.ml.rtw.generic.data.annotation.Datum.Tools.Structurizer;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.StructurizerGraph;
@@ -61,5 +63,10 @@ public class StructurizerGraphEventMentionPair<L> extends StructurizerGraph<Even
 	@Override
 	public String getGenericName() {
 		return "GraphEventMentionPair";
+	}
+
+	@Override
+	public DataSet<EventMentionPairDatum<L>, L> makeData(DataSet<EventMentionPairDatum<L>, L> existingData, Map<String, WeightedStructureGraph> structures) {
+		throw new UnsupportedOperationException();
 	}
 }
