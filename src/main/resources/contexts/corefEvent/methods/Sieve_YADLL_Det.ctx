@@ -11,10 +11,10 @@ structure_fn greedyTlinkTransitiveRules = GreedyStructureRules(rules=(${rulesEve
 
 multi_classify_method sieve = Sieve(methods=(${modelsEventCorefDet.wordNetSynsetSieve},
                                              ${modelsEventCorefDet.wordNetLemmaSieve},
-                                             ${modelsEventCorefYadllCT.yadllCoref90}, 
-											 ${modelsEventCorefYadllCT.yadllCoref80}, 
-                                             ${modelsEventCorefYadllCT.yadllCoref70},
+                                             ${modelsEventCorefYadllCT.yadllCoref70}, 
+											 ${modelsEventCorefYadllCT.yadllCoref65}, 
                                              ${modelsEventCorefYadllCT.yadllCoref60},
+                                             ${modelsEventCorefYadllCT.yadllCoref55},
                                              ${modelsEventCorefYadllCT.yadllCoref50},
                                              ${modelsEventCorefDet.allNotCoref}),                                   
                                     structurizers=(${trainDevTestDataEventCoref.docStructConserve}, 
@@ -26,4 +26,12 @@ multi_classify_method sieve = Sieve(methods=(${modelsEventCorefDet.wordNetSynset
                                                    ${trainDevTestDataEventCoref.docStructConserve},
                                                    ${trainDevTestDataEventCoref.docStructConserve}
                                                    ),
+                                    permutationMeasures=(${evalEventCorefDet.devWordNetSynsetPrecision}, 
+                                                         ${evalEventCorefDet.devWordNetLemmaPrecision}, 
+                                                         ${evalEventCorefYadllCT.devYadllCoref70Precision}, 
+                                                         ${evalEventCorefYadllCT.devYadllCoref65Precision}, 
+                                                         ${evalEventCorefYadllCT.devYadllCoref60Precision}, 
+                                                         ${evalEventCorefYadllCT.devYadllCoref55Precision}, 
+                                                         ${evalEventCorefYadllCT.devYadllCoref50Precision},
+                                                         ${evalEventCorefDet.devZero}),
                                     structureTransformFn=${greedyTlinkTransitiveRules});

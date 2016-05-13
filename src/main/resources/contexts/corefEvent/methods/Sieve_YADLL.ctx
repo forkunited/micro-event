@@ -9,10 +9,10 @@ structure_fn graphPaths2 = GraphPaths(length="2");
 structure_fn greedyTlinkTransitiveRules = GreedyStructureRules(rules=(${rulesEventCorefTransitive.rules}), 
                                                                splitFns=(${graphPaths2}));
 
-multi_classify_method sieve = Sieve(methods=(${modelsEventCorefYadllCT.yadllCoref90}, 
-											 ${modelsEventCorefYadllCT.yadllCoref80}, 
-                                             ${modelsEventCorefYadllCT.yadllCoref70},
+multi_classify_method sieve = Sieve(methods=(${modelsEventCorefYadllCT.yadllCoref70}, 
+											 ${modelsEventCorefYadllCT.yadllCoref65}, 
                                              ${modelsEventCorefYadllCT.yadllCoref60},
+                                             ${modelsEventCorefYadllCT.yadllCoref55},
                                              ${modelsEventCorefYadllCT.yadllCoref50},
                                              ${modelsEventCorefDet.allNotCoref}),                                   
                                     structurizers=(${trainDevTestDataEventCoref.docStructConserve}, 
@@ -22,4 +22,10 @@ multi_classify_method sieve = Sieve(methods=(${modelsEventCorefYadllCT.yadllCore
                                                    ${trainDevTestDataEventCoref.docStructConserve},
                                                    ${trainDevTestDataEventCoref.docStructConserve}
                                                    ),
+                                    permutationMeasures=(${evalEventCorefYadllCT.devYadllCoref70Precision}, 
+                                                         ${evalEventCorefYadllCT.devYadllCoref65Precision}, 
+                                                         ${evalEventCorefYadllCT.devYadllCoref60Precision}, 
+                                                         ${evalEventCorefYadllCT.devYadllCoref55Precision}, 
+                                                         ${evalEventCorefYadllCT.devYadllCoref50Precision},
+                                                         ${evalEventCorefDet.devZero}),
                                     structureTransformFn=${greedyTlinkTransitiveRules});

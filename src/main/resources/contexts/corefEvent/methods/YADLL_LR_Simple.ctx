@@ -20,5 +20,5 @@ model yadllModel=YADLL(numEpochs="40", stepSize=".5",
 evaluation acc=Accuracy();
 
 classify_method yadllUnfiltered = SupervisedModel(model=${yadllModel}, data=${trainMatrix}, trainEvaluation=${acc});
-classify_method yadllUnfilteredP = CloneClassifyMethod(method=${yadllUnfiltered}, numEpochs="1000");
+classify_method yadllUnfilteredP = CloneClassifyMethod(method=${yadllUnfiltered}, numEpochs="2000");
 classify_method yadll = InitClassifyMethod(devData=${trainDevTestDataEventCoref.devData}, method=${yadllUnfilteredP});

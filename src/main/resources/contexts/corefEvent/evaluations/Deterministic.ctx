@@ -15,3 +15,5 @@ classify_eval devAllNotCorefPrecision = Precision(task=${trainDevTestDataEventCo
 classify_eval devAllNotCorefRecall = Recall(task=${trainDevTestDataEventCoref.devTask}, method=${modelsEventCorefDet.allNotCoref}, mode="MICRO");
 classify_eval testAllNotCorefPrecision = Precision(task=${trainDevTestDataEventCoref.testTask}, method=${modelsEventCorefDet.allNotCoref}, mode="MICRO");
 classify_eval testAllNotCorefRecall = Recall(task=${trainDevTestDataEventCoref.testTask}, method=${modelsEventCorefDet.allNotCoref}, mode="MICRO");
+
+classify_eval devZero = Constant(value="0.0");

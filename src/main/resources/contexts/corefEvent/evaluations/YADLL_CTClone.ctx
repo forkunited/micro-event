@@ -6,25 +6,25 @@ classify_eval devYadllCoref50Recall = Recall(task=${trainDevTestDataEventCoref.d
 classify_eval testYadllCoref50Precision = Precision(task=${trainDevTestDataEventCoref.testTask}, method=${modelsEventCorefYadllCT.yadllCoref50}, mode="MICRO", filterLabel="COREF");
 classify_eval testYadllCoref50Recall = Recall(task=${trainDevTestDataEventCoref.testTask}, method=${modelsEventCorefYadllCT.yadllCoref50}, mode="MICRO", filterLabel="COREF");
 
+classify_eval devYadllCoref55Precision = Precision(task=${trainDevTestDataEventCoref.devTask}, method=${modelsEventCorefYadllCT.yadllCoref55}, mode="MICRO", filterLabel="COREF");
+classify_eval devYadllCoref55Recall = Recall(task=${trainDevTestDataEventCoref.devTask}, method=${modelsEventCorefYadllCT.yadllCoref55}, mode="MICRO", filterLabel="COREF");
+classify_eval testYadllCoref55Precision = Precision(task=${trainDevTestDataEventCoref.testTask}, method=${modelsEventCorefYadllCT.yadllCoref55}, mode="MICRO", filterLabel="COREF");
+classify_eval testYadllCoref55Recall = Recall(task=${trainDevTestDataEventCoref.testTask}, method=${modelsEventCorefYadllCT.yadllCoref55}, mode="MICRO", filterLabel="COREF");
+
 classify_eval devYadllCoref60Precision = Precision(task=${trainDevTestDataEventCoref.devTask}, method=${modelsEventCorefYadllCT.yadllCoref60}, mode="MICRO", filterLabel="COREF");
 classify_eval devYadllCoref60Recall = Recall(task=${trainDevTestDataEventCoref.devTask}, method=${modelsEventCorefYadllCT.yadllCoref60}, mode="MICRO", filterLabel="COREF");
 classify_eval testYadllCoref60Precision = Precision(task=${trainDevTestDataEventCoref.testTask}, method=${modelsEventCorefYadllCT.yadllCoref60}, mode="MICRO", filterLabel="COREF");
 classify_eval testYadllCoref60Recall = Recall(task=${trainDevTestDataEventCoref.testTask}, method=${modelsEventCorefYadllCT.yadllCoref60}, mode="MICRO", filterLabel="COREF");
 
+classify_eval devYadllCoref65Precision = Precision(task=${trainDevTestDataEventCoref.devTask}, method=${modelsEventCorefYadllCT.yadllCoref65}, mode="MICRO", filterLabel="COREF");
+classify_eval devYadllCoref65Recall = Recall(task=${trainDevTestDataEventCoref.devTask}, method=${modelsEventCorefYadllCT.yadllCoref65}, mode="MICRO", filterLabel="COREF");
+classify_eval testYadllCoref65Precision = Precision(task=${trainDevTestDataEventCoref.testTask}, method=${modelsEventCorefYadllCT.yadllCoref65}, mode="MICRO", filterLabel="COREF");
+classify_eval testYadllCoref65Recall = Recall(task=${trainDevTestDataEventCoref.testTask}, method=${modelsEventCorefYadllCT.yadllCoref65}, mode="MICRO", filterLabel="COREF");
+
 classify_eval devYadllCoref70Precision = Precision(task=${trainDevTestDataEventCoref.devTask}, method=${modelsEventCorefYadllCT.yadllCoref70}, mode="MICRO", filterLabel="COREF");
 classify_eval devYadllCoref70Recall = Recall(task=${trainDevTestDataEventCoref.devTask}, method=${modelsEventCorefYadllCT.yadllCoref70}, mode="MICRO", filterLabel="COREF");
 classify_eval testYadllCoref70Precision = Precision(task=${trainDevTestDataEventCoref.testTask}, method=${modelsEventCorefYadllCT.yadllCoref70}, mode="MICRO", filterLabel="COREF");
 classify_eval testYadllCoref70Recall = Recall(task=${trainDevTestDataEventCoref.testTask}, method=${modelsEventCorefYadllCT.yadllCoref70}, mode="MICRO", filterLabel="COREF");
-
-classify_eval devYadllCoref80Precision = Precision(task=${trainDevTestDataEventCoref.devTask}, method=${modelsEventCorefYadllCT.yadllCoref80}, mode="MICRO", filterLabel="COREF");
-classify_eval devYadllCoref80Recall = Recall(task=${trainDevTestDataEventCoref.devTask}, method=${modelsEventCorefYadllCT.yadllCoref80}, mode="MICRO", filterLabel="COREF");
-classify_eval testYadllCoref80Precision = Precision(task=${trainDevTestDataEventCoref.testTask}, method=${modelsEventCorefYadllCT.yadllCoref80}, mode="MICRO", filterLabel="COREF");
-classify_eval testYadllCoref80Recall = Recall(task=${trainDevTestDataEventCoref.testTask}, method=${modelsEventCorefYadllCT.yadllCoref80}, mode="MICRO", filterLabel="COREF");
-
-classify_eval devYadllCoref90Precision = Precision(task=${trainDevTestDataEventCoref.devTask}, method=${modelsEventCorefYadllCT.yadllCoref90}, mode="MICRO", filterLabel="COREF");
-classify_eval devYadllCoref90Recall = Recall(task=${trainDevTestDataEventCoref.devTask}, method=${modelsEventCorefYadllCT.yadllCoref90}, mode="MICRO", filterLabel="COREF");
-classify_eval testYadllCoref90Precision = Precision(task=${trainDevTestDataEventCoref.testTask}, method=${modelsEventCorefYadllCT.yadllCoref90}, mode="MICRO", filterLabel="COREF");
-classify_eval testYadllCoref90Recall = Recall(task=${trainDevTestDataEventCoref.testTask}, method=${modelsEventCorefYadllCT.yadllCoref90}, mode="MICRO", filterLabel="COREF");
 
 classify_eval devYadllPrecision = Precision(task=${trainDevTestDataEventCoref.devTask}, method=${modelsEventCorefYadllCT.modelsEventCorefYadll.yadll}, mode="MICRO", filterLabel="COREF");
 classify_eval devYadllRecall = Recall(task=${trainDevTestDataEventCoref.devTask}, method=${modelsEventCorefYadllCT.modelsEventCorefYadll.yadll}, mode="MICRO", filterLabel="COREF");
