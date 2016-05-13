@@ -6,9 +6,13 @@ import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.WordNet;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.CorefRelType;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention.TimeMLClass;
 
 public class DetWordNetSynset {
 	public static CorefRelType determineRelation(EventMention e1, EventMention e2, WordNet wordNet) {
+		if (e1.getTimeMLClass() == TimeMLClass.REPORTING || e2.getTimeMLClass() == TimeMLClass.REPORTING)
+			return null;
+		
 		TokenSpan s1 = e1.getTokenSpan();
 		TokenSpan s2 = e2.getTokenSpan();
 		
