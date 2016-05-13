@@ -103,7 +103,7 @@ public class StructurizerGraphEventTime<L> extends StructurizerGraph<EventTimeDa
 		}
 		
 		WeightedStructureGraph graph = structures.get(structureId);
-		if (!graph.hasNode(oldEvent.getId())) {
+		if (!graph.hasEdgeFrom(oldEvent.getId())) {
 			newEvents.put(oldEvent.getId(), oldEvent);
 			return oldEvent;
 		}

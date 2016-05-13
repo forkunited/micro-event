@@ -105,7 +105,7 @@ public class StructurizerGraphEventPair<L> extends StructurizerGraph<EventPairDa
 		}
 		
 		WeightedStructureGraph graph = structures.get(structureId);
-		if (!graph.hasNode(oldEvent.getId())) {
+		if (!graph.hasEdgeFrom(oldEvent.getId())) {
 			newEvents.put(oldEvent.getId(), oldEvent);
 			return oldEvent;
 		}
