@@ -16,6 +16,7 @@ import edu.cmu.ml.rtw.generic.structure.WeightedStructureRelationBinary;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType;
 import edu.psu.ist.acs.micro.event.data.feature.FeatureEventMentionAttribute;
+import edu.psu.ist.acs.micro.event.task.classify.MethodClassificationEventPairCorefDet;
 import edu.psu.ist.acs.micro.event.task.classify.MethodClassificationEventPairTLinkDet;
 
 public class EventPairDatum<L> extends Datum<L> {
@@ -60,6 +61,8 @@ public class EventPairDatum<L> extends Datum<L> {
 	
 		for (CorefRelType relType : CorefRelType.values())
 			dataTools.addGenericWeightedStructure(new WeightedStructureRelationBinary(relType.toString(), false));
+		
+		tools.addGenericClassifyMethod(new MethodClassificationEventPairCorefDet());
 		
 		tools.addGenericDataSetBuilder(new DataSetBuilderEventCoref());
 		
