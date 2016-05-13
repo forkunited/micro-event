@@ -32,6 +32,8 @@ value strEvals = OutputStrings(id=${resultsId}, storage="EventString", collectio
                   ${evalSieve.modelsJointTLinkSieve.evalEventTimeTLinkYadll.devYadllDCTRecall},
                   ${evalSieve.modelsJointTLinkSieve.evalEventTLinkYadll.devYadllWSPrecision}, 
                   ${evalSieve.modelsJointTLinkSieve.evalEventTLinkYadll.devYadllWSRecall},
+	              ${evalSieve.modelsJointTLinkSieve.evalEventTLinkYadll.devYadllEEDPrecision}, 
+                  ${evalSieve.modelsJointTLinkSieve.evalEventTLinkYadll.devYadllEEDRecall},
 	              
 	              ${evalSieve.multiDevPrecision}, 
 	              ${evalSieve.multiDevRecall},   
@@ -67,6 +69,8 @@ value strEvals = OutputStrings(id=${resultsId}, storage="EventString", collectio
                   ${evalSieve.modelsJointTLinkSieve.evalEventTimeTLinkYadll.testYadllDCTRecall},
                   ${evalSieve.modelsJointTLinkSieve.evalEventTLinkYadll.testYadllWSPrecision}, 
                   ${evalSieve.modelsJointTLinkSieve.evalEventTLinkYadll.testYadllWSRecall},
+                  ${evalSieve.modelsJointTLinkSieve.evalEventTLinkYadll.testYadllEEDPrecision}, 
+                  ${evalSieve.modelsJointTLinkSieve.evalEventTLinkYadll.testYadllEEDRecall},
                 
 	              ${evalSieve.multiTestPrecision}, 
 	              ${evalSieve.multiTestRecall}

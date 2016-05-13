@@ -10,6 +10,8 @@ import org.json.JSONObject;
 import edu.cmu.ml.rtw.generic.data.DataTools;
 import edu.cmu.ml.rtw.generic.data.annotation.Datum;
 import edu.cmu.ml.rtw.generic.data.annotation.Datum.Tools.LabelMapping;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.ConstituencyParse;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.data.store.StoreReference;
 import edu.cmu.ml.rtw.generic.structure.WeightedStructureRelationBinary;
@@ -366,6 +368,30 @@ public class EventPairDatum<L> extends Datum<L> {
 					}
 					
 					return false;
+				}
+			});
+			
+			this.addDatumIndicator(new DatumIndicator<EventPairDatum<L>>() {
+				public String toString() { return "SomeWithinSentenceDominant"; }
+				public boolean indicator(EventPairDatum<L> datum) { 
+					for (int i = 0; i < datum.getSource().getSomeMentionCount(); i++) {
+						for (int j = 0; j < datum.getTarget().getSomeMentionCount(); j++) {
+							EventMention source = datum.getSource().getSomeMention(i);
+							EventMention target = datum.getTarget().getSomeMention(j);
+							TokenSpan sourceSpan = source.getTokenSpan();
+							TokenSpan targetSpan = target.getTokenSpan();
+							
+							if (sourceSpan.getDocument().getName().equals(targetSpan.getDocument().getName())
+									&& sourceSpan.getSentenceIndex() == targetSpan.getSentenceIndex()) {
+								DocumentNLP document = sourceSpan.getDocument();
+								ConstituencyParse parse = document.getConstituencyParse(sourceSpan.getSentenceIndex());
+								if (parse != null && parse.getRelation(sourceSpan, targetSpan) != ConstituencyParse.Relation.NONE)
+									return true;
+							}
+						}
+					}
+					
+					return false;					
 				}
 			});
 			

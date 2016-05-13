@@ -3,6 +3,7 @@ context featureSetsEventTLink = EventTLink(initScript="/tlinkEvent/featureSets/C
 context trainDevTestDataEventTLink = EventTLink(initScript="/tlinkEvent/data/LoadTrainDevTest.ctx", initOnce="true", initOverrideByName="true");
 
 data_features trainMatrixWS = DataFeatureMatrix(data=${trainDevTestDataEventTLink.trainDataWS}, features=${featureSetsEventTLink.fs});
+data_features trainMatrixEED = DataFeatureMatrix(data=${trainDevTestDataEventTLink.trainDataEED}, features=${featureSetsEventTLink.fs});
 
 model yadll=YADLL(numEpochs="40", stepSize=".1", 
 				  fnNodes=("Softmax", "NegativeLogLoss"), 
@@ -20,9 +21,11 @@ model yadll=YADLL(numEpochs="40", stepSize=".1",
 evaluation acc=Accuracy();
 
 classify_method yadllWSUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixWS}, trainEvaluation=${acc});
-
 classify_method yadllWSUnfilteredP = CloneClassifyMethod(method=${yadllWSUnfiltered}, numEpochs="4000");
-
 classify_method yadllWSSub = FilterDatumIndicator(method=${yadllWSUnfilteredP}, datumIndicator="SomeWithinSentence");
-
 classify_method yadllWS = InitClassifyMethod(devData=${trainDevTestDataEventTLink.devData}, method=${yadllWSSub});
+
+classify_method yadllEEDUnfiltered = SupervisedModel(model=${yadll}, data=${trainMatrixEED}, trainEvaluation=${acc});
+classify_method yadllEEDUnfilteredP = CloneClassifyMethod(method=${yadllEEDUnfiltered}, numEpochs="4000");
+classify_method yadllEEDSub = FilterDatumIndicator(method=${yadllEEDUnfilteredP}, datumIndicator="SomeWithinSentenceDominant");
+classify_method yadllEED = InitClassifyMethod(devData=${trainDevTestDataEventTLink.devData}, method=${yadllEEDSub});
