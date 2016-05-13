@@ -26,7 +26,7 @@ classify_eval devYadllCoref90Recall = Recall(task=${trainDevTestDataEventCoref.d
 classify_eval testYadllCoref90Precision = Precision(task=${trainDevTestDataEventCoref.testTask}, method=${modelsEventCorefYadllCT.yadllCoref90}, mode="MICRO");
 classify_eval testYadllCoref90Recall = Recall(task=${trainDevTestDataEventCoref.testTask}, method=${modelsEventCorefYadllCT.yadllCoref90}, mode="MICRO");
 
-classify_eval devYadllPrecision = Precision(task=${trainDevTestDataEventCoref.devTask}, method=${modelsEventCorefYadllCT.modelsEventCorefYadll.yadllCoref}, mode="MICRO");
-classify_eval devYadllRecall = Recall(task=${trainDevTestDataEventCoref.devTask}, method=${modelsEventCorefYadllCT.modelsEventCorefYadll.yadllCoref}, mode="MICRO");
-classify_eval testYadllPrecision = Precision(task=${trainDevTestDataEventCoref.testTask}, method=${modelsEventCorefYadllCT.modelsEventCorefYadll.yadllCoref}, mode="MICRO");
-classify_eval testYadllRecall = Recall(task=${trainDevTestDataEventCoref.testTask}, method=${modelsEventCorefYadllCT.modelsEventCorefYadll.yadllCoref}, mode="MICRO");
+classify_eval devYadllPrecision = Precision(task=${trainDevTestDataEventCoref.devTask}, method=${modelsEventCorefYadllCT.modelsEventCorefYadll.yadll}, mode="MICRO");
+classify_eval devYadllRecall = Recall(task=${trainDevTestDataEventCoref.devTask}, method=${modelsEventCorefYadllCT.modelsEventCorefYadll.yadll}, mode="MICRO");
+classify_eval testYadllPrecision = Precision(task=${trainDevTestDataEventCoref.testTask}, method=${modelsEventCorefYadllCT.modelsEventCorefYadll.yadll}, mode="MICRO");
+classify_eval testYadllRecall = Recall(task=${trainDevTestDataEventCoref.testTask}, method=${modelsEventCorefYadllCT.modelsEventCorefYadll.yadll}, mode="MICRO");
