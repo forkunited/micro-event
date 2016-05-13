@@ -27,8 +27,6 @@ public class MethodClassificationEventTimeTLinkDet extends MethodClassification<
 	private Rule rule;
 	private String[] parameterNames = { "rule" };
 	
-	private DatumContext<EventTimeDatum<TimeMLRelType>, TimeMLRelType> context;
-	
 	public MethodClassificationEventTimeTLinkDet() {
 		
 	}

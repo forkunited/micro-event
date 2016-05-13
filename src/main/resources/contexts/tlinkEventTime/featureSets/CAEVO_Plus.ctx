@@ -1,7 +1,7 @@
 context features = EventTimeTLink(initScript="/tlinkEventTime/Features.ctx", initOnce="true");
 context trainDevTestDataEventTimeTLink = EventTimeTLink(initScript="/tlinkEventTime/data/LoadTrainDevTest.ctx", initOnce="true");
 
-feature_set fs = FeatureSet(features=(${features.ftfEventTokenClean}, 
+feature_set fsWSDCT = FeatureSet(features=(${features.ftfEventTokenClean}, 
 										${features.ftfEventPos},
 										${features.ftfEventPosB},
 										${features.ftfEventPosBI},

@@ -26,8 +26,6 @@ public class MethodClassificationTimePairTLinkDet extends MethodClassification<T
 	private Rule rule;
 	private String[] parameterNames = { "rule" };
 	
-	private DatumContext<TimePairDatum<TimeMLRelType>, TimeMLRelType> context;
-	
 	public MethodClassificationTimePairTLinkDet() {
 		
 	}

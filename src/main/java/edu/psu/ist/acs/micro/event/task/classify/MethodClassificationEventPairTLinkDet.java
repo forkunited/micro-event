@@ -30,8 +30,6 @@ public class MethodClassificationEventPairTLinkDet extends MethodClassification<
 	private Rule rule;
 	private String[] parameterNames = { "rule" };
 	
-	private DatumContext<EventPairDatum<TimeMLRelType>, TimeMLRelType> context;
-	
 	public MethodClassificationEventPairTLinkDet() {
 		
 	}

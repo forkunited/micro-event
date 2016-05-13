@@ -6,6 +6,8 @@ data devData = EventTimeTLink(storage="EventBson", documents=${dataParamsEventTi
 data testData = EventTimeTLink(storage="EventBson", documents=${dataParamsEventTimeTLink.testDocs}, tlinks=${dataParamsEventTimeTLink.testTlinks}, filter=${trainDevTestDocsEventTimeTLink.testDocs}, filterType="INTERSECT", labelMode=${dataParamsEventTimeTLink.testLabelMode}, labelMapping=${dataParamsEventTimeTLink.testLM}, maxSentenceDistance=${dataParamsEventTimeTLink.testMaxSentDist}, crossDocMode=${dataParamsEventTimeTLink.testCrossDocMode}, clusterMode=${dataParamsEventTimeTLink.testClusterMode});
 
 data trainDataWSDCT = FilterData(data=${trainData}, datumIndicator="SomeWithinSentenceOrDCT");
+data trainDataWS = FilterData(data=${trainData}, datumIndicator="SomeWithinSentence");
+data trainDataDCT = FilterData(data=${trainData}, datumIndicator="SomeDCT");
 
 value countTBDEventTimeTLinkTrainData = SizeData(data=${trainData});
 value countTBDEventTimeTLinkDevData = SizeData(data=${devData});

@@ -26,8 +26,6 @@ public class MethodClassificationEventPairCorefDet extends MethodClassification<
 	private Rule rule;
 	private String[] parameterNames = { "rule" };
 	
-	private DatumContext<EventPairDatum<CorefRelType>, CorefRelType> context;
-	
 	public MethodClassificationEventPairCorefDet() {
 		
 	}

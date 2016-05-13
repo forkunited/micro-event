@@ -313,6 +313,36 @@ public class EventTimeDatum<L> extends Datum<L> {
 				}
 			});
 			
+			this.addDatumIndicator(new DatumIndicator<EventTimeDatum<L>>() {
+				public String toString() { return "SomeWithinSentence"; }
+				public boolean indicator(EventTimeDatum<L> datum) { 					
+					for (int i = 0; i < datum.getTime().getSomeExpressionCount(); i++) {
+						for (int j = 0; j < datum.getEvent().getSomeMentionCount(); j++) {
+							TimeExpression time = datum.getTime().getSomeExpression(i);
+							EventMention event = datum.getEvent().getSomeMention(j);
+							
+							if (time.getTokenSpan().getDocument().getName().equals(event.getTokenSpan().getDocument().getName())
+									&& time.getTokenSpan().getSentenceIndex() == event.getTokenSpan().getSentenceIndex())
+								return true;
+						}
+					}
+					
+					return false;
+				}
+			});
+			
+			this.addDatumIndicator(new DatumIndicator<EventTimeDatum<L>>() {
+				public String toString() { return "SomeDCT"; }
+				public boolean indicator(EventTimeDatum<L> datum) { 					
+					for (int i = 0; i < datum.getTime().getSomeExpressionCount(); i++) {
+						if (datum.getTime().getSomeExpression(i).getTimeMLDocumentFunction() == TimeMLDocumentFunction.CREATION_TIME)
+							return true;
+					}
+					
+					return false;
+				}
+			});
+			
 			this.addGenericStructurizer(new StructurizerGraphEventTime<L>());
 			this.addGenericStructurizer(new StructurizerGraphEventTimeByDocument<L>());
 		}
