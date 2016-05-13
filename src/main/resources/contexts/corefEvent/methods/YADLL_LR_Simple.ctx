@@ -4,7 +4,7 @@ context trainDevTestDataEventCoref = EventCoref(initScript="/corefEvent/data/Loa
 
 data_features trainMatrix = DataFeatureMatrix(data=${trainDevTestDataEventCoref.trainData}, features=${featureSetsEventCoref.fs});
 
-model yadllModel=YADLL(numEpochs="40", stepSize=".5", 
+model yadllModel=YADLL(numEpochs="40", stepSize=".1", 
 				  fnNodes=("Softmax", "NegativeLogLoss"), 
 				  fnParameters=("Zeros", "Zeros"), 
 				  Softmax_0_input="Zeros_0*x+Zeros_1", 
