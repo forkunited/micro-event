@@ -7,9 +7,9 @@ context modelsEventTimeTLinkDet = EventTimeTLink(initScript="/tlinkEventTime/met
 context modelsEventTimeTLinkYadll = EventTimeTLink(initScript="/tlinkEventTime/methods/YADLL_LR_CAEVO_Simple.ctx", initOnce="true", initOverrideByName="true");
 context modelsTimeTLinkDet = TimeTLink(initScript="/tlinkTime/methods/Deterministic_TBD.ctx", initOnce="true", initOverrideByName="true");
 context evalEventTLinkDet = EventTLink(initScript="/tlinkEvent/evaluations/Deterministic_TBD.ctx", initOnce="true", initOverrideByName="true");
-context evalEventTLinkYadll = EventTLink(initScript="/tlinkEvent/evaluations/YADLL_LR_CAEVO_Simple.ctx", initOnce="true", initOverrideByName="true");
+context evalEventTLinkYadll = EventTLink(initScript="/tlinkEvent/evaluations/YADLL.ctx", initOnce="true", initOverrideByName="true");
 context evalEventTimeTLinkDet = EventTimeTLink(initScript="/tlinkEventTime/evaluations/Deterministic_TBD.ctx", initOnce="true", initOverrideByName="true");
-context evalEventTimeTLinkYadll = EventTimeTLink(initScript="/tlinkEventTime/evaluations/YADLL_LR_CAEVO_Simple.ctx", initOnce="true", initOverrideByName="true");
+context evalEventTimeTLinkYadll = EventTimeTLink(initScript="/tlinkEventTime/evaluations/YADLL.ctx", initOnce="true", initOverrideByName="true");
 context evalTimeTLinkDet = TimeTLink(initScript="/tlinkTime/evaluations/Deterministic_TBD.ctx", initOnce="true", initOverrideByName="true");
 context trainDevTestDataEventTLink = EventTLink(initScript="/tlinkEvent/data/LoadTrainDevTest.ctx", initOnce="true", initOverrideByName="true");
 context trainDevTestDataEventTimeTLink = EventTimeTLink(initScript="/tlinkEventTime/data/LoadTrainDevTest.ctx", initOnce="true", initOverrideByName="true");
