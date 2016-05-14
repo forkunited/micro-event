@@ -1,5 +1,6 @@
-context rulesTlinkTypeTransitive = EventTLink(initScript="/tlinkJoint/rules/Transitive.ctx", initOnce="true");
-context rulesTlinkTypeConverse = EventTLink(initScript="/tlinkJoint/rules/Converse.ctx", initOnce="true");
+context rulesJointTransitive = EventTLink(initScript="/tlinkCorefJoint/rules/Transitive.ctx", initOnce="true");
+context rulesJointTLinkConverse = EventTLink(initScript="/tlinkJoint/rules/Converse.ctx", initOnce="true");
+context rulesJoint = EventTLink(initScript="/tlinkCorefJoint/rules/Joint.ctx", initOnce="true");
 context modelsEventTLinkDetInd = EventTLink(initScript="/tlinkEvent/methods/Deterministic_TBD_Ind.ctx", initOnce="true", initOverrideByName="true");
 context modelsEventTLinkYadllInd = EventTLink(initScript="/tlinkEvent/methods/YADLL_Ind.ctx", initOnce="true", initOverrideByName="true");
 context modelsEventTimeTLinkDetInd = EventTimeTLink(initScript="/tlinkEventTime/methods/Deterministic_TBD_Ind.ctx", initOnce="true", initOverrideByName="true");
@@ -14,12 +15,27 @@ context trainDevTestDataEventTLink = EventTLink(initScript="/tlinkEvent/data/Loa
 context trainDevTestDataEventTimeTLink = EventTimeTLink(initScript="/tlinkEventTime/data/LoadTrainDevTest.ctx", initOnce="true", initOverrideByName="true");
 context trainDevTestDataTimeTLink = TimeTLink(initScript="/tlinkTime/data/LoadTrainDevTest.ctx", initOnce="true", initOverrideByName="true");
 
+context modelsEventCorefDet = EventCoref(initScript="/corefEvent/methods/Deterministic.ctx", initOnce="true", initOverrideByName="true");
+context modelsEventCorefYadllCT = EventCoref(initScript="/corefEvent/methods/YADLL_CTClone.ctx", initOnce="true", initOverrideByName="true");
+context evalEventCorefYadllCT = EventCoref(initScript="/corefEvent/evaluations/YADLL_CTClone.ctx", initOnce="true", initOverrideByName="true");
+context evalEventCorefDet = EventCoref(initScript="/corefEvent/evaluations/Deterministic.ctx", initOnce="true", initOverrideByName="true");
+context trainDevTestDataEventCoref = EventCoref(initScript="/corefEvent/data/LoadTrainDevTest.ctx", initOnce="true", initOverrideByName="true");
+
+
 structure_fn graphPaths2 = GraphPaths(length="2", ignoreTypes=("VAGUE"));
 structure_fn graphPaths1 = GraphPaths(length="1", ignoreTypes=("VAGUE"));
-structure_fn greedyTlinkTransitiveRules = GreedyStructureRules(rules=(${rulesTlinkTypeTransitive.rules}, ${rulesTlinkTypeConverse.rules}), 
-                                                               splitFns=(${graphPaths2}, ${graphPaths1}));
+structure_fn greedyTlinkTransitiveRules = GreedyStructureRules(rules=(${rulesJointTransitive.rules}, ${rulesJointTLinkConverse.rules}, ${rulesJoint.rules}), 
+                                                               splitFns=(${graphPaths2}, ${graphPaths1}, ${graphPaths1}));
 
-multi_classify_method sieve = Sieve(methods=(${modelsEventTLinkDetInd.repGovB}, 
+multi_classify_method sieve = Sieve(methods=(${modelsEventCorefDet.wordNetSynsetSieve},
+                                             ${modelsEventCorefDet.wordNetLemmaSieve},
+                                             ${modelsEventCorefYadllCT.yadllCoref70}, 
+											 ${modelsEventCorefYadllCT.yadllCoref65}, 
+                                             ${modelsEventCorefYadllCT.yadllCoref60},
+                                             ${modelsEventCorefYadllCT.yadllCoref55},
+                                             ${modelsEventCorefYadllCT.yadllCoref50},
+                                             
+                                             ${modelsEventTLinkDetInd.repGovB}, 
                                              ${modelsEventTLinkDetInd.repGovA}, 
                                              ${modelsEventTLinkDetInd.repGovI}, 
                                              ${modelsEventTLinkDetInd.repGovII}, 
@@ -102,7 +118,15 @@ multi_classify_method sieve = Sieve(methods=(${modelsEventTLinkDetInd.repGovB},
                                              ${modelsEventTLinkYadllInd.yadllWSS},
                                              ${modelsEventTLinkYadllInd.yadllWSV}
                                              ),                                   
-                                    structurizers=(${trainDevTestDataEventTLink.docStructConserve}, 
+                                    structurizers=(${trainDevTestDataEventCoref.docStructConserve}, 
+                                                   ${trainDevTestDataEventCoref.docStructConserve}, 
+                                                   ${trainDevTestDataEventCoref.docStructConserve}, 
+                                                   ${trainDevTestDataEventCoref.docStructConserve},
+                                                   ${trainDevTestDataEventCoref.docStructConserve},
+                                                   ${trainDevTestDataEventCoref.docStructConserve},
+                                                   ${trainDevTestDataEventCoref.docStructConserve},
+                                                   
+                                                   ${trainDevTestDataEventTLink.docStructConserve}, 
                                                    ${trainDevTestDataEventTLink.docStructConserve},
                                                    ${trainDevTestDataEventTLink.docStructConserve},
                                                    ${trainDevTestDataEventTLink.docStructConserve},
@@ -184,7 +208,15 @@ multi_classify_method sieve = Sieve(methods=(${modelsEventTLinkDetInd.repGovB},
                                                    ${trainDevTestDataEventTLink.docStructConserve}, 
                                                    ${trainDevTestDataEventTLink.docStructConserve}, 
                                                    ${trainDevTestDataEventTLink.docStructConserve}),
-                                    permutationMeasures=(${evalEventTLinkDetInd.devRepGovBPrecision}, 
+                                    permutationMeasures=(${evalEventCorefDet.devWordNetSynsetPrecision}, 
+                                                         ${evalEventCorefDet.devWordNetLemmaPrecision}, 
+                                                         ${evalEventCorefYadllCT.devYadllCoref70Precision}, 
+                                                         ${evalEventCorefYadllCT.devYadllCoref65Precision}, 
+                                                         ${evalEventCorefYadllCT.devYadllCoref60Precision}, 
+                                                         ${evalEventCorefYadllCT.devYadllCoref55Precision}, 
+                                                         ${evalEventCorefYadllCT.devYadllCoref50Precision},
+                                    
+                                                         ${evalEventTLinkDetInd.devRepGovBPrecision}, 
                                                          ${evalEventTLinkDetInd.devRepGovAPrecision}, 
                                                          ${evalEventTLinkDetInd.devRepGovIPrecision}, 
                                                          ${evalEventTLinkDetInd.devRepGovIIPrecision}, 
