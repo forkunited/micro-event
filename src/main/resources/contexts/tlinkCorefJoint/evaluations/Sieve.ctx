@@ -22,3 +22,11 @@ multi_classify_eval multiTLinkDevPrecision = MultiPrecision(task=${multiTLinkDev
 multi_classify_eval multiTLinkDevRecall = MultiRecall(task=${multiTLinkDevTask}, method=${modelsJointTLinkCorefSieve.sieve}, mode="MICRO");
 multi_classify_eval multiTLinkTestPrecision = MultiPrecision(task=${multiTLinkTestTask}, method=${modelsJointTLinkCorefSieve.sieve}, mode="MICRO");
 multi_classify_eval multiTLinkTestRecall = MultiRecall(task=${multiTLinkTestTask}, method=${modelsJointTLinkCorefSieve.sieve}, mode="MICRO");
+
+multi_classify_task multiDevTask = MultiClassification(tasks=(${trainDevTestDataEventCoref.devTask},${trainDevTestDataEventTLink.devTask},${trainDevTestDataTimeTLink.devTask},${trainDevTestDataEventTimeTLink.devTask}));
+multi_classify_task multiTestTask = MultiClassification(tasks=(${trainDevTestDataEventCoref.testTask},${trainDevTestDataEventTLink.testTask},${trainDevTestDataTimeTLink.testTask},${trainDevTestDataEventTimeTLink.testTask}));
+
+multi_classify_eval multiDevPrecision = MultiPrecision(task=${multiDevTask}, method=${modelsJointTLinkCorefSieve.sieve}, mode="MICRO");
+multi_classify_eval multiDevRecall = MultiRecall(task=${multiDevTask}, method=${modelsJointTLinkCorefSieve.sieve}, mode="MICRO");
+multi_classify_eval multiTestPrecision = MultiPrecision(task=${multiTestTask}, method=${modelsJointTLinkCorefSieve.sieve}, mode="MICRO");
+multi_classify_eval multiTestRecall = MultiRecall(task=${multiTestTask}, method=${modelsJointTLinkCorefSieve.sieve}, mode="MICRO");
