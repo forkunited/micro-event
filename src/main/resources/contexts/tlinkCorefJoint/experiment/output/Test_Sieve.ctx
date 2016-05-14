@@ -8,5 +8,5 @@ value strEvals = OutputStrings(id=${resultsId}, storage="EventString", collectio
 	              ${evalSieve.multiCorefTestPrecision}, 
 	              ${evalSieve.multiCorefTestPrecision}, 
 	              ${evalSieve.multiTLinkTestPrecision}, 
-	              ${evalSieve.multiTLinkTestPrecision},  
+	              ${evalSieve.multiTLinkTestPrecision} 
                  )); 
