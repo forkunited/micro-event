@@ -27,9 +27,7 @@ structure_fn graphPaths1 = GraphPaths(length="1", ignoreTypes=("VAGUE"));
 structure_fn greedyTlinkTransitiveRules = GreedyStructureRules(rules=(${rulesJointTransitive.rules}, ${rulesJointTLinkConverse.rules}, ${rulesJoint.rules}), 
                                                                splitFns=(${graphPaths2}, ${graphPaths1}, ${graphPaths1}));
 
-multi_classify_method sieve = Sieve(methods=(${modelsEventCorefDet.wordNetSynsetSieve},
-                                             ${modelsEventCorefDet.wordNetLemmaSieve},
-                                             ${modelsEventCorefYadllCT.yadllCoref70}, 
+multi_classify_method sieve = Sieve(methods=(${modelsEventCorefYadllCT.yadllCoref70}, 
 											 ${modelsEventCorefYadllCT.yadllCoref65}, 
                                              ${modelsEventCorefYadllCT.yadllCoref60},
                                              ${modelsEventCorefYadllCT.yadllCoref55},
@@ -119,8 +117,6 @@ multi_classify_method sieve = Sieve(methods=(${modelsEventCorefDet.wordNetSynset
                                              ${modelsEventTLinkYadllInd.yadllWSV}
                                              ),                                   
                                     structurizers=(${trainDevTestDataEventCoref.docStructConserve}, 
-                                                   ${trainDevTestDataEventCoref.docStructConserve}, 
-                                                   ${trainDevTestDataEventCoref.docStructConserve}, 
                                                    ${trainDevTestDataEventCoref.docStructConserve},
                                                    ${trainDevTestDataEventCoref.docStructConserve},
                                                    ${trainDevTestDataEventCoref.docStructConserve},
@@ -208,9 +204,7 @@ multi_classify_method sieve = Sieve(methods=(${modelsEventCorefDet.wordNetSynset
                                                    ${trainDevTestDataEventTLink.docStructConserve}, 
                                                    ${trainDevTestDataEventTLink.docStructConserve}, 
                                                    ${trainDevTestDataEventTLink.docStructConserve}),
-                                    permutationMeasures=(${evalEventCorefDet.devWordNetSynsetPrecision}, 
-                                                         ${evalEventCorefDet.devWordNetLemmaPrecision}, 
-                                                         ${evalEventCorefYadllCT.devYadllCoref70Precision}, 
+                                    permutationMeasures=(${evalEventCorefYadllCT.devYadllCoref70Precision}, 
                                                          ${evalEventCorefYadllCT.devYadllCoref65Precision}, 
                                                          ${evalEventCorefYadllCT.devYadllCoref60Precision}, 
                                                          ${evalEventCorefYadllCT.devYadllCoref55Precision}, 
