@@ -288,7 +288,7 @@ public class EventPairDatum<L> extends Datum<L> {
 					for (int i = 0; i < datum.getSource().getSomeMentionCount(); i++) {
 						TokenSpan sourceSpan = datum.getSource().getSomeMention(i).getTokenSpan();
 						for (int j = 0; j < datum.getTarget().getSomeMentionCount(); j++) {
-							TokenSpan targetSpan = datum.getSource().getSomeMention(i).getTokenSpan();
+							TokenSpan targetSpan = datum.getSource().getSomeMention(j).getTokenSpan();
 							if (!sourceSpan.getDocument().getName().equals(targetSpan.getDocument().getName())
 									|| sourceSpan.getSentenceIndex() != targetSpan.getSentenceIndex())
 								continue;

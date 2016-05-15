@@ -245,7 +245,7 @@ public class EventTimeDatum<L> extends Datum<L> {
 					for (int i = 0; i < datum.getEvent().getSomeMentionCount(); i++) {
 						TokenSpan eventSpan = datum.getEvent().getSomeMention(i).getTokenSpan();
 						for (int j = 0; j < datum.getTime().getSomeExpressionCount(); j++) {
-							TokenSpan timeSpan = datum.getTime().getSomeExpression(i).getTokenSpan();
+							TokenSpan timeSpan = datum.getTime().getSomeExpression(j).getTokenSpan();
 							if (!eventSpan.getDocument().getName().equals(timeSpan.getDocument().getName())
 									|| eventSpan.getSentenceIndex() != timeSpan.getSentenceIndex())
 								continue;
