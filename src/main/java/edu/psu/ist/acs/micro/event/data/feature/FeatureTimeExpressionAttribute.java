@@ -49,7 +49,7 @@ public class FeatureTimeExpressionAttribute<D extends Datum<L>, L> extends Featu
 		TimeExpression[] exprs = this.expressionExtractor.extract(datum);
 		
 		for (TimeExpression e : exprs) {
-			if (this.attribute == Attribute.TIMEML_DOCUMENT_FUNCTION) {
+			if (this.attribute == Attribute.TIMEML_DOCUMENT_FUNCTION && e.getTimeMLDocumentFunction() != null) {
 				if (this.vocabulary.containsKey(e.getTimeMLDocumentFunction().toString()))
 					vector.put(offset + this.vocabulary.get(e.getTimeMLDocumentFunction().toString()), 1.0);
 			}

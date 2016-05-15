@@ -105,19 +105,19 @@ public class FeatureEventMentionAttribute<D extends Datum<L>, L> extends Feature
 		EventMention[] mentions = this.mentionExtractor.extract(datum);
 		
 		for (EventMention e : mentions) {
-			if (this.attribute == Attribute.TIMEML_TENSE) {
+			if (this.attribute == Attribute.TIMEML_TENSE && e.getTimeMLTense() != null) {
 				vector.put(offset + this.vocabulary.get(e.getTimeMLTense().toString()), 1.0);
-			} else if (this.attribute == Attribute.TIMEML_ASPECT)
+			} else if (this.attribute == Attribute.TIMEML_ASPECT && e.getTimeMLAspect() != null)
 				vector.put(offset + this.vocabulary.get(e.getTimeMLAspect().toString()), 1.0);
-			else if (this.attribute == Attribute.TIMEML_POLARITY)
+			else if (this.attribute == Attribute.TIMEML_POLARITY && e.getTimeMLPolarity() != null)
 				vector.put(offset + this.vocabulary.get(e.getTimeMLPolarity().toString()), 1.0);
-			else if (this.attribute == Attribute.TIMEML_CLASS)
+			else if (this.attribute == Attribute.TIMEML_CLASS && e.getTimeMLClass() != null)
 				vector.put(offset + this.vocabulary.get(e.getTimeMLClass().toString()), 1.0);
-			else if (this.attribute == Attribute.TIMEML_POS)
+			else if (this.attribute == Attribute.TIMEML_POS && e.getTimeMLPoS() != null)
 				vector.put(offset + this.vocabulary.get(e.getTimeMLPoS().toString()), 1.0);
-			else if (this.attribute == Attribute.TIMEML_MOOD)
+			else if (this.attribute == Attribute.TIMEML_MOOD && e.getTimeMLMood() != null)
 				vector.put(offset + this.vocabulary.get(e.getTimeMLMood().toString()), 1.0);
-			else if (this.attribute == Attribute.TIMEML_VERB_FORM)
+			else if (this.attribute == Attribute.TIMEML_VERB_FORM && e.getTimeMLVerbForm() != null)
 				vector.put(offset + this.vocabulary.get(e.getTimeMLVerbForm().toString()), 1.0);
 			else if (this.attribute == Attribute.MODALITY) {
 				if (e.getModality() == null || this.vocabulary.containsKey(e.getModality()))
