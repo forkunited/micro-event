@@ -103,7 +103,7 @@ public class DataSetBuilderTimeTLink extends DataSetBuilderDocumentFiltered<Time
 	
 	@Override
 	public DataSet<TimePairDatum<TimeMLRelType>, TimeMLRelType> build() {
-		StoredItemSetInMemoryLazy<TLink, TLink> tlinkSet = (this.tlinks == null) ? null :
+		StoredItemSetInMemoryLazy<TLink, TLink> tlinkSet = (this.tlinks == null || this.tlinks.length() == 0) ? null :
 				this.context.getDataTools().getStoredItemSetManager().getItemSet(this.storage, this.tlinks);
 		
 		DataSet<TimePairDatum<TimeMLRelType>, TimeMLRelType> data = new DataSet<TimePairDatum<TimeMLRelType>, TimeMLRelType>(this.context.getDatumTools());

@@ -103,7 +103,7 @@ public class DataSetBuilderEventTLink extends DataSetBuilderDocumentFiltered<Eve
 	
 	@Override
 	public DataSet<EventPairDatum<TimeMLRelType>, TimeMLRelType> build() {
-		StoredItemSetInMemoryLazy<TLink, TLink> tlinkSet = (this.tlinks == null) ? null :
+		StoredItemSetInMemoryLazy<TLink, TLink> tlinkSet = (this.tlinks == null || this.tlinks.length() == 0) ? null :
 				this.context.getDataTools().getStoredItemSetManager().getItemSet(this.storage, this.tlinks);
 		
 		DataSet<EventPairDatum<TimeMLRelType>, TimeMLRelType> data = new DataSet<EventPairDatum<TimeMLRelType>, TimeMLRelType>(this.context.getDatumTools());
