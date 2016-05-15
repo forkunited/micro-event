@@ -469,7 +469,9 @@ public class NormalizedTimeValue implements Argumentable {
 	}
 	
 	public NormalizedTimeValue toDate() {			
-  		if(this.value.matches("^\\d\\d\\d\\d-\\d\\d-\\d\\d.+") ) {
+  		if (this.value == null)
+  			return this; // FIXME?
+		if(this.value.matches("^\\d\\d\\d\\d-\\d\\d-\\d\\d.+") ) {
   			return new NormalizedTimeValue(this.dataTools, this.reference, this.getId(), this.value.substring(0, 10), this.someExpressionReferences);
   		} else {
   			return null;
