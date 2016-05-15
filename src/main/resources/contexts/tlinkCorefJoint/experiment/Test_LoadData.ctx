@@ -6,11 +6,11 @@ context trainDevTestDataTimeTLinkTBD = TimeTLink(initScript="/tlinkTime/data/Loa
 context dataParamsEventCoref = EventCoref(initScript="/corefEvent/data/parameters/TBD.ctx", initOnce="false");
 context trainDevTestDocsEventCoref = EventCoref(initScript="/util/data/docs/TBD.ctx", initOnce="false");
 context dataParamsEventTLink = EventTLink(initScript="/tlinkEvent/data/parameters/ACE2005.ctx", initOnce="false");
-context trainDevTestDocsEventTLink = EventCoref(initScript="/util/data/docs/ACE2005.ctx", initOnce="false");
+context trainDevTestDocsEventTLink = EventTLink(initScript="/util/data/docs/ACE2005.ctx", initOnce="false");
 context dataParamsEventTimeTLink = EventTimeTLink(initScript="/tlinkEventTime/data/parameters/ACE2005.ctx", initOnce="false");
-context trainDevTestDocsEventTimeTLink = EventCoref(initScript="/util/data/docs/ACE2005.ctx", initOnce="false");
+context trainDevTestDocsEventTimeTLink = EventTimeTLink(initScript="/util/data/docs/ACE2005.ctx", initOnce="false");
 context dataParamsTimeTLink = TimeTLink(initScript="/tlinkTime/data/parameters/ACE2005.ctx", initOnce="false");
-context trainDevTestDocsTimeTLink = EventCoref(initScript="/util/data/docs/ACE2005.ctx", initOnce="false");
+context trainDevTestDocsTimeTLink = TimeTLink(initScript="/util/data/docs/ACE2005.ctx", initOnce="false");
 
 context trainDevTestDataEventCorefTBD = EventCoref(initScript="/corefEvent/data/LoadTrainDevTest.ctx", initOnce="false");
 context trainDevTestDataEventTLinkACE = EventTLink(initScript="/tlinkEvent/data/LoadTrainDevTest.ctx", initOnce="false");
