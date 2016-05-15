@@ -84,6 +84,42 @@ public class EventDataTools extends DataTools {
 		this.addAnnotationTypeNLP(AnnotationTypeNLPEvent.ACE_DOCUMENT_TYPE);
 		
 		this.addGenericWeightedStructure(new WeightedStructureRelationUnary("O"));
+		
+		
+		
+		this.addStringPairIndicatorFn(new StringPairIndicator() {
+			public String toString() {
+				return "EventRelationMutex";
+			}
+			
+			@Override
+			public boolean compute(String str1, String str2) {
+				if (str1.equals(str2))
+					return true;
+				
+				boolean corefRel = false;
+				for (CorefRelType rel : CorefRelType.values()) {
+					if (rel.toString().equals(str1) || rel.toString().equals(str2)) {
+						if (corefRel)
+							return true;
+						else
+							corefRel = true;
+					}
+				}
+				
+				boolean timeRel = false;
+				for (TimeMLRelType rel : TimeMLRelType.values()) {
+					if (rel.toString().equals(str1) || rel.toString().equals(str2)) {
+						if (timeRel)
+							return true;
+						else
+							timeRel = true;
+					}
+				}
+				
+				return false;
+			}
+		});
 	}
 	
 	@Override

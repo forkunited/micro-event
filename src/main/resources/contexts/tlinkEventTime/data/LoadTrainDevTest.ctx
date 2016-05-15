@@ -19,10 +19,10 @@ value debugTestData = OutputDebug(refs=(${countTBDEventTimeTLinkTestData}));
 classify_task devTask = Classification(data=${devData});
 classify_task testTask = Classification(data=${testData});
 
-structurizer docStruct = GraphEventTimeByDocument(labelMapping="TBD");
-structurizer docStructConserve = GraphEventTimeByDocument(labelMapping="TBD", graphOverwriteOperator="CONSERVE");
-structurizer docStructMulti = GraphEventTimeByDocument(graphEdgeMode="MULTI", graphNodeMode="MULTI", labelMapping="TBD");
+structurizer docStruct = GraphEventTimeByDocument(labelMapping="TBD", graphEdgeMutexFn="EventRelationMutex");
+structurizer docStructConserve = GraphEventTimeByDocument(labelMapping="TBD", graphOverwriteOperator="CONSERVE", graphEdgeMutexFn="EventRelationMutex");
+structurizer docStructMulti = GraphEventTimeByDocument(graphEdgeMode="MULTI", graphNodeMode="MULTI", labelMapping="TBD", graphEdgeMutexFn="EventRelationMutex");
 
-structurizer struct = GraphEventTime(labelMapping="TBD");
-structurizer structConserve = GraphEventTime(labelMapping="TBD", graphOverwriteOperator="CONSERVE");
-structurizer structMulti = GraphEventTime(graphEdgeMode="MULTI", graphNodeMode="MULTI", labelMapping="TBD");
+structurizer struct = GraphEventTime(labelMapping="TBD", graphEdgeMutexFn="EventRelationMutex");
+structurizer structConserve = GraphEventTime(labelMapping="TBD", graphOverwriteOperator="CONSERVE", graphEdgeMutexFn="EventRelationMutex");
+structurizer structMulti = GraphEventTime(graphEdgeMode="MULTI", graphNodeMode="MULTI", labelMapping="TBD", graphEdgeMutexFn="EventRelationMutex");
