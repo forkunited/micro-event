@@ -28,4 +28,6 @@ rule_set rules = RuleSet(rules=(${rulesEventCorefTransitive.t_t_t},
                                 ${rulesJointTLinkTransitive.l_b_b},
                                 ${rulesJointTLinkTransitive.l_s_l}, 
                                 ${rulesJointTLinkTransitive.lb_s_lb}, 
-                                ${rulesJointTLinkTransitive.lb_a_a}));
+                                ${rulesJointTLinkTransitive.lb_a_a},
+                                ${rulesJointTLinkTransitive.s_v_v}, 
+                                ${rulesJointTLinkTransitive.v_s_v}));
