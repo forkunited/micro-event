@@ -5,10 +5,10 @@ context trainDevTestDataEventTLinkTBD = EventTLink(initScript="/tlinkEvent/data/
 context trainDevTestDataEventTimeTLinkTBD = EventTimeTLink(initScript="/tlinkEventTime/data/LoadTrainDevTest.ctx", initOnce="true", initOverrideByName="true");
 context trainDevTestDataTimeTLinkTBD = TimeTLink(initScript="/tlinkTime/data/LoadTrainDevTest.ctx", initOnce="true", initOverrideByName="true");
 
-context dataParamsEventCoref = EventCoref(initScript="/corefEvent/data/parameters/TBD.ctx", initOnce="true", initOverrideByName="true");
-context dataParamsEventTLink = EventTLink(initScript="/tlinkEvent/data/parameters/ACE2005.ctx", initOnce="true", initOverrideByName="true");
-context dataParamsEventTimeTLink = EventTimeTLink(initScript="/tlinkEventTime/data/parameters/ACE2005.ctx", initOnce="true", initOverrideByName="true");
-context dataParamsTimeTLink = TimeTLink(initScript="/tlinkTime/data/parameters/ACE2005.ctx", initOnce="true", initOverrideByName="true");
+context dataParamsEventCoref = EventCoref(initScript="/corefEvent/data/parameters/TBD.ctx", initOnce="false");
+context dataParamsEventTLink = EventTLink(initScript="/tlinkEvent/data/parameters/ACE2005.ctx", initOnce="false");
+context dataParamsEventTimeTLink = EventTimeTLink(initScript="/tlinkEventTime/data/parameters/ACE2005.ctx", initOnce="false");
+context dataParamsTimeTLink = TimeTLink(initScript="/tlinkTime/data/parameters/ACE2005.ctx", initOnce="false");
 
 context trainDevTestDataEventCorefTBD = EventCoref(initScript="/corefEvent/data/LoadTrainDevTest.ctx", initOnce="false");
 context trainDevTestDataEventTLinkACE = EventTLink(initScript="/tlinkEvent/data/LoadTrainDevTest.ctx", initOnce="false");
