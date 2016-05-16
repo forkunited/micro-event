@@ -1,5 +1,5 @@
 value maxThreads="30";
-value resultsId = "TLinkCorefJoint_Test_CAEVO_Ind_Remake";
+value resultsId = "TLinkCorefJoint_Test_CAEVO_Ind_Remake_Det";
 value debug=Debug(file=${resultsId});
 
 context util = EventTimeTLink(initScript="/util/Util.ctx", initOnce="true");
