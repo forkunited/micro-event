@@ -44,7 +44,8 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 	private String tlinks;
 	private int maxSentenceDistance = -1;
 	private CrossDocumentMode crossDocMode = CrossDocumentMode.NONE;
-	private String[] parameterNames = { "directionMode", "tlinks", "maxSentenceDistance", "crossDocMode" };
+	private boolean useLinkIds = true;
+	private String[] parameterNames = { "directionMode", "tlinks", "maxSentenceDistance", "crossDocMode", "useLinkIds" };
 	
 	public DataSetBuilderTLinkType() {
 		this(null);
@@ -73,6 +74,8 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 			return Obj.stringValue(String.valueOf(this.crossDocMode));
 		else if (parameter.equals("directionMode"))
 			return Obj.stringValue(String.valueOf(this.directionMode));
+		else if (parameter.equals("useLinkIds"))
+			return Obj.stringValue(String.valueOf(this.useLinkIds));
 		else
 			return super.getParameterValue(parameter);
 	}
@@ -87,6 +90,8 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 			this.crossDocMode = CrossDocumentMode.valueOf(this.context.getMatchValue(parameterValue));
 		else if (parameter.equals("directionMode"))
 			this.directionMode = DirectionMode.valueOf(this.context.getMatchValue(parameterValue));
+		else if (parameter.equals("useLinkIds"))
+			this.useLinkIds = Boolean.valueOf(this.context.getMatchValue(parameterValue));
 		else
 			return super.setParameterValue(parameter, parameterValue);
 		return true;
@@ -152,11 +157,12 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 		Pair<Integer, Integer> idRange = this.context.getDataTools().getIncrementIdRange(labeledLinks.size());
 		int i = idRange.getFirst();
 		for (Entry<Integer, TLink> entry : labeledLinks.entrySet()) {
+			int id = (this.useLinkIds) ? entry.getKey() : i;
 			if (this.labelMode != LabelMode.ALL_AS_UNLABELED)
 				data.add(new TLinkDatum<TimeMLRelType>(
-					i,  entry.getValue(), (labelMapping != null) ? labelMapping.map(entry.getValue().getTimeMLRelType()) : entry.getValue().getTimeMLRelType()));
+					id,  entry.getValue(), (labelMapping != null) ? labelMapping.map(entry.getValue().getTimeMLRelType()) : entry.getValue().getTimeMLRelType()));
 			else
-				data.add(new TLinkDatum<TimeMLRelType>(i,  entry.getValue(), null));
+				data.add(new TLinkDatum<TimeMLRelType>(id,  entry.getValue(), null));
 
 			i++;
 		}
