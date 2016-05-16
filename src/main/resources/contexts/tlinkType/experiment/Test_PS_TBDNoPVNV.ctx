@@ -1,5 +1,5 @@
 value maxThreads="30";
-value resultsId = "TLinkType_Dev_PS";
+value resultsId = "TLinkType_Test_PS_TBDNoPVNV";
 value debug=Debug(file=${resultsId});
 
 context util = TLinkType(initScript="/util/Util.ctx", initOnce="true");
