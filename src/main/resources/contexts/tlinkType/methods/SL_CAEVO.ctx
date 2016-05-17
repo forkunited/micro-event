@@ -1,11 +1,11 @@
 context dataParamsTlinkType = TLinkType(initScript="/tlinkType/data/parameters/TBD.ctx", initOnce="true", initOverrideByName="true");
-context featureSetsTlinkType = TLinkType(initScript="/tlinkType/featureSets/CAEVO.ctx", initOnce="true", initOverrideByName="true");
+context featureSetsTlinkType = TLinkType(initScript="/tlinkType/featureSets/CAEVO_SL.ctx", initOnce="true", initOverrideByName="true");
 context trainDevTestDataTlinkType = TLinkType(initScript="/tlinkType/data/LoadTrainDevTest.ctx", initOnce="true", initOverrideByName="true");
 
 data_features trainMatrixDCT = DataFeatureMatrix(data=${trainDevTestDataTlinkType.trainDataDCT}, features=${featureSetsTlinkType.fsDCT});
-data_features trainMatrixETWS = DataFeatureMatrix(data=${trainDevTestDataTlinkType.trainDataETWS}, features=${featureSetsTlinkType.fsET});
-data_features trainMatrixEEWS = DataFeatureMatrix(data=${trainDevTestDataTlinkType.trainDataEEWS}, features=${featureSetsTlinkType.fsEE});
-data_features trainMatrixEED = DataFeatureMatrix(data=${trainDevTestDataTlinkType.trainDataEED}, features=${featureSetsTlinkType.fsEE});
+data_features trainMatrixETWS = DataFeatureMatrix(data=${trainDevTestDataTlinkType.trainDataETWS}, features=${featureSetsTlinkType.fsETWS});
+data_features trainMatrixEEWS = DataFeatureMatrix(data=${trainDevTestDataTlinkType.trainDataEEWS}, features=${featureSetsTlinkType.fsEEWS});
+data_features trainMatrixEED = DataFeatureMatrix(data=${trainDevTestDataTlinkType.trainDataEED}, features=${featureSetsTlinkType.fsEED});
 
 model sl=StanfordLinear() {
 	array validLabels=${dataParamsTlinkType.labels};
