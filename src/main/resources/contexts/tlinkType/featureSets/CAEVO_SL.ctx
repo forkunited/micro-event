@@ -60,11 +60,11 @@ feature_set fsEEWS = FeatureSet(features=(${features.fsTokenClean},
 										${features.fstTense}, 
 										${features.fstAspect}, 
 										${features.fstClass}, 
-										${features.fstPolarity}, 
-										${features.fstModality},
+										
 										${features.fdepPathEE}, 
 										${features.fconPathEE}, 
 										${features.fconPathPosEE}, 
+										${features.fdepTypeEE},
 										${features.foverEventEE}, 
 										${features.fdomEE}), 
 						initData=(${data.trainDataEEWS}));

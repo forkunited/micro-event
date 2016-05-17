@@ -129,7 +129,7 @@ feature fstTenseEq = Conjunction(mode="EQUALITY", minFeatureOccurrence="2", feat
 feature fstAspectEq = Conjunction(mode="EQUALITY", minFeatureOccurrence="2", features=(${fsAspect}, ${ftAspect}));
 feature fstClassEq = Conjunction(mode="EQUALITY", minFeatureOccurrence="2", features=(${fsClass}, ${ftClass}));	
 feature fstPolarityEq = Conjunction(mode="EQUALITY", minFeatureOccurrence="2", features=(${fsPolarity}, ${ftPolarity}));	
-feature fstModalityEq = Conjunction(mode="EQUALITY", minFeatureOccurrence="2", features=(${fsModality}, ${ftModality}));	
+feature fstModalityEq = Conjunction(mode="EQUALITY", minFeatureOccurrence="2", features=(${fsModality}, ${ftModality}));		
 feature fstSentPos = Conjunction(minFeatureOccurrence="2", features=(${fsSentPos}, ${ftSentPos}));
 feature fstPred = Conjunction(minFeatureOccurrence="2", features=(${fsPred}, ${ftPred}));
 feature fdepPathEE = DependencyPath(minFeatureOccurrence="2", sourceTokenExtractor="Source", targetTokenExtractor="Target", useRelationTypes="true");
