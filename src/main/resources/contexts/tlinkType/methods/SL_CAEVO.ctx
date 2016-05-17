@@ -1,0 +1,28 @@
+context dataParamsTlinkType = TLinkType(initScript="/tlinkType/data/parameters/TBD.ctx", initOnce="true", initOverrideByName="true");
+context featureSetsTlinkType = TLinkType(initScript="/tlinkType/featureSets/CAEVO.ctx", initOnce="true", initOverrideByName="true");
+context trainDevTestDataTlinkType = TLinkType(initScript="/tlinkType/data/LoadTrainDevTest.ctx", initOnce="true", initOverrideByName="true");
+
+data_features trainMatrixDCT = DataFeatureMatrix(data=${trainDevTestDataTlinkType.trainDataDCT}, features=${featureSetsTlinkType.fsDCT});
+data_features trainMatrixETWS = DataFeatureMatrix(data=${trainDevTestDataTlinkType.trainDataETWS}, features=${featureSetsTlinkType.fsET});
+data_features trainMatrixEEWS = DataFeatureMatrix(data=${trainDevTestDataTlinkType.trainDataEEWS}, features=${featureSetsTlinkType.fsEE});
+data_features trainMatrixEED = DataFeatureMatrix(data=${trainDevTestDataTlinkType.trainDataEED}, features=${featureSetsTlinkType.fsEE});
+
+model sl=StanfordLinear() {
+	array validLabels=${dataParamsTlinkType.labels};
+};
+
+evaluation acc=Accuracy();
+classify_method slDCTUnfiltered = SupervisedModel(model=${sl}, data=${trainMatrixDCT}, trainEvaluation=${acc});
+classify_method slETWSUnfiltered = SupervisedModel(model=${sl}, data=${trainMatrixETWS}, trainEvaluation=${acc});
+classify_method slEEWSUnfiltered = SupervisedModel(model=${sl}, data=${trainMatrixEEWS}, trainEvaluation=${acc});
+classify_method slEEDUnfiltered = SupervisedModel(model=${sl}, data=${trainMatrixEED}, trainEvaluation=${acc});
+
+classify_method slDCTSub = FilterDatumIndicator(method=${slDCTUnfiltered}, datumIndicator="ETDCT");
+classify_method slETWSSub = FilterDatumIndicator(method=${slETWSUnfiltered}, datumIndicator="ETWS");
+classify_method slEEWSSub = FilterDatumIndicator(method=${slEEWSUnfiltered}, datumIndicator="EEWS");
+classify_method slEEDSub = FilterDatumIndicator(method=${slEEDUnfiltered}, datumIndicator="EED");
+
+classify_method slDCT = InitClassifyMethod(devData=${trainDevTestDataTlinkType.devData}, method=${slDCTSub});
+classify_method slETWS = InitClassifyMethod(devData=${trainDevTestDataTlinkType.devData}, method=${slETWSSub});
+classify_method slEEWS = InitClassifyMethod(devData=${trainDevTestDataTlinkType.devData}, method=${slEEWSSub});
+classify_method slEED = InitClassifyMethod(devData=${trainDevTestDataTlinkType.devData}, method=${slEEDSub});
