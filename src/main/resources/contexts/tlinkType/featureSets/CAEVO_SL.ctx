@@ -11,7 +11,7 @@ feature_set fsETWS = FeatureSet(features=(${features.feventTokenClean},
 										${features.feventLemma}, 
 										${features.feventSynset},
 										${features.feventSentPos},
-										${features.feventPrep},
+		
 										${features.feventSentPosPos},
 										${features.ftimeToken}, 
 										${features.ftimeTokenh}, 
