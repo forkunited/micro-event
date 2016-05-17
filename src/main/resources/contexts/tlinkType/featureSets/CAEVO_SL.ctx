@@ -62,7 +62,7 @@ feature_set fsEEWS = FeatureSet(features=(${features.fsTokenClean},
 										${features.fdepTypeEE},
 										${features.foverEventEE}, 
 										${features.fdomEE}), 
-						initData=(${data.trainDataEEWS}));
+						initData=(${data.trainDataEE}));
 
 feature_set fsEED = FeatureSet(features=(${features.fsTokenClean}, 
 										${features.fsPos}, 
