@@ -44,7 +44,7 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 	private String tlinks;
 	private int maxSentenceDistance = -1;
 	private CrossDocumentMode crossDocMode = CrossDocumentMode.NONE;
-	private boolean useLinkIds = true;
+	private boolean useLinkIds = false;
 	private String[] parameterNames = { "directionMode", "tlinks", "maxSentenceDistance", "crossDocMode", "useLinkIds" };
 	
 	public DataSetBuilderTLinkType() {
