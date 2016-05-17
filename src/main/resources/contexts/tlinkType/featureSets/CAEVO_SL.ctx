@@ -10,7 +10,9 @@ feature_set fsETWS = FeatureSet(features=(${features.feventTokenClean},
 										${features.feventClass}, 
 										${features.feventLemma}, 
 										${features.feventSynset},
+										${features.feventSentPos},
 										${features.feventPrep},
+										${features.feventSentPosPos},
 										${features.ftimeToken}, 
 										${features.ftimeTokenh}, 
 										${features.ftimeSentPos}, 
@@ -21,7 +23,7 @@ feature_set fsETWS = FeatureSet(features=(${features.feventTokenClean},
 										${features.fconPathPosET},
 										${features.fdepTypeET},
 										${features.fdomET},
-										
+										${features.foverEventET},
 										${features.fsourceType}), 
 								initData=(${data.trainDataETWS}));
 
