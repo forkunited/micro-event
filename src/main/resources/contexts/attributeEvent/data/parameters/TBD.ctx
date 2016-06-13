@@ -24,6 +24,6 @@ value labelCountClass = SizeArray(array=${labelsClass});
 array labelsPolarity = ("POS", "NEG");
 value labelCountPolarity = SizeArray(array=${labelsPolarity});
 	
-array labelsModality = ("", "can", "could", "'d", "delete", "may", "might", "must", "none"
+array labelsModality = ("", "can", "could", "'d", "delete", "may", "might", "must", "none",
                         "possible", "should", "to", "until", "would");
 value labelCountModality = SizeArray(array=${labelsModality});
