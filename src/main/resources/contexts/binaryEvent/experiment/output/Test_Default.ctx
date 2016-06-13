@@ -12,6 +12,6 @@ value strEvals = OutputStrings(id=${resultsId}, storage="EventString", collectio
                   ${eval.testF},
                   
                   ${eval.devConfusionMatrix}, 
-                  ${eval.testConfusionMatrix},
+                  ${eval.testConfusionMatrix}
                  ));
                  
