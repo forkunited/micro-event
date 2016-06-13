@@ -2,11 +2,11 @@ context dataParamsEventAttribute = EventMentionString(initScript="/attributeEven
 context featureSetsEventAttribute = EventMentionString(initScript="/attributeEvent/featureSets/Default.ctx", initOnce="true", initOverrideByName="true");
 context trainDevTestDataEventAttribute = EventMentionString(initScript="/attributeEvent/data/LoadTrainDevTest.ctx", initOnce="true", initOverrideByName="true");
 
-data_features trainMatrixTense = DataFeatureMatrix(data=${trainDevTestDataEventAttribute.trainDataTense}, features=${featureSetsEventAttribute.fs});
-data_features trainMatrixAspect = DataFeatureMatrix(data=${trainDevTestDataEventAttribute.trainDataAspect}, features=${featureSetsEventAttribute.fs});
-data_features trainMatrixClass = DataFeatureMatrix(data=${trainDevTestDataEventAttribute.trainDataClass}, features=${featureSetsEventAttribute.fs});
-data_features trainMatrixPolarity = DataFeatureMatrix(data=${trainDevTestDataEventAttribute.trainDataPolarity}, features=${featureSetsEventAttribute.fs});
-data_features trainMatrixModality = DataFeatureMatrix(data=${trainDevTestDataEventAttribute.trainDataModality}, features=${featureSetsEventAttribute.fs});
+data_features trainMatrixTense = DataFeatureMatrix(data=${trainDevTestDataEventAttribute.trainDataTense}, features=${featureSetsEventAttribute.fsTense});
+data_features trainMatrixAspect = DataFeatureMatrix(data=${trainDevTestDataEventAttribute.trainDataAspect}, features=${featureSetsEventAttribute.fsAspect});
+data_features trainMatrixClass = DataFeatureMatrix(data=${trainDevTestDataEventAttribute.trainDataClass}, features=${featureSetsEventAttribute.fsClass});
+data_features trainMatrixPolarity = DataFeatureMatrix(data=${trainDevTestDataEventAttribute.trainDataPolarity}, features=${featureSetsEventAttribute.fsPolarity});
+data_features trainMatrixModality = DataFeatureMatrix(data=${trainDevTestDataEventAttribute.trainDataModality}, features=${featureSetsEventAttribute.fsModality});
 
 model slTense=StanfordLinear() { array validLabels=${dataParamsEventAttribute.labelsTense}; };
 model slAspect=StanfordLinear() { array validLabels=${dataParamsEventAttribute.labelsAspect}; };
