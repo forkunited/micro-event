@@ -1,5 +1,5 @@
-context features = EventMentionAttribute(initScript="/attributeEvent/Features.ctx", initOnce="true");
-context trainDevTestDataEventAttribute = EventMentionAttribute(initScript="/attributeEvent/data/LoadTrainDevTest.ctx", initOnce="true");
+context features = EventMentionString(initScript="/attributeEvent/Features.ctx", initOnce="true");
+context trainDevTestDataEventAttribute = EventMentionString(initScript="/attributeEvent/data/LoadTrainDevTest.ctx", initOnce="true");
 
 feature_set fs = FeatureSet(features=(${features.fTokenB}, 
 										${features.fTokenA},
