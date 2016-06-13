@@ -62,3 +62,5 @@ value strEvals = OutputStrings(id=${resultsId}, storage="EventString", collectio
                   ${eval.devModalityConfusionMatrix}, 
                   ${eval.testModalityConfusionMatrix}
                  )); 
+                 
+value strCtx = OutputContext(id=${resultsId}, storage="EventString", collection="ExperimentModelOutput");
