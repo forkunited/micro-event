@@ -15,3 +15,4 @@ value strEvals = OutputStrings(id=${resultsId}, storage="EventString", collectio
                   ${eval.testConfusionMatrix}
                  ));
                  
+value strCtx = OutputContext(id=${resultsId}, storage="EventString", collection="ExperimentModelOutput");
