@@ -14,7 +14,7 @@ import edu.cmu.ml.rtw.generic.util.Pair;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkDatum;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.LinkableTimeExpression;
 import edu.psu.ist.acs.micro.event.task.classify.tlink.det.DetTimeTime;
 
 public class MethodClassificationTLinkTypeTimeTime extends MethodClassification<TLinkDatum<TimeMLRelType>, TimeMLRelType> {
@@ -125,8 +125,8 @@ public class MethodClassificationTLinkTypeTimeTime extends MethodClassification<
 		if (tlink.getType() != TLink.Type.TIME_TIME)
 			return null;
 		
-		TimeExpression t1 = (TimeExpression)tlink.getSource();
-		TimeExpression t2 = (TimeExpression)tlink.getTarget();
+		LinkableTimeExpression t1 = (LinkableTimeExpression)tlink.getSource();
+		LinkableTimeExpression t2 = (LinkableTimeExpression)tlink.getTarget();
 		return DetTimeTime.determineRelation(t1, t2);
 	}
 }

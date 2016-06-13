@@ -16,7 +16,7 @@ import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkDatum;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkable;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.LinkableTimeExpression;
 import edu.psu.ist.acs.micro.event.task.classify.tlink.det.DetReportingDCT;
 
 public class MethodClassificationTLinkTypeReportingDCT extends MethodClassification<TLinkDatum<TimeMLRelType>, TimeMLRelType> {
@@ -129,14 +129,14 @@ public class MethodClassificationTLinkTypeReportingDCT extends MethodClassificat
 			return null;
 		
 		EventMention mention = null;
-		TimeExpression time = null;
+		LinkableTimeExpression time = null;
 		boolean eventSource = true;
 		if (tlink.getSource().getTLinkableType() == TLinkable.Type.EVENT) {
 			mention = (EventMention)tlink.getSource();
-			time = (TimeExpression)tlink.getTarget();
+			time = (LinkableTimeExpression)tlink.getTarget();
 		} else {
 			mention = (EventMention)tlink.getTarget();
-			time = (TimeExpression)tlink.getSource();
+			time = (LinkableTimeExpression)tlink.getSource();
 			eventSource = false;
 		}
 		

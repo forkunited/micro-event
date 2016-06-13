@@ -234,10 +234,13 @@ public class DataSetBuilderEventTLink extends DataSetBuilderDocumentFiltered<Eve
 						
 						for (String docName1 : item.getValue()) {
 							DocumentNLP doc1 = docs.getDocumentByName(docName1, true);
-							List<Pair<TokenSpan, StoreReference>> doc1Mentions = doc1.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION);
-							
+							List<Pair<TokenSpan, StoreReference>> doc1Refs = new ArrayList<>();
+							List<Pair<TokenSpan, EventMention>> doc1Mentions = doc1.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION);
+							for (Pair<TokenSpan, EventMention> m : doc1Mentions)
+								doc1Refs.add(new Pair<TokenSpan, StoreReference>(m.getFirst(), m.getSecond().getStoreReference()));
+								
 							if (labelMode != LabelMode.ONLY_LABELED)
-								links = runAllPairs(doc1Mentions, fn, links, true); 
+								links = runAllPairs(doc1Refs, fn, links, true); 
 							
 							if (crossDocMode == CrossDocumentMode.NONE)
 								continue;
@@ -247,8 +250,13 @@ public class DataSetBuilderEventTLink extends DataSetBuilderDocumentFiltered<Eve
 									continue;
 								
 								DocumentNLP doc2 = docs.getDocumentByName(docName2, true);
-								List<Pair<TokenSpan, StoreReference>> doc2Mentions = doc2.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION);
-								links = runAllPairs(doc1Mentions, doc2Mentions, fn, links); 
+								List<Pair<TokenSpan, StoreReference>> doc2Refs = new ArrayList<>();
+								List<Pair<TokenSpan, EventMention>> doc2Mentions = doc2.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION);
+								for (Pair<TokenSpan, EventMention> m : doc2Mentions)
+									doc2Refs.add(new Pair<TokenSpan, StoreReference>(m.getFirst(), m.getSecond().getStoreReference()));
+								
+								
+								links = runAllPairs(doc1Refs, doc2Refs, fn, links); 
 							}
 						}
 						

@@ -14,7 +14,7 @@ public abstract class EventDatumTools<D extends Datum<L>, L> extends Datum.Tools
 	
 	public static interface TimeExpressionExtractor<D extends Datum<L>, L> {
 		String toString();
-		TimeExpression[] extract(D datum);
+		LinkableTimeExpression[] extract(D datum);
 	}
 	
 	private Map<String, EventMentionExtractor<D, L>> eventMentionExtractors;

@@ -1,15 +1,15 @@
 package edu.psu.ist.acs.micro.event.task.classify.tlink.det;
 
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.time.TimeExpression.TimeMLDocumentFunction;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention.TimeMLAspect;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention.TimeMLClass;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention.TimeMLTense;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression.TimeMLDocumentFunction;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.LinkableTimeExpression;
 
 public class DetReportingDCT {
-	public static TimeMLRelType determineRelation(EventMention event, TimeExpression time) {
+	public static TimeMLRelType determineRelation(EventMention event, LinkableTimeExpression time) {
 		if (time.getTimeMLDocumentFunction() != TimeMLDocumentFunction.CREATION_TIME || 
 				!event.getTokenSpan().getDocument().getName().equals(time.getTokenSpan().getDocument().getName()))
 			return null;

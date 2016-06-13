@@ -30,6 +30,9 @@ import edu.cmu.ml.rtw.generic.data.annotation.nlp.PoSTag;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.Predicate;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.Token;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.time.TimeExpression.TimeMLDocumentFunction;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.time.TimeExpression.TimeMLMod;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.time.TimeExpression.TimeMLType;
 import edu.cmu.ml.rtw.generic.data.store.Storage;
 import edu.cmu.ml.rtw.generic.data.store.StoreReference;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.AnnotatorDocument;
@@ -46,9 +49,9 @@ import edu.psu.ist.acs.micro.event.data.EventDataTools;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Event;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.NormalizedTimeValue;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.LinkableNormalizedTimeValue;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.LinkableTimeExpression;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention.TimeMLAspect;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention.TimeMLClass;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention.TimeMLMood;
@@ -57,9 +60,6 @@ import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention.TimeML
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention.TimeMLTense;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention.TimeMLVerbForm;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression.TimeMLDocumentFunction;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression.TimeMLMod;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression.TimeMLType;
 
 public class ConstructTempEval3 {
 	private static EventDataTools dataTools;
@@ -78,8 +78,8 @@ public class ConstructTempEval3 {
 	private static DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable> storedDocuments;
 	private static StoredItemSetInMemoryLazy<EventMention, EventMention> storedEventMentions;
 	private static StoredItemSetInMemoryLazy<Event, Event> storedEvents;
-	private static StoredItemSetInMemoryLazy<TimeExpression, TimeExpression> storedTimeExpressions;
-	private static StoredItemSetInMemoryLazy<NormalizedTimeValue, NormalizedTimeValue> storedTimeValues;
+	private static StoredItemSetInMemoryLazy<LinkableTimeExpression, LinkableTimeExpression> storedTimeExpressions;
+	private static StoredItemSetInMemoryLazy<LinkableNormalizedTimeValue, LinkableNormalizedTimeValue> storedTimeValues;
 	private static StoredItemSetInMemoryLazy<TLink, TLink> storedTLinks;
 	//private static StoredItemSetInMemoryLazy<Signal, Signal> storedSignals;
 	
@@ -92,7 +92,7 @@ public class ConstructTempEval3 {
 	private static int timexId = 0;
 	private static int timeValueId = 0;
 	private static Map<String, Map<String, StoreReference>> references = new HashMap<String, Map<String, StoreReference>>(); 
-	private static Map<String, Pair<NormalizedTimeValue, List<StoreReference>>> timeValues = new HashMap<>();
+	private static Map<String, Pair<LinkableNormalizedTimeValue, List<StoreReference>>> timeValues = new HashMap<>();
 	
 	private static PipelineNLP extraAnnotationPipeline;
 	
@@ -137,9 +137,9 @@ public class ConstructTempEval3 {
 		storedEvents = dataTools.getStoredItemSetManager()
 				.getItemSet(storageName, EVENT_COLLECTION, true,(Serializer<Event, Document>)serializers.get("JSONBSONEvent"));
 		storedTimeExpressions = dataTools.getStoredItemSetManager()
-				.getItemSet(storageName, TIME_EXPRESSION_COLLECTION, true,(Serializer<TimeExpression, Document>)serializers.get("JSONBSONTimeExpression"));
+				.getItemSet(storageName, TIME_EXPRESSION_COLLECTION, true,(Serializer<LinkableTimeExpression, Document>)serializers.get("JSONBSONTimeExpression"));
 		storedTimeValues = dataTools.getStoredItemSetManager()
-				.getItemSet(storageName, TIME_VALUE_COLLECTION, true,(Serializer<NormalizedTimeValue, Document>)serializers.get("JSONBSONNormalizedTimeValue"));
+				.getItemSet(storageName, TIME_VALUE_COLLECTION, true,(Serializer<LinkableNormalizedTimeValue, Document>)serializers.get("JSONBSONNormalizedTimeValue"));
 		storedTLinks = dataTools.getStoredItemSetManager()
 				.getItemSet(storageName, TLINK_COLLECTION, true,(Serializer<TLink, Document>)serializers.get("JSONBSONTLink"));
 		//storedSignals = dataTools.getStoredItemSetManager()
@@ -167,7 +167,7 @@ public class ConstructTempEval3 {
 			i++;
 		}
 		
-		for (Pair<NormalizedTimeValue, List<StoreReference>> timeValue : timeValues.values()) {
+		for (Pair<LinkableNormalizedTimeValue, List<StoreReference>> timeValue : timeValues.values()) {
 			if (!storedTimeValues.addItem(timeValue.getFirst())) {
 				System.out.println("Failed to store time value.");
 				return;
@@ -323,8 +323,8 @@ public class ConstructTempEval3 {
 		});
 
 
-		List<Triple<TokenSpan, StoreReference, Double>> timexRefs = new ArrayList<>();
-		List<Triple<TokenSpan, StoreReference, Double>> eventMentionRefs = new ArrayList<>();
+		List<Triple<TokenSpan, LinkableTimeExpression, Double>> timexes = new ArrayList<>();
+		List<Triple<TokenSpan, EventMention, Double>> eventMentions = new ArrayList<>();
 		for (Element entryElement : entryElements) {
 			int sentenceIndex = Integer.parseInt(entryElement.getAttributeValue("sid"));
 		
@@ -332,13 +332,13 @@ public class ConstructTempEval3 {
 			List<Element> timexElements = (List<Element>)timexesElement.getChildren("timex");
 			if (timexElements != null && timexElements.size() != 0) {
 				for (Element timexElement : timexElements) {
-					TimeExpression timex = timexFromXML(timexElement, document, sentenceIndex);
+					LinkableTimeExpression timex = timexFromXML(timexElement, document, sentenceIndex);
 					if (timex == null) {
 						System.out.println("ERROR: Failed to load timex " + timexElement.toString());
 						System.exit(0);
 					}
 					
-					timexRefs.add(new Triple<>(timex.getTokenSpan(), timex.getStoreReference(), null));
+					timexes.add(new Triple<>(timex.getTokenSpan(), timex, null));
 				}
 			}
 			
@@ -346,49 +346,49 @@ public class ConstructTempEval3 {
 			List<Element> eventElements = (List<Element>)eventsElement.getChildren("event");
 			if (eventElements != null && eventElements.size() != 0) {
 				for (Element eventElement : eventElements) {
-					List<EventMention> eventMentions = eventFromXML(eventElement, document, sentenceIndex);
+					List<EventMention> elemEventMentions = eventFromXML(eventElement, document, sentenceIndex);
 					if (eventMentions == null) {
 						System.out.println("ERROR: Failed to load events " + eventElement.toString());
 						System.exit(0);	
 					}
-					for (EventMention eventMention : eventMentions) {
-						eventMentionRefs.add(new Triple<>(eventMention.getTokenSpan(), eventMention.getStoreReference(), null));
+					for (EventMention eventMention : elemEventMentions) {
+						eventMentions.add(new Triple<>(eventMention.getTokenSpan(), eventMention, null));
 					}
 				}
 			}
 		}
 		
-		pipeline.extend(new AnnotatorTokenSpan<StoreReference>() {
+		pipeline.extend(new AnnotatorTokenSpan<LinkableTimeExpression>() {
 			public String getName() { return "te3"; }
-			public AnnotationType<StoreReference> produces() { return AnnotationTypeNLPEvent.TIME_EXPRESSION; };
+			public AnnotationType<LinkableTimeExpression> produces() { return AnnotationTypeNLPEvent.TIME_EXPRESSION; };
 			public AnnotationType<?>[] requires() { return new AnnotationType<?>[] { }; }
 			public boolean measuresConfidence() { return false; }
-			public List<Triple<TokenSpan, StoreReference, Double>> annotate(DocumentNLP document) {
-				return timexRefs;
+			public List<Triple<TokenSpan, LinkableTimeExpression, Double>> annotate(DocumentNLP document) {
+				return timexes;
 			}
 		});
 		
-		pipeline.extend(new AnnotatorTokenSpan<StoreReference>() {
+		pipeline.extend(new AnnotatorTokenSpan<EventMention>() {
 			public String getName() { return "te3"; }
-			public AnnotationType<StoreReference> produces() { return AnnotationTypeNLPEvent.EVENT_MENTION; };
+			public AnnotationType<EventMention> produces() { return AnnotationTypeNLPEvent.EVENT_MENTION; };
 			public AnnotationType<?>[] requires() { return new AnnotationType<?>[] { }; }
 			public boolean measuresConfidence() { return false; }
-			public List<Triple<TokenSpan, StoreReference, Double>> annotate(DocumentNLP document) {
-				return eventMentionRefs;
+			public List<Triple<TokenSpan, EventMention, Double>> annotate(DocumentNLP document) {
+				return eventMentions;
 			}
 		});
 		
 		List<Element> creationTimeElements = (List<Element>)element.getChildren("timex");
 		if (creationTimeElements.size() > 0) {
-			TimeExpression creationTime = timexFromXML(creationTimeElements.get(0), document, -1);
+			LinkableTimeExpression creationTime = timexFromXML(creationTimeElements.get(0), document, -1);
 			if (creationTime != null) {
-				pipeline.extend(new AnnotatorDocument<StoreReference>() {
+				pipeline.extend(new AnnotatorDocument<LinkableTimeExpression>() {
 					public String getName() { return "te3"; }
-					public AnnotationType<StoreReference> produces() { return AnnotationTypeNLPEvent.CREATION_TIME; };
+					public AnnotationType<LinkableTimeExpression> produces() { return AnnotationTypeNLPEvent.CREATION_TIME; };
 					public AnnotationType<?>[] requires() { return new AnnotationType<?>[] { }; }
 					public boolean measuresConfidence() { return false; }
-					public Pair<StoreReference, Double> annotate(DocumentNLP document) {
-						return new Pair<StoreReference, Double>(creationTime.getStoreReference(), null);
+					public Pair<LinkableTimeExpression, Double> annotate(DocumentNLP document) {
+						return new Pair<LinkableTimeExpression, Double>(creationTime, null);
 					}
 				});
 			} else {
@@ -502,7 +502,7 @@ public class ConstructTempEval3 {
 				   span.getEndTokenIndex() + tokenOffset);
 	}
 	
-	private static TimeExpression timexFromXML(Element element, DocumentNLP document, int sentenceIndex) {			
+	private static LinkableTimeExpression timexFromXML(Element element, DocumentNLP document, int sentenceIndex) {			
 		boolean hasOffset = false;
 		boolean hasLength = false;
 		boolean hasId = false;
@@ -593,7 +593,7 @@ public class ConstructTempEval3 {
 		String freq = null;
 		if (hasFreq)
 			freq = element.getAttributeValue("freq");
-		NormalizedTimeValue value = null;
+		LinkableNormalizedTimeValue value = null;
 		StoreReference valueRef = null;
 		if (hasValue) {
 			value = makeTimeValue(document.getName(), element.getAttributeValue("value"), reference);
@@ -632,7 +632,7 @@ public class ConstructTempEval3 {
 		if (hasTimeMLMod)
 			timeMLMod = TimeMLMod.valueOf(element.getAttributeValue("mod"));
 		
-		TimeExpression timeExpression = new TimeExpression(dataTools, 
+		LinkableTimeExpression timeExpression = new LinkableTimeExpression(dataTools, 
 														  reference,
 														  tokenSpan,
 														  reference.getIndexValue(0).toString(),
@@ -905,7 +905,7 @@ public class ConstructTempEval3 {
 		return references.get(documentName).get(sourceId);
 	}
 	
-	private static NormalizedTimeValue makeTimeValue(String documentName, String value, StoreReference exprRef) {
+	private static LinkableNormalizedTimeValue makeTimeValue(String documentName, String value, StoreReference exprRef) {
 		String docSpecId = documentName + "_" + value;
 		if (timeValues.containsKey(docSpecId)) {
 			timeValues.get(docSpecId).getSecond().add(exprRef);
@@ -916,8 +916,8 @@ public class ConstructTempEval3 {
 		StoreReference ref = new StoreReference(storageName, TIME_VALUE_COLLECTION, "id", String.valueOf(timeValueId));
 		List<StoreReference> exprRefs = new ArrayList<>();
 		exprRefs.add(exprRef);
-		NormalizedTimeValue timeValue = new NormalizedTimeValue(dataTools,ref, ref.getIndexValue(0).toString(), value, exprRefs);
-		timeValues.put(docSpecId, new Pair<NormalizedTimeValue, List<StoreReference>>(timeValue, exprRefs));
+		LinkableNormalizedTimeValue timeValue = new LinkableNormalizedTimeValue(dataTools,ref, ref.getIndexValue(0).toString(), value, exprRefs);
+		timeValues.put(docSpecId, new Pair<LinkableNormalizedTimeValue, List<StoreReference>>(timeValue, exprRefs));
 		
 		return timeValue;
 	}

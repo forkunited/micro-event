@@ -15,7 +15,7 @@ import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkDatum;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkable;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.LinkableTimeExpression;
 
 /**
  * FeatureTLinkTimeRelation computes the relation type 
@@ -78,29 +78,27 @@ public class FeatureTLinkTimeRelation<L> extends Feature<TLinkDatum<L>, L>{
 	 */
 	@Override
 	public Map<Integer, Double> computeVector(TLinkDatum<L> datum, int offset, Map<Integer, Double> vector) {		
-		TimeExpression time1 = null;
-		TimeExpression time2 = null;
+		LinkableTimeExpression time1 = null;
+		LinkableTimeExpression time2 = null;
 		if (this.relation == Relation.SOURCE_DCT) {
 			if (datum.getTLink().getSource().getTLinkableType() != TLinkable.Type.TIME)
 				return vector;
-			time1 = (TimeExpression)datum.getTLink().getSource();
+			time1 = (LinkableTimeExpression)datum.getTLink().getSource();
 			DocumentNLP document = time1.getTokenSpan().getDocument();
-			time2 = document.getDocumentAnnotation(AnnotationTypeNLPEvent.CREATION_TIME)
-					.resolve(this.context.getDataTools(), true);
+			time2 = document.getDocumentAnnotation(AnnotationTypeNLPEvent.CREATION_TIME);
 		} else if (this.relation == Relation.TARGET_DCT) {
 			if (datum.getTLink().getTarget().getTLinkableType() != TLinkable.Type.TIME)
 				return vector;
-			time1 = (TimeExpression)datum.getTLink().getTarget();
+			time1 = (LinkableTimeExpression)datum.getTLink().getTarget();
 			DocumentNLP document = time1.getTokenSpan().getDocument();
-			time2 = document.getDocumentAnnotation(AnnotationTypeNLPEvent.CREATION_TIME)
-					.resolve(this.context.getDataTools(), true);
+			time2 = document.getDocumentAnnotation(AnnotationTypeNLPEvent.CREATION_TIME);
 		} else if (this.relation == Relation.SOURCE_TARGET) {
 			if (datum.getTLink().getSource().getTLinkableType() != TLinkable.Type.TIME ||
 					datum.getTLink().getTarget().getTLinkableType() != TLinkable.Type.TIME)
 				return vector;
 			
-			time1 = (TimeExpression)datum.getTLink().getSource();
-			time2 = (TimeExpression)datum.getTLink().getTarget();
+			time1 = (LinkableTimeExpression)datum.getTLink().getSource();
+			time2 = (LinkableTimeExpression)datum.getTLink().getTarget();
 		}
 		
 		if (time1 == null || time2 == null)

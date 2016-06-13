@@ -11,7 +11,7 @@ import edu.cmu.ml.rtw.generic.parse.Obj;
 import edu.cmu.ml.rtw.generic.task.classify.MethodClassification;
 import edu.cmu.ml.rtw.generic.task.classify.Trainable;
 import edu.cmu.ml.rtw.generic.util.Pair;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.LinkableTimeExpression;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimePairDatum;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType;
 import edu.psu.ist.acs.micro.event.task.classify.tlink.det.DetTimeTime;
@@ -147,7 +147,7 @@ public class MethodClassificationTimePairTLinkDet extends MethodClassification<T
 		return rel;
 	}
 	
-	private TimeMLRelType determineRelation(TimeExpression t1, TimeExpression t2) {
+	private TimeMLRelType determineRelation(LinkableTimeExpression t1, LinkableTimeExpression t2) {
 		if (this.rule == Rule.TIME_TIME) {
 			return DetTimeTime.determineRelation(t1, t2);
 		} else if (this.rule == Rule.WORD_NET) {

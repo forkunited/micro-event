@@ -15,19 +15,9 @@ import edu.cmu.ml.rtw.generic.util.ThreadMapper;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventDatumTools;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventDatumTools.EventMentionExtractor;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention.Attribute;
 
 public class FeatureEventMentionAttribute<D extends Datum<L>, L> extends Feature<D, L>{
-	public enum Attribute {
-		TIMEML_TENSE,
-		TIMEML_ASPECT,
-		TIMEML_POLARITY,
-		TIMEML_CLASS,
-		TIMEML_POS,
-		TIMEML_MOOD,
-		TIMEML_VERB_FORM,
-		MODALITY
-	}
-	
 	private EventMentionExtractor<D, L> mentionExtractor;
 	private Attribute attribute;
 	private String[] parameterNames = { "mentionExtractor", "attribute" };

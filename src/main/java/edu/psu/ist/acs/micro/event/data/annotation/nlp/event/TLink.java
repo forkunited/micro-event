@@ -302,14 +302,14 @@ public class TLink implements StoredJSONSerializable {
 		return null;
 	}
 	
-	public TimeExpression getFirstTime() {
+	public LinkableTimeExpression getFirstTime() {
 		TLinkable source = getSource();
 		if (source.getTLinkableType() == TLinkable.Type.TIME)
-			return (TimeExpression)source;
+			return (LinkableTimeExpression)source;
 		else {
 			TLinkable target = getTarget();
 			if (target.getTLinkableType() == TLinkable.Type.TIME)
-				return (TimeExpression)target;
+				return (LinkableTimeExpression)target;
 		}
 		
 		return null;
@@ -403,7 +403,7 @@ public class TLink implements StoredJSONSerializable {
 		int endIndex = Math.max(source.getStartTokenIndex(), source.getStartTokenIndex());
 		
 		for (int i = startIndex; i < endIndex; i++) {
-			List<Pair<TokenSpan, StoreReference>> es = source.getDocument().getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION, new TokenSpan(source.getDocument(), source.getSentenceIndex(), i, i + 1), OVER_EVENT_RELATIONS);
+			List<Pair<TokenSpan, EventMention>> es = source.getDocument().getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION, new TokenSpan(source.getDocument(), source.getSentenceIndex(), i, i + 1), OVER_EVENT_RELATIONS);
 			if (es != null && es.size() > 0)
 				return true;
 		}

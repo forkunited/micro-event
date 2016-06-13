@@ -19,21 +19,21 @@ import edu.psu.ist.acs.micro.event.data.feature.FeatureTimeExpressionAttribute;
 import edu.psu.ist.acs.micro.event.task.classify.MethodClassificationTimePairTLinkDet;
 
 public class TimePairDatum<L> extends Datum<L> {
-	private NormalizedTimeValue source;
-	private NormalizedTimeValue target;
+	private LinkableNormalizedTimeValue source;
+	private LinkableNormalizedTimeValue target;
 
-	public TimePairDatum(int id, NormalizedTimeValue source, NormalizedTimeValue target, L label) {
+	public TimePairDatum(int id, LinkableNormalizedTimeValue source, LinkableNormalizedTimeValue target, L label) {
 		this.id = id;
 		this.source = source;
 		this.target = target;
 		this.label = label;
 	}
 	
-	public NormalizedTimeValue getSource() {
+	public LinkableNormalizedTimeValue getSource() {
 		return this.source;
 	}
 	
-	public NormalizedTimeValue getTarget() {
+	public LinkableNormalizedTimeValue getTarget() {
 		return this.target;
 	}
 	
@@ -254,9 +254,9 @@ public class TimePairDatum<L> extends Datum<L> {
 				int id = Integer.valueOf(json.getString("id"));
 				
 				L label = (json.has("label")) ? labelFromString(json.getString("label")) : null;
-				NormalizedTimeValue source = this.dataTools.getStoredItemSetManager()
+				LinkableNormalizedTimeValue source = this.dataTools.getStoredItemSetManager()
 						.resolveStoreReference(StoreReference.makeFromJSON(json.getJSONObject("src")), true);
-				NormalizedTimeValue target = this.dataTools.getStoredItemSetManager()
+				LinkableNormalizedTimeValue target = this.dataTools.getStoredItemSetManager()
 						.resolveStoreReference(StoreReference.makeFromJSON(json.getJSONObject("tar")), true);
 				return new TimePairDatum<L>(id, source, target, label);
 			} catch (JSONException e) {

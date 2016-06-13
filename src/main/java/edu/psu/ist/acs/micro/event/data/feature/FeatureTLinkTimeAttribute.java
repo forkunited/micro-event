@@ -6,14 +6,15 @@ import edu.cmu.ml.rtw.generic.data.annotation.DataSet;
 import edu.cmu.ml.rtw.generic.data.annotation.Datum;
 import edu.cmu.ml.rtw.generic.data.annotation.Datum.Tools.LabelIndicator;
 import edu.cmu.ml.rtw.generic.data.annotation.DatumContext;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.time.NormalizedTimeValue;
 import edu.cmu.ml.rtw.generic.data.feature.Feature;
 import edu.cmu.ml.rtw.generic.parse.AssignmentList;
 import edu.cmu.ml.rtw.generic.parse.Obj;
 import edu.cmu.ml.rtw.generic.util.BidirectionalLookupTable;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.NormalizedTimeValue;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.LinkableNormalizedTimeValue;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkDatum;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkable;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.LinkableTimeExpression;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkable.Type;
 
 /**
@@ -70,7 +71,7 @@ public class FeatureTLinkTimeAttribute<L> extends Feature<TLinkDatum<L>, L>{
 	@Override
 	public boolean init(DataSet<TLinkDatum<L>, L> dataSet) {
 		if (this.attribute == Attribute.TIMEML_TYPE) {
-			TimeExpression.TimeMLType[] types = TimeExpression.TimeMLType.values();
+			LinkableTimeExpression.TimeMLType[] types = LinkableTimeExpression.TimeMLType.values();
 			for (int i = 0 ; i < types.length; i++) {
 				this.vocabulary.put(types[i].toString(), i);
 			}
@@ -80,7 +81,7 @@ public class FeatureTLinkTimeAttribute<L> extends Feature<TLinkDatum<L>, L>{
 				this.vocabulary.put(types[i].toString(), i);
 			}
 		} else if (this.attribute == Attribute.REFERENCE) {
-			NormalizedTimeValue.Reference[] refs = NormalizedTimeValue.Reference.values();
+			LinkableNormalizedTimeValue.Reference[] refs = LinkableNormalizedTimeValue.Reference.values();
 			for (int i = 0; i < refs.length; i++) {
 				this.vocabulary.put(refs[i].toString(), i);
 			}
@@ -102,10 +103,10 @@ public class FeatureTLinkTimeAttribute<L> extends Feature<TLinkDatum<L>, L>{
 		else if (this.sourceOrTarget == SourceOrTarget.TARGET || (this.sourceOrTarget == SourceOrTarget.EITHER && datum.getTLink().getTarget().getTLinkableType() == Type.TIME))
 			linkable = datum.getTLink().getTarget();
 		
-		TimeExpression t = null;
+		LinkableTimeExpression t = null;
 		// to make sure we're only adding features for events:
 		if (linkable.getTLinkableType() == TLinkable.Type.TIME)
-			t = (TimeExpression) linkable;
+			t = (LinkableTimeExpression) linkable;
 		else
 			return vector;
 		

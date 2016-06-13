@@ -11,20 +11,20 @@ import edu.cmu.ml.rtw.generic.data.DataTools;
 import edu.cmu.ml.rtw.generic.data.annotation.Datum;
 import edu.cmu.ml.rtw.generic.data.annotation.Datum.Tools.LabelMapping;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.time.TimeExpression.TimeMLDocumentFunction;
 import edu.cmu.ml.rtw.generic.data.store.StoreReference;
 import edu.cmu.ml.rtw.generic.structure.WeightedStructureRelationBinary;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression.TimeMLDocumentFunction;
 import edu.psu.ist.acs.micro.event.data.feature.FeatureEventMentionAttribute;
 import edu.psu.ist.acs.micro.event.data.feature.FeatureTimeExpressionAttribute;
 import edu.psu.ist.acs.micro.event.task.classify.MethodClassificationEventTimeTLinkDet;
 
 public class EventTimeDatum<L> extends Datum<L> {
 	private Event event;
-	private NormalizedTimeValue time;
+	private LinkableNormalizedTimeValue time;
 
-	public EventTimeDatum(int id, Event event, NormalizedTimeValue time, L label) {
+	public EventTimeDatum(int id, Event event, LinkableNormalizedTimeValue time, L label) {
 		this.id = id;
 		this.event = event;
 		this.time = time;
@@ -35,7 +35,7 @@ public class EventTimeDatum<L> extends Datum<L> {
 		return this.event;
 	}
 	
-	public NormalizedTimeValue getTime() {
+	public LinkableNormalizedTimeValue getTime() {
 		return this.time;
 	}
 	
@@ -285,8 +285,8 @@ public class EventTimeDatum<L> extends Datum<L> {
 				}
 				
 				@Override
-				public TimeExpression[] extract(EventTimeDatum<L> datum) {
-					TimeExpression[] expressions = new TimeExpression[datum.getTime().getSomeExpressionCount()];
+				public LinkableTimeExpression[] extract(EventTimeDatum<L> datum) {
+					LinkableTimeExpression[] expressions = new LinkableTimeExpression[datum.getTime().getSomeExpressionCount()];
 					for (int i = 0; i < datum.getTime().getSomeExpressionCount(); i++)
 						expressions[i] = datum.getTime().getSomeExpression(i);
 					return expressions;
@@ -300,7 +300,7 @@ public class EventTimeDatum<L> extends Datum<L> {
 						if (datum.getTime().getSomeExpression(i).getTimeMLDocumentFunction() == TimeMLDocumentFunction.CREATION_TIME)
 							return true;
 						for (int j = 0; j < datum.getEvent().getSomeMentionCount(); j++) {
-							TimeExpression time = datum.getTime().getSomeExpression(i);
+							LinkableTimeExpression time = datum.getTime().getSomeExpression(i);
 							EventMention event = datum.getEvent().getSomeMention(j);
 							
 							if (time.getTokenSpan().getDocument().getName().equals(event.getTokenSpan().getDocument().getName())
@@ -318,7 +318,7 @@ public class EventTimeDatum<L> extends Datum<L> {
 				public boolean indicator(EventTimeDatum<L> datum) { 					
 					for (int i = 0; i < datum.getTime().getSomeExpressionCount(); i++) {
 						for (int j = 0; j < datum.getEvent().getSomeMentionCount(); j++) {
-							TimeExpression time = datum.getTime().getSomeExpression(i);
+							LinkableTimeExpression time = datum.getTime().getSomeExpression(i);
 							EventMention event = datum.getEvent().getSomeMention(j);
 							
 							if (time.getTokenSpan().getDocument().getName().equals(event.getTokenSpan().getDocument().getName())
@@ -355,7 +355,7 @@ public class EventTimeDatum<L> extends Datum<L> {
 				L label = (json.has("label")) ? labelFromString(json.getString("label")) : null;
 				Event event = this.dataTools.getStoredItemSetManager()
 						.resolveStoreReference(StoreReference.makeFromJSON(json.getJSONObject("e")), true);
-				NormalizedTimeValue time = this.dataTools.getStoredItemSetManager()
+				LinkableNormalizedTimeValue time = this.dataTools.getStoredItemSetManager()
 						.resolveStoreReference(StoreReference.makeFromJSON(json.getJSONObject("t")), true);
 				return new EventTimeDatum<L>(id, event, time, label);
 			} catch (JSONException e) {

@@ -155,8 +155,8 @@ public class DataSetBuilderTimeTLink extends DataSetBuilderDocumentFiltered<Time
 		int i = idRange.getFirst();
 		for (Entry<Integer, TLink> entry : labeledLinks.entrySet()) {
 			TLink link = entry.getValue();
-			TimeExpression te1 = (TimeExpression)link.getSource();
-			TimeExpression te2 = (TimeExpression)link.getTarget();
+			LinkableTimeExpression te1 = (LinkableTimeExpression)link.getSource();
+			LinkableTimeExpression te2 = (LinkableTimeExpression)link.getTarget();
 			
 			List<StoreReference> te1Ref = new ArrayList<>();
 			te1Ref.add(te1.getStoreReference());
@@ -164,13 +164,13 @@ public class DataSetBuilderTimeTLink extends DataSetBuilderDocumentFiltered<Time
 			List<StoreReference> te2Ref = new ArrayList<>();
 			te2Ref.add(te2.getStoreReference());
 		
-			NormalizedTimeValue t1 = new NormalizedTimeValue(context.getDataTools(), 
+			LinkableNormalizedTimeValue t1 = new LinkableNormalizedTimeValue(context.getDataTools(), 
 					null, 
 					te1.getId(),
 					te1.getValue().toString(),
 					te1Ref);
 
-			NormalizedTimeValue t2 = new NormalizedTimeValue(context.getDataTools(), 
+			LinkableNormalizedTimeValue t2 = new LinkableNormalizedTimeValue(context.getDataTools(), 
 					null, 
 					te2.getId(),
 					te2.getValue().toString(),
@@ -228,11 +228,14 @@ public class DataSetBuilderTimeTLink extends DataSetBuilderDocumentFiltered<Time
 						
 						for (String docName1 : item.getValue()) {
 							DocumentNLP doc1 = docs.getDocumentByName(docName1, true);
-							List<Pair<TokenSpan, StoreReference>> doc1Mentions = doc1.getTokenSpanAnnotations(AnnotationTypeNLPEvent.TIME_EXPRESSION);
-							doc1Mentions.add(new Pair<TokenSpan, StoreReference>(null, doc1.getDocumentAnnotation(AnnotationTypeNLPEvent.CREATION_TIME)));
+							List<Pair<TokenSpan, StoreReference>> doc1Refs = new ArrayList<>();
+							List<Pair<TokenSpan, LinkableTimeExpression>> doc1Exprs = doc1.getTokenSpanAnnotations(AnnotationTypeNLPEvent.TIME_EXPRESSION);
+							for (Pair<TokenSpan, LinkableTimeExpression> e : doc1Exprs)
+								doc1Refs.add(new Pair<TokenSpan, StoreReference>(e.getFirst(), e.getSecond().getStoreReference()));
+							doc1Refs.add(new Pair<TokenSpan, StoreReference>(null, doc1.getDocumentAnnotation(AnnotationTypeNLPEvent.CREATION_TIME).getStoreReference()));
 							
 							if (labelMode != LabelMode.ONLY_LABELED)
-								links = runAllPairs(doc1Mentions, fn, links, true); 
+								links = runAllPairs(doc1Refs, fn, links, true); 
 							
 							if (crossDocMode == CrossDocumentMode.NONE)
 								continue;
@@ -242,10 +245,14 @@ public class DataSetBuilderTimeTLink extends DataSetBuilderDocumentFiltered<Time
 									continue;
 								
 								DocumentNLP doc2 = docs.getDocumentByName(docName2, true);
-								List<Pair<TokenSpan, StoreReference>> doc2Mentions = doc2.getTokenSpanAnnotations(AnnotationTypeNLPEvent.TIME_EXPRESSION);
-								doc2Mentions.add(new Pair<TokenSpan, StoreReference>(null, doc2.getDocumentAnnotation(AnnotationTypeNLPEvent.CREATION_TIME)));
 								
-								links = runAllPairs(doc1Mentions, doc2Mentions, fn, links); 
+								List<Pair<TokenSpan, StoreReference>> doc2Refs = new ArrayList<>();
+								List<Pair<TokenSpan, LinkableTimeExpression>> doc2Exprs = doc2.getTokenSpanAnnotations(AnnotationTypeNLPEvent.TIME_EXPRESSION);
+								for (Pair<TokenSpan, LinkableTimeExpression> e : doc2Exprs)
+									doc2Refs.add(new Pair<TokenSpan, StoreReference>(e.getFirst(), e.getSecond().getStoreReference()));
+								doc2Refs.add(new Pair<TokenSpan, StoreReference>(null, doc2.getDocumentAnnotation(AnnotationTypeNLPEvent.CREATION_TIME).getStoreReference()));
+								
+								links = runAllPairs(doc1Refs, doc2Refs, fn, links); 
 							}
 						}
 						
@@ -264,8 +271,8 @@ public class DataSetBuilderTimeTLink extends DataSetBuilderDocumentFiltered<Time
 			i = idRange.getFirst();
 			for (Entry<String, TLink> entry : unlabeledLinks.entrySet()) {
 				TLink link = entry.getValue();
-				TimeExpression te1 = (TimeExpression)link.getSource();
-				TimeExpression te2 = (TimeExpression)link.getTarget();
+				LinkableTimeExpression te1 = (LinkableTimeExpression)link.getSource();
+				LinkableTimeExpression te2 = (LinkableTimeExpression)link.getTarget();
 				
 				List<StoreReference> te1Ref = new ArrayList<>();
 				te1Ref.add(te1.getStoreReference());
@@ -273,13 +280,13 @@ public class DataSetBuilderTimeTLink extends DataSetBuilderDocumentFiltered<Time
 				List<StoreReference> te2Ref = new ArrayList<>();
 				te2Ref.add(te2.getStoreReference());
 			
-				NormalizedTimeValue t1 = new NormalizedTimeValue(context.getDataTools(), 
+				LinkableNormalizedTimeValue t1 = new LinkableNormalizedTimeValue(context.getDataTools(), 
 						null, 
 						te1.getId(),
 						te1.getValue().toString(),
 						te1Ref);
 
-				NormalizedTimeValue t2 = new NormalizedTimeValue(context.getDataTools(), 
+				LinkableNormalizedTimeValue t2 = new LinkableNormalizedTimeValue(context.getDataTools(), 
 						null, 
 						te2.getId(),
 						te2.getValue().toString(),

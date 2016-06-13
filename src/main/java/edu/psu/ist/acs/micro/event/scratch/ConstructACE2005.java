@@ -33,6 +33,9 @@ import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPMutable;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.SerializerDocumentNLPBSON;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.Token;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.time.TimeExpression.TimeMLDocumentFunction;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.time.TimeExpression.TimeMLMod;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.time.TimeExpression.TimeMLType;
 import edu.cmu.ml.rtw.generic.data.store.Storage;
 import edu.cmu.ml.rtw.generic.data.store.StoreReference;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.AnnotatorDocument;
@@ -53,18 +56,15 @@ import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Entity;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EntityMention;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Event;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.NormalizedTimeValue;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.LinkableNormalizedTimeValue;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Relation;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.RelationMention;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.LinkableTimeExpression;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Value;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.ValueMention;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention.TimeMLPolarity;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention.TimeMLTense;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.RelationMention.ACELexicalCondition;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression.TimeMLDocumentFunction;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression.TimeMLMod;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression.TimeMLType;
 
 public class ConstructACE2005 {
 	public static class ACESourceDocument {
@@ -129,8 +129,8 @@ public class ConstructACE2005 {
 	private static StoredItemSetInMemoryLazy<Relation, Relation> storedRelations;
 	private static StoredItemSetInMemoryLazy<ValueMention, ValueMention> storedValueMentions;
 	private static StoredItemSetInMemoryLazy<Value, Value> storedValues;
-	private static StoredItemSetInMemoryLazy<TimeExpression, TimeExpression> storedTimeExpressions;
-	private static StoredItemSetInMemoryLazy<NormalizedTimeValue, NormalizedTimeValue> storedTimeValues;
+	private static StoredItemSetInMemoryLazy<LinkableTimeExpression, LinkableTimeExpression> storedTimeExpressions;
+	private static StoredItemSetInMemoryLazy<LinkableNormalizedTimeValue, LinkableNormalizedTimeValue> storedTimeValues;
 	
 	private static EventDataTools dataTools;
 	
@@ -197,9 +197,9 @@ public class ConstructACE2005 {
 		storedValues = dataTools.getStoredItemSetManager()
 				.getItemSet(storageName, VALUE_COLLECTION, true,(Serializer<Value, Document>)serializers.get("JSONBSONValue"));
 		storedTimeExpressions = dataTools.getStoredItemSetManager()
-				.getItemSet(storageName, TIME_EXPRESSION_COLLECTION, true,(Serializer<TimeExpression, Document>)serializers.get("JSONBSONTimeExpression"));	
+				.getItemSet(storageName, TIME_EXPRESSION_COLLECTION, true,(Serializer<LinkableTimeExpression, Document>)serializers.get("JSONBSONTimeExpression"));	
 		storedTimeValues = dataTools.getStoredItemSetManager()
-				.getItemSet(storageName, TIME_VALUE_COLLECTION, true,(Serializer<NormalizedTimeValue, Document>)serializers.get("JSONBSONNormalizedTimeValue"));	
+				.getItemSet(storageName, TIME_VALUE_COLLECTION, true,(Serializer<LinkableNormalizedTimeValue, Document>)serializers.get("JSONBSONNormalizedTimeValue"));	
 		
 		Map<String, Set<String>> summary = new TreeMap<String, Set<String>>();
 		for (Entry<String, Pair<File, File>> entry : inputFiles.entrySet()) {
@@ -299,7 +299,7 @@ public class ConstructACE2005 {
 	}
 	
 	private static boolean parseAndOutputEntityMentions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Pair<Integer, Integer>, TokenSpan> seqSpans) {
-		Map<String, List<Triple<TokenSpan, StoreReference, Double>>> annotations = new HashMap<>();
+		Map<String, List<Triple<TokenSpan, EntityMention, Double>>> annotations = new HashMap<>();
 		List<Element> entityElements = annotationsRoot.getChild("document").getChildren("entity");
 
 		for (Element entityElement : entityElements) {
@@ -331,18 +331,18 @@ public class ConstructACE2005 {
 				
 				if (!annotations.containsKey(tokenSpan.getDocument().getName()))
 					annotations.put(tokenSpan.getDocument().getName(), new ArrayList<>());
-				annotations.get(tokenSpan.getDocument().getName()).add(new Triple<TokenSpan, StoreReference, Double>(tokenSpan, mention.getStoreReference(), null));
+				annotations.get(tokenSpan.getDocument().getName()).add(new Triple<TokenSpan, EntityMention, Double>(tokenSpan, mention, null));
 			}
 		}		
 		
-		for (Entry<String, List<Triple<TokenSpan, StoreReference, Double>>> entry : annotations.entrySet()) {
+		for (Entry<String, List<Triple<TokenSpan, EntityMention, Double>>> entry : annotations.entrySet()) {
 			PipelineNLPExtendable pipeline = new PipelineNLPExtendable();
-			pipeline.extend(new AnnotatorTokenSpan<StoreReference>() {
+			pipeline.extend(new AnnotatorTokenSpan<EntityMention>() {
 				public String getName() { return "ace_2005"; }
-				public AnnotationType<StoreReference> produces() { return AnnotationTypeNLPEvent.ENTITY_MENTION; };
+				public AnnotationType<EntityMention> produces() { return AnnotationTypeNLPEvent.ENTITY_MENTION; };
 				public AnnotationType<?>[] requires() { return new AnnotationType<?>[] { }; }
 				public boolean measuresConfidence() { return false; }
-				public List<Triple<TokenSpan, StoreReference, Double>> annotate(DocumentNLP document) {
+				public List<Triple<TokenSpan, EntityMention, Double>> annotate(DocumentNLP document) {
 					return entry.getValue();
 				}
 			});
@@ -375,7 +375,7 @@ public class ConstructACE2005 {
 	}
 	
 	private static boolean parseAndOutputValueMentions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Pair<Integer, Integer>, TokenSpan> seqSpans) {
-		Map<String, List<Triple<TokenSpan, StoreReference, Double>>> annotations = new HashMap<>();
+		Map<String, List<Triple<TokenSpan, ValueMention, Double>>> annotations = new HashMap<>();
 		List<Element> valueElements = annotationsRoot.getChild("document").getChildren("value");
 
 		for (Element valueElement : valueElements) {
@@ -397,18 +397,18 @@ public class ConstructACE2005 {
 				
 				if (!annotations.containsKey(tokenSpan.getDocument().getName()))
 					annotations.put(tokenSpan.getDocument().getName(), new ArrayList<>());
-				annotations.get(tokenSpan.getDocument().getName()).add(new Triple<TokenSpan, StoreReference, Double>(tokenSpan, mention.getStoreReference(), null));
+				annotations.get(tokenSpan.getDocument().getName()).add(new Triple<TokenSpan, ValueMention, Double>(tokenSpan, mention, null));
 			}
 		}		
 		
-		for (Entry<String, List<Triple<TokenSpan, StoreReference, Double>>> entry : annotations.entrySet()) {
+		for (Entry<String, List<Triple<TokenSpan, ValueMention, Double>>> entry : annotations.entrySet()) {
 			PipelineNLPExtendable pipeline = new PipelineNLPExtendable();
-			pipeline.extend(new AnnotatorTokenSpan<StoreReference>() {
+			pipeline.extend(new AnnotatorTokenSpan<ValueMention>() {
 				public String getName() { return "ace_2005"; }
-				public AnnotationType<StoreReference> produces() { return AnnotationTypeNLPEvent.VALUE_MENTION; };
+				public AnnotationType<ValueMention> produces() { return AnnotationTypeNLPEvent.VALUE_MENTION; };
 				public AnnotationType<?>[] requires() { return new AnnotationType<?>[] { }; }
 				public boolean measuresConfidence() { return false; }
-				public List<Triple<TokenSpan, StoreReference, Double>> annotate(DocumentNLP document) {
+				public List<Triple<TokenSpan, ValueMention, Double>> annotate(DocumentNLP document) {
 					return entry.getValue();
 				}
 			});
@@ -473,7 +473,7 @@ public class ConstructACE2005 {
 	}
 	
 	private static Map<String, List<StoreReference>> parseAndOutputEventMentions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Pair<Integer, Integer>, TokenSpan> seqSpans) {
-		Map<String, List<Triple<TokenSpan, StoreReference, Double>>> annotations = new HashMap<>();
+		Map<String, List<Triple<TokenSpan, EventMention, Double>>> annotations = new HashMap<>();
 		List<Element> eventElements = annotationsRoot.getChild("document").getChildren("event");
 		Map<String, List<StoreReference>> eventsToMentions = new HashMap<>();
 		for (Element eventElement : eventElements) {
@@ -552,18 +552,18 @@ public class ConstructACE2005 {
 				
 				if (!annotations.containsKey(anchor.getDocument().getName()))
 					annotations.put(anchor.getDocument().getName(), new ArrayList<>());
-				annotations.get(anchor.getDocument().getName()).add(new Triple<TokenSpan, StoreReference, Double>(anchor, mention.getStoreReference(), null));
+				annotations.get(anchor.getDocument().getName()).add(new Triple<TokenSpan, EventMention, Double>(anchor, mention, null));
 			}
 		}		
 		
-		for (Entry<String, List<Triple<TokenSpan, StoreReference, Double>>> entry : annotations.entrySet()) {
+		for (Entry<String, List<Triple<TokenSpan, EventMention, Double>>> entry : annotations.entrySet()) {
 			PipelineNLPExtendable pipeline = new PipelineNLPExtendable();
-			pipeline.extend(new AnnotatorTokenSpan<StoreReference>() {
+			pipeline.extend(new AnnotatorTokenSpan<EventMention>() {
 				public String getName() { return "ace_2005"; }
-				public AnnotationType<StoreReference> produces() { return AnnotationTypeNLPEvent.EVENT_MENTION; };
+				public AnnotationType<EventMention> produces() { return AnnotationTypeNLPEvent.EVENT_MENTION; };
 				public AnnotationType<?>[] requires() { return new AnnotationType<?>[] { }; }
 				public boolean measuresConfidence() { return false; }
-				public List<Triple<TokenSpan, StoreReference, Double>> annotate(DocumentNLP document) {
+				public List<Triple<TokenSpan, EventMention, Double>> annotate(DocumentNLP document) {
 					return entry.getValue();
 				}
 			});
@@ -626,7 +626,7 @@ public class ConstructACE2005 {
 	}
 	
 	private static boolean parseAndOutputRelationMentions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Pair<Integer, Integer>, TokenSpan> seqSpans) {
-		Map<String, List<Triple<TokenSpan, StoreReference, Double>>> annotations = new HashMap<>();
+		Map<String, List<Triple<TokenSpan, RelationMention, Double>>> annotations = new HashMap<>();
 		List<Element> relationElements = annotationsRoot.getChild("document").getChildren("relation");
 
 		for (Element relationElement : relationElements) {
@@ -680,19 +680,19 @@ public class ConstructACE2005 {
 				if (extent != null) {
 					if (!annotations.containsKey(extent.getDocument().getName()))
 						annotations.put(extent.getDocument().getName(), new ArrayList<>());
-					annotations.get(extent.getDocument().getName()).add(new Triple<TokenSpan, StoreReference, Double>(extent, mention.getStoreReference(), null));
+					annotations.get(extent.getDocument().getName()).add(new Triple<TokenSpan, RelationMention, Double>(extent, mention, null));
 				}
 			}
 		}
 		
-		for (Entry<String, List<Triple<TokenSpan, StoreReference, Double>>> entry : annotations.entrySet()) {
+		for (Entry<String, List<Triple<TokenSpan, RelationMention, Double>>> entry : annotations.entrySet()) {
 			PipelineNLPExtendable pipeline = new PipelineNLPExtendable();
-			pipeline.extend(new AnnotatorTokenSpan<StoreReference>() {
+			pipeline.extend(new AnnotatorTokenSpan<RelationMention>() {
 				public String getName() { return "ace_2005"; }
-				public AnnotationType<StoreReference> produces() { return AnnotationTypeNLPEvent.RELATION_MENTION; };
+				public AnnotationType<RelationMention> produces() { return AnnotationTypeNLPEvent.RELATION_MENTION; };
 				public AnnotationType<?>[] requires() { return new AnnotationType<?>[] { }; }
 				public boolean measuresConfidence() { return false; }
-				public List<Triple<TokenSpan, StoreReference, Double>> annotate(DocumentNLP document) {
+				public List<Triple<TokenSpan, RelationMention, Double>> annotate(DocumentNLP document) {
 					return entry.getValue();
 				}
 			});
@@ -712,7 +712,7 @@ public class ConstructACE2005 {
 			String value = timexElement.getAttributeValue("VAL");
 			
 			List<StoreReference> exprs = (timesToExprs.containsKey(id)) ? timesToExprs.get(id) : new ArrayList<>();
-			NormalizedTimeValue tvalue = new NormalizedTimeValue(dataTools, ref, id, value, exprs);
+			LinkableNormalizedTimeValue tvalue = new LinkableNormalizedTimeValue(dataTools, ref, id, value, exprs);
 			storedTimeValues.addItem(tvalue);
 		}
 		
@@ -720,7 +720,7 @@ public class ConstructACE2005 {
 	}
 	
 	private static Map<String, List<StoreReference>> parseAndOutputTimeExpressions(Element annotationsRoot, Map<String, DocumentNLPMutable> docs, Map<Pair<Integer, Integer>, TokenSpan> seqSpans, List<ACESourceDocument> sourceDocs) {		
-		Map<String, List<Triple<TokenSpan, StoreReference, Double>>> annotations = new HashMap<>();
+		Map<String, List<Triple<TokenSpan, LinkableTimeExpression, Double>>> annotations = new HashMap<>();
 		List<Element> timexElements = annotationsRoot.getChild("document").getChildren("timex2");
 		
 		Map<String, List<StoreReference>> timesToExprs = new HashMap<>();
@@ -750,27 +750,13 @@ public class ConstructACE2005 {
 					
 					if (tokenSpan == null) {
 						System.err.println("WARNING: Failed to find document for creation time " + id);
-					} else {
-						PipelineNLPExtendable pipeline = new PipelineNLPExtendable();
-						pipeline.extend(new AnnotatorDocument<StoreReference>() {
-							public String getName() { return "ace_2005"; }
-							public AnnotationType<StoreReference> produces() { return AnnotationTypeNLPEvent.CREATION_TIME; };
-							public AnnotationType<?>[] requires() { return new AnnotationType<?>[] { }; }
-							public boolean measuresConfidence() { return false; }
-							public Pair<StoreReference, Double> annotate(DocumentNLP document) {
-								return new Pair<StoreReference, Double>(ref, null);
-							}
-						});
-						
-						DocumentNLPMutable doc = (DocumentNLPMutable)tokenSpan.getDocument();
-						pipeline.run(doc);
 					}
 				} 
 				
 				if (tokenSpan == null)
 					continue;
 				
-				TimeExpression mention = new TimeExpression(dataTools, 
+				LinkableTimeExpression mention = new LinkableTimeExpression(dataTools, 
 															  ref,
 															  tokenSpan,
 															  id,
@@ -796,19 +782,34 @@ public class ConstructACE2005 {
 				if (fn != TimeMLDocumentFunction.CREATION_TIME) {
 					if (!annotations.containsKey(tokenSpan.getDocument().getName()))
 						annotations.put(tokenSpan.getDocument().getName(), new ArrayList<>());
-					annotations.get(tokenSpan.getDocument().getName()).add(new Triple<TokenSpan, StoreReference, Double>(tokenSpan, mention.getStoreReference(), null));
+					annotations.get(tokenSpan.getDocument().getName()).add(new Triple<TokenSpan, LinkableTimeExpression, Double>(tokenSpan, mention, null));
+				} else {
+					PipelineNLPExtendable pipeline = new PipelineNLPExtendable();
+					pipeline.extend(new AnnotatorDocument<LinkableTimeExpression>() {
+						public String getName() { return "ace_2005"; }
+						public AnnotationType<LinkableTimeExpression> produces() { return AnnotationTypeNLPEvent.CREATION_TIME; };
+						public AnnotationType<?>[] requires() { return new AnnotationType<?>[] { }; }
+						public boolean measuresConfidence() { return false; }
+						public Pair<LinkableTimeExpression, Double> annotate(DocumentNLP document) {
+							return new Pair<LinkableTimeExpression, Double>(mention, null);
+						}
+					});
+					
+					DocumentNLPMutable doc = (DocumentNLPMutable)tokenSpan.getDocument();
+					pipeline.run(doc);
 				}
 			}
 		}		
 		
-		for (Entry<String, List<Triple<TokenSpan, StoreReference, Double>>> entry : annotations.entrySet()) {
+		for (Entry<String, List<Triple<TokenSpan, LinkableTimeExpression, Double>>> entry : annotations.entrySet()) {
 			PipelineNLPExtendable pipeline = new PipelineNLPExtendable();
-			pipeline.extend(new AnnotatorTokenSpan<StoreReference>() {
+			
+			pipeline.extend(new AnnotatorTokenSpan<LinkableTimeExpression>() {
 				public String getName() { return "ace_2005"; }
-				public AnnotationType<StoreReference> produces() { return AnnotationTypeNLPEvent.TIME_EXPRESSION; };
+				public AnnotationType<LinkableTimeExpression> produces() { return AnnotationTypeNLPEvent.TIME_EXPRESSION; };
 				public AnnotationType<?>[] requires() { return new AnnotationType<?>[] { }; }
 				public boolean measuresConfidence() { return false; }
-				public List<Triple<TokenSpan, StoreReference, Double>> annotate(DocumentNLP document) {
+				public List<Triple<TokenSpan, LinkableTimeExpression, Double>> annotate(DocumentNLP document) {
 					return entry.getValue();
 				}
 			});

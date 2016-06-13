@@ -15,7 +15,6 @@ import edu.cmu.ml.rtw.generic.data.annotation.DatumContext;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPMutable;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
-import edu.cmu.ml.rtw.generic.data.store.StoreReference;
 import edu.cmu.ml.rtw.generic.util.Pair;
 import edu.cmu.ml.rtw.generic.util.ThreadMapper;
 import edu.cmu.ml.rtw.generic.util.ThreadMapper.Fn;
@@ -76,10 +75,10 @@ public class DataSetBuilderEventMentionCoref extends DataSetBuilderDocumentFilte
 					for (String docName1 : item.getValue()) {
 						DocumentNLP doc1 = docs.getDocumentByName(docName1, true);
 						
-						List<Pair<TokenSpan, StoreReference>> spanMentions1 = doc1.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION);
+						List<Pair<TokenSpan, EventMention>> spanMentions1 = doc1.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION);
 						List<EventMention> mentions1 = new ArrayList<>();
-						for (Pair<TokenSpan, StoreReference> spanMention : spanMentions1) {
-							mentions1.add(context.getDataTools().getStoredItemSetManager().resolveStoreReference(spanMention.getSecond(), true));
+						for (Pair<TokenSpan, EventMention> spanMention : spanMentions1) {
+							mentions1.add(spanMention.getSecond());
 						}
 						
 						cDatums = runAllPairs(mentions1, fn, cDatums, false);
@@ -90,10 +89,10 @@ public class DataSetBuilderEventMentionCoref extends DataSetBuilderDocumentFilte
 								continue;
 							
 							DocumentNLP doc2 = docs.getDocumentByName(docName2, true);
-							List<Pair<TokenSpan, StoreReference>> spanMentions2 = doc2.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION);
+							List<Pair<TokenSpan, EventMention>> spanMentions2 = doc2.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION);
 							List<EventMention> mentions2 = new ArrayList<>();
-							for (Pair<TokenSpan, StoreReference> spanMention : spanMentions2) {
-								mentions2.add(context.getDataTools().getStoredItemSetManager().resolveStoreReference(spanMention.getSecond(), true));
+							for (Pair<TokenSpan, EventMention> spanMention : spanMentions2) {
+								mentions2.add(spanMention.getSecond());
 							}
 							
 							cDatums = runAllPairs(mentions1, mentions2, fn, cDatums); 

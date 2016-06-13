@@ -14,7 +14,7 @@ import edu.cmu.ml.rtw.generic.util.Pair;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventTimeDatum;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.LinkableTimeExpression;
 import edu.psu.ist.acs.micro.event.task.classify.tlink.det.DetReportingDCT;
 import edu.psu.ist.acs.micro.event.task.classify.tlink.det.DetAdjacentEventTime;
 
@@ -148,7 +148,7 @@ public class MethodClassificationEventTimeTLinkDet extends MethodClassification<
 		return rel;
 	}
 	
-	private TimeMLRelType determineRelation(EventMention e, TimeExpression t) {
+	private TimeMLRelType determineRelation(EventMention e, LinkableTimeExpression t) {
 		if (this.rule == Rule.ADJACENT_EVENT_TIME) {
 			return DetAdjacentEventTime.determineRelation(e, t);
 		} else if (this.rule == Rule.REPORTING_DCT) {

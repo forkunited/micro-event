@@ -5,17 +5,17 @@ import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.PoSTag;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.PoSTagClass;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.time.NormalizedTimeValue;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.time.NormalizedTimeValue.Reference;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.NormalizedTimeValue;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.LinkableTimeExpression;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention.TimeMLAspect;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.NormalizedTimeValue.Reference;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType;
 
 public class DetAdjacentEventTime {
 	private static final int MAX_DISTANCE = 2;
 	
-	public static TimeMLRelType determineRelation(EventMention event, TimeExpression time) {
+	public static TimeMLRelType determineRelation(EventMention event, LinkableTimeExpression time) {
 		if (time.getTokenSpan().getSentenceIndex() != event.getTokenSpan().getSentenceIndex() ||
 			!time.getTokenSpan().getDocument().getName().equals(event.getTokenSpan().getDocument().getName()))
 			return null;

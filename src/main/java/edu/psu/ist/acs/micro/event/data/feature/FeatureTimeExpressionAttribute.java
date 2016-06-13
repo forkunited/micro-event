@@ -12,7 +12,7 @@ import edu.cmu.ml.rtw.generic.parse.Obj;
 import edu.cmu.ml.rtw.generic.util.BidirectionalLookupTable;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventDatumTools;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventDatumTools.TimeExpressionExtractor;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.LinkableTimeExpression;
 
 public class FeatureTimeExpressionAttribute<D extends Datum<L>, L> extends Feature<D, L>{
 	public enum Attribute {
@@ -37,8 +37,8 @@ public class FeatureTimeExpressionAttribute<D extends Datum<L>, L> extends Featu
 	@Override
 	public boolean init(DataSet<D, L> dataSet) {
 		if (this.attribute == Attribute.TIMEML_DOCUMENT_FUNCTION) {
-			this.vocabulary.put(TimeExpression.TimeMLDocumentFunction.CREATION_TIME.toString(), 0);
-			this.vocabulary.put(TimeExpression.TimeMLDocumentFunction.NONE.toString(), 1);
+			this.vocabulary.put(LinkableTimeExpression.TimeMLDocumentFunction.CREATION_TIME.toString(), 0);
+			this.vocabulary.put(LinkableTimeExpression.TimeMLDocumentFunction.NONE.toString(), 1);
 		} 
 		
 		return true;
@@ -46,9 +46,9 @@ public class FeatureTimeExpressionAttribute<D extends Datum<L>, L> extends Featu
 
 	@Override
 	public Map<Integer, Double> computeVector(D datum, int offset, Map<Integer, Double> vector) {
-		TimeExpression[] exprs = this.expressionExtractor.extract(datum);
+		LinkableTimeExpression[] exprs = this.expressionExtractor.extract(datum);
 		
-		for (TimeExpression e : exprs) {
+		for (LinkableTimeExpression e : exprs) {
 			if (this.attribute == Attribute.TIMEML_DOCUMENT_FUNCTION && e.getTimeMLDocumentFunction() != null) {
 				if (this.vocabulary.containsKey(e.getTimeMLDocumentFunction().toString()))
 					vector.put(offset + this.vocabulary.get(e.getTimeMLDocumentFunction().toString()), 1.0);

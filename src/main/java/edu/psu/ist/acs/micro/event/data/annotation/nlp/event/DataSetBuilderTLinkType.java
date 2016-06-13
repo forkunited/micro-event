@@ -209,12 +209,19 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 						
 						for (String docName1 : item.getValue()) {
 							DocumentNLP doc1 = docs.getDocumentByName(docName1, true);
-							List<Pair<TokenSpan, StoreReference>> doc1Mentions = doc1.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION);
-							doc1Mentions.addAll(doc1.getTokenSpanAnnotations(AnnotationTypeNLPEvent.TIME_EXPRESSION));
-							doc1Mentions.add(new Pair<TokenSpan, StoreReference>(null, doc1.getDocumentAnnotation(AnnotationTypeNLPEvent.CREATION_TIME)));
+							
+							List<Pair<TokenSpan, StoreReference>> doc1Refs = new ArrayList<>();
+							List<Pair<TokenSpan, EventMention>> doc1Mentions = doc1.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION);
+							List<Pair<TokenSpan, LinkableTimeExpression>> doc1Exprs = doc1.getTokenSpanAnnotations(AnnotationTypeNLPEvent.TIME_EXPRESSION);
+							for (Pair<TokenSpan, EventMention> m : doc1Mentions)
+								doc1Refs.add(new Pair<TokenSpan, StoreReference>(m.getFirst(), m.getSecond().getStoreReference()));
+							for (Pair<TokenSpan, LinkableTimeExpression> e : doc1Exprs)
+								doc1Refs.add(new Pair<TokenSpan, StoreReference>(e.getFirst(), e.getSecond().getStoreReference()));
+							doc1Refs.add(new Pair<TokenSpan, StoreReference>(null, doc1.getDocumentAnnotation(AnnotationTypeNLPEvent.CREATION_TIME).getStoreReference()));
+							
 							
 							if (labelMode != LabelMode.ONLY_LABELED)
-								links = runAllPairs(doc1Mentions, fn, links, true); 
+								links = runAllPairs(doc1Refs, fn, links, true); 
 							
 							if (crossDocMode == CrossDocumentMode.NONE)
 								continue;
@@ -224,11 +231,16 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 									continue;
 								
 								DocumentNLP doc2 = docs.getDocumentByName(docName2, true);
-								List<Pair<TokenSpan, StoreReference>> doc2Mentions = doc2.getTokenSpanAnnotations(AnnotationTypeNLPEvent.TIME_EXPRESSION);
-								doc2Mentions.add(new Pair<TokenSpan, StoreReference>(null, doc2.getDocumentAnnotation(AnnotationTypeNLPEvent.CREATION_TIME)));
-								doc2Mentions.addAll(doc2.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION));
+								List<Pair<TokenSpan, StoreReference>> doc2Refs = new ArrayList<>();
+								List<Pair<TokenSpan, EventMention>> doc2Mentions = doc2.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION);
+								List<Pair<TokenSpan, LinkableTimeExpression>> doc2Exprs = doc2.getTokenSpanAnnotations(AnnotationTypeNLPEvent.TIME_EXPRESSION);
+								for (Pair<TokenSpan, EventMention> m : doc2Mentions)
+									doc2Refs.add(new Pair<TokenSpan, StoreReference>(m.getFirst(), m.getSecond().getStoreReference()));
+								for (Pair<TokenSpan, LinkableTimeExpression> e : doc2Exprs)
+									doc2Refs.add(new Pair<TokenSpan, StoreReference>(e.getFirst(), e.getSecond().getStoreReference()));
+								doc2Refs.add(new Pair<TokenSpan, StoreReference>(null, doc2.getDocumentAnnotation(AnnotationTypeNLPEvent.CREATION_TIME).getStoreReference()));
 								
-								links = runAllPairs(doc1Mentions, doc2Mentions, fn, links); 
+								links = runAllPairs(doc1Refs, doc2Refs, fn, links); 
 							}
 						}
 						

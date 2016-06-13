@@ -17,7 +17,7 @@ import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.Position;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkDatum;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkable.Type;
-import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimeExpression;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.LinkableTimeExpression;
 import edu.psu.ist.acs.micro.event.task.classify.tlink.det.DetAdjacentEventTime;
 
 public class MethodClassificationTLinkTypeAdjacentEventTime extends MethodClassification<TLinkDatum<TimeMLRelType>, TimeMLRelType> {
@@ -129,7 +129,7 @@ public class MethodClassificationTLinkTypeAdjacentEventTime extends MethodClassi
 				|| tlink.getType() != TLink.Type.EVENT_TIME)
 			return null;
 		
-		TimeExpression time = tlink.getFirstTime();
+		LinkableTimeExpression time = tlink.getFirstTime();
 		EventMention event = tlink.getFirstEvent();
 		
 		TimeMLRelType etRel = DetAdjacentEventTime.determineRelation(event, time);

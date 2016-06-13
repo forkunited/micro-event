@@ -79,7 +79,7 @@ public class StructurizerGraphEventTime<L> extends StructurizerGraph<EventTimeDa
 		
 		for (EventTimeDatum<L> datum : existingData) {
 			Event e = datum.getEvent();
-			NormalizedTimeValue t = datum.getTime();
+			LinkableNormalizedTimeValue t = datum.getTime();
 			Event newE = (newEvents.containsKey(e.getId())) ? newEvents.get(e.getId()) : makeEventFromStructure(e, oldEvents, datum, structures, newEvents, validClusterRelations);
 			
 			if (newIdPairs.containsKey(newE.getId()) && newIdPairs.get(newE.getId()).contains(t.getId()))

@@ -80,10 +80,10 @@ public class DataSetBuilderEventCoref extends DataSetBuilderDocumentFiltered<Eve
 					for (String docName1 : item.getValue()) {
 						DocumentNLP doc1 = docs.getDocumentByName(docName1, true);
 						
-						List<Pair<TokenSpan, StoreReference>> spanMentions1 = doc1.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION);
+						List<Pair<TokenSpan, EventMention>> spanMentions1 = doc1.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION);
 						List<Pair<Event, Event>> singleActualEvents1 = new ArrayList<>();
-						for (Pair<TokenSpan, StoreReference> spanMention : spanMentions1) {
-							EventMention mention = context.getDataTools().getStoredItemSetManager().resolveStoreReference(spanMention.getSecond(), true);
+						for (Pair<TokenSpan, EventMention> spanMention : spanMentions1) {
+							EventMention mention = spanMention.getSecond();
 							List<StoreReference> singleMentions = new ArrayList<>();
 							singleMentions.add(mention.getStoreReference());
 							Event singletonEvent = new Event(context.getDataTools(), 
@@ -108,10 +108,10 @@ public class DataSetBuilderEventCoref extends DataSetBuilderDocumentFiltered<Eve
 								continue;
 							
 							DocumentNLP doc2 = docs.getDocumentByName(docName2, true);
-							List<Pair<TokenSpan, StoreReference>> spanMentions2 = doc2.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION);
+							List<Pair<TokenSpan, EventMention>> spanMentions2 = doc2.getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION);
 							List<Pair<Event, Event>> singleActualEvents2 = new ArrayList<>();
-							for (Pair<TokenSpan, StoreReference> spanMention : spanMentions2) {
-								EventMention mention = context.getDataTools().getStoredItemSetManager().resolveStoreReference(spanMention.getSecond(), true);
+							for (Pair<TokenSpan, EventMention> spanMention : spanMentions2) {
+								EventMention mention = spanMention.getSecond();
 								List<StoreReference> singleMentions = new ArrayList<>();
 								singleMentions.add(mention.getStoreReference());
 								Event singletonEvent = new Event(context.getDataTools(), 

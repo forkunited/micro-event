@@ -29,6 +29,17 @@ import edu.cmu.ml.rtw.generic.util.StoredJSONSerializable;
  * 
  */
 public class EventMention implements TLinkable, MentionArgumentable {	
+	public enum Attribute {
+		TIMEML_TENSE,
+		TIMEML_ASPECT,
+		TIMEML_POLARITY,
+		TIMEML_CLASS,
+		TIMEML_POS,
+		TIMEML_MOOD,
+		TIMEML_VERB_FORM,
+		MODALITY
+	}
+	
 	public enum TimeMLTense {
 		FUTURE,
 		INFINITIVE,
@@ -161,6 +172,26 @@ public class EventMention implements TLinkable, MentionArgumentable {
 		this.extent = extent;
 		this.eventReference = eventReference;
 		this.argumentReferences = argumentReferences;
+	}
+	
+	public String getAttributeString(Attribute attribute) {
+		if (attribute == Attribute.TIMEML_TENSE && getTimeMLTense() != null) {
+			return getTimeMLTense().toString();
+		} else if (attribute == Attribute.TIMEML_ASPECT && getTimeMLAspect() != null)
+			return getTimeMLAspect().toString();
+		else if (attribute == Attribute.TIMEML_POLARITY && getTimeMLPolarity() != null)
+			return getTimeMLPolarity().toString();
+		else if (attribute == Attribute.TIMEML_CLASS && getTimeMLClass() != null)
+			return getTimeMLClass().toString();
+		else if (attribute == Attribute.TIMEML_POS && getTimeMLPoS() != null)
+			return getTimeMLPoS().toString();
+		else if (attribute == Attribute.TIMEML_MOOD && getTimeMLMood() != null)
+			return getTimeMLMood().toString();
+		else if (attribute == Attribute.TIMEML_VERB_FORM && getTimeMLVerbForm() != null)
+			return getTimeMLVerbForm().toString();
+		else if (attribute == Attribute.MODALITY && getModality() != null)
+			return getModality();
+		return "";
 	}
 	
 	public TLinkable.Type getTLinkableType() {
