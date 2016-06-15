@@ -9,6 +9,6 @@ import edu.psu.ist.acs.micro.event.util.EventProperties;
 
 public class RunEventContext {
 	public static void main(String[] args) {
-		Context.run(new EventDataTools(new OutputWriter(), new EventProperties()), new File(args[0]));
+		Context.run(new EventDataTools(new OutputWriter(), new EventProperties(), 0), new File(args[0]));
 	}
 }

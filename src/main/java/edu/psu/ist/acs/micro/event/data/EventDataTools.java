@@ -50,12 +50,12 @@ public class EventDataTools extends DataTools {
 	}
 	
 	public EventDataTools(EventProperties properties) {
-		this(new OutputWriter(), properties);
+		this(new OutputWriter(), properties, 0);
 		
 	}
 	
 	public EventDataTools(OutputWriter outputWriter, EventDataTools dataTools) {
-		this(outputWriter, (EventProperties)dataTools.properties);
+		this(outputWriter, (EventProperties)dataTools.properties, dataTools.incrementId);
 		
 		this.timer = dataTools.timer;
 		
@@ -64,10 +64,11 @@ public class EventDataTools extends DataTools {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public EventDataTools(OutputWriter outputWriter, EventProperties properties) {
+	public EventDataTools(OutputWriter outputWriter, EventProperties properties, int initIncrementId) {
 		super(outputWriter, properties);
 		
 		this.properties = properties;
+		this.incrementId = initIncrementId;
 		
 		this.addGenericContext(new DatumContext<EventMentionDatum<Boolean>, Boolean>(EventMentionDatum.getBooleanTools(this), "EventMentionBoolean"));
 		this.addGenericContext(new DatumContext<EventMentionDatum<String>, String>(EventMentionDatum.getStringTools(this), "EventMentionString"));

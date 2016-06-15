@@ -29,6 +29,11 @@
   </build>
   <dependencies>
   	<dependency>
+		<groupId>edu.psu.ist.acs</groupId>
+		<artifactId>micro-event-data</artifactId> 
+		<version>0.0.1-SNAPSHOT</version>
+	</dependency>
+  	<dependency>
 		<groupId>org.nd4j</groupId>
 		<artifactId>nd4j-x86</artifactId> 
 		<version>${nd4j.version}</version>
