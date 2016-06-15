@@ -38,12 +38,11 @@ import edu.psu.ist.acs.micro.event.util.EventProperties;
 public class EventAnnotator implements AnnotatorTokenSpan<EventMention> {
 	private static final AnnotationType<?>[] REQUIRED_ANNOTATIONS = new AnnotationType<?>[] {
 		AnnotationTypeNLP.TOKEN,
-		AnnotationTypeNLP.SENTENCE,
 		AnnotationTypeNLP.POS,
 		AnnotationTypeNLP.CONSTITUENCY_PARSE,
 		AnnotationTypeNLP.DEPENDENCY_PARSE,
 		AnnotationTypeNLP.NER,
-		AnnotationTypeNLPEvent.TIME_EXPRESSION
+		AnnotationTypeNLP.TIME_EXPRESSION
 	};
 	
 	public static final File DEFAULT_EVENT_DETECTOR_MODEL_FILE = new File("models/BinaryEvent_Test_StanfordLinear");
