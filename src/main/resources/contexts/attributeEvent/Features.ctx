@@ -1,5 +1,20 @@
 context util = EventMentionString(initScript="/util/Util.ctx", initOnce="true");
 
+ts_str_fn str=String();
+str_fn trim = Trim();
+str_fn lwr = StringCase(type="LOWER");
+str_fn rmvSym = StringReplace(mode="REGEX", target="[\\W&&[^\\s]]+", replace=" ");
+str_fn rplNum = StringReplace(mode="REGEX", target="\\d+", replace="[D]");
+str_fn usToSpc = StringReplace(mode="LITERAL", target="_", replace=" ");
+str_fn rmvLong = RemoveLongStringParts(maxLength="30", partSplit="\\s+", partGlue=" "); 
+str_fn stem = StemStringParts(partSplit="\\s+", partGlue=" ");
+str_fn spcToUs = StringReplace(mode="LITERAL", target=" ", replace="_");
+
+ts_str_fn strClean = Composite(f=(${spcToUs} o ${stem} o ${rmvLong} o ${trim} o ${usToSpc} o ${rplNum} o ${rmvSym} o ${lwr} o ${trim}), 
+                               g=${str});
+ts_str_fn strDef = Composite(f=(${trim} o ${lwr}), g=${str});
+ts_str_fn strTrim = Composite(f=${trim}, g=${str});
+
 ts_fn head = Head();
 ts_fn after2 = NGramContext(type="AFTER", n="2");
 ts_fn before2 = NGramContext(type="BEFORE", n="2");
@@ -11,9 +26,7 @@ ts_fn beforeAfterS2 = NGramContext(type="BEFORE_AND_AFTER", n="2", allowSqueeze=
 ts_fn inside1 = NGramInside(n="1");
 ts_fn dep = DependencyRelation(mode="PARENTS_AND_CHILDREN");
 ts_fn prep = PrepositionOfClause();
-ts_str_fn strDef = String(cleanFn="LowerCaseCleanFn");
-ts_str_fn strTrim = String(cleanFn="TrimCleanFn");
-ts_str_fn str = String(cleanFn="TrimCleanFn");
+
 ts_str_fn pos = PoS();
 ts_str_fn nlpLemma = TokenAnnotation(annotationType="lemma");
 ts_str_fn lemma = WordNetLemma();
@@ -38,7 +51,7 @@ feature fLemma = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2
 feature fSynset = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Mention", fn=${synset});
 feature fSentPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Mention", fn=${sentPos});
 feature fSentPosPos = Conjunction(minFeatureOccurrence="2", features=(${fSentPos}, ${fPos}));
-feature fW2v = Word2Vec(tokenExtractor="Mention", mode="VECTOR", fn=(${str} o ${head}));
+feature fW2v = Word2Vec(tokenExtractor="Mention", mode="VECTOR", fn=(${strTrim} o ${head}));
 feature fPred= TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Mention", fn=(${pred} o ${head}));
 feature fDep=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Mention", fn=${depLemma});
 feature fDepRel=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Mention", fn=${depRel});
