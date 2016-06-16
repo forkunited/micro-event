@@ -269,7 +269,7 @@ public class EventAnnotator implements AnnotatorTokenSpan<EventMention> {
 					null,
 					null);
 		
-			this.storedEventMentions.getStoredItems().addItem(eventMention);
+			this.storedEventMentions.addItem(eventMention);
 			
 			mentions.add(new Triple<TokenSpan, EventMention, Double>(eventMention.getTokenSpan(), eventMention, null));	
 		}
