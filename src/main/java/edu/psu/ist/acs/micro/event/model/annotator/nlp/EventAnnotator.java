@@ -70,6 +70,20 @@ public class EventAnnotator implements AnnotatorTokenSpan<EventMention> {
 	public EventAnnotator(StoredItemSet<EventMention, EventMention> storedEventMentions) {
 		this(storedEventMentions, DEFAULT_EVENT_DETECTOR_MODEL_FILE, DEFAULT_EVENT_ATTRIBUTE_MODEL_FILE);
 	}
+	
+	public EventAnnotator(StoredItemSet<EventMention, EventMention> storedEventMentions, EventDataTools dataTools) {
+		this(storedEventMentions, 
+				DEFAULT_EVENT_DETECTOR_MODEL_FILE, 
+				DEFAULT_EVENT_ATTRIBUTE_MODEL_FILE,
+				DEFAULT_EVENT_DETECTOR_MODEL_PARSE_PATH,
+				DEFAULT_EVENT_ATTRIBUTE_TENSE_MODEL_PARSE_PATH,
+				DEFAULT_EVENT_ATTRIBUTE_ASPECT_MODEL_PARSE_PATH,
+				DEFAULT_EVENT_ATTRIBUTE_CLASS_MODEL_PARSE_PATH,
+				DEFAULT_EVENT_ATTRIBUTE_POLARITY_MODEL_PARSE_PATH,
+				DEFAULT_EVENT_ATTRIBUTE_MODALITY_MODEL_PARSE_PATH,
+				0,
+				dataTools);
+	}
 
 	public EventAnnotator(StoredItemSet<EventMention, EventMention> storedEventMentions, 
 						  File eventDetectorModelFile, 
@@ -104,7 +118,7 @@ public class EventAnnotator implements AnnotatorTokenSpan<EventMention> {
 			 eventAttributeClassParsePath, 
 			 eventAttributePolarityParsePath, 
 			 eventAttributeModalityParsePath,
-			 0);
+			 0, null);
 	}
 	
 	public EventAnnotator(StoredItemSet<EventMention, EventMention> storedEventMentions,
@@ -116,8 +130,9 @@ public class EventAnnotator implements AnnotatorTokenSpan<EventMention> {
 						  String eventAttributeClassParsePath, 
 						  String eventAttributePolarityParsePath, 
 						  String eventAttributeModalityParsePath,
-						  int initIncrementId) {
-		this.dataTools = new EventDataTools(new OutputWriter(), new EventProperties(), initIncrementId);
+						  int initIncrementId,
+						  EventDataTools dataTools) {
+		this.dataTools = dataTools != null ? dataTools : new EventDataTools(new OutputWriter(), new EventProperties(), initIncrementId);
 		this.eventDetectionDatumTools = TokenSpansDatum.getBooleanTools(this.dataTools);
 		this.eventAttributeDatumTools = EventMentionDatum.getStringTools(this.dataTools);
 		
