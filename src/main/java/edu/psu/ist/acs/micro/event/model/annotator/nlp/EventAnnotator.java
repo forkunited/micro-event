@@ -67,11 +67,21 @@ public class EventAnnotator implements AnnotatorTokenSpan<EventMention> {
 	private MethodClassification<EventMentionDatum<String>, String> eventPolarityClassifier;
 	private MethodClassification<EventMentionDatum<String>, String> eventModalityClassifier;
 
+	private int maxSentenceLength;
+
 	public EventAnnotator(StoredItemSet<EventMention, EventMention> storedEventMentions) {
-		this(storedEventMentions, DEFAULT_EVENT_DETECTOR_MODEL_FILE, DEFAULT_EVENT_ATTRIBUTE_MODEL_FILE);
+		this(storedEventMentions, DEFAULT_EVENT_DETECTOR_MODEL_FILE, DEFAULT_EVENT_ATTRIBUTE_MODEL_FILE, 0);
 	}
 	
 	public EventAnnotator(StoredItemSet<EventMention, EventMention> storedEventMentions, EventDataTools dataTools) {
+		this(storedEventMentions, dataTools, 0);
+	}
+	
+	public EventAnnotator(StoredItemSet<EventMention, EventMention> storedEventMentions, int maxSentenceLength) {
+		this(storedEventMentions, DEFAULT_EVENT_DETECTOR_MODEL_FILE, DEFAULT_EVENT_ATTRIBUTE_MODEL_FILE, maxSentenceLength);
+	}
+	
+	public EventAnnotator(StoredItemSet<EventMention, EventMention> storedEventMentions, EventDataTools dataTools, int maxSentenceLength) {
 		this(storedEventMentions, 
 				DEFAULT_EVENT_DETECTOR_MODEL_FILE, 
 				DEFAULT_EVENT_ATTRIBUTE_MODEL_FILE,
@@ -82,12 +92,14 @@ public class EventAnnotator implements AnnotatorTokenSpan<EventMention> {
 				DEFAULT_EVENT_ATTRIBUTE_POLARITY_MODEL_PARSE_PATH,
 				DEFAULT_EVENT_ATTRIBUTE_MODALITY_MODEL_PARSE_PATH,
 				0,
-				dataTools);
+				dataTools, 
+				maxSentenceLength);
 	}
 
 	public EventAnnotator(StoredItemSet<EventMention, EventMention> storedEventMentions, 
 						  File eventDetectorModelFile, 
-						  File eventAttributeModelFile) {
+						  File eventAttributeModelFile,
+						  int maxSentenceLength) {
 		this(storedEventMentions,
 			 eventDetectorModelFile, 
 			 eventAttributeModelFile,
@@ -96,7 +108,8 @@ public class EventAnnotator implements AnnotatorTokenSpan<EventMention> {
 			 DEFAULT_EVENT_ATTRIBUTE_ASPECT_MODEL_PARSE_PATH,
 			 DEFAULT_EVENT_ATTRIBUTE_CLASS_MODEL_PARSE_PATH,
 			 DEFAULT_EVENT_ATTRIBUTE_POLARITY_MODEL_PARSE_PATH,
-			 DEFAULT_EVENT_ATTRIBUTE_MODALITY_MODEL_PARSE_PATH
+			 DEFAULT_EVENT_ATTRIBUTE_MODALITY_MODEL_PARSE_PATH,
+			 maxSentenceLength
 		);
 	}
 	
@@ -108,7 +121,8 @@ public class EventAnnotator implements AnnotatorTokenSpan<EventMention> {
 			  String eventAttributeAspectParsePath, 
 			  String eventAttributeClassParsePath, 
 			  String eventAttributePolarityParsePath, 
-			  String eventAttributeModalityParsePath) {
+			  String eventAttributeModalityParsePath,
+			  int maxSentenceLength) {
 		this(storedEventMentions,
 			 eventDetectorModelFile,
 			 eventAttributeModelFile, 
@@ -118,7 +132,7 @@ public class EventAnnotator implements AnnotatorTokenSpan<EventMention> {
 			 eventAttributeClassParsePath, 
 			 eventAttributePolarityParsePath, 
 			 eventAttributeModalityParsePath,
-			 0, null);
+			 0, null, maxSentenceLength);
 	}
 	
 	public EventAnnotator(StoredItemSet<EventMention, EventMention> storedEventMentions,
@@ -131,12 +145,15 @@ public class EventAnnotator implements AnnotatorTokenSpan<EventMention> {
 						  String eventAttributePolarityParsePath, 
 						  String eventAttributeModalityParsePath,
 						  int initIncrementId,
-						  EventDataTools dataTools) {
+						  EventDataTools dataTools,
+						  int maxSentenceLength) {
 		this.dataTools = dataTools != null ? dataTools : new EventDataTools(new OutputWriter(), new EventProperties(), initIncrementId);
 		this.eventDetectionDatumTools = TokenSpansDatum.getBooleanTools(this.dataTools);
 		this.eventAttributeDatumTools = EventMentionDatum.getStringTools(this.dataTools);
 		
 		this.storedEventMentions = storedEventMentions;
+		
+		this.maxSentenceLength = maxSentenceLength;
 		
 		if (!deserialize(eventDetectorModelFile, 
 						 eventAttributeModelFile, 
@@ -195,6 +212,9 @@ public class EventAnnotator implements AnnotatorTokenSpan<EventMention> {
 		DataSet<TokenSpansDatum<Boolean>, Boolean> data = new DataSet<TokenSpansDatum<Boolean>, Boolean>(this.eventDetectionDatumTools, null);
 		
 		for (int i = 0; i < document.getSentenceCount(); i++) {
+			if (this.maxSentenceLength > 0 && document.getSentenceTokenCount(i) > this.maxSentenceLength)
+				continue;
+			
 			for (int j = 0; j < document.getSentenceTokenCount(i); j++) {
 				TokenSpan span = new TokenSpan(document, i, j, j+1);
 				data.add(new TokenSpansDatum<Boolean>(this.dataTools.getIncrementId(), new TokenSpan[] { span }, null));
