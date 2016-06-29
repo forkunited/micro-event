@@ -1,5 +1,4 @@
 value maxThreads="30";
-value outputId = "TLinkType__CAEVO_SL";
 value debug=Debug();
 
 context util = TLinkType(initScript="/util/Util.ctx", initOnce="true");
