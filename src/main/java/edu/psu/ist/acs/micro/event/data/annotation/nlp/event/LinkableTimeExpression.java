@@ -8,6 +8,7 @@ import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.time.TimeExpression;
 import edu.cmu.ml.rtw.generic.data.store.StoreReference;
 import edu.cmu.ml.rtw.generic.util.Pair;
+import edu.cmu.ml.rtw.generic.util.StoredJSONSerializable;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
 
 
@@ -240,5 +241,10 @@ public class LinkableTimeExpression extends TimeExpression implements TLinkable,
 	@Override
 	public Argumentable getArgumentable() {
 		return getValue();
+	}
+	
+	@Override
+	public StoredJSONSerializable makeInstance(StoreReference reference) {
+		return new LinkableTimeExpression(this.dataTools, reference);
 	}
 }

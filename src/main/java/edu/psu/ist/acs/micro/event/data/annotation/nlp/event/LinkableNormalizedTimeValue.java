@@ -1,9 +1,11 @@
 package edu.psu.ist.acs.micro.event.data.annotation.nlp.event;
 
 import java.util.List;
+
 import edu.cmu.ml.rtw.generic.data.DataTools;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.time.NormalizedTimeValue;
 import edu.cmu.ml.rtw.generic.data.store.StoreReference;
+import edu.cmu.ml.rtw.generic.util.StoredJSONSerializable;
 
 /**
  * 
@@ -47,5 +49,10 @@ public class LinkableNormalizedTimeValue extends NormalizedTimeValue implements 
 	
 	public LinkableTimeExpression getSomeExpression(int index) {
 		return this.dataTools.getStoredItemSetManager().resolveStoreReference(this.someExpressionReferences.get(index), true);
+	}
+	
+	@Override
+	public StoredJSONSerializable makeInstance(StoreReference reference) {
+		return new LinkableNormalizedTimeValue(this.dataTools, reference);
 	}
 }
