@@ -19,7 +19,7 @@ ts_str_fn pos = PoS();
 ts_str_fn nlpLemma = TokenAnnotation(annotationType="lemma");
 ts_str_fn lemma = WordNetLemma();
 ts_str_fn synset = WordNetSynset();
-ts_str_fn synset1 = WordNetSynset(onlyFirst="true");
+ts_str_fn synset1 = WordNetSynset(firstOnly="true");
 ts_str_fn sentPos = SentencePosition();
 ts_str_fn depStr = TokenSpanPathStr(mode="ALL", pathLength="1", spanFn1=${dep}, strFn=${strDef});
 ts_str_fn pred = PredicateSense();
