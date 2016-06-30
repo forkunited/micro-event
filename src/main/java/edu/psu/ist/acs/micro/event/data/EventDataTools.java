@@ -137,7 +137,8 @@ public class EventDataTools extends DataTools {
 	@Override
 	public Map<String, Serializer<?, ?>> getSerializers() {
 		Map<String, Serializer<?, ?>> serializers = super.getSerializers();
-		
+		System.out.println("Got serializers?");
+		System.exit(0);
 		SerializerJSONBSON<EventMention> eventMentionSerializer = new SerializerJSONBSON<EventMention>("EventMention", new EventMention(this));
 		SerializerJSONBSON<Event> eventSerializer = new SerializerJSONBSON<Event>("Event", new Event(this));
 		SerializerJSONBSON<EntityMention> entityMentionSerializer = new SerializerJSONBSON<EntityMention>("EntityMention", new EntityMention(this));
