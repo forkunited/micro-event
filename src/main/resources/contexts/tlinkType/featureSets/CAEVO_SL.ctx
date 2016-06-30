@@ -120,6 +120,5 @@ feature_set fsDCT = FeatureSet(features=(${features.feventTokenClean},
 										 ${features.feventPosB2_1}, 
 										 ${features.feventPosBI},  
 										 ${features.feventLemma}, 
-										 ${features.feventSynset1},
-										 ${features.feventSentPos}), 
+										 ${features.feventSynset1}), 
 						initData=(${data.trainDataDCT}));
