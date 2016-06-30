@@ -79,6 +79,8 @@ feature fsTokenB = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence=
 feature fsTokenA = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${strDef} o ${inside1} o ${afterS2}));
 feature fsPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${pos});
 feature fsPosB = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${pos} o ${inside1} o ${beforeS2}));
+feature fsPosB2_1 = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${pos} o ${insideNoHead1} o ${beforeS2}));
+feature fsPosB2_0 = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${pos} o ${head} o ${beforeS2}));
 feature fsPosBI = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${pos} o ${beforeI1}));
 feature fsPosB2 = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${pos} o ${before2}));
 feature fsPosA = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${pos} o ${inside1} o ${afterS2}));
@@ -104,6 +106,8 @@ feature ftTokenB = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence=
 feature ftTokenA = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${strDef} o ${inside1} o ${afterS2}));
 feature ftPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${pos});
 feature ftPosB = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${pos} o ${inside1} o ${beforeS2}));
+feature ftPosB2_1 = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${pos} o ${insideNoHead1} o ${beforeS2}));
+feature ftPosB2_0 = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${pos} o ${head} o ${beforeS2}));
 feature ftPosBI = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${pos} o ${beforeI1}));
 feature ftPosB2 = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${pos} o ${before2}));
 feature ftPosA = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${pos} o ${inside1} o ${afterS2}));
