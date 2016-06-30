@@ -5,11 +5,11 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import edu.cmu.ml.rtw.generic.data.DataTools;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.data.store.StoreReference;
 import edu.cmu.ml.rtw.generic.util.Pair;
 import edu.cmu.ml.rtw.generic.util.StoredJSONSerializable;
+import edu.psu.ist.acs.micro.event.data.EventDataTools;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
 
 /**
@@ -241,19 +241,19 @@ public class TLink implements StoredJSONSerializable {
 	private Signal signal;
 	private String syntax;
 	
-	private DataTools dataTools;
+	private EventDataTools dataTools;
 	private StoreReference reference;
 	
-	public TLink(DataTools dataTools) {
+	public TLink(EventDataTools dataTools) {
 		this.dataTools = dataTools;
 	}
 	
-	public TLink(DataTools dataTools, StoreReference reference) {
+	public TLink(EventDataTools dataTools, StoreReference reference) {
 		this.dataTools = dataTools;
 		this.reference = reference;
 	}
 	
-	public TLink(DataTools dataTools, 
+	public TLink(EventDataTools dataTools, 
 				 StoreReference reference, 
 				 String id, 
 				 String origin,

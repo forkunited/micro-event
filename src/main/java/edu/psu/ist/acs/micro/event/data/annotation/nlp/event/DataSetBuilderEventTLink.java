@@ -23,6 +23,7 @@ import edu.cmu.ml.rtw.generic.parse.Obj;
 import edu.cmu.ml.rtw.generic.util.Pair;
 import edu.cmu.ml.rtw.generic.util.ThreadMapper;
 import edu.cmu.ml.rtw.generic.util.ThreadMapper.Fn;
+import edu.psu.ist.acs.micro.event.data.EventDataTools;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TextDirection;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType;
@@ -206,7 +207,7 @@ public class DataSetBuilderEventTLink extends DataSetBuilderDocumentFiltered<Eve
 						return null;
 				}
 				
-				TLink link = new TLink(context.getDataTools(), null, id1 + "_" + id2, null, o1.getSecond(), o2.getSecond(), null,null,null);
+				TLink link = new TLink((EventDataTools)context.getDataTools(), null, id1 + "_" + id2, null, o1.getSecond(), o2.getSecond(), null,null,null);
 				TextDirection d = link.getTextDirection();
 				if (directionMode == DirectionMode.FORWARD && d != TextDirection.FORWARD && d != TextDirection.NONE)
 					return null;
