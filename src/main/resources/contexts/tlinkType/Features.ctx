@@ -19,6 +19,7 @@ ts_str_fn pos = PoS();
 ts_str_fn nlpLemma = TokenAnnotation(annotationType="lemma");
 ts_str_fn lemma = WordNetLemma();
 ts_str_fn synset = WordNetSynset();
+ts_str_fn synset1 = WordNetSynset(onlyFirst="true");
 ts_str_fn sentPos = SentencePosition();
 ts_str_fn depStr = TokenSpanPathStr(mode="ALL", pathLength="1", spanFn1=${dep}, strFn=${strDef});
 ts_str_fn pred = PredicateSense();
@@ -44,6 +45,7 @@ feature feventDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence
 feature feventPrep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${strDef} o ${prep}));
 feature feventLemma = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${lemma});
 feature feventSynset = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${synset});
+feature feventSynset1 = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${synset1});
 feature feventSentPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${sentPos});
 feature feventSentPosPos = Conjunction(minFeatureOccurrence="2", features=(${feventSentPos}, ${feventPos}));
 feature feventW2v = Word2Vec(tokenExtractor="FirstEvent", mode="VECTOR", fn=(${str} o ${head}));
@@ -88,6 +90,7 @@ feature fsDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2"
 feature fsPrep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=(${strDef} o ${prep}));
 feature fsLemma = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${lemma});
 feature fsSynset = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${synset});
+feature fsSynset1 = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${synset1});
 feature fsW2v = Word2Vec(tokenExtractor="Source", mode="VECTOR", fn=(${str} o ${head}));
 feature fsSentPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Source", fn=${sentPos});
 feature fsSentPosPos = Conjunction(minFeatureOccurrence="2", features=(${fsSentPos}, ${fsPos}));
@@ -112,6 +115,7 @@ feature ftDep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2"
 feature ftPrep = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=(${strDef} o ${prep}));
 feature ftLemma = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${lemma});
 feature ftSynset = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${synset});
+feature ftSynset1 = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${synset1});
 feature ftSentPos = TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="Target", fn=${sentPos});
 feature ftSentPosPos = Conjunction(minFeatureOccurrence="2", features=(${ftSentPos}, ${ftPos}));
 feature ftW2v = Word2Vec(tokenExtractor="Target", mode="VECTOR", fn=(${str} o ${head}));
