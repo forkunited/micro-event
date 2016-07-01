@@ -4,11 +4,11 @@ context modelsTlinkTypeDet = TLinkType(initScript="/tlinkType/methods/Determinis
 ts_fn head = Head();
 ts_fn after2 = NGramContext(type="AFTER", n="2");
 ts_fn before2 = NGramContext(type="BEFORE", n="2");
-ts_fn afterS2 = NGramContext(type="AFTER", n="2", allowSqueeze="true");
-ts_fn beforeS2 = NGramContext(type="BEFORE", n="2", allowSqueeze="true");
+ts_fn afterS2 = NGramContext(type="AFTER", n="2", sentenceBoundaryMode="SQUEEZE");
+ts_fn beforeS2 = NGramContext(type="BEFORE", n="2", sentenceBoundaryMode="SQUEEZE");
 ts_fn beforeI1 = NGramContext(type="BEFORE_INCLUDING", n="1");
 ts_fn afterI1 = NGramContext(type="AFTER_INCLUDING", n="1");
-ts_fn beforeAfterS2 = NGramContext(type="BEFORE_AND_AFTER", n="2", allowSqueeze="true");
+ts_fn beforeAfterS2 = NGramContext(type="BEFORE_AND_AFTER", n="2", sentenceBoundaryMode="SQUEEZE");
 ts_fn inside1 = NGramInside(n="1");
 ts_fn insideNoHead1 = NGramInside(n="1", noHead="true");
 ts_fn dep = DependencyRelation(mode="PARENTS_AND_CHILDREN");
