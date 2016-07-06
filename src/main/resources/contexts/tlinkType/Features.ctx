@@ -6,10 +6,9 @@ str_fn trim = Trim();
 str_fn lwr = StringCase(type="LOWER");
 str_fn rplDoW = StringListReplace(mode="LITERAL", ignoreCase="true", replace="[DoW]",
                                   target=("monday","tuesday","wednesday","thursday","friday","saturday","sunday"));
-ts_str_fn strDef = Composite(f=(${lwr} o ${trim}), g=${str});
-ts_str_fn strTrim = Composite(f=${trim}, g=${str});
-ts_str_fn strTime = Composite(f=(${trim} o ${rplDoW}), g=${str});
+                                  
 
+ts_fn min1Token = TokenSpanLengthFilter(min="1");
 ts_fn head = Head();
 ts_fn after2 = NGramContext(type="AFTER", n="2");
 ts_fn before2 = NGramContext(type="BEFORE", n="2");
@@ -33,6 +32,10 @@ ts_str_fn synset1 = WordNetSynset(firstOnly="true");
 ts_str_fn sentPos = SentencePosition();
 ts_str_fn depStr = TokenSpanPathStr(mode="ALL", pathLength="1", spanFn1=${dep}, strFn=${strDef});
 ts_str_fn pred = PredicateSense();
+ts_str_fn strDef = Composite(f=(${lwr} o ${trim}), g=${str});
+ts_str_fn strTrim = Composite(f=${trim}, g=${str});
+ts_str_fn strTime = Composite(f=(${trim} o ${rplDoW}), g=${str});
+ts_str_fn strPhrase = Composite(f=${trim}, g=(${str} o ${min1Token}));
 
 feature feventToken = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${strTrim});
 feature feventTokenClean = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${strDef});
@@ -63,7 +66,7 @@ feature feventSentPos = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence
 feature feventSentPosPos = Conjunction(minFeatureOccurrence="2", features=(${feventSentPos}, ${feventPos}));
 feature feventW2v = Word2Vec(tokenExtractor="FirstEvent", mode="VECTOR", fn=(${strTrim} o ${head}));
 feature feventPred= TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=(${pred} o ${head}));
-feature ftimeToken = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=${strDef});
+feature ftimeToken = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=${strPhrase});
 feature ftimeTokenh = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=(${strTime} o ${head}));
 feature ftimeSentPos = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=${sentPos});
 feature ftimePrep = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=(${strDef} o ${prep}));

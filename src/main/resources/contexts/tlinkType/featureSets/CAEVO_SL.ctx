@@ -1,7 +1,7 @@
 context features = TLinkType(initScript="/tlinkType/Features.ctx", initOnce="true");
 context data = TLinkType(initScript="/tlinkType/data/LoadTrainDevTest.ctx", initOnce="true");
 
-feature_set fsETWS = FeatureSet(features=(${features.feventTokenClean}, 
+feature_set fsETWS = FeatureSet(features=(${features.feventToken}, 
 										${features.feventPos},
 										${features.feventPosB2_0},
 										${features.feventPosB2_1}, 
@@ -20,7 +20,7 @@ feature_set fsETWS = FeatureSet(features=(${features.feventTokenClean},
 										${features.fsourceType}), 
 								initData=(${data.trainDataETWS}));
 
-feature_set fsEEWS = FeatureSet(features=(${features.fsTokenClean}, 
+feature_set fsEEWS = FeatureSet(features=(${features.fsToken}, 
 										${features.fsPos}, 
 										${features.fsPosB2_0}, 
 										${features.fsPosB2_1},
@@ -33,7 +33,7 @@ feature_set fsEEWS = FeatureSet(features=(${features.fsTokenClean},
 										${features.fsLemma}, 
 										${features.fsSynset1},
 										${features.fsPrep},
-										${features.ftTokenClean},  
+										${features.ftToken},  
 										${features.ftPos}, 
 										${features.ftPosB}, 
 										${features.ftPosB2_0},
@@ -60,7 +60,7 @@ feature_set fsEEWS = FeatureSet(features=(${features.fsTokenClean},
 										${features.fdomEE}), 
 						initData=(${data.trainDataEEWS}));
 
-feature_set fsEED = FeatureSet(features=(${features.fsTokenClean}, 
+feature_set fsEED = FeatureSet(features=(${features.fsToken}, 
 										${features.fsPos}, 
 										${features.fsPosB2_0}, 
 										${features.fsPosB2_1}, 
@@ -86,7 +86,7 @@ feature_set fsEED = FeatureSet(features=(${features.fsTokenClean},
 										${features.ftLemma}, 
 										${features.ftSynset1},
 										${features.ftPrep},
-										${features.fstTokenClean}, 
+										${features.fstToken}, 
 										${features.fstPos}, 
 										${features.fstTense}, 
 										${features.fstAspect}, 
@@ -107,7 +107,7 @@ feature_set fsEED = FeatureSet(features=(${features.fsTokenClean},
 										${features.fdomEE}), 
 						initData=(${data.trainDataEED}));
 
-feature_set fsDCT = FeatureSet(features=(${features.feventTokenClean},
+feature_set fsDCT = FeatureSet(features=(${features.feventToken},
 										 ${features.feventTokenBA},
 										 ${features.feventPos},
 										 ${features.feventPosB2_0},
