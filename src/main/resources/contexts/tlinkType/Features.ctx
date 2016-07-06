@@ -7,7 +7,6 @@ str_fn lwr = StringCase(type="LOWER");
 str_fn rplDoW = StringListReplace(mode="LITERAL", ignoreCase="true", replace="[DoW]",
                                   target=("monday","tuesday","wednesday","thursday","friday","saturday","sunday"));
                                   
-
 ts_fn min2Token = TokenSpanLengthFilter(min="2");
 ts_fn head = Head();
 ts_fn after2 = NGramContext(type="AFTER", n="2");
