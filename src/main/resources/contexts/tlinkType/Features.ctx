@@ -8,7 +8,7 @@ str_fn rplDoW = StringListReplace(mode="LITERAL", ignoreCase="true", replace="[D
                                   target=("monday","tuesday","wednesday","thursday","friday","saturday","sunday"));
                                   
 
-ts_fn min1Token = TokenSpanLengthFilter(min="1");
+ts_fn min2Token = TokenSpanLengthFilter(min="2");
 ts_fn head = Head();
 ts_fn after2 = NGramContext(type="AFTER", n="2");
 ts_fn before2 = NGramContext(type="BEFORE", n="2");
@@ -34,7 +34,7 @@ ts_str_fn pred = PredicateSense();
 ts_str_fn strDef = Composite(f=(${lwr} o ${trim}), g=${str});
 ts_str_fn strTrim = Composite(f=${trim}, g=${str});
 ts_str_fn strTime = Composite(f=(${trim} o ${rplDoW}), g=${str});
-ts_str_fn strPhrase = Composite(f=${trim}, g=(${str} o ${min1Token}));
+ts_str_fn strPhrase = Composite(f=${trim}, g=(${str} o ${min2Token}));
 ts_str_fn depStr = TokenSpanPathStr(mode="ALL", pathLength="1", spanFn1=${dep}, strFn=${strDef});
 
 feature feventToken = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="2", tokenExtractor="FirstEvent", fn=${strTrim});
