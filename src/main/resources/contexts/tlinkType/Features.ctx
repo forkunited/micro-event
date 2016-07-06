@@ -29,6 +29,7 @@ ts_str_fn lemma = WordNetLemma();
 ts_str_fn synset = WordNetSynset();
 ts_str_fn synset1 = WordNetSynset(firstOnly="true");
 ts_str_fn sentPos = SentencePosition();
+ts_str_fn sentPosEnd = SentencePosition(filter="END");
 ts_str_fn pred = PredicateSense();
 ts_str_fn strDef = Composite(f=(${lwr} o ${trim}), g=${str});
 ts_str_fn strTrim = Composite(f=${trim}, g=${str});
@@ -68,6 +69,7 @@ feature feventPred= TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="2"
 feature ftimeToken = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=${strPhrase});
 feature ftimeTokenh = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=(${strTime} o ${head}));
 feature ftimeSentPos = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=${sentPos});
+feature ftimeSentPosEnd = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=${sentPosEnd});
 feature ftimePrep = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="2", tokenExtractor="FirstTime", fn=(${strDef} o ${prep}));
 feature ftimeW2v = Word2Vec(tokenExtractor="FirstTime", mode="VECTOR", fn=(${strTrim} o ${head}));
 feature feventTimeToken = Conjunction(minFeatureOccurrence="2", features=(${feventToken}, ${ftimeTokenh}));
