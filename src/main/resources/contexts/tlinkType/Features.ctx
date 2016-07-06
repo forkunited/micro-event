@@ -86,6 +86,8 @@ feature fw2vDiffET = Word2Vec(tokenExtractor="EventTime", mode="DIFFERENCE", fn=
 feature fsourceType = TLinkableType(sourceOrTarget="SOURCE");
 feature foverEventET = TLinkAttribute(attribute="OVER_EVENT");
 feature fadjET = MethodClassification(method=${modelsTlinkTypeDet.adjET});
+feature fconPathSourceTypeET = Conjunction(minFeatureOccurrence="2", features=(${fconPathET}, ${fsourceType}));
+feature fconPathPosSourceTypeET = Conjunction(minFeatureOccurrence="2", features=(${fconPathPosET}, ${fsourceType}));
 
 feature fsToken = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="2", tokenExtractor="Source", fn=${strTrim});
 feature fsTokenClean = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="2", tokenExtractor="Source", fn=${strDef});
