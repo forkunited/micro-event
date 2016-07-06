@@ -4,8 +4,8 @@ context modelsTlinkTypeDet = TLinkType(initScript="/tlinkType/methods/Determinis
 ts_str_fn str=String();
 str_fn trim = Trim();
 str_fn lwr = StringCase(type="LOWER");
-str_fn rplDoW = StringReplace(mode="LITERAL", ignoreCase="true", replace="[DoW]",
-                              target=("monday","tuesday","wednesday","thursday","friday","saturday","sunday"));
+str_fn rplDoW = StringListReplace(mode="LITERAL", ignoreCase="true", replace="[DoW]",
+                                  target=("monday","tuesday","wednesday","thursday","friday","saturday","sunday"));
 ts_str_fn strDef = Composite(f=(${lwr} o ${trim}), g=${str});
 ts_str_fn strTrim = Composite(f=${trim}, g=${str});
 ts_str_fn strTime = Composite(f=(${trim} o ${rplDoW}), g=${str});
