@@ -13,7 +13,7 @@ feature_set fsETWS = FeatureSet(features=(${features.feventToken},
 										${features.feventAspect}, 
 										${features.feventClass}, 
 										${features.feventPolarity}, 
-										${features.feventModality}
+										${features.feventModality},
 										${features.ftimeToken}, 
 										${features.ftimeTokenh},
 										${features.ftimeSentPosEnd},
