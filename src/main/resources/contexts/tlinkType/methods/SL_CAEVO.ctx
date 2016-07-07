@@ -23,6 +23,6 @@ classify_method slEEWSSub = FilterDatumIndicator(method=${slEEWSUnfiltered}, dat
 classify_method slEEDSub = FilterDatumIndicator(method=${slEEDUnfiltered}, datumIndicator="EED");
 
 classify_method slDCT = InitClassifyMethod(devData=${trainDevTestDataTlinkType.devData}, method=${slDCTSub});
-classify_method slETWS = InitClassifyMethod(devData=${trainDevTestDataTlinkType.devData}, method=${slETWSSub});
-classify_method slEEWS = InitClassifyMethod(devData=${trainDevTestDataTlinkType.devData}, method=${slEEWSSub});
-classify_method slEED = InitClassifyMethod(devData=${trainDevTestDataTlinkType.devData}, method=${slEEDSub});
+classify_method slETWS = InitClassifyMethod(devData=${trainDevTestDataTlinkType.devData}, method=${slETWSSub}, minFeatureOccurrence="2");
+classify_method slEEWS = InitClassifyMethod(devData=${trainDevTestDataTlinkType.devData}, method=${slEEWSSub}, minFeatureOccurrence="2");
+classify_method slEED = InitClassifyMethod(devData=${trainDevTestDataTlinkType.devData}, method=${slEEDSub}, minFeatureOccurrence="2");
