@@ -23,7 +23,7 @@ ts_fn inside1 = NGramInside(n="1");
 ts_fn insideNoHead1 = NGramInside(n="1", noHead="true");
 ts_fn dep = DependencyRelation(mode="PARENTS_AND_CHILDREN");
 ts_fn prep = PrepositionOfClause();
-ts_str_fn pos = PoS();
+ts_str_fn pos = PoS(literalSymbols="true");
 ts_str_fn nlpLemma = TokenAnnotation(annotationType="lemma");
 ts_str_fn lemma = WordNetLemma();
 ts_str_fn synset = WordNetSynset();
