@@ -88,6 +88,7 @@ feature foverEventET = TLinkAttribute(attribute="OVER_EVENT");
 feature fadjET = MethodClassification(method=${modelsTlinkTypeDet.adjET});
 feature fconPathSourceTypeET = Conjunction(minFeatureOccurrence="2", features=(${fconPathET}, ${fsourceType}));
 feature fconPathPosSourceTypeET = Conjunction(minFeatureOccurrence="2", features=(${fconPathPosET}, ${fsourceType}));
+feature ftokenPathSourceTypeET = Conjunction(minFeatureOccurrence="2", features=(${ftokenPathET}, ${fsourceType}));
 
 feature fsToken = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="2", tokenExtractor="Source", fn=${strTrim});
 feature fsTokenClean = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="2", tokenExtractor="Source", fn=${strDef});
