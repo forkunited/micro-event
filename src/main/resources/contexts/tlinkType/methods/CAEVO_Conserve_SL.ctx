@@ -34,5 +34,5 @@ multi_classify_method sieve = Sieve(methods=(${modelsTlinkTypeDet.adjET}, ${mode
                                                       ${evalTlinkTypeSl.devSlETWSPrecision}, 
                                                       ${evalTlinkTypeSl.devSlEEDPrecision}, 
                                                       ${evalTlinkTypeSl.devSlEEWSPrecision}, 
-                                                      ${evalTlinkTypeSl.devSlDCTPrecision}
-                                    ));
+                                                      ${evalTlinkTypeSl.devSlDCTPrecision}),
+                                    structureTransformFn=${greedyTlinkTransitiveRules});
