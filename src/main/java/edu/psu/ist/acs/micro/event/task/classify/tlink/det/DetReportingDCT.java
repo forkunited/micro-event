@@ -12,7 +12,9 @@ public class DetReportingDCT {
 	public static TimeMLRelType determineRelation(EventMention event, LinkableTimeExpression time) {
 		if (!time.getValue().getValue().equals(time.getTokenSpan().getDocument().getDocumentAnnotation(AnnotationTypeNLP.CREATION_TIME).getValue().getValue()) 
 				|| 
-				!event.getTokenSpan().getDocument().getName().equals(time.getTokenSpan().getDocument().getName()))
+				!event.getTokenSpan().getDocument().getName().equals(time.getTokenSpan().getDocument().getName())
+				||
+				event.getTokenSpan().getSentenceIndex() != time.getTokenSpan().getSentenceIndex())
 			return null;
 		
 		if (event.getTimeMLClass() == TimeMLClass.REPORTING 
