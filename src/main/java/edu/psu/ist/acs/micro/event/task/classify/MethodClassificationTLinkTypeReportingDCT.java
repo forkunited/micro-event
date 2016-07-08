@@ -125,7 +125,7 @@ public class MethodClassificationTLinkTypeReportingDCT extends MethodClassificat
 	public TimeMLRelType classify(TLinkDatum<TimeMLRelType> datum) {		
 		TLink tlink = datum.getTLink();
 		
-		if (tlink.getPosition() != TLink.Position.DCT || tlink.getType() != TLink.Type.EVENT_TIME)
+		if (tlink.getType() != TLink.Type.EVENT_TIME)
 			return null;
 		
 		EventMention mention = null;
