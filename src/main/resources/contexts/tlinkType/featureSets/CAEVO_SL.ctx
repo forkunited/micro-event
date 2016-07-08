@@ -23,7 +23,8 @@ feature_set fsETWS = FeatureSet(features=(${features.feventToken},
 										${features.fsourceType},
 										${features.fconPathSourceTypeET},
 										${features.fconPathPosSourceTypeET},
-										${features.ftokenPathSourceTypeET}), 
+										${features.ftokenPathSourceTypeET},
+										${features.fconstant}), 
 								initData=(${data.trainDataETWS}));
 
 feature_set fsEEWS = FeatureSet(features=(${features.fsToken}, 
@@ -131,5 +132,6 @@ feature_set fsDCT = FeatureSet(features=(${features.feventToken},
 										 ${features.feventAspect}, 
 										 ${features.feventClass}, 
 										 ${features.feventPolarity}, 
-										 ${features.feventModality}), 
+										 ${features.feventModality},
+										 ${features.fconstant}), 
 						initData=(${data.trainDataDCT}));
