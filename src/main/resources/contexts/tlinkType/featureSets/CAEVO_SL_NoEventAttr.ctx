@@ -46,6 +46,7 @@ feature_set fsEEWS = FeatureSet(features=(${features.fsToken},
 										${features.fconPathPosEE}, 
 										${features.foverEventEE}, 
 										${features.fdomEE},
+										${features.fconstant},
 										${features.fconstant}), 
 						initData=(${data.trainDataEEWS}));
 
