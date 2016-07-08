@@ -127,7 +127,7 @@ public class MethodClassificationTLinkTypeReportingDCT extends MethodClassificat
 		
 		if (tlink.getType() != TLink.Type.EVENT_TIME)
 			return null;
-		
+	
 		EventMention mention = null;
 		LinkableTimeExpression time = null;
 		boolean eventSource = true;

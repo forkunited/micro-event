@@ -16,8 +16,8 @@ public class DetReportingDCT {
 			return null;
 		
 		if (event.getTimeMLClass() == TimeMLClass.REPORTING 
-				&& event.getTimeMLTense() == TimeMLTense.PAST
-				&& event.getTimeMLAspect() == TimeMLAspect.PERFECTIVE) {
+				/*&& event.getTimeMLTense() == TimeMLTense.PAST
+				&& event.getTimeMLAspect() == TimeMLAspect.PERFECTIVE*/) {
 			return TimeMLRelType.IS_INCLUDED;
 		} else {
 			return null;
