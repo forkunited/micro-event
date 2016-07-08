@@ -66,6 +66,7 @@ public class FeatureTLinkAttribute<L> extends Feature<TLinkDatum<L>, L>{
 				this.vocabulary.put(types[i].toString(), this.vocabulary.size());
 		} else if (this.attribute == Attribute.OVER_EVENT) {
 			this.vocabulary.put("true", this.vocabulary.size());
+			this.vocabulary.put("false", this.vocabulary.size());
 		}
 		
 		return true;
@@ -83,7 +84,10 @@ public class FeatureTLinkAttribute<L> extends Feature<TLinkDatum<L>, L>{
 		else if (this.attribute == Attribute.TYPE)
 			vector.put(offset + this.vocabulary.get(datum.getTLink().getType().toString()), 1.0);
 		else if (this.attribute == Attribute.OVER_EVENT) {
-			vector.put(offset, (datum.getTLink().isOverEvent() ? 1.0 : 0.0));
+			if (datum.getTLink().isOverEvent())
+				vector.put(offset, 1.0);
+			else
+				vector.put(offset + 1, 1.0);
 		}
 		
 		return vector;
