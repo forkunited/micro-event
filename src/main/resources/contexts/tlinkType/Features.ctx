@@ -39,6 +39,8 @@ ts_str_fn strPhrase = Composite(f=${trim}, g=(${str} o ${min2Token}));
 ts_str_fn depStr = TokenSpanPathStr(mode="ALL", pathLength="1", spanFn1=${dep}, strFn=${strDef});
 
 feature fconstant = Constant();
+feature fconstant1 = Constant();
+feature fconstant2 = Constant();
 
 feature feventToken = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="FirstEvent", fn=${strTrim});
 feature feventTokenClean = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="FirstEvent", fn=${strDef});
