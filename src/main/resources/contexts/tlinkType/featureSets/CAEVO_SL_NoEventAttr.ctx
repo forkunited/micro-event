@@ -18,8 +18,7 @@ feature_set fsETWS = FeatureSet(features=(${features.feventToken},
 										${features.fsourceType},
 										${features.fconPathSourceTypeET},
 										${features.fconPathPosSourceTypeET},
-										${features.ftokenPathSourceTypeET},
-										${features.fconstant}), 
+										${features.ftokenPathSourceTypeET}), 
 								initData=(${data.trainDataETWS}));
 
 feature_set fsEEWS = FeatureSet(features=(${features.fsToken}, 
@@ -46,6 +45,8 @@ feature_set fsEEWS = FeatureSet(features=(${features.fsToken},
 										${features.fconPathPosEE}, 
 										${features.foverEventEE}, 
 										${features.fdomEE},
+										${features.fconstant},
+										${features.fconstant},
 										${features.fconstant}), 
 						initData=(${data.trainDataEEWS}));
 
@@ -72,6 +73,8 @@ feature_set fsEED = FeatureSet(features=(${features.fsToken},
 										${features.fconPathPosEE},
 										${features.foverEventEE}, 
 										${features.fdomEE},
+										${features.fconstant},
+										${features.fconstant},
 										${features.fconstant}), 
 						initData=(${data.trainDataEED}));
 
@@ -82,6 +85,5 @@ feature_set fsDCT = FeatureSet(features=(${features.feventToken},
 										 ${features.feventPosB2_1}, 
 										 ${features.feventPosBNI},  
 										 ${features.feventLemma}, 
-										 ${features.feventSynset1},
-										 ${features.fconstant}), 
+										 ${features.feventSynset1}), 
 						initData=(${data.trainDataDCT}));
