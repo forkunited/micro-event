@@ -392,7 +392,7 @@ public class TLink implements StoredJSONSerializable {
 			return Type.EVENT_TIME;
 	}
 	
-	private static final TokenSpan.Relation[] OVER_EVENT_RELATIONS = new TokenSpan.Relation[] { TokenSpan.Relation.CONTAINED_BY, TokenSpan.Relation.EQUAL };
+	private static final TokenSpan.Relation[] OVER_EVENT_RELATIONS = new TokenSpan.Relation[] { TokenSpan.Relation.CONTAINED_BY, TokenSpan.Relation.EQUAL, TokenSpan.Relation.CONTAINS };
 	public boolean isOverEvent() {
 		if (getPosition() != Position.WITHIN_SENTENCE)
 			return false;
@@ -400,7 +400,7 @@ public class TLink implements StoredJSONSerializable {
 		TokenSpan source = getSource().getTokenSpan();
 		TokenSpan target = getTarget().getTokenSpan();
 		int startIndex = Math.min(source.getEndTokenIndex(), target.getEndTokenIndex());
-		int endIndex = Math.max(source.getStartTokenIndex(), source.getStartTokenIndex());
+		int endIndex = Math.max(source.getStartTokenIndex(), target.getStartTokenIndex());
 		
 		for (int i = startIndex; i < endIndex; i++) {
 			List<Pair<TokenSpan, EventMention>> es = source.getDocument().getTokenSpanAnnotations(AnnotationTypeNLPEvent.EVENT_MENTION, new TokenSpan(source.getDocument(), source.getSentenceIndex(), i, i + 1), OVER_EVENT_RELATIONS);
