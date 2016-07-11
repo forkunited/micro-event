@@ -392,7 +392,7 @@ public class TLink implements StoredJSONSerializable {
 			return Type.EVENT_TIME;
 	}
 	
-	private static final TokenSpan.Relation[] OVER_EVENT_RELATIONS = new TokenSpan.Relation[] { TokenSpan.Relation.CONTAINED_BY };
+	private static final TokenSpan.Relation[] OVER_EVENT_RELATIONS = new TokenSpan.Relation[] { TokenSpan.Relation.CONTAINED_BY, TokenSpan.Relation.EQUAL };
 	public boolean isOverEvent() {
 		if (getPosition() != Position.WITHIN_SENTENCE)
 			return false;
