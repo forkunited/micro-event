@@ -86,9 +86,8 @@ public class TestCAEVOFeatureOutput {
 			} else if (name.startsWith("ftSynset1_")) {
 				caevoName = name.replace("ftSynset1_", "synset2-");
 			} else if (name.startsWith("fstToken_")) {
-				caevoName = name.replace("fstToken_", "BI_");
-				caevoName = caevoName.replace("//", "-");
-				caevoName = caevoName.replace("_", "");
+				caevoName = name.replace("fstToken_", "BI");
+				caevoName = caevoName.replace("//", "_");
 			} else if (name.startsWith("fstPos_")) {
 				caevoName = name.replace("fstPos_", "posBi_");
 				caevoName = caevoName.replace("//", "-");
