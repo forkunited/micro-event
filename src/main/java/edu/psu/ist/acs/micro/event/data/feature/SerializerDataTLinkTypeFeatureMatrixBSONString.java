@@ -10,9 +10,12 @@ import org.platanios.learn.math.matrix.Vector.VectorElement;
 
 import edu.cmu.ml.rtw.generic.data.DataTools;
 import edu.cmu.ml.rtw.generic.data.Serializer;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.time.TimeExpression;
 import edu.cmu.ml.rtw.generic.data.feature.DataFeatureMatrix;
 import edu.cmu.ml.rtw.generic.data.store.StoreReference;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkDatum;
+import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkable;
 
 public class SerializerDataTLinkTypeFeatureMatrixBSONString extends Serializer<DataFeatureMatrix<?, ?>, String> {
 	private List<Serializer.Index<DataFeatureMatrix<?, ?>>> indices;
@@ -64,9 +67,27 @@ public class SerializerDataTLinkTypeFeatureMatrixBSONString extends Serializer<D
 			}
 		
 			//String labelStr = (d.getLabel() == null) ? "null" : d.getLabel().toString();
-			str.append(d.getTLink().getSource().getId())
+		
+			String doc = d.getTLink().getSource().getTokenSpan().getDocument().getName();
+			String sourceId = null;
+			String targetId = null;
+			if (d.getTLink().getSource().getTLinkableType() == TLinkable.Type.EVENT) {
+				sourceId = ((EventMention)d.getTLink().getSource()).getSourceInstanceId();
+			} else {
+				sourceId = ((TimeExpression)d.getTLink().getSource()).getSourceId();
+			}
+			
+			if (d.getTLink().getTarget().getTLinkableType() == TLinkable.Type.EVENT) {
+				targetId = ((EventMention)d.getTLink().getTarget()).getSourceInstanceId();
+			} else {
+				targetId = ((TimeExpression)d.getTLink().getTarget()).getSourceId();
+			}
+			
+			str.append(doc)
 				.append("\t")
-				.append(d.getTLink().getTarget().getId())
+				.append(sourceId)
+				.append("\t")
+				.append(targetId)
 				.append("\t")
 				.append(bsonVector.toJson()).append("\n");
 		}
