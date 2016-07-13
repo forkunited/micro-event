@@ -33,6 +33,7 @@ import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.LinkableTimeExpress
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TimePairDatum;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.Value;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.ValueMention;
+import edu.psu.ist.acs.micro.event.data.feature.SerializerDataTLinkTypeFeatureMatrixBSONString;
 import edu.psu.ist.acs.micro.event.util.EventProperties;
 
 /**
@@ -151,6 +152,9 @@ public class EventDataTools extends DataTools {
 		SerializerJSONBSON<LinkableNormalizedTimeValue> timeValueSerializer = new SerializerJSONBSON<LinkableNormalizedTimeValue>("NormalizedTimeValue", new LinkableNormalizedTimeValue(this));
 		SerializerJSONBSON<TLink> tlinkSerializer = new SerializerJSONBSON<TLink>("TLink", new TLink(this));
 		
+		SerializerDataTLinkTypeFeatureMatrixBSONString dtltFMatSerializer = new SerializerDataTLinkTypeFeatureMatrixBSONString(this);
+		
+		
 		serializers.put(eventMentionSerializer.getName(), eventMentionSerializer);
 		serializers.put(eventSerializer.getName(), eventSerializer);
 		serializers.put(entityMentionSerializer.getName(), entityMentionSerializer);
@@ -163,6 +167,7 @@ public class EventDataTools extends DataTools {
 		serializers.put(timeExpressionSerializer.getName(), timeExpressionSerializer);
 		serializers.put(timeValueSerializer.getName(), timeValueSerializer);
 		serializers.put(tlinkSerializer.getName(), tlinkSerializer);
+		serializers.put(dtltFMatSerializer.getName(), dtltFMatSerializer);
 		
 		return serializers;
 	}
