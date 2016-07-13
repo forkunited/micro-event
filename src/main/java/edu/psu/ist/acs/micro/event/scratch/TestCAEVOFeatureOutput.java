@@ -77,7 +77,7 @@ public class TestCAEVOFeatureOutput {
 				caevoName = caevoName.replace("PRE-0", "<s>");
 				caevoName = caevoName.replace("PRE-1", "<pre-s>");
 			} else if (name.startsWith("ftPosBNI_")) {
-				caevoName = name.replace("fsPosBNI_", "pos2-bi-");
+				caevoName = name.replace("ftPosBNI_", "pos2-bi-");
 				caevoName = caevoName.replace("PRE-0", "<s>");
 				caevoName = caevoName.replace("PRE-1", "<pre-s>");
 				caevoName = caevoName.replace("_", "-");
