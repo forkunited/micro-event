@@ -47,6 +47,8 @@ public class TestCAEVOFeatureOutput {
 		for (String name : names) {
 			if (name.startsWith("fsToken_")) {
 				caevoName = name.replace("fsToken_", "token1-");
+			} else if (name.startsWith("fsPrep_")) {
+				caevoName = name.replace("fsPrep_", "prep1-");
 			} else if (name.startsWith("fsPos_")) {
 				caevoName = name.replace("fsPos_", "pos1-0-");
 			} else if (name.startsWith("fsPosB2_0_")) {
@@ -67,6 +69,8 @@ public class TestCAEVOFeatureOutput {
 				caevoName = name.replace("fsSynset1_", "synset1-");
 			} else if (name.startsWith("ftToken_")) {
 				caevoName = name.replace("ftToken_", "token2-");	
+			} else if (name.startsWith("ftPrep_")) {
+				caevoName = name.replace("ftPrep_", "prep2-");
 			} else if (name.startsWith("ftPos_")) {
 				caevoName = name.replace("ftPos_", "pos2-0-");
 			} else if (name.startsWith("ftPosB2_0_")) {
