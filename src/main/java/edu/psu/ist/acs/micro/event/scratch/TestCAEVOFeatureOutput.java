@@ -87,9 +87,12 @@ public class TestCAEVOFeatureOutput {
 				caevoName = name.replace("ftSynset1_", "synset2-");
 			} else if (name.startsWith("fstToken_")) {
 				caevoName = name.replace("fstToken_", "BI-");
+				caevoName = caevoName.replace("//", "-");
+				caevoName = caevoName.replace("_", "");
 			} else if (name.startsWith("fstPos_")) {
 				caevoName = name.replace("fstPos_", "posBi-");
-				caevoName = caevoName.replace("_", "-");
+				caevoName = caevoName.replace("//", "-");
+				caevoName = caevoName.replace("_", "");
 			} else if (name.startsWith("fdepPathEE_")) {
 				caevoName = name.replace("fdepPathEE_", "");
 			} else if (name.startsWith("fconPathEE_")) {
