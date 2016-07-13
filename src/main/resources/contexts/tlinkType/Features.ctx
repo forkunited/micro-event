@@ -63,7 +63,7 @@ feature feventClass = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="TI
 feature feventPolarity = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="TIMEML_POLARITY");
 feature feventModality = TLinkEventAttribute(sourceOrTarget="EITHER", attribute="MODALITY");
 feature feventDep = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="FirstEvent", fn=${depStr});
-feature feventPrep = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="FirstEvent", fn=(${strDef} o ${prep}));
+feature feventPrep = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="FirstEvent", fn=(${strTrim} o ${prep}));
 feature feventLemma = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="FirstEvent", fn=${lemma});
 feature feventSynset = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="FirstEvent", fn=(${synset} o ${filterNV}));
 feature feventSynset1 = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="FirstEvent", fn=(${synset1} o ${filterNV}));
@@ -75,7 +75,7 @@ feature ftimeToken = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1
 feature ftimeTokenh = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="FirstTime", fn=(${strTime} o ${head}));
 feature ftimeSentPos = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="FirstTime", fn=${sentPos});
 feature ftimeSentPosEnd = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="FirstTime", fn=${sentPosEnd});
-feature ftimePrep = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="FirstTime", fn=(${strDef} o ${prep}));
+feature ftimePrep = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="FirstTime", fn=(${strTrim} o ${prep}));
 feature ftimeW2v = Word2Vec(tokenExtractor="FirstTime", mode="VECTOR", fn=(${strTrim} o ${head}));
 feature feventTimeToken = Conjunction(minFeatureOccurrence="1", features=(${feventToken}, ${ftimeTokenh}));
 feature ftokenPathET = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="BetweenSourceTarget", fn=${strDef});
@@ -115,7 +115,7 @@ feature fsClass = TLinkEventAttribute(sourceOrTarget="SOURCE", attribute="TIMEML
 feature fsPolarity = TLinkEventAttribute(sourceOrTarget="SOURCE", attribute="TIMEML_POLARITY");
 feature fsModality = TLinkEventAttribute(sourceOrTarget="SOURCE", attribute="MODALITY");
 feature fsDep = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="Source", fn=${depStr});
-feature fsPrep = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="Source", fn=(${strDef} o ${prep}));
+feature fsPrep = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="Source", fn=(${strTrim} o ${prep}));
 feature fsLemma = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="Source", fn=${lemma});
 feature fsSynset = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="Source", fn=(${synset} o ${filterNV}));
 feature fsSynset1 = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="Source", fn=(${synset1} o ${filterNV}));
@@ -143,7 +143,7 @@ feature ftClass = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="TIMEML
 feature ftPolarity = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="TIMEML_POLARITY");
 feature ftModality = TLinkEventAttribute(sourceOrTarget="TARGET", attribute="MODALITY");
 feature ftDep = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="Target", fn=${depStr});
-feature ftPrep = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="Target", fn=(${strDef} o ${prep}));
+feature ftPrep = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="Target", fn=(${strTrim} o ${prep}));
 feature ftLemma = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="Target", fn=${lemma});
 feature ftSynset = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="Target", fn=(${synset} o ${filterNV}));
 feature ftSynset1 = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="Target", fn=(${synset1} o ${filterNV}));
