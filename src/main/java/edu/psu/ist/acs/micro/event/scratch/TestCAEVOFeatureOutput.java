@@ -105,11 +105,11 @@ public class TestCAEVOFeatureOutput {
 			} else if (name.startsWith("fdomEE_DOMINATED")) {
 				caevoName = name.replace("fdomEE_DOMINATED", "isDominated");
 			} else if (name.startsWith("fconstant_")) {
-				caevoName = name.replace("fconstant_", "order-sameSent-before");
+				caevoName = name.replace("fconstant_c", "order-sameSent-before");
 			} else if (name.startsWith("fconstant1_")) {
-				caevoName = name.replace("fconstant1_", "order-sameSent");
+				caevoName = name.replace("fconstant1_c", "order-sameSent");
 			} else if (name.startsWith("fconstant2_")) {
-				caevoName = name.replace("fconstant2_", "order-before");
+				caevoName = name.replace("fconstant2_c", "order-before");
 			} else {
 				throw new UnsupportedOperationException("Unrecognized feature: " + name);
 			}
