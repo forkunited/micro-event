@@ -51,18 +51,26 @@ public class TestCAEVOFeatureOutput {
 				caevoName = name.replace("fsPrep_", "prep1-");
 			} else if (name.startsWith("fsPos_")) {
 				caevoName = name.replace("fsPos_", "pos1-0-");
+				caevoName = caevoName.replace(")", "-RRB-");
+				caevoName = caevoName.replace("(", "-LRB-");
 			} else if (name.startsWith("fsPosB2_0_")) {
 				caevoName = name.replace("fsPosB2_0_", "pos1-1-");
 				caevoName = caevoName.replace("PRE-0", "<s>");
+				caevoName = caevoName.replace(")", "-RRB-");
+				caevoName = caevoName.replace("(", "-LRB-");
 			} else if (name.startsWith("fsPosB2_1_")) {
 				caevoName = name.replace("fsPosB2_1_", "pos1-2-");
 				caevoName = caevoName.replace("PRE-0", "<s>");
 				caevoName = caevoName.replace("PRE-1", "<pre-s>");
+				caevoName = caevoName.replace(")", "-RRB-");
+				caevoName = caevoName.replace("(", "-LRB-");
 			} else if (name.startsWith("fsPosBNI_")) {
 				caevoName = name.replace("fsPosBNI_", "pos1-bi-");
 				caevoName = caevoName.replace("PRE-0", "<s>");
 				caevoName = caevoName.replace("PRE-1", "<pre-s>");
 				caevoName = caevoName.replace("_", "-");
+				caevoName = caevoName.replace(")", "-RRB-");
+				caevoName = caevoName.replace("(", "-LRB-");
 			} else if (name.startsWith("fsLemma_")) {
 				caevoName = name.replace("fsLemma_", "lemma1-");
 			} else if (name.startsWith("fsSynset1_")) {
@@ -73,17 +81,25 @@ public class TestCAEVOFeatureOutput {
 				caevoName = name.replace("ftPrep_", "prep2-");
 			} else if (name.startsWith("ftPos_")) {
 				caevoName = name.replace("ftPos_", "pos2-0-");
+				caevoName = caevoName.replace(")", "-RRB-");
+				caevoName = caevoName.replace("(", "-LRB-");
 			} else if (name.startsWith("ftPosB2_0_")) {
 				caevoName = name.replace("ftPosB2_0_", "pos2-1-");
 				caevoName = caevoName.replace("PRE-0", "<s>");
+				caevoName = caevoName.replace(")", "-RRB-");
+				caevoName = caevoName.replace("(", "-LRB-");
 			} else if (name.startsWith("ftPosB2_1_")) {
 				caevoName = name.replace("ftPosB2_1_", "pos2-2-");
 				caevoName = caevoName.replace("PRE-0", "<s>");
 				caevoName = caevoName.replace("PRE-1", "<pre-s>");
+				caevoName = caevoName.replace(")", "-RRB-");
+				caevoName = caevoName.replace("(", "-LRB-");
 			} else if (name.startsWith("ftPosBNI_")) {
 				caevoName = name.replace("ftPosBNI_", "pos2-bi-");
 				caevoName = caevoName.replace("PRE-0", "<s>");
 				caevoName = caevoName.replace("PRE-1", "<pre-s>");
+				caevoName = caevoName.replace(")", "-RRB-");
+				caevoName = caevoName.replace("(", "-LRB-");
 				caevoName = caevoName.replace("_", "-");
 			} else if (name.startsWith("ftLemma_")) {
 				caevoName = name.replace("ftLemma_", "lemma2-");
@@ -97,6 +113,8 @@ public class TestCAEVOFeatureOutput {
 				caevoName = name.replace("fstPos_", "posBi_");
 				caevoName = caevoName.replace("//", "-");
 				caevoName = caevoName.replace("_", "");
+				caevoName = caevoName.replace(")", "-RRB-");
+				caevoName = caevoName.replace("(", "-LRB-");
 			} else if (name.startsWith("fdepPathEE_")) {
 				caevoName = name.replace("fdepPathEE_", "");
 			} else if (name.startsWith("fconPathEE_")) {
