@@ -16,3 +16,8 @@ value strEED = OutputStrings(id="Output_DataFeatureMatrix_CAEVO_SL_NoEventAttr_E
 
 value strDCT = OutputStrings(id="Output_DataFeatureMatrix_CAEVO_SL_NoEventAttr_DCT", storage="EventString", collection="ExperimentDebugOutput", 
                  refs=(${modelsTlinkTypeSl.trainMatrixDCT}), serializer="DataTLinkTypeFeatureMatrixBSONString");
+
+
+data_features testMatrixDCT = DataFeatureMatrix(data=${featureSetsTLinkType.trainDevTestDataTlinkType.testData}, features=${featureSetsTlinkType.fsEEWS});
+value strTestEEWS = OutputStrings(id="Output_DataFeatureMatrix_CAEVO_SL_NoEventAttr_Test_EEWS", storage="EventString", collection="ExperimentDebugOutput", 
+                 refs=(${testMatrixEEWS}), serializer="DataTLinkTypeFeatureMatrixBSONString");
