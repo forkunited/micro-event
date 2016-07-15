@@ -7,6 +7,8 @@ data_features trainMatrixETWS = DataFeatureMatrix(data=${trainDevTestDataTlinkTy
 data_features trainMatrixEEWS = DataFeatureMatrix(data=${trainDevTestDataTlinkType.trainDataEEWS}, features=${featureSetsTlinkType.fsEEWS});
 data_features trainMatrixEED = DataFeatureMatrix(data=${trainDevTestDataTlinkType.trainDataEED}, features=${featureSetsTlinkType.fsEED});
 
+data_features testMatrixEEWS = DataFeatureMatrix(data=${trainDevTestDataTlinkType.testDataEEWS}, features=${featureSetsTlinkType.fsEEWS});
+
 model sl=StanfordLinear() {
 	array validLabels=${dataParamsTlinkType.labels};
 };
