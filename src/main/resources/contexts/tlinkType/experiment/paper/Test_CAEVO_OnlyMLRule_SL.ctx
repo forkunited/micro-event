@@ -1,5 +1,5 @@
 value maxThreads="30";
-value resultsId = "TLinkType_Test_CAEVO_OnlyMLRule_SL;
+value resultsId = "TLinkType_Test_CAEVO_OnlyMLRule_SL";
 value debug=Debug(file=${resultsId});
 
 context util = TLinkType(initScript="/util/Util.ctx", initOnce="true");
