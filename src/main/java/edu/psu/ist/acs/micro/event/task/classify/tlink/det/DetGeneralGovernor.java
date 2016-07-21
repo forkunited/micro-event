@@ -6,7 +6,6 @@ import edu.cmu.ml.rtw.generic.data.annotation.nlp.DependencyParse;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DependencyParse.Dependency;
-import edu.cmu.ml.rtw.generic.data.annotation.nlp.DependencyParse.DependencyPath;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention.TimeMLAspect;
@@ -23,45 +22,46 @@ public class DetGeneralGovernor {
 		TokenSpan e1Span = e1.getTokenSpan();
 		TokenSpan e2Span = e2.getTokenSpan();
 		DocumentNLP document = e1.getTokenSpan().getDocument();
-		DependencyPath path = document.getDependencyParse(e1Span.getSentenceIndex()).getPath(e1Span.getStartTokenIndex(), e2Span.getStartTokenIndex());
-		if (path == null || path.getDependencyLength() != 1)
-			return null;
-
-		String type = path.getDependencyType(0);
-		EventMention eGov = null;
-		EventMention eDep = null;
-		if (path.isAllGoverning()) {
-			eGov = e1;
-			eDep = e2;
-		} else {
-			eGov = e2;
-			eDep = e1;
-		}
-		
-		TimeMLRelType govDepRel = null;
-		if (type.equals("xcomp"))
-			govDepRel = classifyEventPair_xcomp(eGov, eDep);
-		else if (type.equals("ccomp"))
-			govDepRel = classifyEventPair_ccomp(eGov, eDep);
-		else if (type.equals("conj_and"))
-			govDepRel = classifyEventPair_conj_and(eGov, eDep);
-		else if (type.equals("nsubj")) 
-			govDepRel = classifyEventPair_nsubj(eGov, eDep);
-		else if (type.equals("advcl")) 
-			govDepRel = classifyEventPair_advcl(eGov, eDep);
-		else if (type.equals("conj_but"))
-			govDepRel = classifyEventPair_conj_but(eGov, eDep);
-		else if (type.equals("conj_or"))
-			govDepRel = classifyEventPair_conj_or(eGov, eDep);
-		else if (type.equals("dobj"))
-			govDepRel = classifyEventPair_dobj(eGov, eDep);
-		 
-		if (govDepRel != null) {
-			TimeMLRelType rel = govDepRel;
-			if (!e1.getId().equals(eGov.getId()))
-				rel = TLink.getConverseTimeMLRelType(govDepRel);
+		List<Dependency> deps = document.getDependencyParse(e1Span.getSentenceIndex()).toList();
+		for (Dependency dep : deps) {
+			String type = dep.getType();
+			EventMention eGov = null;
+			EventMention eDep = null;
+			if (dep.getGoverningTokenIndex() == e1Span.getStartTokenIndex() && dep.getDependentTokenIndex() == e2Span.getStartTokenIndex()) {
+				eGov = e1;
+				eDep = e2;
+			} else if (dep.getGoverningTokenIndex() == e2Span.getStartTokenIndex() && dep.getDependentTokenIndex() == e1Span.getStartTokenIndex()) {
+				eGov = e2;
+				eDep = e1;
+			} else {
+				continue;
+			}
 			
-			return rel;
+			TimeMLRelType govDepRel = null;
+			if (type.equals("xcomp"))
+				govDepRel = classifyEventPair_xcomp(eGov, eDep);
+			else if (type.equals("ccomp"))
+				govDepRel = classifyEventPair_ccomp(eGov, eDep);
+			else if (type.equals("conj_and"))
+				govDepRel = classifyEventPair_conj_and(eGov, eDep);
+			else if (type.equals("nsubj")) 
+				govDepRel = classifyEventPair_nsubj(eGov, eDep);
+			else if (type.equals("advcl")) 
+				govDepRel = classifyEventPair_advcl(eGov, eDep);
+			else if (type.equals("conj_but"))
+				govDepRel = classifyEventPair_conj_but(eGov, eDep);
+			else if (type.equals("conj_or"))
+				govDepRel = classifyEventPair_conj_or(eGov, eDep);
+			else if (type.equals("dobj"))
+				govDepRel = classifyEventPair_dobj(eGov, eDep);
+			 
+			if (govDepRel != null) {
+				TimeMLRelType rel = govDepRel;
+				if (!e1.getId().equals(eGov.getId()))
+					rel = TLink.getConverseTimeMLRelType(govDepRel);
+				
+				return rel;
+			}
 		}
 	
 		return null;
