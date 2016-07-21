@@ -106,7 +106,27 @@ public class DetGeneralGovernor {
 		
 		TokenSpan depSpan = eDep.getTokenSpan();
 		DependencyParse parse = depSpan.getDocument().getDependencyParse(depSpan.getSentenceIndex());
-		List<Dependency> deps = parse.getGovernedDependencies(depSpan.getStartTokenIndex());
+		
+		List<Dependency> deps = parse.toList();
+		for (Dependency dep : deps) {
+			if (dep.getGoverningTokenIndex() == depSpan.getStartTokenIndex()) {
+				if (dep.getType().equals("mark")) {
+					mark = depSpan.getDocument().getTokenStr(depSpan.getSentenceIndex(), dep.getDependentTokenIndex());
+				}
+			}
+		}
+		
+		if (mark == null) {
+			for (Dependency dep : deps) {
+				if (dep.getGoverningTokenIndex() == depSpan.getStartTokenIndex()) {
+					if (dep.getType().equals("advmod")) {
+						mark = depSpan.getDocument().getTokenStr(depSpan.getSentenceIndex(), dep.getDependentTokenIndex());					
+					}
+				}
+			}
+		}
+		
+		/*List<Dependency> deps = parse.getGovernedDependencies(depSpan.getStartTokenIndex());
 		for (Dependency dep : deps) {
 			if (dep.getType().equals("mark"))
 				mark = depSpan.getDocument().getTokenStr(depSpan.getSentenceIndex(), dep.getDependentTokenIndex());
@@ -117,7 +137,7 @@ public class DetGeneralGovernor {
 				if (dep.getType().equals("advmod"))
 					mark = depSpan.getDocument().getTokenStr(depSpan.getSentenceIndex(), dep.getDependentTokenIndex());
 			}
-		}
+		}*/
 		 
 		if (mark != null && mark.toLowerCase().equals("until")) {
 			return TimeMLRelType.BEFORE;
