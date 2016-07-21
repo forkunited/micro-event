@@ -19,8 +19,4 @@ multi_classify_method sieve = Sieve(methods=(${modelsTlinkTypeDet.adjET}, ${mode
                                                    ${trainDevTestDataTlinkType.docStructConserve}, ${trainDevTestDataTlinkType.docStructConserve},
                                                    ${trainDevTestDataTlinkType.docStructConserve}, ${trainDevTestDataTlinkType.docStructConserve},
                                                    ${trainDevTestDataTlinkType.docStructConserve}),
-                                    permutationMeasures=(${evalTlinkTypeDet.devAdjETPrecision}, ${evalTlinkTypeDet.devTimeTimePrecision},
-                                                      ${evalTlinkTypeDet.devRepGovPrecision}, ${evalTlinkTypeDet.devReichenbachPrecision},
-                                                      ${evalTlinkTypeDet.devGenGovPrecision}, ${evalTlinkTypeDet.devWordNetPrecision},
-                                                      ${evalTlinkTypeDet.devReportingDCTPrecision}),
                                     structureTransformFn=${greedyTlinkTransitiveRules});
