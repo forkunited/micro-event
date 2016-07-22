@@ -33,7 +33,12 @@ public class TestCAEVOFeatureOutput {
 					throw new UnsupportedOperationException("Missing feature (" + caevoName + "):\n" + microLines[i] + "\n" + caevoLines[i]);
 				if (!microJson.get(caevoName).equals(caevoJson.get(caevoName)))
 					throw new UnsupportedOperationException("Mismatch value (" + caevoName + "):\n" + microLines[i] + "\n" + caevoLines[i]);
-
+			}
+			
+			String[] microNames = JSONObject.getNames(microJson);
+			for (String microName : microNames) {
+				if (!caevoJson.has(microName))
+					throw new UnsupportedOperationException("Extra feature (" + microName + "):\n" + microLines[i] + "\n" + caevoLines[i]);
 			}
 		}
 		
