@@ -1,4 +1,4 @@
-value maxThreads="1";
+value maxThreads="30";
 value resultsId = "TLinkType_Test_CAEVO_NoAllVague_SL";
 value debug=Debug(file=${resultsId});
 
