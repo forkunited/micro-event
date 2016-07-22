@@ -21,6 +21,8 @@ data trainDataEEND = FilterData(data=${trainDataEE}, datumIndicator="PositionWit
 
 data testDataEEWS = FilterData(data=${testDataEE}, datumIndicator="PositionWithinSentence");
 
+data trainTestDataEEWS = UnionData(data=(${trainDataEEWS}, ${testDataEEWS}));
+
 value ETDCTIndicator = ConjoinDatumIndicators(name="ETDCT", fns=("TypeEventTime", "PositionDCT"));
 value ETWSIndicator = ConjoinDatumIndicators(name="ETWS", fns=("TypeEventTime", "PositionWithinSentence"));
 value ETBSIndicator = ConjoinDatumIndicators(name="ETBS", fns=("TypeEventTime", "PositionBetweenSentence"));
