@@ -145,7 +145,7 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 						labeledPairs.get(tlink.getSource().getId()).add(tlink.getTarget().getId());				
 						
 						if (labelMode != LabelMode.ONLY_UNLABELED && linkMeetsCrossDocumentMode(tlink, true)) {	
-							labeledLinks.put(context.getDataTools().getIncrementId()/*Integer.valueOf(tlink.getId())*/, tlink);
+							labeledLinks.put(Integer.valueOf(tlink.getId()), tlink);
 						}
 					}
 					
