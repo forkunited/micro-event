@@ -7,3 +7,5 @@ context featureSetsTlinkType = TLinkType(initScript="/tlinkType/featureSets/CAEV
 context modelsTlinkTypeSieve = TLinkType(initScript="/tlinkType/methods/CAEVO_Conserve_SL.ctx", initOnce="false");
 context evalSieve = TLinkType(initScript="/tlinkType/evaluations/Sieve.ctx", initOnce="false");
 context results = TLinkType(initScript="/tlinkType/experiment/output/Test_CAEVO_SL.ctx", initOnce="false");
+
+value strCtx = OutputContext(id=${resultsId}, storage="EventString", collection="ExperimentModelOutput");
