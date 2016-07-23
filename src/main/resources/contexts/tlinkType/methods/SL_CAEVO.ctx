@@ -14,7 +14,7 @@ model sl=StanfordLinear() {
 };
 
 evaluation acc=Accuracy();
-classify_method slDCTUnfiltered = SupervisedModel(model=${sl}, data=${trainMatrixDCT}, trainEvaluation=${acc}, minFeatureOccurrence="2");
+classify_method slDCTUnfiltered = SupervisedModel(model=${sl}, data=${trainMatrixDCT}, trainEvaluation=${acc});
 classify_method slETWSUnfiltered = SupervisedModel(model=${sl}, data=${trainMatrixETWS}, trainEvaluation=${acc}, minFeatureOccurrence="2");
 classify_method slEEWSUnfiltered = SupervisedModel(model=${sl}, data=${trainMatrixEEWS}, trainEvaluation=${acc}, minFeatureOccurrence="2");
 classify_method slEEDUnfiltered = SupervisedModel(model=${sl}, data=${trainMatrixEED}, trainEvaluation=${acc}, minFeatureOccurrence="2");
