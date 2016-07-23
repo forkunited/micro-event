@@ -16,7 +16,7 @@ model slEEDm=StanfordLinear() { array validLabels=${dataParamsTlinkType.labels};
 
 evaluation acc=Accuracy();
 classify_method slDCTUnfiltered = SupervisedModel(model=${slDCTm}, data=${trainMatrixDCT}, trainEvaluation=${acc});
-classify_method slETWSUnfiltered = SupervisedModel(model=${slETWSm}, data=${trainMatrixETWS}, trainEvaluation=${acc}, minFeatureOccurrence="2");
+classify_method slETWSUnfiltered = SupervisedModel(model=${slETWSm}, data=${trainMatrixETWS}, trainEvaluation=${acc});
 classify_method slEEWSUnfiltered = SupervisedModel(model=${slEEWSm}, data=${trainMatrixEEWS}, trainEvaluation=${acc}, minFeatureOccurrence="2");
 classify_method slEEDUnfiltered = SupervisedModel(model=${slEEDm}, data=${trainMatrixEED}, trainEvaluation=${acc}, minFeatureOccurrence="2");
 
