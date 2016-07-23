@@ -9,15 +9,16 @@ data_features trainMatrixEED = DataFeatureMatrix(data=${trainDevTestDataTlinkTyp
 
 data_features testMatrixEEWS = DataFeatureMatrix(data=${trainDevTestDataTlinkType.testDataEEWS}, features=${featureSetsTlinkType.fsEEWS});
 
-model sl=StanfordLinear() {
-	array validLabels=${dataParamsTlinkType.labels};
-};
+model slDCTm=StanfordLinear() { array validLabels=${dataParamsTlinkType.labels}; };
+model slETWSm=StanfordLinear() { array validLabels=${dataParamsTlinkType.labels}; };
+model slEEWSm=StanfordLinear() { array validLabels=${dataParamsTlinkType.labels}; };
+model slEEDm=StanfordLinear() { array validLabels=${dataParamsTlinkType.labels}; };
 
 evaluation acc=Accuracy();
-classify_method slDCTUnfiltered = SupervisedModel(model=${sl}, data=${trainMatrixDCT}, trainEvaluation=${acc});
-classify_method slETWSUnfiltered = SupervisedModel(model=${sl}, data=${trainMatrixETWS}, trainEvaluation=${acc});
-classify_method slEEWSUnfiltered = SupervisedModel(model=${sl}, data=${trainMatrixEEWS}, trainEvaluation=${acc});
-classify_method slEEDUnfiltered = SupervisedModel(model=${sl}, data=${trainMatrixEED}, trainEvaluation=${acc});
+classify_method slDCTUnfiltered = SupervisedModel(model=${slDCTm}, data=${trainMatrixDCT}, trainEvaluation=${acc});
+classify_method slETWSUnfiltered = SupervisedModel(model=${slETWSm}, data=${trainMatrixETWS}, trainEvaluation=${acc}, minFeatureOccurrence="2");
+classify_method slEEWSUnfiltered = SupervisedModel(model=${slEEWSm}, data=${trainMatrixEEWS}, trainEvaluation=${acc}, minFeatureOccurrence="2");
+classify_method slEEDUnfiltered = SupervisedModel(model=${slEEDm}, data=${trainMatrixEED}, trainEvaluation=${acc}, minFeatureOccurrence="2");
 
 classify_method slDCTSub = FilterDatumIndicator(method=${slDCTUnfiltered}, datumIndicator="ETDCT");
 classify_method slETWSSub = FilterDatumIndicator(method=${slETWSUnfiltered}, datumIndicator="ETWS");
@@ -25,6 +26,6 @@ classify_method slEEWSSub = FilterDatumIndicator(method=${slEEWSUnfiltered}, dat
 classify_method slEEDSub = FilterDatumIndicator(method=${slEEDUnfiltered}, datumIndicator="EED");
 
 classify_method slDCT = InitClassifyMethod(devData=${trainDevTestDataTlinkType.devData}, method=${slDCTSub});
-classify_method slETWS = InitClassifyMethod(devData=${trainDevTestDataTlinkType.devData}, method=${slETWSSub}, minFeatureOccurrence="2");
-classify_method slEEWS = InitClassifyMethod(devData=${trainDevTestDataTlinkType.devData}, method=${slEEWSSub}, minFeatureOccurrence="2");
-classify_method slEED = InitClassifyMethod(devData=${trainDevTestDataTlinkType.devData}, method=${slEEDSub}, minFeatureOccurrence="2");
+classify_method slETWS = InitClassifyMethod(devData=${trainDevTestDataTlinkType.devData}, method=${slETWSSub});
+classify_method slEEWS = InitClassifyMethod(devData=${trainDevTestDataTlinkType.devData}, method=${slEEWSSub});
+classify_method slEED = InitClassifyMethod(devData=${trainDevTestDataTlinkType.devData}, method=${slEEDSub});
