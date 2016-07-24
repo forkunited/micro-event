@@ -2,6 +2,14 @@ context features = TLinkType(initScript="/tlinkType/Features.ctx", initOnce="tru
 context data = TLinkType(initScript="/tlinkType/data/LoadTrainDevTest.ctx", initOnce="true");
 
 feature_set fsETWS = FeatureSet(features=(
+										${features.feventToken}, 
+										${features.feventPos},
+										${features.feventPosB2_0},
+										${features.feventPosB2_1}, 
+										${features.feventPosBNI},
+										${features.feventLemma}, 
+										${features.feventSynset1},
+										${features.ftimeToken},
 										${features.ftimeTokenh},
 										${features.ftimeSentPosEnd},
 										${features.fstToken}, 
@@ -10,16 +18,7 @@ feature_set fsETWS = FeatureSet(features=(
 										${features.fsourceType},
 										${features.fconPathSourceType},
 										${features.fconPathPosSourceType},
-										${features.ftokenPathSourceTypeET},
-
-										${features.feventToken}, 
-										${features.feventPos},
-										${features.feventPosB2_0},
-										${features.feventPosB2_1}, 
-										${features.feventPosBNI},
-										${features.feventLemma}, 
-										${features.feventSynset1},
-										${features.ftimeToken}
+										${features.ftokenPathSourceTypeET}
 										), 
 								initData=(${data.trainDataETWS}));
 
