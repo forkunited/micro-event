@@ -18,10 +18,12 @@ public class TestCAEVOFeatureOutput {
 		
 		//Arrays.sort(caevoLines);
 		//Arrays.sort(microLines);
+		if (caevoLines.length != microLines.length)
+			throw new UnsupportedOperationException("Incorrect data size.");
 		
 		for (int i = 0; i < microLines.length; i++) {
 			JSONObject caevoJson = new JSONObject(caevoLines[i].split("\t")[3]);
-			JSONObject microJson = new JSONObject(microLines[i].split("\t")[3]);
+			JSONObject microJson = new JSONObject((microLines[i].split("\t").length > 2) ? microLines[i].split("\t")[3] : microLines[i]);
 			
 			if (caevoJson.length() != microJson.length())
 				throw new UnsupportedOperationException("Incorrect number of features:\n" + microLines[i] + "\n" + caevoLines[i]);
