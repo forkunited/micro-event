@@ -1,14 +1,7 @@
 context features = TLinkType(initScript="/tlinkType/Features.ctx", initOnce="true");
 context data = TLinkType(initScript="/tlinkType/data/LoadTrainDevTest.ctx", initOnce="true");
 
-feature_set fsETWS = FeatureSet(features=(${features.feventToken}, 
-										${features.feventPos},
-										${features.feventPosB2_0},
-										${features.feventPosB2_1}, 
-										${features.feventPosBNI},
-										${features.feventLemma}, 
-										${features.feventSynset1},
-										${features.ftimeToken}, 
+feature_set fsETWS = FeatureSet(features=(
 										${features.ftimeTokenh},
 										${features.ftimeSentPosEnd},
 										${features.fstToken}, 
@@ -17,7 +10,17 @@ feature_set fsETWS = FeatureSet(features=(${features.feventToken},
 										${features.fsourceType},
 										${features.fconPathSourceType},
 										${features.fconPathPosSourceType},
-										${features.ftokenPathSourceTypeET}), 
+										${features.ftokenPathSourceTypeET},
+
+										${features.feventToken}, 
+										${features.feventPos},
+										${features.feventPosB2_0},
+										${features.feventPosB2_1}, 
+										${features.feventPosBNI},
+										${features.feventLemma}, 
+										${features.feventSynset1},
+										${features.ftimeToken}
+										), 
 								initData=(${data.trainDataETWS}));
 
 feature_set fsEEWS = FeatureSet(features=(${features.fsToken}, 
@@ -54,7 +57,7 @@ feature_set fsEED = FeatureSet(features=(${features.fsToken},
 										${features.fsPosB2_1}, 
 										${features.fsPosBNI},
 										${features.fsLemma}, 
-										${features.fsSynset},
+										${features.fsSynset1},
 										${features.fsPrep},
 										${features.ftToken},  
 										${features.ftPos}, 
