@@ -103,13 +103,7 @@ public class TestCAEVOFeatureOutput {
 				caevoName = name.replace("ftimeToken_", "timephrase-");
 			} else if (name.startsWith("ftimeTokenh_")) {
 				caevoName = name.replace("ftimeTokenh_", "timetoken-");
-				caevoName = caevoName.replace("monday", "[DoW]");
-				caevoName = caevoName.replace("tuesday", "[DoW]");
-				caevoName = caevoName.replace("wednesday", "[DoW]");
-				caevoName = caevoName.replace("thursday", "[DoW]");
-				caevoName = caevoName.replace("friday", "[DoW]");
-				caevoName = caevoName.replace("saturday", "[DoW]");
-				caevoName = caevoName.replace("sunday", "[DoW]");
+				caevoName = caevoName.replace("[DoW]", "DAYOFWEEK");
 			} else if (name.startsWith("feventLemma_")) {
 				caevoName = name.replace("feventLemma_", "lemma1-");
 			} else if (name.startsWith("feventPosBNI_")) {
@@ -203,6 +197,7 @@ public class TestCAEVOFeatureOutput {
 					caevoName = name.replace("fstToken_", "bi-");
 				caevoName = caevoName.replace("//", "_");
 				caevoName = caevoName.replace("-_", "-");
+				caevoName = caevoName.replace("[DoW]", "DAYOFWEEK");
 			} else if (name.startsWith("fstPos_")) {
 				caevoName = name.replace("fstPos_", "posBi_");
 				caevoName = caevoName.replace("//", "-");
