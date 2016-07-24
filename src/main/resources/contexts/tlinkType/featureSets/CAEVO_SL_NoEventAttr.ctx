@@ -15,8 +15,8 @@ feature_set fsETWS = FeatureSet(features=(${features.feventToken},
 										${features.fdepPathET}, 
 										${features.fdomET},
 										${features.fsourceType},
-										${features.fconPathSourceTypeET},
-										${features.fconPathPosSourceTypeET},
+										${features.fconPathSourceType},
+										${features.fconPathPosSourceType},
 										${features.ftokenPathSourceTypeET}), 
 								initData=(${data.trainDataETWS}));
 

@@ -240,6 +240,32 @@ public class TLinkDatum<L> extends Datum<L> {
 			this.addTokenSpanExtractor(new TokenSpanExtractor<TLinkDatum<L>, L>() {
 				@Override
 				public String toString() {
+					return "SourceHead";
+				}
+				
+				@Override
+				public TokenSpan[] extract(TLinkDatum<L> tlinkDatum) {
+					TokenSpan span = tlinkDatum.getTLink().getSource().getTokenSpan();
+					return new TokenSpan[] {span.getSubspan(span.getLength() - 1, span.getLength()) } ;
+				}
+			});
+			
+			this.addTokenSpanExtractor(new TokenSpanExtractor<TLinkDatum<L>, L>() {
+				@Override
+				public String toString() {
+					return "TargetHead";
+				}
+				
+				@Override
+				public TokenSpan[] extract(TLinkDatum<L> tlinkDatum) {
+					TokenSpan span = tlinkDatum.getTLink().getTarget().getTokenSpan();
+					return new TokenSpan[] {span.getSubspan(span.getLength() - 1, span.getLength()) } ;
+				}
+			});
+			
+			this.addTokenSpanExtractor(new TokenSpanExtractor<TLinkDatum<L>, L>() {
+				@Override
+				public String toString() {
 					return "Target";
 				}
 				

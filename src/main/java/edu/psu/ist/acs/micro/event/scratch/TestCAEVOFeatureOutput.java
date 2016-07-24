@@ -53,8 +53,8 @@ public class TestCAEVOFeatureOutput {
 		for (String name : names) {
 			if (name.startsWith("feventSynset1_")) {
 				caevoName = name.replace("feventSynset1_", "synset1-");
-			} else if (name.startsWith("fconPathSourceTypeET_")) {
-				caevoName = name.replace("fconPathSourceTypeET_", "");
+			} else if (name.startsWith("fconPathSourceType_")) {
+				caevoName = name.replace("fconPathSourceType_", "");
 				caevoName = caevoName.replace("//", "");
 				if (name.endsWith("EVENT")) {
 					caevoName = caevoName.substring(0, caevoName.length() - 5);
@@ -65,8 +65,8 @@ public class TestCAEVOFeatureOutput {
 				}
 				
 				caevoName = "pathnopos-" + caevoName;
-			} else if (name.startsWith("fconPathPosSourceTypeET_")) {
-				caevoName = name.replace("fconPathPosSourceTypeET_", "");
+			} else if (name.startsWith("fconPathPosSourceType_")) {
+				caevoName = name.replace("fconPathPosSourceType_", "");
 				caevoName = caevoName.replace("//", "");
 				if (name.endsWith("EVENT")) {
 					caevoName = caevoName.substring(0, caevoName.length() - 5);

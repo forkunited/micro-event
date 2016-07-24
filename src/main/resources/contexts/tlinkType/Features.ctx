@@ -83,6 +83,8 @@ feature ftokenPathET = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence=
 feature fdepPathET = DependencyPath(minFeatureOccurrence="1", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTimeHead", useRelationTypes="true", assumeTree="true");
 feature fconPathET = ConstituencyPath(minFeatureOccurrence="1", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTimeHead", noLeaves="true", useRelationDirections="false");
 feature fconPathPosET = ConstituencyPath(minFeatureOccurrence="1", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTimeHead", noLeaves="false", useRelationDirections="false");
+feature fconPathPos = ConstituencyPath(minFeatureOccurrence="1", sourceTokenExtractor="SourceHead", targetTokenExtractor="TargetHead", noLeaves="false", useRelationDirections="false");
+feature fconPath = ConstituencyPath(minFeatureOccurrence="1", sourceTokenExtractor="SourceHead", targetTokenExtractor="TargetHead", noLeaves="true", useRelationDirections="false");
 feature fdepTypeET = DependencyPathType(sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime");
 feature fpredPathET = PredicateArgumentPath(sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime");
 feature fpredPathNoSenseET = PredicateArgumentPath(sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime", useSenses="false");
@@ -94,6 +96,8 @@ feature foverEventET = TLinkAttribute(attribute="OVER_EVENT");
 feature fadjET = MethodClassification(method=${modelsTlinkTypeDet.adjET});
 feature fconPathSourceTypeET = Conjunction(minFeatureOccurrence="1", features=(${fconPathET}, ${fsourceType}));
 feature fconPathPosSourceTypeET = Conjunction(minFeatureOccurrence="1", features=(${fconPathPosET}, ${fsourceType}));
+feature fconPathSourceType = Conjunction(minFeatureOccurrence="1", features=(${fconPath}, ${fsourceType}));
+feature fconPathPosSourceType = Conjunction(minFeatureOccurrence="1", features=(${fconPathPos}, ${fsourceType}));
 feature ftokenPathSourceTypeET = Conjunction(minFeatureOccurrence="1", features=(${ftokenPathET}, ${fsourceType}));
 
 feature fsToken = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="SourceTail", fn=${strTime});
