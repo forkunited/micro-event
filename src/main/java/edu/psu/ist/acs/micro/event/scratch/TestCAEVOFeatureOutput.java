@@ -52,7 +52,7 @@ public class TestCAEVOFeatureOutput {
 		String caevoName = null;
 		for (String name : names) {
 			if (name.startsWith("fconPathSourceTypeET_")) {
-				caevoName = name.replace("fconPathSourceTypeET_", "pathnopos-");
+				caevoName = name.replace("fconPathSourceTypeET_", "");
 				caevoName = caevoName.replace("//", "");
 				if (name.endsWith("EVENT")) {
 					caevoName = caevoName.substring(0, caevoName.length() - 5);
@@ -62,9 +62,9 @@ public class TestCAEVOFeatureOutput {
 					caevoName = "TIME_" + caevoName +"_EVENT";
 				}
 				
-				System.out.println("NAME: " + caevoName);
+				caevoName = "pathnopos-" + caevoName;
 			} else if (name.startsWith("fconPathPosSourceTypeET_")) {
-				caevoName = name.replace("fconPathPosSourceTypeET_", "pathfull-");
+				caevoName = name.replace("fconPathPosSourceTypeET_", "");
 				caevoName = caevoName.replace("//", "");
 				if (name.endsWith("EVENT")) {
 					caevoName = caevoName.substring(0, caevoName.length() - 5);
@@ -73,6 +73,8 @@ public class TestCAEVOFeatureOutput {
 					caevoName = caevoName.substring(0, caevoName.length() - 4);
 					caevoName = "TIME_" + caevoName +"_EVENT";
 				}
+				
+				caevoName = "pathfull-" + caevoName;
 			} else if (name.startsWith("fsourceType_TIME")) {
 				caevoName = name.replace("fsourceType_TIME", "time-first");
 			} else if (name.startsWith("fsourceType_EVENT")) {
