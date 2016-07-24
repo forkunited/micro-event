@@ -1,6 +1,6 @@
 package edu.psu.ist.acs.micro.event.scratch;
 
-import java.util.Arrays;
+//import java.util.Arrays;
 
 import org.json.JSONException;
 import org.json.JSONObject;
