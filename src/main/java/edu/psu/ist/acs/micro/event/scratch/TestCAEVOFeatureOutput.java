@@ -22,8 +22,17 @@ public class TestCAEVOFeatureOutput {
 			throw new UnsupportedOperationException("Incorrect data size.");
 		
 		for (int i = 0; i < microLines.length; i++) {
-			JSONObject caevoJson = new JSONObject(caevoLines[i].split("\t")[3]);
-			JSONObject microJson = new JSONObject((microLines[i].split("\t").length > 2) ? microLines[i].split("\t")[3] : microLines[i]);
+			String[] caevoLineParts = caevoLines[i].split("\t");
+			String[] microLineParts = microLines[i].split("\t");
+			JSONObject caevoJson = new JSONObject(caevoLineParts[3]);
+			JSONObject microJson = new JSONObject((microLineParts.length > 2) ? microLineParts[3] : microLineParts[0]);
+			
+			if (caevoLineParts.length != 4) {
+				String caevoLabel = caevoLineParts[caevoLineParts.length - 1];
+				String microLabel = microLineParts[microLineParts.length - 1];
+				if (!caevoLabel.equals(microLabel))
+					throw new UnsupportedOperationException("Incorrect label (" + microLabel + ", " + caevoLabel + "): " + microLines[i] + "\n" + caevoLines[i]);
+			}
 			
 			if (caevoJson.length() != microJson.length())
 				throw new UnsupportedOperationException("Incorrect number of features:\n" + microLines[i] + "\n" + caevoLines[i]);
