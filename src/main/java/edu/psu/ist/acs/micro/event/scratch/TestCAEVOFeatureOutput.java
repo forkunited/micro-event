@@ -51,7 +51,19 @@ public class TestCAEVOFeatureOutput {
 		String[] names = JSONObject.getNames(microJson);
 		String caevoName = null;
 		for (String name : names) {
-			if (name.startsWith("feventSynset1_")) {
+			if (name.startsWith("ftokenPathSourceTypeET_")) {
+				caevoName = name.replace("ftokenPathSourceTypeET_", "");
+				caevoName = caevoName.replace("//", "");
+				if (name.endsWith("EVENT")) {
+					caevoName = caevoName.substring(0, caevoName.length() - 5);
+					caevoName = "EVENT_" + caevoName + "_TIME";
+				} else {
+					caevoName = caevoName.substring(0, caevoName.length() - 4);
+					caevoName = "TIME_" + caevoName +"_EVENT";
+				}
+				
+				caevoName = "tokenpath-" + caevoName;
+			} else if (name.startsWith("feventSynset1_")) {
 				caevoName = name.replace("feventSynset1_", "synset1-");
 			} else if (name.startsWith("fconPathSourceType_")) {
 				caevoName = name.replace("fconPathSourceType_", "");
