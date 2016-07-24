@@ -51,7 +51,11 @@ public class TestCAEVOFeatureOutput {
 		String[] names = JSONObject.getNames(microJson);
 		String caevoName = null;
 		for (String name : names) {
-			if (name.startsWith("ftokenPathSourceTypeET_")) {
+			if (name.startsWith("fdomET_DOMINATING")) {
+				caevoName = name.replace("fdomET_DOMINATING", "dominates");
+			} else if (name.startsWith("fdomET_DOMINATED")) {
+				caevoName = name.replace("fdomET_DOMINATED", "isDominated");
+			} else if (name.startsWith("ftokenPathSourceTypeET_")) {
 				caevoName = name.replace("ftokenPathSourceTypeET_", "");
 				caevoName = caevoName.replace("//", "");
 				if (name.endsWith("EVENT")) {
