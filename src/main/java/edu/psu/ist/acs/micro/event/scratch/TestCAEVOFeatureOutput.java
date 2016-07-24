@@ -60,12 +60,10 @@ public class TestCAEVOFeatureOutput {
 				caevoName = caevoName.replace("//", "");
 				if (name.endsWith("EVENT")) {
 					caevoName = caevoName.substring(0, caevoName.length() - 5);
-					caevoName = "EVENT_" + caevoName + "_TIME";
-					caevoName = caevoName.replace("__", "_");
+					caevoName = "EVENT_" + caevoName + ((caevoName.length() > 0) ? "_" : "") + "TIME";
 				} else {
 					caevoName = caevoName.substring(0, caevoName.length() - 4);
-					caevoName = "TIME_" + caevoName + "_EVENT";
-					caevoName = caevoName.replace("__", "_");
+					caevoName = "TIME_" + caevoName + ((caevoName.length() > 0) ? "_" : "") + "EVENT";
 				}
 				
 				caevoName = "tokenpath-" + caevoName;
