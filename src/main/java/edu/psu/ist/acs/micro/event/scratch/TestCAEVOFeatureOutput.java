@@ -15,8 +15,8 @@ public class TestCAEVOFeatureOutput {
 		String[] caevoLines = caevoStr.split("\n");
 		String[] microLines = microStr.split("\n");
 		
-		Arrays.sort(caevoLines);
-		Arrays.sort(microLines);
+		//Arrays.sort(caevoLines);
+		//Arrays.sort(microLines);
 		
 		for (int i = 0; i < microLines.length; i++) {
 			JSONObject caevoJson = new JSONObject(caevoLines[i].split("\t")[3]);
