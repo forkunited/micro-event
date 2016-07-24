@@ -11,6 +11,7 @@ public class TestCAEVOFeatureOutput {
 	public static void main(String[] args) throws JSONException {
 		String caevoStr = FileUtil.readFile(args[0]);
 		String microStr = FileUtil.readFile(args[1]);
+		String mode = args[2];
 		
 		String[] caevoLines = caevoStr.split("\n");
 		String[] microLines = microStr.split("\n");
@@ -25,7 +26,7 @@ public class TestCAEVOFeatureOutput {
 			if (caevoJson.length() != microJson.length())
 				throw new UnsupportedOperationException("Incorrect number of features:\n" + microLines[i] + "\n" + caevoLines[i]);
 			
-			microJson = convertMicroToCaevo(microJson);
+			microJson = convertMicroToCaevo(microJson, mode);
 			
 			String[] caevoNames = JSONObject.getNames(caevoJson);
 			for (String caevoName : caevoNames) {
@@ -45,12 +46,69 @@ public class TestCAEVOFeatureOutput {
 		System.out.println("SUCCESS!");
 	}
 	
-	private static JSONObject convertMicroToCaevo(JSONObject microJson) throws JSONException {
+	private static JSONObject convertMicroToCaevo(JSONObject microJson, String mode) throws JSONException {
 		JSONObject caevoJson = new JSONObject();
 		String[] names = JSONObject.getNames(microJson);
 		String caevoName = null;
 		for (String name : names) {
-			if (name.startsWith("fsToken_")) {
+			if (name.startsWith("fconPathSourceTypeET_")) {
+				caevoName = name.replace("fconPathSourceTypeET_", "pathnopos-");
+				caevoName = caevoName.replace("//", "");
+				if (name.endsWith("EVENT"))
+					caevoName = "EVENT-" + caevoName + "-TIME";
+				else
+					caevoName = "TIME-" + caevoName +"-EVENT";
+			} else if (name.startsWith("fconPathPosSourceTypeET_")) {
+				caevoName = name.replace("fconPathPosSourceTypeET_", "pathfull-");
+				caevoName = caevoName.replace("//", "");
+				if (name.endsWith("EVENT"))
+					caevoName = "EVENT-" + caevoName + "-TIME";
+				else
+					caevoName = "TIME-" + caevoName +"-EVENT";
+			} else if (name.startsWith("fsourceType_TIME")) {
+				caevoName = name.replace("fsourceType_TIME", "time-first");
+			} else if (name.startsWith("fsourceType_EVENT")) {
+				caevoName = name.replace("fsourceType_EVENT", "event-first");
+			} else if (name.startsWith("fdepPathET_")) {
+				caevoName = name.replace("fdepPathET_", "");
+			} else if (name.startsWith("ftimeToken_")) {
+				caevoName = name.replace("ftimeToken_", "timephrase-");
+			} else if (name.startsWith("ftimeTokenh_")) {
+				caevoName = name.replace("ftimeTokenh_", "timetoken-");
+				caevoName = caevoName.replace("monday", "[DoW]");
+				caevoName = caevoName.replace("tuesday", "[DoW]");
+				caevoName = caevoName.replace("wednesday", "[DoW]");
+				caevoName = caevoName.replace("thursday", "[DoW]");
+				caevoName = caevoName.replace("friday", "[DoW]");
+				caevoName = caevoName.replace("saturday", "[DoW]");
+				caevoName = caevoName.replace("sunday", "[DoW]");
+			} else if (name.startsWith("feventLemma_")) {
+				caevoName = name.replace("feventLemma_", "lemma1-");
+			} else if (name.startsWith("feventPosBNI_")) {
+				caevoName = name.replace("feventPosBNI_", "pos1-bi-");
+				caevoName = caevoName.replace("PRE-0", "<s>");
+				caevoName = caevoName.replace("PRE-1", "<pre-s>");
+				caevoName = caevoName.replace("_", "-");
+				caevoName = caevoName.replace(")", "-RRB-");
+				caevoName = caevoName.replace("(", "-LRB-");
+			} else if (name.startsWith("feventPosB2_1_")) {
+				caevoName = name.replace("feventPosB2_1_", "pos1-2-");
+				caevoName = caevoName.replace("PRE-0", "<s>");
+				caevoName = caevoName.replace("PRE-1", "<pre-s>");
+				caevoName = caevoName.replace(")", "-RRB-");
+				caevoName = caevoName.replace("(", "-LRB-");
+			} else if (name.startsWith("feventPosB2_0_")) {
+				caevoName = name.replace("feventPosB2_0_", "pos1-1-");
+				caevoName = caevoName.replace("PRE-0", "<s>");
+				caevoName = caevoName.replace(")", "-RRB-");
+				caevoName = caevoName.replace("(", "-LRB-");
+			} else if (name.startsWith("feventPos_")) {
+				caevoName = name.replace("feventPos_", "pos1-0-");
+				caevoName = caevoName.replace(")", "-RRB-");
+				caevoName = caevoName.replace("(", "-LRB-");
+			} else if (name.startsWith("feventToken_")) {
+				caevoName = name.replace("feventToken_", "token1-");
+			} else if (name.startsWith("fsToken_")) {// Start EE
 				caevoName = name.replace("fsToken_", "token1-");
 			} else if (name.startsWith("fsPrep_")) {
 				caevoName = name.replace("fsPrep_", "prep1-");
@@ -111,7 +169,10 @@ public class TestCAEVOFeatureOutput {
 			} else if (name.startsWith("ftSynset1_")) {
 				caevoName = name.replace("ftSynset1_", "synset2-");
 			} else if (name.startsWith("fstToken_")) {
-				caevoName = name.replace("fstToken_", "BI-");
+				if (mode.equalsIgnoreCase("ee"))
+					caevoName = name.replace("fstToken_", "BI-");
+				else 
+					caevoName = name.replace("fstToken_", "bi-");
 				caevoName = caevoName.replace("//", "_");
 				caevoName = caevoName.replace("-_", "-");
 			} else if (name.startsWith("fstPos_")) {
