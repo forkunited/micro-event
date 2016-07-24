@@ -54,17 +54,23 @@ public class TestCAEVOFeatureOutput {
 			if (name.startsWith("fconPathSourceTypeET_")) {
 				caevoName = name.replace("fconPathSourceTypeET_", "pathnopos-");
 				caevoName = caevoName.replace("//", "");
-				if (name.endsWith("EVENT"))
+				if (name.endsWith("EVENT")) {
+					caevoName = caevoName.substring(0, caevoName.length() - 5);
 					caevoName = "EVENT_" + caevoName + "_TIME";
-				else
+				} else {
+					caevoName = caevoName.substring(0, caevoName.length() - 4);
 					caevoName = "TIME_" + caevoName +"_EVENT";
+				}
 			} else if (name.startsWith("fconPathPosSourceTypeET_")) {
 				caevoName = name.replace("fconPathPosSourceTypeET_", "pathfull-");
 				caevoName = caevoName.replace("//", "");
-				if (name.endsWith("EVENT"))
+				if (name.endsWith("EVENT")) {
+					caevoName = caevoName.substring(0, caevoName.length() - 5);
 					caevoName = "EVENT_" + caevoName + "_TIME";
-				else
+				} else {
+					caevoName = caevoName.substring(0, caevoName.length() - 4);
 					caevoName = "TIME_" + caevoName +"_EVENT";
+				}
 			} else if (name.startsWith("fsourceType_TIME")) {
 				caevoName = name.replace("fsourceType_TIME", "time-first");
 			} else if (name.startsWith("fsourceType_EVENT")) {
