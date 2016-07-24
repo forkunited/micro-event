@@ -6,7 +6,8 @@ str_fn trim = Trim();
 str_fn lwr = StringCase(type="LOWER");
 str_fn rplDoW = StringListReplace(mode="LITERAL", ignoreCase="true", replace="[DoW]",
                                   target=("monday","tuesday","wednesday","thursday","friday","saturday","sunday"));
-                                  
+
+ts_fn min3Token = TokenSpanLengthFilter(min="3");                                  
 ts_fn min2Token = TokenSpanLengthFilter(min="2");
 ts_fn head = Head();
 ts_fn after2 = NGramContext(type="AFTER", n="2");
@@ -78,14 +79,14 @@ feature ftimeSentPosEnd = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurren
 feature ftimePrep = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="FirstTime", fn=(${strTrim} o ${prep}));
 feature ftimeW2v = Word2Vec(tokenExtractor="FirstTime", mode="VECTOR", fn=(${strTrim} o ${head}));
 feature feventTimeToken = Conjunction(minFeatureOccurrence="1", features=(${feventToken}, ${ftimeTokenh}));
-feature ftokenPathET = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="BetweenSourceTarget", fn=${strDef});
-feature fdepPathET = DependencyPath(minFeatureOccurrence="1", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime", useRelationTypes="true", assumeTree="true");
-feature fconPathET = ConstituencyPath(minFeatureOccurrence="1", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime", noLeaves="true", useRelationDirections="false");
-feature fconPathPosET = ConstituencyPath(minFeatureOccurrence="1", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime", noLeaves="false", useRelationDirections="false");
+feature ftokenPathET = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="BetweenSourceTarget", fn=(${strTrim} o ${min3Token}));
+feature fdepPathET = DependencyPath(minFeatureOccurrence="1", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTimeHead", useRelationTypes="true", assumeTree="true");
+feature fconPathET = ConstituencyPath(minFeatureOccurrence="1", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTimeHead", noLeaves="true", useRelationDirections="false");
+feature fconPathPosET = ConstituencyPath(minFeatureOccurrence="1", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTimeHead", noLeaves="false", useRelationDirections="false");
 feature fdepTypeET = DependencyPathType(sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime");
 feature fpredPathET = PredicateArgumentPath(sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime");
 feature fpredPathNoSenseET = PredicateArgumentPath(sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime", useSenses="false");
-feature fdomET = ConstituencyParseRelation(sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTime");
+feature fdomET = ConstituencyParseRelation(sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTimeTail");
 feature fw2vSimET = Word2Vec(tokenExtractor="EventTime", mode="SIMILARITY", fn=(${strTrim} o ${head}));
 feature fw2vDiffET = Word2Vec(tokenExtractor="EventTime", mode="DIFFERENCE", fn=(${strTrim} o ${head}));
 feature fsourceType = TLinkableType(sourceOrTarget="SOURCE");
@@ -95,7 +96,7 @@ feature fconPathSourceTypeET = Conjunction(minFeatureOccurrence="1", features=($
 feature fconPathPosSourceTypeET = Conjunction(minFeatureOccurrence="1", features=(${fconPathPosET}, ${fsourceType}));
 feature ftokenPathSourceTypeET = Conjunction(minFeatureOccurrence="1", features=(${ftokenPathET}, ${fsourceType}));
 
-feature fsToken = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="Source", fn=${strTrim});
+feature fsToken = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="SourceTail", fn=${strTime});
 feature fsTokenClean = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="Source", fn=${strDef});
 feature fsTokenB = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="Source", fn=(${strDef} o ${inside1} o ${beforeS2}));
 feature fsTokenA = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="Source", fn=(${strDef} o ${inside1} o ${afterS2}));
@@ -123,7 +124,7 @@ feature fsW2v = Word2Vec(tokenExtractor="Source", mode="VECTOR", fn=(${strTrim} 
 feature fsSentPos = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="Source", fn=${sentPos});
 feature fsSentPosPos = Conjunction(minFeatureOccurrence="1", features=(${fsSentPos}, ${fsPos}));
 feature fsPred= TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="Source", fn=(${pred} o ${head}));
-feature ftToken = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="Target", fn=${strTrim});
+feature ftToken = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="TargetTail", fn=${strTime});
 feature ftTokenClean = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="Target", fn=${strDef});
 feature ftTokenB = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="Target", fn=(${strDef} o ${inside1} o ${beforeS2}));
 feature ftTokenA = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="Target", fn=(${strDef} o ${inside1} o ${afterS2}));
