@@ -61,6 +61,8 @@ public class TestCAEVOFeatureOutput {
 					caevoName = caevoName.substring(0, caevoName.length() - 4);
 					caevoName = "TIME_" + caevoName +"_EVENT";
 				}
+				
+				System.out.println("NAME: " + caevoName);
 			} else if (name.startsWith("fconPathPosSourceTypeET_")) {
 				caevoName = name.replace("fconPathPosSourceTypeET_", "pathfull-");
 				caevoName = caevoName.replace("//", "");
