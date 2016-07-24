@@ -51,7 +51,9 @@ public class TestCAEVOFeatureOutput {
 		String[] names = JSONObject.getNames(microJson);
 		String caevoName = null;
 		for (String name : names) {
-			if (name.startsWith("fconPathSourceTypeET_")) {
+			if (name.startsWith("feventSynset1_")) {
+				caevoName = name.replace("feventSynset1_", "synset1-");
+			} else if (name.startsWith("fconPathSourceTypeET_")) {
 				caevoName = name.replace("fconPathSourceTypeET_", "");
 				caevoName = caevoName.replace("//", "");
 				if (name.endsWith("EVENT")) {
