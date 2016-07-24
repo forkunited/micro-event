@@ -7,7 +7,7 @@ str_fn lwr = StringCase(type="LOWER");
 str_fn rplDoW = StringListReplace(mode="LITERAL", ignoreCase="true", replace="[DoW]",
                                   target=("monday","tuesday","wednesday","thursday","friday","saturday","sunday"));
 
-ts_fn min3Token = TokenSpanLengthFilter(min="3");                                  
+ts_fn max3Token = TokenSpanLengthFilter(max="3");                                  
 ts_fn min2Token = TokenSpanLengthFilter(min="2");
 ts_fn head = Head();
 ts_fn after2 = NGramContext(type="AFTER", n="2");
@@ -79,7 +79,7 @@ feature ftimeSentPosEnd = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurren
 feature ftimePrep = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="FirstTime", fn=(${strTrim} o ${prep}));
 feature ftimeW2v = Word2Vec(tokenExtractor="FirstTime", mode="VECTOR", fn=(${strTrim} o ${head}));
 feature feventTimeToken = Conjunction(minFeatureOccurrence="1", features=(${feventToken}, ${ftimeTokenh}));
-feature ftokenPathET = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="BetweenSourceTarget", fn=(${strTrim} o ${min3Token}));
+feature ftokenPathET = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="BetweenSourceTarget", fn=(${strTrim} o ${max3Token}));
 feature fdepPathET = DependencyPath(minFeatureOccurrence="1", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTimeHead", useRelationTypes="true", assumeTree="true");
 feature fconPathET = ConstituencyPath(minFeatureOccurrence="1", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTimeHead", noLeaves="true", useRelationDirections="false");
 feature fconPathPosET = ConstituencyPath(minFeatureOccurrence="1", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTimeHead", noLeaves="false", useRelationDirections="false");
