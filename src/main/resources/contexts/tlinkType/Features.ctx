@@ -80,7 +80,8 @@ feature ftimePrep = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1"
 feature ftimeW2v = Word2Vec(tokenExtractor="FirstTime", mode="VECTOR", fn=(${strTrim} o ${head}));
 feature feventTimeToken = Conjunction(minFeatureOccurrence="1", features=(${feventToken}, ${ftimeTokenh}));
 feature ftokenPathET = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="BetweenSourceTarget", fn=(${strTrim} o ${max3Token}));
-feature fdepPathET = DependencyPath(minFeatureOccurrence="1", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTimeHead", useRelationTypes="true", assumeTree="true");
+feature fdepPathET = DependencyPath(minFeatureOccurrence="1", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTimeHead", useRelationTypes="true");
+feature fdepPathET_CAEVO = DependencyPath(minFeatureOccurrence="1", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTimeHead", useRelationTypes="true", assumeTree="true");
 feature fconPathET = ConstituencyPath(minFeatureOccurrence="1", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTimeHead", noLeaves="true", useRelationDirections="false");
 feature fconPathPosET = ConstituencyPath(minFeatureOccurrence="1", sourceTokenExtractor="FirstEvent", targetTokenExtractor="FirstTimeHead", noLeaves="false", useRelationDirections="false");
 feature fconPathPos = ConstituencyPath(minFeatureOccurrence="1", sourceTokenExtractor="FirstHead", targetTokenExtractor="SecondHead", noLeaves="false", useRelationDirections="false");
@@ -100,12 +101,9 @@ feature fconPathPosSourceTypeET = Conjunction(minFeatureOccurrence="1", features
 feature fconPathFirstType = Conjunction(minFeatureOccurrence="1", features=(${fconPath}, ${ffirstType}));
 feature fconPathPosFirstType = Conjunction(minFeatureOccurrence="1", features=(${fconPathPos}, ${ffirstType}));
 feature ftokenPathFirstTypeET = Conjunction(minFeatureOccurrence="1", features=(${ftokenPathET}, ${ffirstType}));
-
-
 feature fofToken = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="FirstTail", fn=${strTime});
 feature fosToken = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="SecondTail", fn=${strTime});
 feature ffsToken = Conjunction(minFeatureOccurrence="1", features=(${fofToken}, ${fosToken}));
-
 
 feature fsToken = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="SourceTail", fn=${strTime});
 feature fsTokenClean = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="Source", fn=${strDef});
@@ -182,7 +180,7 @@ feature fstPred = Conjunction(minFeatureOccurrence="1", features=(${fsPred}, ${f
 feature fdepPathEE = DependencyPath(minFeatureOccurrence="1", sourceTokenExtractor="Source", targetTokenExtractor="Target", useRelationTypes="true", assumeTree="true");
 feature fconPathPosEE = ConstituencyPath(minFeatureOccurrence="1", sourceTokenExtractor="Source", targetTokenExtractor="Target", noLeaves="false", useRelationDirections="false");
 feature fconPathEE = ConstituencyPath(minFeatureOccurrence="1", sourceTokenExtractor="Source", targetTokenExtractor="Target", noLeaves="true", useRelationDirections="false");
-feature fdepTypeEE = DependencyPathType(sourceTokenExtractor="Source", targetTokenExtractor="Target");
+feature fdepTypeEE_CAEVO = DependencyPathType(sourceTokenExtractor="Source", targetTokenExtractor="Target");
 feature fpredPathEE = PredicateArgumentPath(sourceTokenExtractor="Source", targetTokenExtractor="Target");
 feature fpredPathNoSenseEE = PredicateArgumentPath(sourceTokenExtractor="Source", targetTokenExtractor="Target", useSenses="false");
 feature fdomEE = ConstituencyParseRelation(sourceTokenExtractor="Source", targetTokenExtractor="Target");
