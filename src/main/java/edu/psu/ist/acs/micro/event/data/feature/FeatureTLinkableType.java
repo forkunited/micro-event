@@ -104,7 +104,7 @@ public class FeatureTLinkableType<L> extends Feature<TLinkDatum<L>, L> {
 
 	@Override
 	public Obj getParameterValue(String parameter) {
-		if (parameter.equals("sourceOrTarget"))
+		if (parameter.equals("part"))
 			return (this.part == null) ? null : Obj.stringValue(this.part.toString());
 		else
 			return null;
@@ -112,7 +112,7 @@ public class FeatureTLinkableType<L> extends Feature<TLinkDatum<L>, L> {
 
 	@Override
 	public boolean setParameterValue(String parameter, Obj parameterValue) {
-		if (parameter.equals("sourceOrTarget"))
+		if (parameter.equals("part"))
 			this.part = (parameterValue == null) ? null : Part.valueOf(this.context.getMatchValue(parameterValue));
 		else
 			return false;

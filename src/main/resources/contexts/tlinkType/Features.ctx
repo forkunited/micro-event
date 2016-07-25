@@ -92,7 +92,7 @@ feature fdomET = ConstituencyParseRelation(sourceTokenExtractor="FirstEvent", ta
 feature fw2vSimET = Word2Vec(tokenExtractor="EventTime", mode="SIMILARITY", fn=(${strTrim} o ${head}));
 feature fw2vDiffET = Word2Vec(tokenExtractor="EventTime", mode="DIFFERENCE", fn=(${strTrim} o ${head}));
 feature fsourceType = TLinkableType(part="SOURCE");
-feature ffirstType = TLinkableType(part="SOURCE");
+feature ffirstType = TLinkableType(part="FIRST");
 feature foverEventET = TLinkAttribute(attribute="OVER_EVENT");
 feature fadjET = MethodClassification(method=${modelsTlinkTypeDet.adjET});
 feature fconPathSourceTypeET = Conjunction(minFeatureOccurrence="1", features=(${fconPathET}, ${fsourceType}));
