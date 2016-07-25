@@ -64,6 +64,8 @@ public class TestCAEVOFeatureOutput {
 		for (String name : names) {
 			if (name.startsWith("feventTokenBA_")) {
 				caevoName = name.replace("feventTokenBA_", "bow-");
+				caevoName = caevoName.replace(")", "-rrb-");
+				caevoName = caevoName.replace("(", "-lrb-");
 			} else if (name.startsWith("fdomET_DOMINATING")) {
 				caevoName = name.replace("fdomET_DOMINATING", "dominates");
 			} else if (name.startsWith("fdomET_DOMINATED")) {
