@@ -70,8 +70,8 @@ public class TestCAEVOFeatureOutput {
 				caevoName = name.replace("fdomET_DOMINATING", "dominates");
 			} else if (name.startsWith("fdomET_DOMINATED")) {
 				caevoName = name.replace("fdomET_DOMINATED", "isDominated");
-			} else if (name.startsWith("ftokenPathSourceTypeET_")) {
-				caevoName = name.replace("ftokenPathSourceTypeET_", "");
+			} else if (name.startsWith("ftokenPathFirstTypeET_")) {
+				caevoName = name.replace("ftokenPathFirstTypeET_", "");
 				caevoName = caevoName.replace("//", "");
 				if (name.endsWith("EVENT")) {
 					caevoName = caevoName.substring(0, caevoName.length() - 5);
