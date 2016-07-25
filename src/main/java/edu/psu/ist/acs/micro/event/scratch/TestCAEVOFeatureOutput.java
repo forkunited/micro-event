@@ -205,11 +205,11 @@ public class TestCAEVOFeatureOutput {
 				caevoName = name.replace("ftLemma_", "lemma2-");
 			} else if (name.startsWith("ftSynset1_")) {
 				caevoName = name.replace("ftSynset1_", "synset2-");
-			} else if (name.startsWith("fstToken_")) {
+			} else if (name.startsWith("fstToken_") || name.startsWith("ffsToken_")) {
 				if (mode.equalsIgnoreCase("ee"))
 					caevoName = name.replace("fstToken_", "BI-");
 				else 
-					caevoName = name.replace("fstToken_", "bi-");
+					caevoName = name.replace("ffsToken_", "bi-");
 				caevoName = caevoName.replace("//", "_");
 				caevoName = caevoName.replace("-_", "-");
 				caevoName = caevoName.replace("[DoW]", "DAYOFWEEK");
