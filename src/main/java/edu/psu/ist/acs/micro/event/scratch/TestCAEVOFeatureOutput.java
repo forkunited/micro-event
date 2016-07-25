@@ -84,8 +84,8 @@ public class TestCAEVOFeatureOutput {
 				caevoName = "tokenpath-" + caevoName;
 			} else if (name.startsWith("feventSynset1_")) {
 				caevoName = name.replace("feventSynset1_", "synset1-");
-			} else if (name.startsWith("fconPathSourceType_")) {
-				caevoName = name.replace("fconPathSourceType_", "");
+			} else if (name.startsWith("fconPathFirstType_")) {
+				caevoName = name.replace("fconPathFirstType_", "");
 				caevoName = caevoName.replace("//", "");
 				if (name.endsWith("EVENT")) {
 					caevoName = caevoName.substring(0, caevoName.length() - 5);
@@ -96,8 +96,8 @@ public class TestCAEVOFeatureOutput {
 				}
 				
 				caevoName = "pathnopos-" + caevoName;
-			} else if (name.startsWith("fconPathPosSourceType_")) {
-				caevoName = name.replace("fconPathPosSourceType_", "");
+			} else if (name.startsWith("fconPathPosFirstType_")) {
+				caevoName = name.replace("fconPathPosFirstType_", "");
 				caevoName = caevoName.replace("//", "");
 				if (name.endsWith("EVENT")) {
 					caevoName = caevoName.substring(0, caevoName.length() - 5);
@@ -108,10 +108,10 @@ public class TestCAEVOFeatureOutput {
 				}
 				
 				caevoName = "pathfull-" + caevoName;
-			} else if (name.startsWith("fsourceType_TIME")) {
-				caevoName = name.replace("fsourceType_TIME", "time-first");
-			} else if (name.startsWith("fsourceType_EVENT")) {
-				caevoName = name.replace("fsourceType_EVENT", "event-first");
+			} else if (name.startsWith("ffirstType_TIME")) {
+				caevoName = name.replace("ffirstType_TIME", "time-first");
+			} else if (name.startsWith("ffirstType_EVENT")) {
+				caevoName = name.replace("ffirstType_EVENT", "event-first");
 			} else if (name.startsWith("fdepPathET_")) {
 				caevoName = name.replace("fdepPathET_", "");
 			} else if (name.startsWith("ftimeToken_")) {
