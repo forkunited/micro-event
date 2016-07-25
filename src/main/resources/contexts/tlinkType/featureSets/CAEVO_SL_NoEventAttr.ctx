@@ -12,13 +12,13 @@ feature_set fsETWS = FeatureSet(features=(
 										${features.ftimeToken},
 										${features.ftimeTokenh},
 										${features.ftimeSentPosEnd},
-										${features.fstToken}, 
+										${features.ffsToken}, 
 										${features.fdepPathET}, 
 										${features.fdomET},
-										${features.fsourceType},
-										${features.fconPathSourceType},
-										${features.fconPathPosSourceType},
-										${features.ftokenPathSourceTypeET}
+										${features.ffirstType},
+										${features.fconPathFirstType},
+										${features.fconPathPosFirstType},
+										${features.ftokenPathFirstTypeET}
 										), 
 								initData=(${data.trainDataETWS}));
 

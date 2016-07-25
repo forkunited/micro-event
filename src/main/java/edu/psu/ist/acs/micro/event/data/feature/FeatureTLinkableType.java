@@ -26,18 +26,18 @@ import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLinkable;
  * @param <L> label type for the TLinks
  */
 public class FeatureTLinkableType<L> extends Feature<TLinkDatum<L>, L> {
-	public enum SourceOrTarget {
+	public enum Part {
 		SOURCE,
-		TARGET
+		TARGET,
+		FIRST,
+		SECOND
 	}
 	
-	// Indicates whether to compute the TLinkable type for the
-	// source or target entity of the TLink
-	private SourceOrTarget sourceOrTarget; 
+	private Part part; 
 	
 	// Vector mapping EVENT and TIME to indices
 	private BidirectionalLookupTable<String, Integer> vocabulary;
-	private String[] parameterNames = { "sourceOrTarget"};
+	private String[] parameterNames = { "part"};
 
 	public FeatureTLinkableType() {
 		
@@ -63,10 +63,14 @@ public class FeatureTLinkableType<L> extends Feature<TLinkDatum<L>, L> {
 	@Override
 	public Map<Integer, Double> computeVector(TLinkDatum<L> datum, int offset,
 			Map<Integer, Double> vector) {
-		if (this.sourceOrTarget == SourceOrTarget.SOURCE)
+		if (this.part == Part.SOURCE)
 			vector.put(offset + this.vocabulary.get(datum.getTLink().getSource().getTLinkableType().toString()), 1.0);
-		else if (this.sourceOrTarget == SourceOrTarget.TARGET)
+		else if (this.part == Part.TARGET)
 			vector.put(offset + this.vocabulary.get(datum.getTLink().getTarget().getTLinkableType().toString()), 1.0);
+		else if (this.part == Part.FIRST)
+			vector.put(offset + this.vocabulary.get(datum.getTLink().getFirst().getTLinkableType().toString()), 1.0);
+		else if (this.part == Part.SECOND)
+			vector.put(offset + this.vocabulary.get(datum.getTLink().getSecond().getTLinkableType().toString()), 1.0);
 		else
 			return null;
 		return vector;
@@ -101,7 +105,7 @@ public class FeatureTLinkableType<L> extends Feature<TLinkDatum<L>, L> {
 	@Override
 	public Obj getParameterValue(String parameter) {
 		if (parameter.equals("sourceOrTarget"))
-			return (this.sourceOrTarget == null) ? null : Obj.stringValue(this.sourceOrTarget.toString());
+			return (this.part == null) ? null : Obj.stringValue(this.part.toString());
 		else
 			return null;
 	}
@@ -109,7 +113,7 @@ public class FeatureTLinkableType<L> extends Feature<TLinkDatum<L>, L> {
 	@Override
 	public boolean setParameterValue(String parameter, Obj parameterValue) {
 		if (parameter.equals("sourceOrTarget"))
-			this.sourceOrTarget = (parameterValue == null) ? null : SourceOrTarget.valueOf(this.context.getMatchValue(parameterValue));
+			this.part = (parameterValue == null) ? null : Part.valueOf(this.context.getMatchValue(parameterValue));
 		else
 			return false;
 		return true;

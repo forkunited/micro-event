@@ -273,12 +273,91 @@ public class TLink implements StoredJSONSerializable {
 		this.syntax = syntax;
 	}
 	
+	public TLink getConverse() {
+		return new TLink(this.dataTools,
+						 null,
+						 this.id,
+						 this.origin,
+						 this.targetReference,
+						 this.sourceReference,
+						 TLink.getConverseTimeMLRelType(this.timeMLRelType),
+						 this.signal,
+						 this.syntax
+						 );
+	}
+	
 	public String getId() {
 		return this.id;
 	}
 	
 	public String getOrigin() {
 		return this.origin;
+	}
+	
+	public TLinkable getFirst() {
+		TLinkable source = getSource();
+		TLinkable target = getTarget();
+		
+		String sourceDoc = source.getTokenSpan().getDocument().getName();
+		String targetDoc = target.getTokenSpan().getDocument().getName();
+		int sourceSent = source.getTokenSpan().getSentenceIndex();
+		int targetSent = target.getTokenSpan().getSentenceIndex();
+		int sourceToken = source.getTokenSpan().getStartTokenIndex();
+		int targetToken = target.getTokenSpan().getStartTokenIndex();
+		int sourceEndToken = source.getTokenSpan().getEndTokenIndex();
+		int targetEndToken = target.getTokenSpan().getEndTokenIndex();
+		
+		if (sourceDoc.compareTo(targetDoc) < 0)
+			return source;
+		else if (sourceDoc.compareTo(targetDoc) > 0)
+			return target;
+		else if (sourceSent < targetSent)
+			return source;
+		else if (sourceSent > targetSent)
+			return target;
+		else if (sourceToken < targetToken)
+			return source;
+		else if (sourceToken > targetToken)
+			return target;
+		else if (sourceEndToken < targetEndToken)
+			return source;
+		else if (sourceEndToken > targetEndToken)
+			return target;
+		else 
+			return source;
+	}
+	
+	public TLinkable getSecond() {
+		TLinkable source = getSource();
+		TLinkable target = getTarget();
+		
+		String sourceDoc = source.getTokenSpan().getDocument().getName();
+		String targetDoc = target.getTokenSpan().getDocument().getName();
+		int sourceSent = source.getTokenSpan().getSentenceIndex();
+		int targetSent = target.getTokenSpan().getSentenceIndex();
+		int sourceToken = source.getTokenSpan().getStartTokenIndex();
+		int targetToken = target.getTokenSpan().getStartTokenIndex();
+		int sourceEndToken = source.getTokenSpan().getEndTokenIndex();
+		int targetEndToken = target.getTokenSpan().getEndTokenIndex();
+		
+		if (sourceDoc.compareTo(targetDoc) < 0)
+			return target;
+		else if (sourceDoc.compareTo(targetDoc) > 0)
+			return source;
+		else if (sourceSent < targetSent)
+			return target;
+		else if (sourceSent > targetSent)
+			return source;
+		else if (sourceToken < targetToken)
+			return target;
+		else if (sourceToken > targetToken)
+			return source;
+		else if (sourceEndToken < targetEndToken)
+			return target;
+		else if (sourceEndToken > targetEndToken)
+			return source;
+		else 
+			return target;
 	}
 	
 	public TLinkable getSource() {

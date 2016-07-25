@@ -204,36 +204,86 @@ public class TLinkDatum<L> extends Datum<L> {
 			this.addTokenSpanExtractor(new TokenSpanExtractor<TLinkDatum<L>, L>() {
 				@Override
 				public String toString() {
+					return "First";
+				}
+				
+				@Override
+				public TokenSpan[] extract(TLinkDatum<L> tlinkDatum) {
+					return new TokenSpan[] { tlinkDatum.getTLink().getFirst().getTokenSpan() } ;
+				}
+			});
+			
+			this.addTokenSpanExtractor(new TokenSpanExtractor<TLinkDatum<L>, L>() {
+				@Override
+				public String toString() {
+					return "FirstHead";
+				}
+				
+				@Override
+				public TokenSpan[] extract(TLinkDatum<L> tlinkDatum) {
+					TokenSpan span = tlinkDatum.getTLink().getFirst().getTokenSpan();
+					return new TokenSpan[] {span.getSubspan(span.getLength() - 1, span.getLength()) } ;
+				}
+			});
+			
+			this.addTokenSpanExtractor(new TokenSpanExtractor<TLinkDatum<L>, L>() {
+				@Override
+				public String toString() {
+					return "FirstTail";
+				}
+				
+				@Override
+				public TokenSpan[] extract(TLinkDatum<L> tlinkDatum) {
+					return new TokenSpan[] { tlinkDatum.getTLink().getFirst().getTokenSpan().getSubspan(0, 1) } ;
+				}
+			});
+			
+			this.addTokenSpanExtractor(new TokenSpanExtractor<TLinkDatum<L>, L>() {
+				@Override
+				public String toString() {
+					return "Second";
+				}
+				
+				@Override
+				public TokenSpan[] extract(TLinkDatum<L> tlinkDatum) {
+					return new TokenSpan[] { tlinkDatum.getTLink().getSecond().getTokenSpan() } ;
+				}
+			});
+			
+			this.addTokenSpanExtractor(new TokenSpanExtractor<TLinkDatum<L>, L>() {
+				@Override
+				public String toString() {
+					return "SecondHead";
+				}
+				
+				@Override
+				public TokenSpan[] extract(TLinkDatum<L> tlinkDatum) {
+					TokenSpan span = tlinkDatum.getTLink().getSecond().getTokenSpan();
+					return new TokenSpan[] {span.getSubspan(span.getLength() - 1, span.getLength()) } ;
+				}
+			});
+			
+			this.addTokenSpanExtractor(new TokenSpanExtractor<TLinkDatum<L>, L>() {
+				@Override
+				public String toString() {
+					return "SecondTail";
+				}
+				
+				@Override
+				public TokenSpan[] extract(TLinkDatum<L> tlinkDatum) {
+					return new TokenSpan[] { tlinkDatum.getTLink().getSecond().getTokenSpan().getSubspan(0, 1) } ;
+				}
+			});
+			
+			this.addTokenSpanExtractor(new TokenSpanExtractor<TLinkDatum<L>, L>() {
+				@Override
+				public String toString() {
 					return "Source";
 				}
 				
 				@Override
 				public TokenSpan[] extract(TLinkDatum<L> tlinkDatum) {
 					return new TokenSpan[] { tlinkDatum.getTLink().getSource().getTokenSpan() } ;
-				}
-			});
-			
-			this.addTokenSpanExtractor(new TokenSpanExtractor<TLinkDatum<L>, L>() {
-				@Override
-				public String toString() {
-					return "SourceTail";
-				}
-				
-				@Override
-				public TokenSpan[] extract(TLinkDatum<L> tlinkDatum) {
-					return new TokenSpan[] { tlinkDatum.getTLink().getSource().getTokenSpan().getSubspan(0, 1) } ;
-				}
-			});
-			
-			this.addTokenSpanExtractor(new TokenSpanExtractor<TLinkDatum<L>, L>() {
-				@Override
-				public String toString() {
-					return "TargetTail";
-				}
-				
-				@Override
-				public TokenSpan[] extract(TLinkDatum<L> tlinkDatum) {
-					return new TokenSpan[] { tlinkDatum.getTLink().getTarget().getTokenSpan().getSubspan(0, 1) } ;
 				}
 			});
 			
@@ -253,13 +303,12 @@ public class TLinkDatum<L> extends Datum<L> {
 			this.addTokenSpanExtractor(new TokenSpanExtractor<TLinkDatum<L>, L>() {
 				@Override
 				public String toString() {
-					return "TargetHead";
+					return "SourceTail";
 				}
 				
 				@Override
 				public TokenSpan[] extract(TLinkDatum<L> tlinkDatum) {
-					TokenSpan span = tlinkDatum.getTLink().getTarget().getTokenSpan();
-					return new TokenSpan[] {span.getSubspan(span.getLength() - 1, span.getLength()) } ;
+					return new TokenSpan[] { tlinkDatum.getTLink().getSource().getTokenSpan().getSubspan(0, 1) } ;
 				}
 			});
 			
@@ -274,6 +323,32 @@ public class TLinkDatum<L> extends Datum<L> {
 					return new TokenSpan[] { tlinkDatum.getTLink().getTarget().getTokenSpan() } ;
 				}
 			});
+			
+			this.addTokenSpanExtractor(new TokenSpanExtractor<TLinkDatum<L>, L>() {
+				@Override
+				public String toString() {
+					return "TargetHead";
+				}
+				
+				@Override
+				public TokenSpan[] extract(TLinkDatum<L> tlinkDatum) {
+					TokenSpan span = tlinkDatum.getTLink().getTarget().getTokenSpan();
+					return new TokenSpan[] {span.getSubspan(span.getLength() - 1, span.getLength()) } ;
+				}
+			});
+			
+			this.addTokenSpanExtractor(new TokenSpanExtractor<TLinkDatum<L>, L>() {
+				@Override
+				public String toString() {
+					return "TargetTail";
+				}
+				
+				@Override
+				public TokenSpan[] extract(TLinkDatum<L> tlinkDatum) {
+					return new TokenSpan[] { tlinkDatum.getTLink().getTarget().getTokenSpan().getSubspan(0, 1) } ;
+				}
+			});
+			
 			
 			this.addTokenSpanExtractor(new TokenSpanExtractor<TLinkDatum<L>, L>() {
 				@Override

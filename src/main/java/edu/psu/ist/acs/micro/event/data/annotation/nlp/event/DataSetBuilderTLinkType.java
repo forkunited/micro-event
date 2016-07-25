@@ -140,6 +140,9 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 						return true;
 						
 					synchronized (labeledLinks) {
+						if (tlink.getType() == TLink.Type.EVENT_TIME && tlink.getSource().getTLinkableType() == TLinkable.Type.TIME)
+							tlink = tlink.getConverse();
+							
 						if (!labeledPairs.containsKey(tlink.getSource().getId()))
 							labeledPairs.put(tlink.getSource().getId(), new HashSet<>());
 						labeledPairs.get(tlink.getSource().getId()).add(tlink.getTarget().getId());				
