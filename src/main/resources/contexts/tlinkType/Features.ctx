@@ -177,10 +177,11 @@ feature fstPolarityEq = Conjunction(mode="EQUALITY", minFeatureOccurrence="1", f
 feature fstModalityEq = Conjunction(mode="EQUALITY", minFeatureOccurrence="1", features=(${fsModality}, ${ftModality}));		
 feature fstSentPos = Conjunction(minFeatureOccurrence="1", features=(${fsSentPos}, ${ftSentPos}));
 feature fstPred = Conjunction(minFeatureOccurrence="1", features=(${fsPred}, ${ftPred}));
-feature fdepPathEE = DependencyPath(minFeatureOccurrence="1", sourceTokenExtractor="Source", targetTokenExtractor="Target", useRelationTypes="true", assumeTree="true");
+feature fdepPathEE = DependencyPath(minFeatureOccurrence="1", sourceTokenExtractor="Source", targetTokenExtractor="Target", useRelationTypes="true");
+feature fdepPathEE_CAEVO = DependencyPath(minFeatureOccurrence="1", sourceTokenExtractor="Source", targetTokenExtractor="Target", useRelationTypes="true", assumeTree="true");
 feature fconPathPosEE = ConstituencyPath(minFeatureOccurrence="1", sourceTokenExtractor="Source", targetTokenExtractor="Target", noLeaves="false", useRelationDirections="false");
 feature fconPathEE = ConstituencyPath(minFeatureOccurrence="1", sourceTokenExtractor="Source", targetTokenExtractor="Target", noLeaves="true", useRelationDirections="false");
-feature fdepTypeEE_CAEVO = DependencyPathType(sourceTokenExtractor="Source", targetTokenExtractor="Target");
+feature fdepTypeEE = DependencyPathType(sourceTokenExtractor="Source", targetTokenExtractor="Target");
 feature fpredPathEE = PredicateArgumentPath(sourceTokenExtractor="Source", targetTokenExtractor="Target");
 feature fpredPathNoSenseEE = PredicateArgumentPath(sourceTokenExtractor="Source", targetTokenExtractor="Target", useSenses="false");
 feature fdomEE = ConstituencyParseRelation(sourceTokenExtractor="Source", targetTokenExtractor="Target");
