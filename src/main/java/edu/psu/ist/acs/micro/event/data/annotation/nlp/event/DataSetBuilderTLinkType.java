@@ -185,6 +185,7 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 						return null;
 				}
 				
+				
 				TLink link = new TLink((EventDataTools)context.getDataTools(), null, id1 + "_" + id2, null, o1.getSecond(), o2.getSecond(), null,null,null);
 				TextDirection d = link.getTextDirection();
 				if (directionMode == DirectionMode.FORWARD && d != TextDirection.FORWARD && d != TextDirection.NONE)
@@ -192,6 +193,13 @@ public class DataSetBuilderTLinkType extends DataSetBuilderDocumentFiltered<TLin
 				if (directionMode == DirectionMode.BACKWARD && d != TextDirection.BACKWARD && d != TextDirection.NONE)
 					return null;
 
+				if (link.getType() == TLink.Type.EVENT_TIME && link.getSource().getTLinkableType() == TLinkable.Type.TIME) {
+					link = new TLink((EventDataTools)context.getDataTools(), null, id2 + "_" + id1, null, o2.getSecond(), o1.getSecond(), null,null,null);
+					String temp = id2;
+					id2 = id1;
+					id1 = temp;
+				}
+				
 				if (labeledPairs.containsKey(id1) && labeledPairs.get(id1).contains(id2))
 					return null;
 				else if (linkMeetsCrossDocumentMode(link, false))
