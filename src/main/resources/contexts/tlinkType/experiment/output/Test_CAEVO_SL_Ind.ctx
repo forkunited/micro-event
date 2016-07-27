@@ -283,10 +283,10 @@ value strEvals = OutputStrings(id=${resultsId}, storage="EventString", collectio
 	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDetInd.testAllVaguePrecision}, 
                   ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDetInd.testAllVagueRecall},
 	              
-	              ${evalSieve.multiTestPrecision}, 
-	              ${evalSieve.multiTestRecall},
-	              
 	              ${evalSieve.multiDevPrecision}, 
-	              ${evalSieve.multiDevRecall}  
+	              ${evalSieve.multiDevRecall},
+	              
+	              ${evalSieve.multiTestPrecision}, 
+	              ${evalSieve.multiTestRecall}  
 	              
                  )); 
