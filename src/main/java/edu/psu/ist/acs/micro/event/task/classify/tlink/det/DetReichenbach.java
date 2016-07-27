@@ -10,7 +10,7 @@ import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.EventMention.TimeML
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.TLink.TimeMLRelType;
 
 public class DetReichenbach {
-	private static int SENTENCE_WINDOW = 1;
+	private static int SENTENCE_WINDOW = Integer.MAX_VALUE;
 	private static boolean SAME_TENSE = false;
 	private static boolean SAME_SENTENCE = true;
 	private static boolean SIMPLIFY_PAST = false;
