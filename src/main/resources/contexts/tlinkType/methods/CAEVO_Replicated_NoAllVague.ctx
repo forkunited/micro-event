@@ -9,7 +9,7 @@ context evalTlinkTypeSl = TLinkType(initScript="/tlinkType/evaluations/SL.ctx", 
 structure_fn graphPaths2 = GraphPaths(length="2", ignoreTypes=("VAGUE"));
 structure_fn graphPaths1 = GraphPaths(length="1", ignoreTypes=("VAGUE"));
 structure_fn greedyTlinkTransitiveRules = GreedyStructureRules(rules=(${rulesTlinkTypeConverse.rules}, ${rulesTlinkTypeTransitive.rules}), 
-                                                               splitFns=(${graphPaths1}, ${graphPaths2}), singleRuleSetPerIteration="true", maxIterations="20");
+                                                               splitFns=(${graphPaths1}, ${graphPaths2}), singleRuleSetPerIteration="true", maxIterations="20", maxIterationSize="1000");
 
 multi_classify_method sieve = Sieve(methods=(${modelsTlinkTypeDet.adjET}, ${modelsTlinkTypeDet.timeTime},
                                              ${modelsTlinkTypeDet.repGov}, ${modelsTlinkTypeDet.reichenbach}, 
