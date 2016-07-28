@@ -14,9 +14,6 @@ value strEvals = OutputStrings(id=${resultsId}, storage="EventString", collectio
                   ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeSl.devSlEEWSConfusions},
                   ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeSl.devSlEEDConfusions},
                   
-	              ${evalSieve.multiDevPrecision}, 
-	              ${evalSieve.multiDevRecall},
-                  
 	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDet.testAdjETConfusions},    
 	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDet.testGenGovConfusions},   
 	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDet.testReichenbachConfusions},
@@ -72,6 +69,9 @@ value strEvals = OutputStrings(id=${resultsId}, storage="EventString", collectio
                   ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeSl.devSlEEWSRecall},                 
                   ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeSl.devSlEEDPrecision}, 
                   ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeSl.devSlEEDRecall}, 
+	              
+	              ${evalSieve.multiDevPrecision}, 
+	              ${evalSieve.multiDevRecall},
 	              
 	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeSl.testSlDCTPrecision}, 
 	              ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeSl.testSlDCTRecall},       
