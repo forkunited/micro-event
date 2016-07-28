@@ -25,7 +25,7 @@ classify_method slDCTSub = FilterDatumIndicator(method=${slDCTUnfiltered}, datum
 classify_method slETWSSub = FilterDatumIndicator(method=${slETWSUnfiltered}, datumIndicator="ETWS");
 classify_method slEEWSSub = FilterDatumIndicator(method=${slEEWSUnfiltered}, datumIndicator="EEWS");
 classify_method slEEDSub = FilterDatumIndicator(method=${slEEDUnfiltered}, datumIndicator="EED");
-classify_method slEEDSub = FilterDatumIndicator(method=${slEEDUnfiltered}, datumIndicator="EEBS");
+classify_method slEEBSSub = FilterDatumIndicator(method=${slEEBSUnfiltered}, datumIndicator="EEBS");
 
 classify_method slDCT = InitClassifyMethod(devData=${trainDevTestDataTlinkType.devData}, method=${slDCTSub});
 classify_method slETWS = InitClassifyMethod(devData=${trainDevTestDataTlinkType.devData}, method=${slETWSSub});
