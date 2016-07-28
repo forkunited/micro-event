@@ -1,5 +1,5 @@
 context dataParamsTlinkType = TLinkType(initScript="/tlinkType/data/parameters/TBD.ctx", initOnce="true", initOverrideByName="true");
-context featureSetsTlinkType = TLinkType(initScript="/tlinkType/featureSets/CAEVO_SL.ctx", initOnce="true", initOverrideByName="true");
+context featureSetsTlinkType = TLinkType(initScript="/tlinkType/featureSets/CAEVO_SL_Fixed.ctx", initOnce="true", initOverrideByName="true");
 context trainDevTestDataTlinkType = TLinkType(initScript="/tlinkType/data/LoadTrainDevTest.ctx", initOnce="true", initOverrideByName="true");
 
 data_features trainMatrixDCT = DataFeatureMatrix(data=${trainDevTestDataTlinkType.trainDataDCT}, features=${featureSetsTlinkType.fsDCT});
