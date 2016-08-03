@@ -13,4 +13,4 @@ classify_method repGov = LabelMapping(method=${repGovSieveUM}, labelMapping="TBD
 classify_method timeTime = LabelMapping(method=${timeTimeSieveUM}, labelMapping="TBD");
 classify_method wordNet = LabelMapping(method=${wordNetSieveUM}, labelMapping="TBD");
 classify_method reportingDCT = LabelMapping(method=${reportingDCTSieveUM}, labelMapping="TBD");
-classify_method allVague = Constant(label="VAGUE");
+classify_method allVague = Constant(label="VAGUE", score="0.0");
