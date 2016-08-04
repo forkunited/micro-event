@@ -96,6 +96,7 @@ feature fsourceType = TLinkableType(part="SOURCE");
 feature ffirstType = TLinkableType(part="FIRST");
 feature foverEventET = TLinkAttribute(attribute="OVER_EVENT");
 feature fadjET = MethodClassification(method=${modelsTlinkTypeDet.adjET});
+feature freportingDCT = MethodClassification(method=${modelsTlinkTypeDet.reportingDCT});
 feature fconPathSourceTypeET = Conjunction(minFeatureOccurrence="1", features=(${fconPathET}, ${fsourceType}));
 feature fconPathPosSourceTypeET = Conjunction(minFeatureOccurrence="1", features=(${fconPathPosET}, ${fsourceType}));
 feature fconPathFirstType = Conjunction(minFeatureOccurrence="1", features=(${fconPath}, ${ffirstType}));
