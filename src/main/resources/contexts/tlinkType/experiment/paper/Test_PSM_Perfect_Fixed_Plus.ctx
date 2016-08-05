@@ -9,7 +9,7 @@ context modelsTlinkTypeSl = TLinkType(initScript="/tlinkType/methods/SL_CAEVO_Fi
 context methodRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/methods/meta/Reranker_Perfect.ctx", initOnce="false");
 context modelsTlinkTypePS = TLinkType(initScript="/tlinkType/methods/PrecedenceScoreByModel_SL.ctx", initOnce="false");
 context evalPS = TLinkType(initScript="/tlinkType/evaluations/PrecedenceScore.ctx", initOnce="false");
-context evalRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/evaluations/meta/Reranker.ctx", initOnce="false");
+context evalRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/evaluations/Reranker.ctx", initOnce="false");
 context results = TLinkType(initScript="/tlinkType/experiment/output/Test_PSM_SL.ctx", initOnce="false");
 
 value resultsId = "TLinkType_Test_PSM_Perfect_Fixed_Plus_4Fold_0";
@@ -19,7 +19,7 @@ context modelsTlinkTypeSl = TLinkType(initScript="/tlinkType/methods/SL_CAEVO_Fi
 context methodRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/methods/meta/Reranker_Perfect.ctx", initOnce="false");
 context modelsTlinkTypePS = TLinkType(initScript="/tlinkType/methods/PrecedenceScoreByModel_SL.ctx", initOnce="false");
 context evalPS = TLinkType(initScript="/tlinkType/evaluations/PrecedenceScore.ctx", initOnce="false");
-context evalRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/evaluations/meta/Reranker.ctx", initOnce="false");
+context evalRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/evaluations/Reranker.ctx", initOnce="false");
 context results = TLinkType(initScript="/tlinkType/experiment/output/Test_PSM_SL.ctx", initOnce="false");
 
 value resultsId = "TLinkType_Test_PSM_Perfect_Fixed_Plus_4Fold_1";
@@ -29,7 +29,7 @@ context modelsTlinkTypeSl = TLinkType(initScript="/tlinkType/methods/SL_CAEVO_Fi
 context methodRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/methods/meta/Reranker_Perfect.ctx", initOnce="false");
 context modelsTlinkTypePS = TLinkType(initScript="/tlinkType/methods/PrecedenceScoreByModel_SL.ctx", initOnce="false");
 context evalPS = TLinkType(initScript="/tlinkType/evaluations/PrecedenceScore.ctx", initOnce="false");
-context evalRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/evaluations/meta/Reranker.ctx", initOnce="false");
+context evalRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/evaluations/Reranker.ctx", initOnce="false");
 context results = TLinkType(initScript="/tlinkType/experiment/output/Test_PSM_SL.ctx", initOnce="false");
 
 value resultsId = "TLinkType_Test_PSM_Perfect_Fixed_Plus_4Fold_2";
@@ -39,7 +39,7 @@ context modelsTlinkTypeSl = TLinkType(initScript="/tlinkType/methods/SL_CAEVO_Fi
 context methodRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/methods/meta/Reranker_Perfect.ctx", initOnce="false");
 context modelsTlinkTypePS = TLinkType(initScript="/tlinkType/methods/PrecedenceScoreByModel_SL.ctx", initOnce="false");
 context evalPS = TLinkType(initScript="/tlinkType/evaluations/PrecedenceScore.ctx", initOnce="false");
-context evalRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/evaluations/meta/Reranker.ctx", initOnce="false");
+context evalRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/evaluations/Reranker.ctx", initOnce="false");
 context results = TLinkType(initScript="/tlinkType/experiment/output/Test_PSM_SL.ctx", initOnce="false");
 
 value resultsId = "TLinkType_Test_PSM_Perfect_Fixed_Plus_4Fold_3";
@@ -49,5 +49,5 @@ context modelsTlinkTypeSl = TLinkType(initScript="/tlinkType/methods/SL_CAEVO_Fi
 context methodRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/methods/meta/Reranker_Perfect.ctx", initOnce="false");
 context modelsTlinkTypePS = TLinkType(initScript="/tlinkType/methods/PrecedenceScoreByModel_SL.ctx", initOnce="false");
 context evalPS = TLinkType(initScript="/tlinkType/evaluations/PrecedenceScore.ctx", initOnce="false");
-context evalRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/evaluations/meta/Reranker.ctx", initOnce="false");
+context evalRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/evaluations/Reranker.ctx", initOnce="false");
 context results = TLinkType(initScript="/tlinkType/experiment/output/Test_PSM_SL.ctx", initOnce="false");
