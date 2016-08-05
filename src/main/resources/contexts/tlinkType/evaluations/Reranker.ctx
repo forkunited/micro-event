@@ -1,0 +1,14 @@
+context trainDevTestDataMetaTLinkType = MetaTLinkType(initScript="/tlinkType/data/meta/LoadTrainDevTest_SL.ctx", initOnce="true", initOverrideByName="true");
+context methodRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/methods/meta/Reranker_Perfect.ctx", initOnce="true", initOverrideByName="true");
+
+classify_eval devPrecision = Precision(task=${trainDevTestDataMetaTlinkType.devTask}, method=${methodRerankerTlinkType.reranker}, mode="MICRO", filterLabel="true");
+classify_eval devRecall = Recall(task=${trainDevTestDataMetaTlinkType.devTask}, method=${methodRerankerTlinkType.reranker}, mode="MICRO", filterLabel="true");
+classify_eval devAUC = AUC(task=${trainDevTestDataMetaTlinkType.devTask}, method=${methodRerankerTlinkType.reranker}, filterLabel="true");
+
+classify_eval fullDevPrecision = Precision(task=${trainDevTestDataMetaTlinkType.fullDevTask}, method=${methodRerankerTlinkType.reranker}, mode="MICRO", filterLabel="true");
+classify_eval fullDevRecall = Recall(task=${trainDevTestDataMetaTlinkType.fullDevTask}, method=${methodRerankerTlinkType.reranker}, mode="MICRO", filterLabel="true");
+classify_eval fullDevAUC = AUC(task=${trainDevTestDataMetaTlinkType.fullDevTask}, method=${methodRerankerTlinkType.reranker}, filterLabel="true");
+
+classify_eval testPrecision = Precision(task=${trainDevTestDataMetaTlinkType.testTask}, method=${methodRerankerTlinkType.reranker}, mode="MICRO", filterLabel="true");
+classify_eval testRecall = Recall(task=${trainDevTestDataMetaTlinkType.testTask}, method=${methodRerankerTlinkType.reranker}, mode="MICRO", filterLabel="true");
+classify_eval testAUC = AUC(task=${trainDevTestDataMetaTlinkType.testTask}, method=${methodRerankerTlinkType.reranker}, filterLabel="true");

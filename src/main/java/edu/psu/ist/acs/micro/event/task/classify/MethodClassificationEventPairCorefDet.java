@@ -156,4 +156,23 @@ public class MethodClassificationEventPairCorefDet extends MethodClassification<
 			return null;
 		}
 	}
+
+	@Override
+	public Map<EventPairDatum<CorefRelType>, Double> score(DataSet<EventPairDatum<CorefRelType>, CorefRelType> data, CorefRelType label) {
+		Map<EventPairDatum<CorefRelType>, Double> scoreMap = new HashMap<>();
+		
+		for (EventPairDatum<CorefRelType> datum : data) {
+			scoreMap.put(datum, score(datum, label));
+		}
+		
+		return scoreMap;
+	}
+
+	@Override
+	public double score(EventPairDatum<CorefRelType> datum, CorefRelType label) {
+		if (label.equals(classify(datum)))
+			return 1.0;
+		else
+			return 0.0;
+	}
 }

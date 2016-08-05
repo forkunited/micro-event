@@ -128,4 +128,23 @@ public class MethodClassificationTLinkTypeGeneralGovernor extends MethodClassifi
 		
 		return DetGeneralGovernor.determineRelation((EventMention)tlink.getSource(), (EventMention)tlink.getTarget());
 	}
+	
+	@Override
+	public Map<TLinkDatum<TimeMLRelType>, Double> score(DataSet<TLinkDatum<TimeMLRelType>, TimeMLRelType> data, TimeMLRelType label) {
+		Map<TLinkDatum<TimeMLRelType>, Double> scoreMap = new HashMap<>();
+		
+		for (TLinkDatum<TimeMLRelType> datum : data) {
+			scoreMap.put(datum, score(datum, label));
+		}
+		
+		return scoreMap;
+	}
+
+	@Override
+	public double score(TLinkDatum<TimeMLRelType> datum, TimeMLRelType label) {
+		if (label.equals(classify(datum)))
+			return 1.0;
+		else
+			return 0.0;
+	}
 }

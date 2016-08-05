@@ -10,6 +10,7 @@ import edu.cmu.ml.rtw.generic.data.SerializerJSONBSON;
 import edu.cmu.ml.rtw.generic.data.annotation.DatumContext;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpansDatum;
 import edu.cmu.ml.rtw.generic.structure.WeightedStructureRelationUnary;
+import edu.cmu.ml.rtw.generic.task.classify.meta.PredictionClassificationDatum;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.AnnotationTypeNLPEvent;
 import edu.psu.ist.acs.micro.event.data.annotation.nlp.event.CorefRelType;
@@ -82,6 +83,8 @@ public class EventDataTools extends DataTools {
 		this.addGenericContext(new DatumContext<EventPairDatum<TimeMLRelType>, TimeMLRelType>(EventPairDatum.getTLinkTypeTools(this), "EventTLink"));
 		this.addGenericContext(new DatumContext<TimePairDatum<TimeMLRelType>, TimeMLRelType>(TimePairDatum.getTLinkTypeTools(this), "TimeTLink"));
 		this.addGenericContext(new DatumContext<EventTimeDatum<TimeMLRelType>, TimeMLRelType>(EventTimeDatum.getTLinkTypeTools(this), "EventTimeTLink"));
+		
+		this.addGenericContext(new DatumContext<PredictionClassificationDatum<Boolean>, Boolean>(PredictionClassificationDatum.getBooleanTools(TLinkDatum.getTimeMLRelTypeTools(this)), "MetaTLinkType"));
 		
 		((DatumContext<TokenSpansDatum<Boolean>, Boolean>)this.genericContexts.get("TokenSpansBoolean")).getDatumTools().addGenericDataSetBuilder(new DataSetBuilderTokenSpanAnnnotationIndicator());
 		

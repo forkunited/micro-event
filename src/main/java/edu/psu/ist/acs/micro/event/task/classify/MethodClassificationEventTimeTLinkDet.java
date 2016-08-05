@@ -157,4 +157,23 @@ public class MethodClassificationEventTimeTLinkDet extends MethodClassification<
 			return null;
 		}
 	}
+	
+	@Override
+	public Map<EventTimeDatum<TimeMLRelType>, Double> score(DataSet<EventTimeDatum<TimeMLRelType>, TimeMLRelType> data, TimeMLRelType label) {
+		Map<EventTimeDatum<TimeMLRelType>, Double> scoreMap = new HashMap<>();
+		
+		for (EventTimeDatum<TimeMLRelType> datum : data) {
+			scoreMap.put(datum, score(datum, label));
+		}
+		
+		return scoreMap;
+	}
+
+	@Override
+	public double score(EventTimeDatum<TimeMLRelType> datum, TimeMLRelType label) {
+		if (label.equals(classify(datum)))
+			return 1.0;
+		else
+			return 0.0;
+	}
 }
