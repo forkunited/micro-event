@@ -29,7 +29,7 @@ data slEEWSTestData = MetaClassification(method=${modelsTlinkTypeSl.slEEWS}, tas
 data slDCTTestData = MetaClassification(method=${modelsTlinkTypeSl.slDCT}, task=${trainDevTestDataTlinkType.devTask});
 
 data fullDevData = UnionData(data=(${adjETDevData}, ${timeTimeDevData}, ${repGovDevData}, ${reichenbachDevData},
-                               ${genGovDevData}, ${wordNetDevData, ${reportingDCTDevData}, ${allVagueDevData},
+                               ${genGovDevData}, ${wordNetDevData}, ${reportingDCTDevData}, ${allVagueDevData},
                                ${slETWSDevData}, ${slEEDDevData}, ${slEEWSDevData}, ${slDCTDevData}));
 
 value devParition = PartitionData(data=${fullDevData}, distribution=(".5", ".5"));
@@ -37,7 +37,7 @@ value devParition = PartitionData(data=${fullDevData}, distribution=(".5", ".5")
 data trainData = UnionData(data=(${devPartition_0}));
 data devData = UnionData(data=(${devPartition_1}));
 data testData = UnionData(data=(${adjETTestData}, ${timeTimeTestData}, ${repGovTestData}, ${reichenbachTestData},
-                               ${genGovTestData}, ${wordNetTestData, ${reportingDCTTestData}, ${allVagueTestData},
+                               ${genGovTestData}, ${wordNetTestData}, ${reportingDCTTestData}, ${allVagueTestData},
                                ${slETWSTestData}, ${slEEDTestData}, ${slEEWSTestData}, ${slDCTTestData}));
 
 
