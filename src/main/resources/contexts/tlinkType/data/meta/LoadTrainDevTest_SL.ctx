@@ -32,7 +32,7 @@ data fullDevData = UnionData(data=(${adjETDevData}, ${timeTimeDevData}, ${repGov
                                ${genGovDevData}, ${wordNetDevData}, ${reportingDCTDevData}, ${allVagueDevData},
                                ${slETWSDevData}, ${slEEDDevData}, ${slEEWSDevData}, ${slDCTDevData}));
 
-value devParition = PartitionData(data=${fullDevData}, distribution=(".5", ".5"));
+value devPartition = PartitionData(data=${fullDevData}, distribution=(".5", ".5"));
 
 data trainData = UnionData(data=(${devPartition_0}));
 data devData = UnionData(data=(${devPartition_1}));
