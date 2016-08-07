@@ -34,8 +34,8 @@ data fullDevData = UnionData(data=(${adjETDevData}, ${timeTimeDevData}, ${repGov
 
 value devPartition = PartitionData(data=${fullDevData}, distribution=(".5", ".5"));
 
-data trainData = UnionData(data=(${devPartition_0}));
-data devData = UnionData(data=(${devPartition_1}));
+data trainData = UnionData(data=(${fullDevData_0}));
+data devData = UnionData(data=(${fullDevData_1}));
 data testData = UnionData(data=(${adjETTestData}, ${timeTimeTestData}, ${repGovTestData}, ${reichenbachTestData},
                                ${genGovTestData}, ${wordNetTestData}, ${reportingDCTTestData}, ${allVagueTestData},
                                ${slETWSTestData}, ${slEEDTestData}, ${slEEWSTestData}, ${slDCTTestData}));
