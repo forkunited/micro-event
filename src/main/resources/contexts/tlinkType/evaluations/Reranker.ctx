@@ -1,4 +1,4 @@
-context trainDevTestDataMetaTLinkType = MetaTLinkType(initScript="/tlinkType/data/meta/LoadTrainDevTest_SL.ctx", initOnce="true", initOverrideByName="true");
+context trainDevTestDataMetaTlinkType = MetaTLinkType(initScript="/tlinkType/data/meta/LoadTrainDevTest_SL.ctx", initOnce="true", initOverrideByName="true");
 context methodRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/methods/meta/Reranker_Perfect.ctx", initOnce="true", initOverrideByName="true");
 
 classify_eval devPrecision = Precision(task=${trainDevTestDataMetaTlinkType.devTask}, method=${methodRerankerTlinkType.reranker}, mode="MICRO", filterLabel="true");
