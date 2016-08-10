@@ -4,6 +4,7 @@ feature fconstant = Constant();
 
 feature fpredLabel = MetaClassificationAttribute(attribute="LABEL");
 feature fpredMethod = MetaClassificationAttribute(attribute="METHOD");
+feature fpredLabelMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredLabel}, ${fpredMethod}));
 
 feature feventToken = MetaClassificationIdentity(feature=${features.feventToken});
 feature feventTokenClean = MetaClassificationIdentity(feature=${features.feventTokenClean}); 
