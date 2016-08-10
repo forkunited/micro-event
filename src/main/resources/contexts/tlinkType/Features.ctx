@@ -193,6 +193,10 @@ feature fgenGov = MethodClassification(method=${modelsTlinkTypeDet.genGov});
 feature freichenbach = MethodClassification(method=${modelsTlinkTypeDet.reichenbach});
 feature frepGov = MethodClassification(method=${modelsTlinkTypeDet.repGov});
 
+
+feature ftype= TLinkAttribute(attribute="TYPE");
+feature fposition= TLinkAttribute(attribute="POSITION");
+
 feature fwordNet = MethodClassification(method=${modelsTlinkTypeDet.wordNet});
 
 feature fsmlType = TLinkTimeAttribute(sourceOrTarget="SOURCE", attribute="TIMEML_TYPE");

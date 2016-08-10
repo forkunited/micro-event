@@ -156,6 +156,9 @@ feature fgenGov = MetaClassificationIdentity(feature=${fgenGov});
 feature freichenbach = MetaClassificationIdentity(feature=${freichenbach});
 feature frepGov = MetaClassificationIdentity(feature=${frepGov});
 
+feature ftype = MetaClassificationIdentity(feature=${ftype});
+feature fposition = MetaClassificationIdentity(feature=${fposition});
+
 feature fwordNet = MetaClassificationIdentity(feature=${fwordNet});
 
 feature fsmlType = MetaClassificationIdentity(feature=${fsmlType});
