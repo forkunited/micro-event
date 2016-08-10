@@ -1,7 +1,7 @@
 context metaFeatures = MetaTLinkType(initScript="/tlinkType/MetaFeatures.ctx", initOnce="true", initOverrideByName="true");
 context trainDevTestDataMetaTlinkType = MetaTLinkType(initScript="/tlinkType/data/meta/LoadTrainDevTest_SL.ctx", initOnce="true", initOverrideByName="true");
 
-feature_set fs = FeatureSet(features=(${metaFeatures.fpredLabel}, ${metaFeatures.fpredMethod}), 
+feature_set fs = FeatureSet(features=(${metaFeatures.fconstant}, ${metaFeatures.fpredLabel}, ${metaFeatures.fpredMethod}), 
 							initData=(${trainDevTestDataMetaTlinkType.trainData}));
 
 data_features trainMatrix = DataFeatureMatrix(data=${trainDevTestDataMetaTlinkType.trainData}, features=${fs});
