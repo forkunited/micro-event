@@ -93,5 +93,15 @@ value strEvals = OutputStrings(id=${resultsId}, storage="EventString", collectio
 	              ${evalRerankerTlinkType.devAUC},
 	              ${evalRerankerTlinkType.testPrecision},
 	              ${evalRerankerTlinkType.testRecall},
-	              ${evalRerankerTlinkType.testAUC}
+	              ${evalRerankerTlinkType.testAUC},
+	              
+	              ${evalRerankerTlinkType.fullDevNAVPrecision},
+	              ${evalRerankerTlinkType.fullDevNAVRecall},
+	              ${evalRerankerTlinkType.fullDevNAVAUC},
+	              ${evalRerankerTlinkType.devNAVPrecision},
+	              ${evalRerankerTlinkType.devNAVRecall},
+	              ${evalRerankerTlinkType.devNAVAUC},
+	              ${evalRerankerTlinkType.testNAVPrecision},
+	              ${evalRerankerTlinkType.testNAVRecall},
+	              ${evalRerankerTlinkType.testNAVAUC}
                  )); 

@@ -44,3 +44,20 @@ data testData = UnionData(data=(${adjETTestData}, ${timeTimeTestData}, ${repGovT
 classify_task fullDevTask = Classification(data=${fullDevData});
 classify_task devTask = Classification(data=${devData});
 classify_task testTask = Classification(data=${testData});
+
+data fullDevDataNAV = UnionData(data=(${adjETDevData}, ${timeTimeDevData}, ${repGovDevData}, ${reichenbachDevData},
+                               ${genGovDevData}, ${wordNetDevData}, ${reportingDCTDevData},
+                               ${slETWSDevData}, ${slEEDDevData}, ${slEEWSDevData}, ${slDCTDevData}));
+
+value devPartitionNAV = PartitionData(data=${fullDevDataNAV}, distribution=(".5", ".5"));
+
+data trainDataNAV = UnionData(data=(${fullDevDataNAV_0}));
+data devDataNAV = UnionData(data=(${fullDevDataNAV_1}));
+data testDataNAV = UnionData(data=(${adjETTestData}, ${timeTimeTestData}, ${repGovTestData}, ${reichenbachTestData},
+                               ${genGovTestData}, ${wordNetTestData}, ${reportingDCTTestData}, 
+                               ${slETWSTestData}, ${slEEDTestData}, ${slEEWSTestData}, ${slDCTTestData}));
+
+classify_task fullDevTaskNAV = Classification(data=${fullDevDataNAV});
+classify_task devTaskNAV = Classification(data=${devDataNAV});
+classify_task testTaskNAV = Classification(data=${testDataNAV});
+

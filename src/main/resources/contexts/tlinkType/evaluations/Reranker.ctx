@@ -12,3 +12,15 @@ classify_eval fullDevAUC = AUC(task=${trainDevTestDataMetaTlinkType.fullDevTask}
 classify_eval testPrecision = Precision(task=${trainDevTestDataMetaTlinkType.testTask}, method=${methodRerankerTlinkType.reranker}, mode="MICRO", filterLabel="true");
 classify_eval testRecall = Recall(task=${trainDevTestDataMetaTlinkType.testTask}, method=${methodRerankerTlinkType.reranker}, mode="MICRO", filterLabel="true");
 classify_eval testAUC = AUC(task=${trainDevTestDataMetaTlinkType.testTask}, method=${methodRerankerTlinkType.reranker}, filterLabel="true");
+
+classify_eval devNAVPrecision = Precision(task=${trainDevTestDataMetaTlinkType.devTaskNAV}, method=${methodRerankerTlinkType.reranker}, mode="MICRO", filterLabel="true");
+classify_eval devNAVRecall = Recall(task=${trainDevTestDataMetaTlinkType.devTaskNAV}, method=${methodRerankerTlinkType.reranker}, mode="MICRO", filterLabel="true");
+classify_eval devNAVAUC = AUC(task=${trainDevTestDataMetaTlinkType.devTaskNAV}, method=${methodRerankerTlinkType.reranker}, filterLabel="true");
+
+classify_eval fullDevNAVPrecision = Precision(task=${trainDevTestDataMetaTlinkType.fullDevTaskNAV}, method=${methodRerankerTlinkType.reranker}, mode="MICRO", filterLabel="true");
+classify_eval fullDevNAVRecall = Recall(task=${trainDevTestDataMetaTlinkType.fullDevTaskNAV}, method=${methodRerankerTlinkType.reranker}, mode="MICRO", filterLabel="true");
+classify_eval fullDevNAVAUC = AUC(task=${trainDevTestDataMetaTlinkType.fullDevTaskNAV}, method=${methodRerankerTlinkType.reranker}, filterLabel="true");
+
+classify_eval testNAVPrecision = Precision(task=${trainDevTestDataMetaTlinkType.testTaskNAV}, method=${methodRerankerTlinkType.reranker}, mode="MICRO", filterLabel="true");
+classify_eval testNAVRecall = Recall(task=${trainDevTestDataMetaTlinkType.testTaskNAV}, method=${methodRerankerTlinkType.reranker}, mode="MICRO", filterLabel="true");
+classify_eval testNAVAUC = AUC(task=${trainDevTestDataMetaTlinkType.testTaskNAV}, method=${methodRerankerTlinkType.reranker}, filterLabel="true");
