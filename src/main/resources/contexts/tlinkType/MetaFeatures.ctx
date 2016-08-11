@@ -174,3 +174,10 @@ feature fstmlTypeEq = MetaClassificationIdentity(feature=${features.fstmlTypeEq}
 feature fstRefEq = MetaClassificationIdentity(feature=${features.fstRefEq});
 feature fstvalTypeEq = MetaClassificationIdentity(feature=${features.fstvalTypeEq});
 feature ftimeTime = MetaClassificationIdentity(feature=${features.ftimeTime});
+
+feature fpredTenseMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fsTense}, ${ftTense}));
+feature fpredAspectMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fsAspect}, ${ftAspect}));
+feature fpredClassMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fsClass}, ${ftClass}));
+feature fpredPosMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fsPos}, ${ftPos}));
+feature fpredTypeMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${ftype}));
+feature fpredPositionMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fposition}));
