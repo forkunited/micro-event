@@ -7,7 +7,17 @@ feature_set fs = FeatureSet(features=(${metaFeatures.fconstant},
                                       ${metaFeatures.ftype},
                                       ${metaFeatures.fposition},
                                       ${metaFeatures.fsTense},
-                                      ${metaFeatures.ftTense}), 
+                                      ${metaFeatures.ftTense},
+                                      ${metaFeatures.fsAspect},
+                                      ${metaFeatures.ftAspect},
+                                      ${metaFeatures.fsClass},
+                                      ${metaFeatures.ftClass},
+                                      ${metaFeatures.fsPos},
+                                      ${metaFeatures.ftPos},
+                                      ${metaFeatures.fstPos},
+                                      ${metaFeatures.fstTense},
+                                      ${metaFeatures.fstAspect},
+                                      ${metaFeatures.fstClass}), 
 							initData=(${trainDevTestDataMetaTlinkType.trainData}));
 
 data_features trainMatrix = DataFeatureMatrix(data=${trainDevTestDataMetaTlinkType.trainData}, features=${fs});
