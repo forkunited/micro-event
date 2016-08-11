@@ -19,7 +19,7 @@ context modelsTlinkTypeSl = TLinkType(initScript="/tlinkType/methods/SL_CAEVO_Fi
 context methodRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/methods/meta/Reranker_Evaluation.ctx", initOnce="false");
 context modelsTlinkTypePS = TLinkType(initScript="/tlinkType/methods/PrecedenceScoreByModel_SL_AllVagueBaseline.ctx", initOnce="false");
 context evalPS = TLinkType(initScript="/tlinkType/evaluations/PrecedenceScore.ctx", initOnce="false");
-con_EvaluationevalRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/evaluations/Reranker.ctx", initOnce="false");
+context evalRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/evaluations/Reranker.ctx", initOnce="false");
 context results = TLinkType(initScript="/tlinkType/experiment/output/Test_PSM_SL.ctx", initOnce="false");
 
 value resultsId = "TLinkType_Test_PSM_BAV_Evaluation_Fixed_Plus_4Fold_1";
