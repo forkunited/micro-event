@@ -1,7 +1,7 @@
 context dataParamsTlinkType = TLinkType(initScript="/tlinkType/data/parameters/TBD.ctx", initOnce="true", initOverrideByName="true");
 context trainDevTestDocsTlinkType = TLinkType(initScript="/util/data/docs/TBD.ctx", initOnce="true", initOverrideByName="true");
 context dataParamsTlinkTypeTE3 = TLinkType(initScript="/tlinkType/data/parameters/TE3Labeled.ctx", initOnce="true", initOverrideByName="true");
-context trainDevTestDocsTlinkTypeTE3 = TLinkType(initScript="/util/data/docs/TE34Fold0.ctx", initOnce="true", initOverrideByName="true");
+context trainDevTestDocsTlinkTypeTE3 = TLinkType(initScript="/util/data/docs/TE34Fold_0.ctx", initOnce="true", initOverrideByName="true");
 
 data trainDataTBD = TLinkType(storage="EventBson", documents=${dataParamsTlinkType.trainDocs}, tlinks=${dataParamsTlinkType.trainTlinks}, filter=${trainDevTestDocsTlinkType.devTestDocs}, filterType="EXCLUDE", labelMode=${dataParamsTlinkType.trainLabelMode}, labelMapping=${dataParamsTlinkType.trainLM}, maxSentenceDistance=${dataParamsTlinkType.trainMaxSentDist}, crossDocMode=${dataParamsTlinkType.trainCrossDocMode}, clusterMode=${dataParamsTlinkType.trainClusterMode});
 data devDataTBD = TLinkType(storage="EventBson", documents=${dataParamsTlinkType.devDocs}, tlinks=${dataParamsTlinkType.devTlinks}, filter=${trainDevTestDocsTlinkType.devDocs}, filterType="INTERSECT", labelMode=${dataParamsTlinkType.devLabelMode}, labelMapping=${dataParamsTlinkType.devLM}, maxSentenceDistance=${dataParamsTlinkType.devMaxSentDist}, crossDocMode=${dataParamsTlinkType.devCrossDocMode}, clusterMode=${dataParamsTlinkType.devClusterMode});
