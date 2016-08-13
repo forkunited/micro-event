@@ -1,11 +1,11 @@
 context features = TLinkType(initScript="/tlinkType/Features.ctx", initOnce="true");
-context data = TLinkType(initScript="/tlinkType/data/LoadTrainDevTest.ctx", initOnce="true");
+context trainDevTestDataTlinkType = TLinkType(initScript="/tlinkType/data/LoadTrainDevTest.ctx", initOnce="true", initOverrideByName="true");
 context unlabeledData = TLinkType(initScript="/tlinkType/data/Load.ctx", initOnce="true");
 
-data allDataTT = UnionData(data=(${data.trainDataTT}, ${unlabeledData.dataTT}));
-data allDataET = UnionData(data=(${data.trainDataET}, ${unlabeledData.dataET}));
-data allDataEE = UnionData(data=(${data.trainDataEE}, ${unlabeledData.dataEE}));
-data allDataDCT = UnionData(data=(${data.trainDataDCT}, ${unlabeledData.dataDCT}));
+data allDataTT = UnionData(data=(${trainDevTestDataTlinkType.trainDataTT}, ${unlabeledData.dataTT}));
+data allDataET = UnionData(data=(${trainDevTestDataTlinkType.trainDataET}, ${unlabeledData.dataET}));
+data allDataEE = UnionData(data=(${trainDevTestDataTlinkType.trainDataEE}, ${unlabeledData.dataEE}));
+data allDataDCT = UnionData(data=(${trainDevTestDataTlinkType.trainDataDCT}, ${unlabeledData.dataDCT}));
 
 feature_set fsET = FeatureSet(features=(${features.feventTokenClean}, 
 										${features.feventPos},

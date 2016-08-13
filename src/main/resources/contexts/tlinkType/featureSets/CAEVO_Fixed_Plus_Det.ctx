@@ -1,5 +1,5 @@
 context features = TLinkType(initScript="/tlinkType/Features.ctx", initOnce="true");
-context data = TLinkType(initScript="/tlinkType/data/LoadTrainDevTest.ctx", initOnce="true");
+context trainDevTestDataTlinkType = TLinkType(initScript="/tlinkType/data/LoadTrainDevTest.ctx", initOnce="true", initOverrideByName="true");
 
 feature_set fsETWS = FeatureSet(features=(
 										${features.feventToken}, 
@@ -33,7 +33,7 @@ feature_set fsETWS = FeatureSet(features=(
 										${features.freportingDCT},
 										${features.fconstant}
 										), 
-								initData=(${data.trainDataETWS}));
+								initData=(${trainDevTestDataTlinkType.trainDataETWS}));
 
 feature_set fsEEWS = FeatureSet(features=(${features.fsToken}, 
 										${features.fsPos}, 
@@ -93,7 +93,7 @@ feature_set fsEEWS = FeatureSet(features=(${features.fsToken},
 										${features.freichenbach},
 										${features.fwordNet},
 										${features.fconstant}), 
-						initData=(${data.trainDataEEWS}));
+						initData=(${trainDevTestDataTlinkType.trainDataEEWS}));
 
 feature_set fsEED = FeatureSet(features=(${features.fsToken}, 
 										${features.fsPos}, 
@@ -141,7 +141,7 @@ feature_set fsEED = FeatureSet(features=(${features.fsToken},
 										${features.freichenbach},
 										${features.fwordNet},
 										${features.fconstant}), 
-						initData=(${data.trainDataEED}));
+						initData=(${trainDevTestDataTlinkType.trainDataEED}));
 
 feature_set fsEEBS = FeatureSet(features=(${features.fsToken}, 
 										${features.fsPos}, 
@@ -193,7 +193,7 @@ feature_set fsEEBS = FeatureSet(features=(${features.fsToken},
 										${features.freichenbach},
 										${features.fwordNet}, 
 										${features.fconstant}), 
-						initData=(${data.trainDataEEBS}));
+						initData=(${trainDevTestDataTlinkType.trainDataEEBS}));
 
 feature_set fsDCT = FeatureSet(features=(${features.feventToken},
 										 ${features.feventTokenBA},
@@ -211,4 +211,4 @@ feature_set fsDCT = FeatureSet(features=(${features.feventToken},
 										 ${features.feventPred},
 										 ${features.feventW2v},
 										 ${features.fconstant}), 
-						initData=(${data.trainDataDCT}));
+						initData=(${trainDevTestDataTlinkType.trainDataDCT}));

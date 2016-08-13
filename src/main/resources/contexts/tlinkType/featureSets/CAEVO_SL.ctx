@@ -1,5 +1,5 @@
 context features = TLinkType(initScript="/tlinkType/Features.ctx", initOnce="true");
-context data = TLinkType(initScript="/tlinkType/data/LoadTrainDevTest.ctx", initOnce="true");
+context trainDevTestDataTlinkType = TLinkType(initScript="/tlinkType/data/LoadTrainDevTest.ctx", initOnce="true", initOverrideByName="true");
 
 feature_set fsETWS = FeatureSet(features=(${features.feventToken}, 
 										${features.feventPos},
@@ -24,7 +24,7 @@ feature_set fsETWS = FeatureSet(features=(${features.feventToken},
 										${features.fconPathPosFirstType},
 										${features.ftokenPathFirstTypeET}
 										${features.fconstant}), 
-								initData=(${data.trainDataETWS}));
+								initData=(${trainDevTestDataTlinkType.trainDataETWS}));
 
 feature_set fsEEWS = FeatureSet(features=(${features.fsToken}, 
 										${features.fsPos}, 
@@ -71,7 +71,7 @@ feature_set fsEEWS = FeatureSet(features=(${features.fsToken},
 										${features.foverEventEE}, 
 										${features.fdomEE},
 										${features.fconstant}), 
-						initData=(${data.trainDataEEWS}));
+						initData=(${trainDevTestDataTlinkType.trainDataEEWS}));
 
 feature_set fsEED = FeatureSet(features=(${features.fsToken}, 
 										${features.fsPos}, 
@@ -117,7 +117,7 @@ feature_set fsEED = FeatureSet(features=(${features.fsToken},
 										${features.foverEventEE}, 
 										${features.fdomEE},
 										${features.fconstant}), 
-						initData=(${data.trainDataEED}));
+						initData=(${trainDevTestDataTlinkType.trainDataEED}));
 
 feature_set fsDCT = FeatureSet(features=(${features.feventToken},
 										 ${features.feventTokenBA},
@@ -133,4 +133,4 @@ feature_set fsDCT = FeatureSet(features=(${features.feventToken},
 										 ${features.feventPolarity}, 
 										 ${features.feventModality},
 										 ${features.fconstant}), 
-						initData=(${data.trainDataDCT}));
+						initData=(${trainDevTestDataTlinkType.trainDataDCT}));

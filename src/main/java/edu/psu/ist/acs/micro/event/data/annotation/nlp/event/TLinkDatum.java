@@ -137,6 +137,33 @@ public class TLinkDatum<L> extends Datum<L> {
 					return TimeMLRelType.INCLUDES;
 				else if (label == TimeMLRelType.SIMULTANEOUS)
 					return TimeMLRelType.SIMULTANEOUS;
+				else if (label == TimeMLRelType.VAGUE)
+					return TimeMLRelType.VAGUE;
+				else 
+					return null;
+			}
+			
+			@Override
+			public String toString() {
+				return "OnlyTBD";
+			}
+		});
+		
+		tools.addLabelMapping(new LabelMapping<TimeMLRelType>() {
+			@Override
+			public TimeMLRelType map(TimeMLRelType label) {
+				if (label == null)
+					return null;
+				else if (label == TimeMLRelType.AFTER)
+					return TimeMLRelType.AFTER;
+				else if (label == TimeMLRelType.BEFORE)
+					return TimeMLRelType.BEFORE;
+				else if (label == TimeMLRelType.IS_INCLUDED)
+					return TimeMLRelType.IS_INCLUDED;
+				else if (label == TimeMLRelType.INCLUDES)
+					return TimeMLRelType.INCLUDES;
+				else if (label == TimeMLRelType.SIMULTANEOUS)
+					return TimeMLRelType.SIMULTANEOUS;
 				else if (label == TimeMLRelType.NONE_VAGUE)
 					return null;
 				else if (label == TimeMLRelType.PARTIAL_VAGUE)
