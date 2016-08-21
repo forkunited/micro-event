@@ -34,8 +34,8 @@ data fullDevData = UnionData(data=(${adjETDevData}, ${timeTimeDevData}, ${repGov
 
 value devPartition = PartitionData(data=${fullDevData}, distribution=(".5", ".5"));
 
-data trainData = UnionData(data=(${fullDevData_0}));
-data devData = UnionData(data=(${fullDevData_1}));
+data trainData = UnionData(data=(${fullDevData}));
+data devData = UnionData(data=(${fullDevData}));
 data testData = UnionData(data=(${adjETTestData}, ${timeTimeTestData}, ${repGovTestData}, ${reichenbachTestData},
                                ${genGovTestData}, ${wordNetTestData}, ${reportingDCTTestData}, ${allVagueTestData},
                                ${slETWSTestData}, ${slEEDTestData}, ${slEEWSTestData}, ${slDCTTestData}));
@@ -51,8 +51,8 @@ data fullDevDataNAV = UnionData(data=(${adjETDevData}, ${timeTimeDevData}, ${rep
 
 value devPartitionNAV = PartitionData(data=${fullDevDataNAV}, distribution=(".5", ".5"));
 
-data trainDataNAV = UnionData(data=(${fullDevDataNAV_0}));
-data devDataNAV = UnionData(data=(${fullDevDataNAV_1}));
+data trainDataNAV = UnionData(data=(${fullDevDataNAV}));
+data devDataNAV = UnionData(data=(${fullDevDataNAV}));
 data testDataNAV = UnionData(data=(${adjETTestData}, ${timeTimeTestData}, ${repGovTestData}, ${reichenbachTestData},
                                ${genGovTestData}, ${wordNetTestData}, ${reportingDCTTestData}, 
                                ${slETWSTestData}, ${slEEDTestData}, ${slEEWSTestData}, ${slDCTTestData}));
