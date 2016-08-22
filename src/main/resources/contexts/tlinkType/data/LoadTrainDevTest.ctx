@@ -38,6 +38,7 @@ value debugTrainData = OutputDebug(refs=(${countTBDTLinkTypeTrainData}));
 value debugDevData = OutputDebug(refs=(${countTBDTLinkTypeDevData}));
 value debugTestData = OutputDebug(refs=(${countTBDTLinkTypeTestData}));
 
+classify_task trainTask = Classification(data=${trainData});
 classify_task devTask = Classification(data=${devData});
 classify_task testTask = Classification(data=${testData});
 
