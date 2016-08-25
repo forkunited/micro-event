@@ -183,3 +183,9 @@ feature fpredModalityMethod = Conjunction(minFeatureOccurrence="1", features=(${
 feature fpredPosMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fsPos}, ${ftPos}));
 feature fpredTypeMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${ftype}));
 feature fpredPositionMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fposition}));
+
+feature fpredTenseEqMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fstTenseEq}));
+feature fpredAspectEqMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fstAspectEq}));
+feature fpredClassEqMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fstClassEq}));
+feature fpredPolarityEqMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fstPolarityEq}));
+feature fpredModalityEqMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fstModalityEq}));
