@@ -178,6 +178,8 @@ feature ftimeTime = MetaClassificationIdentity(feature=${features.ftimeTime});
 feature fpredTenseMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fsTense}, ${ftTense}));
 feature fpredAspectMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fsAspect}, ${ftAspect}));
 feature fpredClassMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fsClass}, ${ftClass}));
+feature fpredPolarityMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fsPolarity}, ${ftPolarity}));
+feature fpredModalityMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fsModality}, ${ftModdality}));
 feature fpredPosMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fsPos}, ${ftPos}));
 feature fpredTypeMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${ftype}));
 feature fpredPositionMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fposition}));
