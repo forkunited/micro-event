@@ -4,7 +4,11 @@ feature fconstant = Constant();
 
 feature fpredLabel = MetaClassificationAttribute(attribute="LABEL");
 feature fpredMethod = MetaClassificationAttribute(attribute="METHOD");
+feature fpredScore = MetaClassificationAttribute(attribute="SCORE");
+feature fpredLogScore = MetaClassificationAttribute(attribute="LOG_SCORE");
 feature fpredLabelMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredLabel}, ${fpredMethod}));
+feature fpredLogScoreMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredLogScore}, ${fpredMethod}));
+
 
 feature feventToken = MetaClassificationIdentity(feature=${features.feventToken});
 feature feventTokenClean = MetaClassificationIdentity(feature=${features.feventTokenClean}); 
