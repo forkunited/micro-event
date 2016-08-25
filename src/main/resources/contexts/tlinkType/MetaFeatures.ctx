@@ -179,7 +179,7 @@ feature fpredTenseMethod = Conjunction(minFeatureOccurrence="1", features=(${fpr
 feature fpredAspectMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fsAspect}, ${ftAspect}));
 feature fpredClassMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fsClass}, ${ftClass}));
 feature fpredPolarityMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fsPolarity}, ${ftPolarity}));
-feature fpredModalityMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fsModality}, ${ftModdality}));
+feature fpredModalityMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fsModality}, ${ftModality}));
 feature fpredPosMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fsPos}, ${ftPos}));
 feature fpredTypeMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${ftype}));
 feature fpredPositionMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fposition}));
