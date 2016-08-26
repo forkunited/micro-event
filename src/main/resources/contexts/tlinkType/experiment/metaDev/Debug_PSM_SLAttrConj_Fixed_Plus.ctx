@@ -11,4 +11,4 @@ context methodRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/methods/m
 context modelsTlinkTypePS = TLinkType(initScript="/tlinkType/methods/PrecedenceScoreByModel_SL.ctx", initOnce="false");
 context evalPS = TLinkType(initScript="/tlinkType/evaluations/PrecedenceScore.ctx", initOnce="false");
 context evalRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/evaluations/Reranker.ctx", initOnce="false");
-context results = TLinkType(initScript="/tlinkType/experiment/output/Debug_PSM.ctx", initOnce="false");
+context results = MetaTLinkType(initScript="/tlinkType/experiment/output/Debug_PSM.ctx", initOnce="false");
