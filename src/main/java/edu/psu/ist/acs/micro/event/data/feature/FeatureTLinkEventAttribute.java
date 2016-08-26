@@ -121,7 +121,7 @@ public class FeatureTLinkEventAttribute<L> extends Feature<TLinkDatum<L>, L>{
 		
 		EventMention e = null;
 		// to make sure we're only adding features for events:
-		if (linkable.getTLinkableType() == TLinkable.Type.EVENT)
+		if (linkable != null && linkable.getTLinkableType() == TLinkable.Type.EVENT)
 			e = (EventMention)linkable;
 		else
 			return vector;
