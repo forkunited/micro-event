@@ -22,6 +22,7 @@ data trainDataEEND = FilterData(data=${trainDataEE}, datumIndicator="PositionWit
 data testDataEEWS = FilterData(data=${testDataEE}, datumIndicator="PositionWithinSentence");
 
 data trainTestDataEEWS = UnionData(data=(${trainDataEEWS}, ${testDataEEWS}));
+data trainDevData = UnionData(data=(${trainData}, ${devData}));
 
 value ETDCTIndicator = ConjoinDatumIndicators(name="ETDCT", fns=("TypeEventTime", "PositionDCT"));
 value ETWSIndicator = ConjoinDatumIndicators(name="ETWS", fns=("TypeEventTime", "PositionWithinSentence"));
@@ -41,6 +42,7 @@ value debugTestData = OutputDebug(refs=(${countTBDTLinkTypeTestData}));
 classify_task trainTask = Classification(data=${trainData});
 classify_task devTask = Classification(data=${devData});
 classify_task testTask = Classification(data=${testData});
+classify_task trainDevTask = Classification(data=${trainDevData});
 
 structurizer docStruct = GraphTLinkByDocument(labelMapping="TBD");
 structurizer docStructConserve = GraphTLinkByDocument(labelMapping="TBD", graphOverwriteOperator="CONSERVE");
