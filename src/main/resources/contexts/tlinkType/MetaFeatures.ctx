@@ -191,6 +191,9 @@ feature fpredTypeMethod = Conjunction(minFeatureOccurrence="1", features=(${fpre
 feature fpredPositionMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fposition}));
 feature fpredDepPathMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fdepPathEE}));
 
+feature ftypePosition = Conjunction(minFeatureOccurrence="1", features=(${ftype}, ${fposition}));
+feature fpredLabelTypePosition = Conjunction(minFeatureOccurrence="1", features=(${fpredLabel}, ${ftype}, ${fposition}));
+
 feature fpredTenseMethodSl = Conjunction(minFeatureOccurrence="1", features=(${fpredMethodSl}, ${fsTense}, ${ftTense}));
 feature fpredAspectMethodSl = Conjunction(minFeatureOccurrence="1", features=(${fpredMethodSl}, ${fsAspect}, ${ftAspect}));
 feature fpredClassMethodSl = Conjunction(minFeatureOccurrence="1", features=(${fpredMethodSl}, ${fsClass}, ${ftClass}));
