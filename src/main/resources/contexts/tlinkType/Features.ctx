@@ -105,6 +105,7 @@ feature ftokenPathFirstTypeET = Conjunction(minFeatureOccurrence="1", features=(
 feature fofToken = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="FirstTail", fn=${strTime});
 feature fosToken = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="SecondTail", fn=${strTime});
 feature ffsToken = Conjunction(minFeatureOccurrence="1", features=(${fofToken}, ${fosToken}));
+feature flinkTypeET = TLinkAttribute(attribute="EVENT_TIME_TYPE");
 
 feature fsToken = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="SourceTail", fn=${strTime});
 feature fsTokenClean = TokenSpanFnDataVocab(scale="COUNT", minFeatureOccurrence="1", tokenExtractor="Source", fn=${strDef});

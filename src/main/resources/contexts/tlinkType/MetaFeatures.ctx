@@ -73,6 +73,7 @@ feature ftokenPathFirstTypeET = MetaClassificationIdentity(feature=${features.ft
 feature fofToken = MetaClassificationIdentity(feature=${features.fofToken});
 feature fosToken = MetaClassificationIdentity(feature=${features.fosToken});
 feature ffsToken = MetaClassificationIdentity(feature=${features.ffsToken});
+feature flinkTypeET = MetaClassificationIdentity(feature=${features.flinkTypeET});
 
 feature fsToken = MetaClassificationIdentity(feature=${features.fsToken});
 feature fsTokenClean = MetaClassificationIdentity(feature=${features.fsTokenClean});
@@ -207,4 +208,22 @@ feature fpredAspectEqMethodSl = Conjunction(minFeatureOccurrence="1", features=(
 feature fpredClassEqMethodSl = Conjunction(minFeatureOccurrence="1", features=(${fpredMethodSl}, ${fstClassEq}));
 feature fpredPolarityEqMethodSl = Conjunction(minFeatureOccurrence="1", features=(${fpredMethodSl}, ${fstPolarityEq}));
 feature fpredModalityEqMethodSl = Conjunction(minFeatureOccurrence="1", features=(${fpredMethodSl}, ${fstModalityEq}));
+
+feature feventTenseET = Conjunction(minFeatureOccurrence="1", features=(${flinkTypeET}, ${feventTense}));
+feature feventAspectET = Conjunction(minFeatureOccurrence="1", features=(${flinkTypeET}, ${feventAspect}));
+feature feventClassET = Conjunction(minFeatureOccurrence="1", features=(${flinkTypeET}, ${feventClass}));
+feature feventPolarityET = Conjunction(minFeatureOccurrence="1", features=(${flinkTypeET}, ${feventPolarity}));
+feature feventModalityET = Conjunction(minFeatureOccurrence="1", features=(${flinkTypeET}, ${feventModality}));
+
+feature fpredEventTenseETMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${feventTenseET}));
+feature fpredEventAspectETMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${feventAspectET}));
+feature fpredEventClassETMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${feventClassET}));
+feature fpredEventPolarityETMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${feventPolarityET}));
+feature fpredEventModalityETMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${feventModalityET}));
+
+feature fpredEventTenseETMethodSl = Conjunction(minFeatureOccurrence="1", features=(${fpredMethodSl}, ${feventTenseET}));
+feature fpredEventAspectETMethodSl = Conjunction(minFeatureOccurrence="1", features=(${fpredMethodSl}, ${feventAspectET}));
+feature fpredEventClassETMethodSl = Conjunction(minFeatureOccurrence="1", features=(${fpredMethodSl}, ${feventClassET}));
+feature fpredEventPolarityETMethodSl = Conjunction(minFeatureOccurrence="1", features=(${fpredMethodSl}, ${feventPolarityET}));
+feature fpredEventModalityETMethodSl = Conjunction(minFeatureOccurrence="1", features=(${fpredMethodSl}, ${feventModalityET}));
 

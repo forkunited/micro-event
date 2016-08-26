@@ -29,7 +29,8 @@ public class FeatureTLinkAttribute<L> extends Feature<TLinkDatum<L>, L>{
 	public enum Attribute {
 		POSITION,
 		TYPE,
-		OVER_EVENT
+		OVER_EVENT,
+		EVENT_TIME_TYPE
 	}
 	
 	// Determines which attribute to compute
@@ -67,6 +68,8 @@ public class FeatureTLinkAttribute<L> extends Feature<TLinkDatum<L>, L>{
 		} else if (this.attribute == Attribute.OVER_EVENT) {
 			this.vocabulary.put("true", this.vocabulary.size());
 			this.vocabulary.put("false", this.vocabulary.size());
+		} else if (this.attribute == Attribute.EVENT_TIME_TYPE) {
+			this.vocabulary.put("true", this.vocabulary.size());
 		}
 		
 		return true;
@@ -88,6 +91,8 @@ public class FeatureTLinkAttribute<L> extends Feature<TLinkDatum<L>, L>{
 				vector.put(offset, 1.0);
 			else
 				vector.put(offset + 1, 1.0);
+		} else if (this.attribute == Attribute.EVENT_TIME_TYPE) {
+			vector.put(offset, (datum.getTLink().getType() == TLink.Type.EVENT_TIME) ? 1.0 : 0.0);
 		}
 		
 		return vector;
