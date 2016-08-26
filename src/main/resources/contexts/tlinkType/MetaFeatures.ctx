@@ -4,6 +4,7 @@ feature fconstant = Constant();
 
 feature fpredLabel = MetaClassificationAttribute(attribute="LABEL");
 feature fpredMethod = MetaClassificationAttribute(attribute="METHOD");
+feature fpredMethodSl = MetaClassificationAttribute(attribute="METHOD", methodPrefixFilter="sl");
 feature fpredScore = MetaClassificationAttribute(attribute="SCORE");
 feature fpredLogScore = MetaClassificationAttribute(attribute="LOG_SCORE");
 feature fpredLabelMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredLabel}, ${fpredMethod}));
@@ -189,8 +190,21 @@ feature fpredTypeMethod = Conjunction(minFeatureOccurrence="1", features=(${fpre
 feature fpredPositionMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fposition}));
 feature fpredDepPathMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fdepPathEE}));
 
+feature fpredTenseMethodSl = Conjunction(minFeatureOccurrence="1", features=(${fpredMethodSl}, ${fsTense}, ${ftTense}));
+feature fpredAspectMethodSl = Conjunction(minFeatureOccurrence="1", features=(${fpredMethodSl}, ${fsAspect}, ${ftAspect}));
+feature fpredClassMethodSl = Conjunction(minFeatureOccurrence="1", features=(${fpredMethodSl}, ${fsClass}, ${ftClass}));
+feature fpredPolarityMethodSl = Conjunction(minFeatureOccurrence="1", features=(${fpredMethodSl}, ${fsPolarity}, ${ftPolarity}));
+feature fpredModalityMethodSl = Conjunction(minFeatureOccurrence="1", features=(${fpredMethodSl}, ${fsModality}, ${ftModality}));
+
 feature fpredTenseEqMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fstTenseEq}));
 feature fpredAspectEqMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fstAspectEq}));
 feature fpredClassEqMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fstClassEq}));
 feature fpredPolarityEqMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fstPolarityEq}));
 feature fpredModalityEqMethod = Conjunction(minFeatureOccurrence="1", features=(${fpredMethod}, ${fstModalityEq}));
+
+feature fpredTenseEqMethodSl = Conjunction(minFeatureOccurrence="1", features=(${fpredMethodSl}, ${fstTenseEq}));
+feature fpredAspectEqMethodSl = Conjunction(minFeatureOccurrence="1", features=(${fpredMethodSl}, ${fstAspectEq}));
+feature fpredClassEqMethodSl = Conjunction(minFeatureOccurrence="1", features=(${fpredMethodSl}, ${fstClassEq}));
+feature fpredPolarityEqMethodSl = Conjunction(minFeatureOccurrence="1", features=(${fpredMethodSl}, ${fstPolarityEq}));
+feature fpredModalityEqMethodSl = Conjunction(minFeatureOccurrence="1", features=(${fpredMethodSl}, ${fstModalityEq}));
+
