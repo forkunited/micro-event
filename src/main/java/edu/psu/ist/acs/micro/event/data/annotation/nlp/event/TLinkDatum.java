@@ -46,7 +46,9 @@ public class TLinkDatum<L> extends Datum<L> {
 	@Override
 	public String toString() {
 		StringBuilder str = new StringBuilder();
-		str.append(this.id).append(": ").append(this.tlink.getId());
+		str.append(this.id).append(": ").append(this.tlink.getId()).append(
+				this.tlink.getSource().getTokenSpan().getDocument().getSentence(
+						this.tlink.getSource().getTokenSpan().getSentenceIndex()));
 		
 		return str.toString();
 	}

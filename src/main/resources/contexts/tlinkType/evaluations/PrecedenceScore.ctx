@@ -8,3 +8,4 @@ multi_classify_eval multiDevPrecision = MultiPrecision(task=${multiDevTask}, met
 multi_classify_eval multiDevRecall = MultiRecall(task=${multiDevTask}, method=${modelsTlinkTypePS.ps}, mode="MICRO");
 multi_classify_eval multiTestPrecision = MultiPrecision(task=${multiTestTask}, method=${modelsTlinkTypePS.ps}, mode="MICRO");
 multi_classify_eval multiTestRecall = MultiRecall(task=${multiTestTask}, method=${modelsTlinkTypePS.ps}, mode="MICRO");
+

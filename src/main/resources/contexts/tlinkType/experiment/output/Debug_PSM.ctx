@@ -1,0 +1,10 @@
+data_features mat = DataFeatureMatrix(data=${evalRerankerTlinkType.trainDevTestDataMetaTlinkType.devData}, 
+                                              features=${evalRerankerTlinkType.methodRerankerTlinkType.fs});
+
+value strEvals = OutputStrings(id="TLinkType_Debug_PSM", storage="EventString", collection="ExperimentEvaluationOutput", 
+                 serializer="DataFeatureMatrixBSONString",
+                 refs=
+                 (
+                  ${mat}
+                 )); 
+                 
