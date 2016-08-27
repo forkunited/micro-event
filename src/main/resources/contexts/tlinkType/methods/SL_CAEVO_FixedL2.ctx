@@ -25,7 +25,7 @@ classify_method slDCTSub = FilterDatumIndicator(method=${slDCTUnfiltered}, datum
 classify_method slETWSSub = FilterDatumIndicator(method=${slETWSUnfiltered}, datumIndicator="ETWS");
 classify_method slEEWSSub = FilterDatumIndicator(method=${slEEWSUnfiltered}, datumIndicator="EEWS");
 classify_method slEEDSub = FilterDatumIndicator(method=${slEEDUnfiltered}, datumIndicator="EED");
-classify_method slEEBSSub = FilterDatumIndicator(method=${slEEBSUnfiltered}, datumIndicator="EEBS")
+classify_method slEEBSSub = FilterDatumIndicator(method=${slEEBSUnfiltered}, datumIndicator="EEBS");
 
 search l2DCT = Grid() { dimension l2=Enumerated(values=(".01", ".1", "1.0", "10.0", "100.0"), stageIndex="0"); };
 search l2ETWS = Grid() { dimension l2=Enumerated(values=(".01", ".1", "1.0", "10.0", "100.0"), stageIndex="0"); };
