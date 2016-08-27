@@ -21,27 +21,30 @@ classify_method slEEWSUnfiltered = SupervisedModel(model=${slEEWSm}, data=${trai
 classify_method slEEDUnfiltered = SupervisedModel(model=${slEEDm}, data=${trainMatrixEED}, trainEvaluation=${acc});
 classify_method slEEBSUnfiltered = SupervisedModel(model=${slEEBSm}, data=${trainMatrixEEBS}, trainEvaluation=${acc});
 
-classify_method slDCTSub = FilterDatumIndicator(method=${slDCTUnfiltered}, datumIndicator="ETDCT");
-classify_method slETWSSub = FilterDatumIndicator(method=${slETWSUnfiltered}, datumIndicator="ETWS");
-classify_method slEEWSSub = FilterDatumIndicator(method=${slEEWSUnfiltered}, datumIndicator="EEWS");
-classify_method slEEDSub = FilterDatumIndicator(method=${slEEDUnfiltered}, datumIndicator="EED");
-classify_method slEEBSSub = FilterDatumIndicator(method=${slEEBSUnfiltered}, datumIndicator="EEBS");
-
 search l2DCT = Grid() { dimension l2=Enumerated(values=(".01", ".1", "1.0", "10.0", "100.0"), stageIndex="0"); };
 search l2ETWS = Grid() { dimension l2=Enumerated(values=(".01", ".1", "1.0", "10.0", "100.0"), stageIndex="0"); };
 search l2EEWS = Grid() { dimension l2=Enumerated(values=(".01", ".1", "1.0", "10.0", "100.0"), stageIndex="0"); };
 search l2EED = Grid() { dimension l2=Enumerated(values=(".01", ".1", "1.0", "10.0", "100.0"), stageIndex="0"); };
 search l2EEBS = Grid() { dimension l2=Enumerated(values=(".01", ".1", "1.0", "10.0", "100.0"), stageIndex="0"); };
 
-classify_eval evalDCT = Precision(task=${trainDevTestDataTlinkType.devTask}, method=${slDCTSub}, mode="MICRO");
-classify_eval evalETWS = Precision(task=${trainDevTestDataTlinkType.devTask}, method=${slETWSSub}, mode="MICRO");
-classify_eval evalEEWS = Precision(task=${trainDevTestDataTlinkType.devTask}, method=${slEEWSSub}, mode="MICRO");
-classify_eval evalEED = Precision(task=${trainDevTestDataTlinkType.devTask}, method=${slEEDSub}, mode="MICRO");
-classify_eval evalEEBS = Precision(task=${trainDevTestDataTlinkType.devTask}, method=${slEEBSSub}, mode="MICRO");
+classify_eval evalDCT = Precision(task=${trainDevTestDataTlinkType.devTask}, method=${slDCTUnfiltered}, mode="MICRO");
+classify_eval evalETWS = Precision(task=${trainDevTestDataTlinkType.devTask}, method=${slETWSUnfiltered}, mode="MICRO");
+classify_eval evalEEWS = Precision(task=${trainDevTestDataTlinkType.devTask}, method=${slEEWSUnfiltered}, mode="MICRO");
+classify_eval evalEED = Precision(task=${trainDevTestDataTlinkType.devTask}, method=${slEEDUnfiltered}, mode="MICRO");
+classify_eval evalEEBS = Precision(task=${trainDevTestDataTlinkType.devTask}, method=${slEEBSUnfiltered}, mode="MICRO");
 
-classify_method slDCT = RunClassifyMethodSearch(fn=${evalDCT}, search=${l2DCT});
-classify_method slETWS = RunClassifyMethodSearch(fn=${evalDCT}, search=${l2ETWS});
-classify_method slEEWS = RunClassifyMethodSearch(fn=${evalDCT}, search=${l2EEWS});
-classify_method slEED = RunClassifyMethodSearch(fn=${evalDCT}, search=${l2EED});
-classify_method slEEBS = RunClassifyMethodSearch(fn=${evalDCT}, search=${l2EEBS});
+classify_method slDCTSub = RunClassifyMethodSearch(fn=${evalDCT}, search=${l2DCT});
+classify_method slETWSSub = RunClassifyMethodSearch(fn=${evalETWS}, search=${l2ETWS});
+classify_method slEEWSSub = RunClassifyMethodSearch(fn=${evalEEWS}, search=${l2EEWS});
+classify_method slEEDSub = RunClassifyMethodSearch(fn=${evalEED}, search=${l2EED});
+classify_method slEEBSSub = RunClassifyMethodSearch(fn=${evalEEBS}, search=${l2EEBS});
+
+classify_method slDCT = FilterDatumIndicator(method=${slDCTSub}, datumIndicator="ETDCT");
+classify_method slETWS = FilterDatumIndicator(method=${slETWSSub}, datumIndicator="ETWS");
+classify_method slEEWS = FilterDatumIndicator(method=${slEEWSSub}, datumIndicator="EEWS");
+classify_method slEED = FilterDatumIndicator(method=${slEEDSub}, datumIndicator="EED");
+classify_method slEEBS = FilterDatumIndicator(method=${slEEBSSub}, datumIndicator="EEBS");
+
+
+
 
