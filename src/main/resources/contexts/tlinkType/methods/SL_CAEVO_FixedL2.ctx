@@ -27,11 +27,11 @@ classify_method slEEWSSub = FilterDatumIndicator(method=${slEEWSUnfiltered}, dat
 classify_method slEEDSub = FilterDatumIndicator(method=${slEEDUnfiltered}, datumIndicator="EED");
 classify_method slEEBSSub = FilterDatumIndicator(method=${slEEBSUnfiltered}, datumIndicator="EEBS");
 
-search l2DCT = Grid() { dimension l2=Enumerated(values=("1.0", "2.0", "4.0", "8.0", "16.0" "32.0", "64.0"), stageIndex="0"); };
-search l2ETWS = Grid() { dimension l2=Enumerated(values=("1.0", "2.0", "4.0", "8.0", "16.0" "32.0", "64.0"), stageIndex="0"); };
-search l2EEWS = Grid() { dimension l2=Enumerated(values=("1.0", "2.0", "4.0", "8.0", "16.0" "32.0", "64.0"), stageIndex="0"); };
-search l2EED = Grid() { dimension l2=Enumerated(values=("1.0", "2.0", "4.0", "8.0", "16.0" "32.0", "64.0"), stageIndex="0"); };
-search l2EEBS = Grid() { dimension l2=Enumerated(values=("1.0", "2.0", "4.0", "8.0", "16.0" "32.0", "64.0"), stageIndex="0"); };
+search l2DCT = Grid() { dimension l2=Enumerated(values=("1.0", "2.0", "4.0", "8.0", "16.0", "32.0", "64.0"), stageIndex="0"); };
+search l2ETWS = Grid() { dimension l2=Enumerated(values=("1.0", "2.0", "4.0", "8.0", "16.0", "32.0", "64.0"), stageIndex="0"); };
+search l2EEWS = Grid() { dimension l2=Enumerated(values=("1.0", "2.0", "4.0", "8.0", "16.0", "32.0", "64.0"), stageIndex="0"); };
+search l2EED = Grid() { dimension l2=Enumerated(values=("1.0", "2.0", "4.0", "8.0", "16.0", "32.0", "64.0"), stageIndex="0"); };
+search l2EEBS = Grid() { dimension l2=Enumerated(values=("1.0", "2.0", "4.0", "8.0", "16.0", "32.0", "64.0"), stageIndex="0"); };
 
 classify_eval evalDCT = Precision(task=${trainDevTestDataTlinkType.devTask}, method=${slDCTSub}, mode="MICRO");
 classify_eval evalETWS = Precision(task=${trainDevTestDataTlinkType.devTask}, method=${slETWSSub}, mode="MICRO");
