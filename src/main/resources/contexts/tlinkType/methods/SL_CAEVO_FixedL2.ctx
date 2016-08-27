@@ -45,7 +45,6 @@ classify_method slEEWS = RunClassifyMethodSearch(fn=${evalEEWS}, search=${l2EEWS
 classify_method slEED = RunClassifyMethodSearch(fn=${evalEED}, search=${l2EED});
 classify_method slEEBS = RunClassifyMethodSearch(fn=${evalEEBS}, search=${l2EEBS});
 
-;
 
 
 
