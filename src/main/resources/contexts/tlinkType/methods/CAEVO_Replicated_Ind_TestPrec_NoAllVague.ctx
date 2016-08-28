@@ -81,9 +81,7 @@ multi_classify_method sieve = Sieve(methods=(${modelsTlinkTypeDetInd.adjETB},
                                              ${modelsTlinkTypeSlInd.slETWSV}, 
                                              ${modelsTlinkTypeSlInd.slEEDV},
                                              ${modelsTlinkTypeSlInd.slEEWSV}, 
-                                             ${modelsTlinkTypeSlInd.slDCTV},
-                                             
-                                             ${modelsTlinkTypeDetInd.modelsTlinkTypeDet.allVague}  
+                                             ${modelsTlinkTypeSlInd.slDCTV} 
                                              ),
                                                                         
                                     structurizers=(${trainDevTestDataTlinkType.docStructConserve}, 
@@ -156,8 +154,6 @@ multi_classify_method sieve = Sieve(methods=(${modelsTlinkTypeDetInd.adjETB},
                                                    ${trainDevTestDataTlinkType.docStructConserve},
                                                    ${trainDevTestDataTlinkType.docStructConserve}, 
                                                    ${trainDevTestDataTlinkType.docStructConserve},
-                                                   ${trainDevTestDataTlinkType.docStructConserve}, 
-                                                   
                                                    ${trainDevTestDataTlinkType.docStructConserve}),
                                                    
                                     permutationMeasures=(${evalTlinkTypeDetInd.testAdjETBPrecision}, 
