@@ -235,4 +235,4 @@ multi_classify_method sieve = RandomSieve(methods=(${modelsTlinkTypeDetInd.adjET
                                                          ${evalTlinkTypeDetInd.trainDevAllVaguePrecision}
                                     ),
                                     structureTransformFn=${greedyTlinkTransitiveRules},
-                                    inferenceIters="15");
+                                    inferenceIters="40");
