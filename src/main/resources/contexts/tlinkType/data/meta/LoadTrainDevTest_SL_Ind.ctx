@@ -253,7 +253,7 @@ data fullDevData = UnionData(data=(${adjETADevData}, ${timeTimeADevData}, ${repG
                                    
                                    ${adjETSDevData}, ${timeTimeSDevData}, ${repGovSDevData},
                                    ${reichenbachSDevData}, ${genGovSDevData}, ${wordNetSDevData}, 
-                                   ${reportingSDCTDevData}, ${slETWSSDevData}, ${slEEDSDevData}, 
+                                   ${reportingDCTSDevData}, ${slETWSSDevData}, ${slEEDSDevData}, 
                                    ${slEEWSSDevData}, ${slDCTSDevData},
                                    
                                    ${adjETVDevData}, ${timeTimeVDevData}, ${repGovVDevData},
