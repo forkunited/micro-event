@@ -215,7 +215,7 @@ data detTrainData = UnionData(data=(${adjETATrainData}, ${timeTimeATrainData}, $
                                     
                                     ${adjETITrainData}, ${timeTimeITrainData}, ${repGovITrainData}, 
                                     ${reichenbachITrainData}, ${genGovITrainData}, ${wordNetITrainData}, 
-                                    ${reportingIDCTTrainData}, 
+                                    ${reportingDCTITrainData}, 
                                     
                                     ${adjETIITrainData}, ${timeTimeIITrainData}, ${repGovIITrainData}, 
                                     ${reichenbachIITrainData}, ${genGovIITrainData}, ${wordNetIITrainData}, 
@@ -289,7 +289,7 @@ data testData = UnionData(data=(${adjETATestData}, ${timeTimeATestData}, ${repGo
                                    
                                    ${adjETSTestData}, ${timeTimeSTestData}, ${repGovSTestData},
                                    ${reichenbachSTestData}, ${genGovSTestData}, ${wordNetSTestData}, 
-                                   ${reportingSDCTTestData}, ${slETWSSTestData}, ${slEEDSTestData}, 
+                                   ${reportingDCTSTestData}, ${slETWSSTestData}, ${slEEDSTestData}, 
                                    ${slEEWSSTestData}, ${slDCTSTestData},
                                    
                                    ${adjETVTestData}, ${timeTimeVTestData}, ${repGovVTestData},
