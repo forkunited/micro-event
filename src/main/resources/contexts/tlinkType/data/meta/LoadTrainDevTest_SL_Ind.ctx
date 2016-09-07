@@ -326,7 +326,7 @@ data fullDevDataNAV = UnionData(data=(${adjETADevData}, ${timeTimeADevData}, ${r
                                    
                                    ${adjETSDevData}, ${timeTimeSDevData}, ${repGovSDevData},
                                    ${reichenbachSDevData}, ${genGovSDevData}, ${wordNetSDevData}, 
-                                   ${reportingSDCTDevData}, ${slETWSSDevData}, ${slEEDSDevData}, 
+                                   ${reportingDCTSDevData}, ${slETWSSDevData}, ${slEEDSDevData}, 
                                    ${slEEWSSDevData}, ${slDCTSDevData},
                                    
                                    ${adjETVDevData}, ${timeTimeVDevData}, ${repGovVDevData},
@@ -360,7 +360,7 @@ data testDataNAV = UnionData(data=(${adjETATestData}, ${timeTimeATestData}, ${re
                                    
                                    ${adjETSTestData}, ${timeTimeSTestData}, ${repGovSTestData},
                                    ${reichenbachSTestData}, ${genGovSTestData}, ${wordNetSTestData}, 
-                                   ${reportingSDCTTestData}, ${slETWSSTestData}, ${slEEDSTestData}, 
+                                   ${reportingDCTSTestData}, ${slETWSSTestData}, ${slEEDSTestData}, 
                                    ${slEEWSSTestData}, ${slDCTSTestData},
                                    
                                    ${adjETVTestData}, ${timeTimeVTestData}, ${repGovVTestData},
