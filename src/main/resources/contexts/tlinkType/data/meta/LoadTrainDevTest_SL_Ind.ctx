@@ -1,6 +1,6 @@
 context trainDevTestDataTlinkType = TLinkType(initScript="/tlinkType/data/LoadTrainDevTest.ctx", initOnce="true", initOverrideByName="true");
 context modelsTlinkTypeDetInd = TLinkType(initScript="/tlinkType/methods/Deterministic_TBD_Ind.ctx", initOnce="true", initOverrideByName="true");
-context modelsTlinkTypeSlInd = TLinkType(initScript="/tlinkType/methods/SL_CAEVO_Ind.ctx", initOnce="true", initOverrideByName="true");
+context modelsTlinkTypeSlInd = TLinkType(initScript="/tlinkType/methods/SL_Ind.ctx", initOnce="true", initOverrideByName="true");
 
 data adjETATrainData = MetaClassification(method=${modelsTlinkTypeDetInd.adjETA}, task=${trainDevTestDataTlinkType.trainTask});
 data timeTimeATrainData = MetaClassification(method=${modelsTlinkTypeDetInd.timeTimeA}, task=${trainDevTestDataTlinkType.trainTask});
