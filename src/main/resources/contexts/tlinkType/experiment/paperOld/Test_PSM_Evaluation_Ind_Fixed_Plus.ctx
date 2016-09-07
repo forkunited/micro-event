@@ -4,6 +4,7 @@ value debug=Debug(file=${resultsId});
 
 context util = TLinkType(initScript="/util/Util.ctx", initOnce="true");
 
+context trainDevTestDataMetaTlinkType = MetaTLinkType(initScript="/tlinkType/data/meta/LoadTrainDevTest_SL_Ind.ctx", initOnce="false");
 context featureSetsTlinkType = TLinkType(initScript="/tlinkType/featureSets/CAEVO_Fixed_Plus.ctx", initOnce="false");
 context modelsTlinkTypeSl = TLinkType(initScript="/tlinkType/methods/SL_CAEVO_Fixed.ctx", initOnce="false");
 context methodRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/methods/meta/Reranker_Evaluation_Ind.ctx", initOnce="false");
@@ -14,6 +15,7 @@ context results = TLinkType(initScript="/tlinkType/experiment/output/Test_PSM_SL
 
 value resultsId = "TLinkType_Test_PSM_Evaluation_Ind_Fixed_Plus_4Fold_0";
 context trainDevTestDocsTlinkType = TLinkType(initScript="/util/data/docs/TBD4Fold_0.ctx", initOnce="true");
+context trainDevTestDataMetaTlinkType = MetaTLinkType(initScript="/tlinkType/data/meta/LoadTrainDevTest_SL_Ind.ctx", initOnce="false");
 context featureSetsTlinkType = TLinkType(initScript="/tlinkType/featureSets/CAEVO_Fixed_Plus.ctx", initOnce="false");
 context modelsTlinkTypeSl = TLinkType(initScript="/tlinkType/methods/SL_CAEVO_Fixed.ctx", initOnce="false");
 context methodRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/methods/meta/Reranker_Evaluation_Ind.ctx", initOnce="false");
@@ -24,6 +26,7 @@ context results = TLinkType(initScript="/tlinkType/experiment/output/Test_PSM_SL
 
 value resultsId = "TLinkType_Test_PSM_Evaluation_Ind_Fixed_Plus_4Fold_1";
 context trainDevTestDocsTlinkType = TLinkType(initScript="/util/data/docs/TBD4Fold_1.ctx", initOnce="true");
+context trainDevTestDataMetaTlinkType = MetaTLinkType(initScript="/tlinkType/data/meta/LoadTrainDevTest_SL_Ind.ctx", initOnce="false");
 context featureSetsTlinkType = TLinkType(initScript="/tlinkType/featureSets/CAEVO_Fixed_Plus.ctx", initOnce="false");
 context modelsTlinkTypeSl = TLinkType(initScript="/tlinkType/methods/SL_CAEVO_Fixed.ctx", initOnce="false");
 context methodRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/methods/meta/Reranker_Evaluation_Ind.ctx", initOnce="false");
@@ -34,6 +37,7 @@ context results = TLinkType(initScript="/tlinkType/experiment/output/Test_PSM_SL
 
 value resultsId = "TLinkType_Test_PSM_Evaluation_Ind_Fixed_Plus_4Fold_2";
 context trainDevTestDocsTlinkType = TLinkType(initScript="/util/data/docs/TBD4Fold_2.ctx", initOnce="true");
+context trainDevTestDataMetaTlinkType = MetaTLinkType(initScript="/tlinkType/data/meta/LoadTrainDevTest_SL_Ind.ctx", initOnce="false");
 context featureSetsTlinkType = TLinkType(initScript="/tlinkType/featureSets/CAEVO_Fixed_Plus.ctx", initOnce="false");
 context modelsTlinkTypeSl = TLinkType(initScript="/tlinkType/methods/SL_CAEVO_Fixed.ctx", initOnce="false");
 context methodRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/methods/meta/Reranker_Evaluation_Ind.ctx", initOnce="false");
@@ -44,6 +48,7 @@ context results = TLinkType(initScript="/tlinkType/experiment/output/Test_PSM_SL
 
 value resultsId = "TLinkType_Test_PSM_Evaluation_Ind_Fixed_Plus_4Fold_3";
 context trainDevTestDocsTlinkType = TLinkType(initScript="/util/data/docs/TBD4Fold_3.ctx", initOnce="true");
+context trainDevTestDataMetaTlinkType = MetaTLinkType(initScript="/tlinkType/data/meta/LoadTrainDevTest_SL_Ind.ctx", initOnce="false");
 context featureSetsTlinkType = TLinkType(initScript="/tlinkType/featureSets/CAEVO_Fixed_Plus.ctx", initOnce="false");
 context modelsTlinkTypeSl = TLinkType(initScript="/tlinkType/methods/SL_CAEVO_Fixed.ctx", initOnce="false");
 context methodRerankerTlinkType = MetaTLinkType(initScript="/tlinkType/methods/meta/Reranker_Evaluation_Ind.ctx", initOnce="false");
