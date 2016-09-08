@@ -16,8 +16,8 @@ classify_eval fullDevMetaAUCOut = MetaAUC(task=${trainDevTestDataMetaTlinkType.f
 classify_eval testPrecision = Precision(task=${trainDevTestDataMetaTlinkType.testTask}, method=${methodRerankerTlinkType.reranker}, mode="MICRO", filterLabel="true");
 classify_eval testRecall = Recall(task=${trainDevTestDataMetaTlinkType.testTask}, method=${methodRerankerTlinkType.reranker}, mode="MICRO", filterLabel="true");
 classify_eval testAUC = AUC(task=${trainDevTestDataMetaTlinkType.testTask}, method=${methodRerankerTlinkType.reranker}, filterLabel="true");
-classify_eval testAUCIn = MetaAUC(task=${trainDevTestDataMetaTlinkType.testTask}, method=${methodRerankerTlinkType.reranker}, filterLabel="true", mode="WITHIN_DATUM");
-classify_eval testAUCOut = MetaAUC(task=${trainDevTestDataMetaTlinkType.testTask}, method=${methodRerankerTlinkType.reranker}, filterLabel="true", mode="WITHOUT_DATUM");
+classify_eval testMetaAUCIn = MetaAUC(task=${trainDevTestDataMetaTlinkType.testTask}, method=${methodRerankerTlinkType.reranker}, filterLabel="true", mode="WITHIN_DATUM");
+classify_eval testMetaAUCOut = MetaAUC(task=${trainDevTestDataMetaTlinkType.testTask}, method=${methodRerankerTlinkType.reranker}, filterLabel="true", mode="WITHOUT_DATUM");
 
 
 classify_eval devNAVPrecision = Precision(task=${trainDevTestDataMetaTlinkType.devTaskNAV}, method=${methodRerankerTlinkType.reranker}, mode="MICRO", filterLabel="true");
