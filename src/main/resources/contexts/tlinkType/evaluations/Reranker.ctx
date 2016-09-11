@@ -22,7 +22,6 @@ classify_eval testMetaAUCIn = MetaAUC(task=${trainDevTestDataMetaTlinkType.testT
 classify_eval testMetaAUCOut = MetaAUC(task=${trainDevTestDataMetaTlinkType.testTask}, method=${methodRerankerTlinkType.reranker}, filterLabel="true", mode="WITHOUT_DATUM");
 classify_eval testMetaROC = MetaROC(task=${trainDevTestDataMetaTlinkType.testTask}, method=${methodRerankerTlinkType.reranker}, filterLabel="true");
 
-
 classify_eval devNAVPrecision = Precision(task=${trainDevTestDataMetaTlinkType.devTaskNAV}, method=${methodRerankerTlinkType.reranker}, mode="MICRO", filterLabel="true");
 classify_eval devNAVRecall = Recall(task=${trainDevTestDataMetaTlinkType.devTaskNAV}, method=${methodRerankerTlinkType.reranker}, mode="MICRO", filterLabel="true");
 classify_eval devNAVAUC = AUC(task=${trainDevTestDataMetaTlinkType.devTaskNAV}, method=${methodRerankerTlinkType.reranker}, filterLabel="true");
@@ -35,7 +34,7 @@ classify_eval fullDevNAVRecall = Recall(task=${trainDevTestDataMetaTlinkType.ful
 classify_eval fullDevNAVAUC = AUC(task=${trainDevTestDataMetaTlinkType.fullDevTaskNAV}, method=${methodRerankerTlinkType.reranker}, filterLabel="true");
 classify_eval fullDevNAVMetaAUCIn = MetaAUC(task=${trainDevTestDataMetaTlinkType.fullDevTaskNAV}, method=${methodRerankerTlinkType.reranker}, filterLabel="true", mode="WITHIN_DATUM");
 classify_eval fullDevNAVMetaAUCOut = MetaAUC(task=${trainDevTestDataMetaTlinkType.fullDevTaskNAV}, method=${methodRerankerTlinkType.reranker}, filterLabel="true", mode="WITHOUT_DATUM");
-classify_eval fullDevNAVMetaROC = MetaROC(task=${trainDevTestDataMetaTlinkType.fullDevNAVTask}, method=${methodRerankerTlinkType.reranker}, filterLabel="true");
+classify_eval fullDevNAVMetaROC = MetaROC(task=${trainDevTestDataMetaTlinkType.fullDevTaskNAV}, method=${methodRerankerTlinkType.reranker}, filterLabel="true");
 
 classify_eval testNAVPrecision = Precision(task=${trainDevTestDataMetaTlinkType.testTaskNAV}, method=${methodRerankerTlinkType.reranker}, mode="MICRO", filterLabel="true");
 classify_eval testNAVRecall = Recall(task=${trainDevTestDataMetaTlinkType.testTaskNAV}, method=${methodRerankerTlinkType.reranker}, mode="MICRO", filterLabel="true");
