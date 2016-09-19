@@ -8,3 +8,16 @@ multi_classify_eval multiDevPrecision = MultiPrecision(task=${multiDevTask}, met
 multi_classify_eval multiDevRecall = MultiRecall(task=${multiDevTask}, method=${modelsTlinkTypeSieve.sieve}, mode="MICRO");
 multi_classify_eval multiTestPrecision = MultiPrecision(task=${multiTestTask}, method=${modelsTlinkTypeSieve.sieve}, mode="MICRO");
 multi_classify_eval multiTestRecall = MultiRecall(task=${multiTestTask}, method=${modelsTlinkTypeSieve.sieve}, mode="MICRO");
+
+multi_classify_eval multiDevPrecisionB = MultiPrecision(filterLabels=("BEFORE"), task=${multiDevTask}, method=${modelsTlinkTypeSieve.sieve}, mode="MICRO");
+multi_classify_eval multiDevPrecisionA = MultiPrecision(filterLabels=("AFTER"), task=${multiDevTask}, method=${modelsTlinkTypeSieve.sieve}, mode="MICRO");
+multi_classify_eval multiDevPrecisionI = MultiPrecision(filterLabels=("INCLUDES"), task=${multiDevTask}, method=${modelsTlinkTypeSieve.sieve}, mode="MICRO");
+multi_classify_eval multiDevPrecisionII = MultiPrecision(filterLabels=("IS_INCLUDED"), task=${multiDevTask}, method=${modelsTlinkTypeSieve.sieve}, mode="MICRO");
+multi_classify_eval multiDevPrecisionS = MultiPrecision(filterLabels=("SIMULTANEOUS"), task=${multiDevTask}, method=${modelsTlinkTypeSieve.sieve}, mode="MICRO");
+multi_classify_eval multiDevPrecisionV = MultiPrecision(filterLabels=("VAGUE"), task=${multiDevTask}, method=${modelsTlinkTypeSieve.sieve}, mode="MICRO");
+multi_classify_eval multiTestPrecisionB = MultiPrecision(filterLabels=("BEFORE"), task=${multiTestTask}, method=${modelsTlinkTypeSieve.sieve}, mode="MICRO");
+multi_classify_eval multiTestPrecisionA = MultiPrecision(filterLabels=("AFTER"), task=${multiTestTask}, method=${modelsTlinkTypeSieve.sieve}, mode="MICRO");
+multi_classify_eval multiTestPrecisionI = MultiPrecision(filterLabels=("INCLUDES"), task=${multiTestTask}, method=${modelsTlinkTypeSieve.sieve}, mode="MICRO");
+multi_classify_eval multiTestPrecisionII = MultiPrecision(filterLabels=("IS_INCLUDED"), task=${multiTestTask}, method=${modelsTlinkTypeSieve.sieve}, mode="MICRO");
+multi_classify_eval multiTestPrecisionS = MultiPrecision(filterLabels=("SIMULTANEOUS"), task=${multiTestTask}, method=${modelsTlinkTypeSieve.sieve}, mode="MICRO");
+multi_classify_eval multiTestPrecisionV = MultiPrecision(filterLabels=("VAGUE"), task=${multiTestTask}, method=${modelsTlinkTypeSieve.sieve}, mode="MICRO");

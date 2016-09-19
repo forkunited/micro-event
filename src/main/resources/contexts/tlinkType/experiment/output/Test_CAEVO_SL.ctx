@@ -1,6 +1,19 @@
 value strEvals = OutputStrings(id=${resultsId}, storage="EventString", collection="ExperimentEvaluationOutput", 
                  refs=
                  (
+                  ${evalSieve.multiDevPrecisionB},
+                  ${evalSieve.multiDevPrecisionA},
+                  ${evalSieve.multiDevPrecisionI},
+                  ${evalSieve.multiDevPrecisionII},
+                  ${evalSieve.multiDevPrecisionS},
+                  ${evalSieve.multiDevPrecisionV},
+                  ${evalSieve.multiTestPrecisionB},
+                  ${evalSieve.multiTestPrecisionA},
+                  ${evalSieve.multiTestPrecisionI},
+                  ${evalSieve.multiTestPrecisionII},
+                  ${evalSieve.multiTestPrecisionS},
+                  ${evalSieve.multiTestPrecisionV},
+                 
                   ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDet.devAdjETConfusions},
                   ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDet.devGenGovConfusions},
                   ${evalSieve.modelsTlinkTypeSieve.evalTlinkTypeDet.devReichenbachConfusions},
