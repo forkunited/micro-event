@@ -124,3 +124,5 @@ value strEvals = OutputStrings(id=${resultsId}, storage="EventString", collectio
 	              ${evalSieve.multiTestPrecision}, 
 	              ${evalSieve.multiTestRecall}
                  )); 
+                 
+value strModels = OutputContext(id=${resultsId}, storage="EventString", collection="ExperimentModelOutput"); 

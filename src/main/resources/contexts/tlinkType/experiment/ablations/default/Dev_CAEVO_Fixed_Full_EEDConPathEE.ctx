@@ -1,5 +1,5 @@
 value maxThreads="30";
-value resultsId = "TLinkType_Dev_CAEVO_Fixed__EEDConPathEE";
+value resultsId = "TLinkType_Dev_CAEVO_Fixed_EEDConPathEE";
 value debug=Debug(file=${resultsId});
 
 context util = TLinkType(initScript="/util/Util.ctx", initOnce="true");
